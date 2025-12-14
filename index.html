@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Protocolo Elite 360º - Criadores de Galinhas</title>
     <style>
-        /* ... Seu CSS completo (mantido) ... */
         * {
             margin: 0;
             padding: 0;
@@ -23,7 +22,7 @@
         header {
             background: linear-gradient(135deg, #1a3a52 0%, #2d5f7f 100%);
             color: white;
-            padding: 3px 15px;
+            padding: 3px 15px; /* Reduzido o padding vertical para diminuir a altura do header */
             position: sticky;
             top: 0;
             z-index: 100;
@@ -50,7 +49,7 @@
             min-width: 200px;
             height: auto;
             display: flex;
-            flex-direction: column;
+            flex-direction: column; /* Para empilhar o carrossel e a frase */
             justify-content: center;
             align-items: center;
             overflow: hidden;
@@ -58,37 +57,35 @@
         }
 
         .header-phrase {
-            font-size: 9px;
+            font-size: 9px; /* Tamanho pequeno para caber na barra reduzida */
             font-weight: bold;
-            color: #ffd700;
+            color: #ffd700; /* Cor de destaque */
             text-align: center;
-            margin-top: 2px;
+            margin-top: 2px; /* Espaço entre o carrossel e a frase */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 100%;
+            /* Garante que a frase não force o aumento da altura do carrossel */
             position: absolute;
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
-            background-color: rgba(0, 0, 0, 0.2);
+            background-color: rgba(0, 0, 0, 0.2); /* Fundo sutil para destaque */
             padding: 1px 0;
         }
 
         .header-carousel-track {
             display: flex;
             gap: 15px;
+            animation: scroll-carousel 40s linear infinite;
             -webkit-transform-style: preserve-3d;
             transform-style: preserve-3d;
             will-change: transform;
             width: max-content;
-            padding-bottom: 15px;
+            padding-bottom: 15px; /* Espaço para a nova frase */
         }
-
-            .header-carousel-track.animate {
-                animation: scroll-carousel 100s linear infinite;
-            }
 
         @-webkit-keyframes scroll-carousel {
             0% {
@@ -113,46 +110,46 @@
         .header-testimonial-item {
             flex-shrink: 0;
             display: flex;
-            align-items: center;
-            gap: 10px;
-            background-color: #2c506b;
-            padding: 3px 8px;
-            border-radius: 12px;
-            min-width: 280px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            align-items: center; /* Centraliza verticalmente para reduzir a altura */
+            gap: 10px; /* Aumentar o espaçamento */
+            background-color: #2c506b; /* Fundo mais sólido e contrastante */
+            padding: 3px 8px; /* Reduzido o padding para diminuir a espessura */
+            border-radius: 12px; /* Borda mais suave e moderna */
+            min-width: 280px; /* Reduzido a largura mínima para melhor adaptação em telas menores */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Sombra para profundidade */
             transition: transform 0.3s ease;
         }
 
             .header-testimonial-item:hover {
-                transform: translateY(-2px);
+                transform: translateY(-2px); /* Efeito sutil no hover */
             }
 
             .header-testimonial-item .avatar {
-                width: 25px;
+                width: 25px; /* Reduzido o avatar para diminuir a espessura */
                 height: 25px;
                 border-radius: 50%;
-                background-color: #00FFFF;
+                background-color: #00FFFF; /* Novo destaque: Ciano */
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-weight: bold;
                 color: #1a3a52;
-                font-size: 10px;
+                font-size: 10px; /* Reduzido o tamanho da fonte do avatar */
                 flex-shrink: 0;
-                border: 3px solid white;
+                border: 3px solid white; /* Borda branca para destacar */
             }
 
             .header-testimonial-item .content {
                 flex: 1;
                 min-width: 0;
                 display: flex;
-                flex-direction: row;
-                align-items: center;
-                gap: 5px;
+                flex-direction: row; /* Muda para layout horizontal */
+                align-items: center; /* Alinha verticalmente os itens do conteúdo */
+                gap: 5px; /* Aumenta o espaçamento horizontal entre os elementos */
             }
 
             .header-testimonial-item .text {
-                font-size: 8px;
+                font-size: 8px; /* Reduzido o tamanho da fonte para diminuir a espessura */
                 line-height: 1.4;
                 margin: 0;
                 font-style: italic;
@@ -160,29 +157,29 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 display: -webkit-box;
-                -webkit-line-clamp: 1;
+                -webkit-line-clamp: 1; /* Limita a 1 linha para reduzir a altura */
                 line-clamp: 1;
                 -webkit-box-orient: vertical;
-                color: #e0e0e0;
+                color: #e0e0e0; /* Texto mais claro para contraste */
             }
 
             .header-testimonial-item .author {
                 font-weight: bold;
-                font-size: 8px;
+                font-size: 8px; /* Reduzido o tamanho da fonte do autor */
                 margin: 0;
-                color: white;
+                color: white; /* Nome do autor em branco */
             }
 
             .header-testimonial-item .location {
-                font-size: 8px;
+                font-size: 8px; /* Reduzido o tamanho da fonte da localização */
                 opacity: 0.8;
                 margin: 0;
-                color: #b0b0b0;
+                color: #b0b0b0; /* Localização em cinza claro */
             }
 
             .header-testimonial-item .stars {
-                font-size: 8px;
-                color: #00FFFF;
+                font-size: 8px; /* Estrelas menores para diminuir a espessura */
+                color: #00FFFF; /* Estrelas no novo destaque: Ciano */
                 margin: 0;
                 white-space: nowrap;
             }
@@ -190,21 +187,21 @@
         header .cta-button {
             background-color: #ff6b35;
             color: white;
-            padding: 8px 15px;
+            padding: 8px 15px; /* Reduzido o padding para diminuir a espessura */
             border: none;
-            border-radius: 8px;
+            border-radius: 8px; /* Borda mais suave */
             cursor: pointer;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 13px; /* Fonte menor para diminuir a espessura */
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             white-space: nowrap;
             flex-shrink: 0;
-            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.4);
+            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.4); /* Sombra para destaque */
         }
 
             header .cta-button:hover {
                 background-color: #e55a2b;
-                transform: translateY(-2px);
+                transform: translateY(-2px); /* Efeito de "levantar" no hover */
                 box-shadow: 0 6px 12px rgba(255, 107, 53, 0.6);
             }
 
@@ -219,7 +216,7 @@
             .header-cta-wrapper .countdown-timer {
                 font-size: 9px;
                 font-weight: bold;
-                color: #ffd700;
+                color: #ffd700; /* Cor de destaque para o timer */
                 text-align: center;
                 line-height: 1.2;
                 padding: 2px 5px;
@@ -236,25 +233,24 @@
 
         /* Hero Section */
         .hero {
-            position: relative;
-            background-color: #1a3a52; /* Cor de fallback para navegadores que não renderizam vídeo nem imagem */
+            position: relative; /* Adicionado para posicionar o vídeo de fundo */
+            background-color: #1a3a52; /* Cor de fallback caso o vídeo não carregue */
             color: white;
-            padding: 80px 20px;
+            padding: 80px 20px; /* Aumentado o padding para dar mais espaço ao vídeo */
             text-align: center;
-            overflow: hidden;
-            min-height: 600px;
-            padding: 80px 20px;
+            overflow: hidden; /* Para garantir que o vídeo não vaze */
+            min-height: 600px; /* Adicione esta linha */
+            padding: 80px 20px; /* Reduzido o padding para mobile */
         }
 
             .hero .container {
-                position: relative;
+                position: relative; /* Para garantir que o conteúdo fique acima do vídeo */
                 z-index: 2;
                 max-width: 1000px;
                 margin: 0 auto;
             }
 
-        /* Estilo comum para Video e Imagem de Fundo */
-        #hero-video, #hero-image {
+        #hero-video {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -264,16 +260,9 @@
             height: auto;
             z-index: 1;
             transform: translate(-50%, -50%);
-            object-fit: cover;
-            object-position: center center;
-            filter: brightness(0.5); /* Escurecimento aplicado a ambos */
-            pointer-events: none; /* Impede que o usuário interaja com o fundo */
-            display: none; /* Ambos escondidos por padrão. O JS decide qual mostrar. */
-        }
-
-        #hero-video {
-            /* Regras de CSS de compatibilidade */
-            -webkit-media-controls: none !important;
+            object-fit: cover; /* Garante que o vídeo cubra toda a área */
+            object-position: center center; /* Centraliza o foco do vídeo */
+            filter: brightness(0.5); /* Escurece o vídeo para o texto ficar legível */
         }
 
         .hero .container {
@@ -354,10 +343,12 @@
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-            line-height: 0;
+            /* Adicionado para cortar o excesso de altura que causa as faixas pretas */
+            line-height: 0; /* Remove qualquer altura extra de linha */
         }
 
             .video-wrapper video {
+                /* Garante que o vídeo preencha a largura e a altura seja automática */
                 width: 100%;
                 height: auto;
                 display: block;
@@ -378,7 +369,7 @@
             .pricing-section .container {
                 max-width: 1200px;
                 margin: 0 auto;
-                overflow: hidden;
+                overflow: hidden; /* Garante que o scroll horizontal não cause problemas de layout */
             }
 
             .pricing-section h2 {
@@ -398,8 +389,8 @@
         /* Wrapper para rolagem horizontal em mobile */
         .pricing-wrapper {
             overflow-x: auto;
-            padding-bottom: 15px;
-            -webkit-overflow-scrolling: touch;
+            padding-bottom: 15px; /* Espaço para a barra de rolagem */
+            -webkit-overflow-scrolling: touch; /* Melhor rolagem em iOS */
         }
 
             .pricing-wrapper::-webkit-scrollbar {
@@ -416,20 +407,20 @@
             }
 
         .pricing-grid {
-            display: flex;
-            flex-wrap: nowrap;
+            display: flex; /* Mudança para flexbox para forçar o lado a lado */
+            flex-wrap: nowrap; /* Impede a quebra de linha */
             gap: 20px;
             margin-bottom: 40px;
-            width: max-content;
+            width: max-content; /* Garante que o grid ocupe o espaço necessário para o scroll */
         }
 
         .pricing-card {
-            min-width: 280px;
-            flex-shrink: 0;
+            min-width: 280px; /* Define uma largura mínima para cada card em mobile */
+            flex-shrink: 0; /* Impede que os cards encolham além do min-width */
         }
 
             .pricing-card.featured {
-                min-width: 300px;
+                min-width: 300px; /* Card em destaque um pouco maior */
             }
 
         /* Centralização para telas maiores (computadores) */
@@ -437,12 +428,12 @@
             .pricing-wrapper {
                 display: flex;
                 justify-content: center;
-                overflow-x: hidden;
+                overflow-x: hidden; /* Desativa a rolagem horizontal em telas grandes */
             }
 
             .pricing-grid {
-                width: auto;
-                justify-content: center;
+                width: auto; /* Permite que o flexbox controle a largura */
+                justify-content: center; /* Centraliza os cards dentro do grid */
             }
         }
 
@@ -786,7 +777,7 @@
         }
 
         .faq-item.active .faq-answer {
-            max-height: 500px;
+            max-height: 500px; /* Valor grande o suficiente para a expansão */
             padding: 15px 20px;
         }
 
@@ -885,20 +876,20 @@
             width: 100%;
             background-color: #ff6b35;
             color: white;
-            padding: 10px 20px;
+            padding: 10px 20px; /* Reduzido o padding */
             text-align: center;
             font-size: 18px;
             font-weight: bold;
             z-index: 1000;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
-            display: none;
+            display: none; /* Escondido por padrão */
             text-decoration: none;
             transition: background-color 0.3s ease;
-            display: flex;
-            flex-direction: column;
+            display: flex; /* Adicionado para alinhar o timer */
+            flex-direction: column; /* Para o timer ficar abaixo do texto */
             align-items: center;
             justify-content: center;
-            gap: 5px;
+            gap: 5px; /* Espaço entre o texto e o timer */
         }
 
             .sticky-cta:hover {
@@ -917,7 +908,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #ffcc00;
+            background-color: #ffcc00; /* Amarelo de destaque */
             color: #1a3a52;
             padding: 8px 15px;
             border-radius: 5px;
@@ -958,6 +949,8 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
+            /* Removido .sticky-cta */
+
             header {
                 padding: 10px 15px;
                 gap: 10px;
@@ -1007,6 +1000,8 @@
             .hero .subheading {
                 font-size: 12px;
             }
+
+            /* Removido o grid-template-columns: 1fr; para manter as ofertas lado a lado conforme solicitado */
 
             .pricing-card.featured {
                 transform: scale(1);
@@ -1105,14 +1100,40 @@
             }
         }
     </style>
-</head>
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '1346740157465853'); /* Pixel ID do Meta inserido */
+      fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=1346740157465853&ev=PageView&noscript=1"
+    /></noscript>
+    <script>
+    !function (w, d, t) {
+      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+    var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+    ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+
+
+      ttq.load('D4VFSO3C77U98L8KBEF0'); /* ID do Pixel do TikTok inserido */
+      ttq.page();
+    }(window, document, 'ttq');
+    </script>
+    </head>
 <body>
     <header>
         <div class="logo">🐔 PROTOCOLO ELITE 360º</div>
 
         <div class="header-carousel-container">
             <div class="header-carousel-track" id="carouselTrack">
-            </div>
+                </div>
             <div class="header-phrase">JÁ AJUDAMOS CENTENAS DE PESSOAS...</div>
         </div>
 
@@ -1123,14 +1144,11 @@
     </header>
 
     <section class="hero">
-        <video autoplay muted loop playsinline id="hero-video">
+        <video autoplay muted loop playsinline id="hero-video" preload="auto">
             <source src="videodefundo.mp4" type="video/mp4">
-            <source src="videodefundo.webm" type="video/webm">
+            <source src="videodefundo.webm" type="video/webm"> /* Adiciona formato webm para melhor compatibilidade e otimização */
             Seu navegador não suporta a tag de vídeo.
         </video>
-
-        <img src="background.png" id="hero-image" alt="Fundo Estático de Galinhas" style="display: none;">
-
         <div class="container">
             <div class="urgency-badge">⚡ OFERTA LIMITADA - DESCONTO DE 20%</div>
             <h1>PARE DE PERDER DINHEIRO E SONHOS!</h1>
@@ -1144,16 +1162,16 @@
             <h2>Assista ao Vídeo Explicativo</h2>
             <p class="subtitle">Descubra como milhares de criadores já blindaram seus aviários</p>
             <div class="video-wrapper">
-                <video src="video1.mp4" poster="capa-video-principal.png" controls playsinline alt="Vídeo de Vendas - Protocolo Elite 360º" style="width: 100%; height: auto; display: block;"></video>
+                <video src="video1.mp4" controls autoplay muted playsinline alt="Vídeo de Vendas - Protocolo Elite 360º" style="width: 100%; height: auto; display: block;"></video>
             </div>
-            <p style="margin-top: 20px; color: #666; font-size: 14px;"></p>
+            <p style="margin-top: 20px; color: #666; font-size: 14px;">Substitua este placeholder pelo seu vídeo de vendas</p>
         </div>
     </section>
 
     <section class="pricing-section" id="pricing-section">
         <div class="container"></div>
         <h2>Escolha Sua Oferta</h2>
-        <p class="subtitle">Compare e Veja Por Que o Combo é a Melhor Escolha !!</p>
+        <p class="subtitle">Ancoragem de Preços: Compare e Veja Por Que o Combo é a Melhor Escolha</p>
 
         <div class="pricing-wrapper">
             <div class="pricing-grid">
@@ -1210,10 +1228,9 @@
                         <li>Suporte Exclusivo</li>
                         <li>Garantia 7 Dias</li>
                     </ul>
-                    <a href="https://pay.kiwify.com.br/hzbzv51" class="cta-button">GARANTIR COMBO AGORA</a>
+                    <a href="https://pay.kiwify.com.br/hzbzv51" class="cta-button" onclick="fbq('track', 'InitiateCheckout'); ttq.track('InitiateCheckout');">GARANTIR COMBO AGORA</a>
                 </div>
-            </div>
-        </div>
+            </div> </div>
     </section>
 
     <section class="guarantee-section">
@@ -1264,8 +1281,7 @@
                     <h3>Acesso Vitalício</h3>
                     <p>Receba todas as futuras atualizações sem custo adicional, para sempre.</p>
                 </div>
-            </div>
-        </div>
+            </div> </div>
     </section>
 
 
@@ -1333,7 +1349,7 @@
             <p style="font-size: 14px; margin: 10px 0;">ou 12x de R$ 9,32</p>
             <div class="cta-timer-wrapper">
                 <div class="countdown-timer" data-timer-id="timer-final"></div>
-                <a href="https://pay.kiwify.com.br/hzbzv51" class="final-button">QUERO GARANTIR MEU ACESSO AGORA</a>
+                <a href="https://pay.kiwify.com.br/hzbzv51" class="final-button" onclick="fbq('track', 'InitiateCheckout'); ttq.track('InitiateCheckout');">QUERO GARANTIR MEU ACESSO AGORA</a>
 
             </div>
             <div class="payment-options">
@@ -1409,14 +1425,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                                            <div class="avatar">${testimonial.avatar}</div>
-                                                                                                            <div class="content">
-                                                                                                                <div class="text">${testimonial.text}</div>
-                                                                                                                <div class="author">${testimonial.author}</div>
-                                                                                                                <div class="location">${testimonial.location}</div>
-                                                                                                                <div class="stars">${testimonial.stars}</div>
-                                                                                                            </div>
-                                                                                                        `;
+                                                                                                    <div class="avatar">${testimonial.avatar}</div>
+                                                                                                    <div class="content">
+                                                                                                        <div class="text">${testimonial.text}</div>
+                                                                                                        <div class="author">${testimonial.author}</div>
+                                                                                                        <div class="location">${testimonial.location}</div>
+                                                                                                        <div class="stars">${testimonial.stars}</div>
+                                                                                                    </div>
+                                                                                                `;
                 carouselTrack.appendChild(item);
             });
 
@@ -1425,19 +1441,16 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                                            <div class="avatar">${testimonial.avatar}</div>
-                                                                                                            <div class="content">
-                                                                                                                <div class="text">${testimonial.text}</div>
-                                                                                                                <div class="author">${testimonial.author}</div>
-                                                                                                                <div class="location">${testimonial.location}</div>
-                                                                                                                <div class="stars">${testimonial.stars}</div>
-                                                                                                            </div>
-                                                                                                        `;
+                                                                                                    <div class="avatar">${testimonial.avatar}</div>
+                                                                                                    <div class="content">
+                                                                                                        <div class="text">${testimonial.text}</div>
+                                                                                                        <div class="author">${testimonial.author}</div>
+                                                                                                        <div class="location">${testimonial.location}</div>
+                                                                                                        <div class="stars">${testimonial.stars}</div>
+                                                                                                    </div>
+                                                                                                `;
                 carouselTrack.appendChild(item);
             });
-
-            // Adiciona a classe 'animate' para iniciar a animação CSS APÓS o conteúdo ser carregado.
-            carouselTrack.classList.add('animate');
         }
 
         // Toggle FAQ
@@ -1450,50 +1463,6 @@
         document.addEventListener('DOMContentLoaded', initCarousel);
     </script>
     <script>
-        // Função de Detecção do iOS
-        function isIOS() {
-            // Verifica se o User Agent contém 'iPad', 'iPhone', ou 'iPod'
-            // Além disso, verifica 'MacIntel' com touch (para novos iPads no Safari)
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-        }
-
-        // Inicialização do Fundo (Vídeo ou Imagem)
-        function initHeroBackground() {
-            const heroVideo = document.getElementById('hero-video');
-            const heroImage = document.getElementById('hero-image');
-
-            if (isIOS()) {
-                // Modo iOS: Mostrar Imagem, Esconder Vídeo
-                if (heroVideo) heroVideo.style.display = 'none';
-                if (heroImage) heroImage.style.display = 'block';
-                console.log("Modo iOS: Fundo estático ativado (background.png).");
-            } else {
-                // Modo Android/Desktop/Outros: Mostrar Vídeo, Esconder Imagem
-                if (heroImage) heroImage.style.display = 'none';
-
-                if (heroVideo) {
-                    heroVideo.style.display = 'block';
-
-                    // Lógica robusta para iniciar o autoplay (principalmente para Android/Desktop)
-                    const tryPlay = () => {
-                        heroVideo.play().then(() => {
-                            console.log("Vídeo de fundo iniciado com sucesso (Non-iOS).");
-                        }).catch(error => {
-                            console.log("Autoplay falhou (Non-iOS). Motivo:", error.name);
-                        });
-                    };
-
-                    // Tenta reproduzir imediatamente
-                    tryPlay();
-                    // Tenta novamente após o carregamento dos metadados
-                    heroVideo.addEventListener('loadeddata', tryPlay, { once: true });
-                }
-                console.log("Modo Non-iOS: Tentando autoplay do vídeo.");
-            }
-        }
-
-        // Inicialização do Contador
         function startCountdown(duration, display) {
             let timer = duration;
             let hours, minutes, seconds;
@@ -1531,10 +1500,24 @@
 
             // Inicia o timer para todos os elementos
             startCountdown(twentyFourHours, timers);
-
-            // Chama a função de inicialização do fundo
-            initHeroBackground();
         });
+
+        // Correção mais agressiva para o autoplay do vídeo no iOS
+        const heroVideo = document.getElementById('hero-video');
+        if (heroVideo) {
+            // Tenta reproduzir o vídeo imediatamente.
+            // O iOS/Safari exige que o vídeo tenha 'muted' e 'playsinline' para autoplay.
+            // O uso de .play() dentro de um .catch() é uma técnica para tentar contornar a restrição.
+            heroVideo.play().catch(error => {
+                console.log("Autoplay do vídeo de fundo falhou. Tentando novamente após o carregamento.", error);
+                // Tenta reproduzir novamente quando o vídeo estiver pronto para tocar
+                heroVideo.addEventListener('loadedmetadata', () => {
+                    heroVideo.play().catch(err => {
+                        console.log("Tentativa de autoplay após loadedmetadata falhou.", err);
+                    });
+                }, { once: true });
+            });
+        }
     </script>
 </body>
 </html>
