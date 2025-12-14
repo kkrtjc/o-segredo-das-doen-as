@@ -297,7 +297,16 @@
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            /* Adicionado para cortar o excesso de altura que causa as faixas pretas */
+            line-height: 0; /* Remove qualquer altura extra de linha */
         }
+
+            .video-wrapper video {
+                /* Garante que o vídeo preencha a largura e a altura seja automática */
+                width: 100%;
+                height: auto;
+                display: block;
+            }
 
             .video-wrapper img {
                 width: 100%;
@@ -1066,7 +1075,7 @@
                         <li>Prevenção de Doenças</li>
                         <li>Sexagem Profissional</li>
                     </ul>
-                    <button class="cta-button" onclick="alert('Redirecionando para compra do Produto 1...')">COMPRAR AGORA</button>
+                    <a href="https://pay.kiwify.com.br/PFuaAFH" class="cta-button">COMPRAR AGORA</a>
                 </div>
 
                 <!-- Produto 2 -->
@@ -1083,7 +1092,8 @@
                         <li>Calendário de Vacinação</li>
                         <li>Economia de até 70%</li>
                     </ul>
-                    <button class="cta-button" onclick="alert('Redirecionando para compra do Produto 2...')">COMPRAR AGORA</button>
+                    <a href="https://pay.kiwify.com.br/t4bvM9I" class="cta-button">COMPRAR AGORA</a>
+
                 </div>
 
                 <!-- Combo (Destaque) -->
@@ -1107,8 +1117,7 @@
                         <li>Suporte Exclusivo</li>
                         <li>Garantia 7 Dias</li>
                     </ul>
-                    <button class="cta-button" onclick="alert('Redirecionando para compra do Combo...')">GARANTIR COMBO AGORA</button>
-                </div>
+                    <a href="https://pay.kiwify.com.br/hzbzv51" class="cta-button">GARANTIR COMBO AGORA</a>                </div>
             </div> <!-- Fim do pricing-wrapper -->
         </div>
     </section>
@@ -1234,7 +1243,8 @@
             <p style="font-size: 14px; margin: 10px 0;">ou 12x de R$ 9,32</p>
             <div class="cta-timer-wrapper">
                 <div class="countdown-timer" data-timer-id="timer-final"></div>
-                <button class="final-button" onclick="alert('Redirecionando para compra do Combo Elite 360º...')">SIM! QUERO O PROTOCOLO ELITE 360º AGORA</button>
+                <a href="https://pay.kiwify.com.br/hzbzv51" class="final-button">QUERO GARANTIR MEU ACESSO AGORA</a>
+
             </div>
             <div class="payment-options">
                 ✓ Acesso Imediato • Vitalício • 7 Dias de Garantia • Sem Risco
@@ -1249,9 +1259,7 @@
         <div class="container">
             <p>&copy; 2025 Protocolo Elite 360º. Todos os direitos reservados.</p>
             <p>
-                <a href="#">Política de Privacidade</a> |
-                <a href="#">Termos de Uso</a> |
-                <a href="#">Contato</a>
+               
             </p>
         </div>
     </footer>
@@ -1312,14 +1320,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                    <div class="avatar">${testimonial.avatar}</div>
-                                                    <div class="content">
-                                                        <div class="text">${testimonial.text}</div>
-                                                        <div class="author">${testimonial.author}</div>
-                                                        <div class="location">${testimonial.location}</div>
-                                                        <div class="stars">${testimonial.stars}</div>
-                                                    </div>
-                                                `;
+                                                            <div class="avatar">${testimonial.avatar}</div>
+                                                            <div class="content">
+                                                                <div class="text">${testimonial.text}</div>
+                                                                <div class="author">${testimonial.author}</div>
+                                                                <div class="location">${testimonial.location}</div>
+                                                                <div class="stars">${testimonial.stars}</div>
+                                                            </div>
+                                                        `;
                 carouselTrack.appendChild(item);
             });
 
@@ -1328,14 +1336,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                    <div class="avatar">${testimonial.avatar}</div>
-                                                    <div class="content">
-                                                        <div class="text">${testimonial.text}</div>
-                                                        <div class="author">${testimonial.author}</div>
-                                                        <div class="location">${testimonial.location}</div>
-                                                        <div class="stars">${testimonial.stars}</div>
-                                                    </div>
-                                                `;
+                                                            <div class="avatar">${testimonial.avatar}</div>
+                                                            <div class="content">
+                                                                <div class="text">${testimonial.text}</div>
+                                                                <div class="author">${testimonial.author}</div>
+                                                                <div class="location">${testimonial.location}</div>
+                                                                <div class="stars">${testimonial.stars}</div>
+                                                            </div>
+                                                        `;
                 carouselTrack.appendChild(item);
             });
         }
