@@ -379,6 +379,7 @@
                 max-width: 1200px;
                 margin: 0 auto;
                 overflow: hidden;
+                position: relative; /* Adicionado para posicionamento absoluto das setas */
             }
 
             .pricing-section h2 {
@@ -394,6 +395,71 @@
                 margin-bottom: 40px;
                 font-size: 12px;
             }
+
+        /* Contêiner para a grade e setas - JÁ EXISTENTE, APENAS COPIADO ACIMA */
+        /* .pricing-section .container {
+            position: relative;
+        } */
+
+        /* Estilo Base das Setas */
+        .pricing-nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 24px;
+            line-height: 1;
+            opacity: 0.8;
+            transition: opacity 0.3s ease, background-color 0.3s ease;
+            border-radius: 50%; /* Faz a seta redonda */
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Inicia escondido e só mostra em telas menores onde a rolagem é principal */
+            display: none;
+        }
+
+        /* Mostrar as setas em telas menores onde a rolagem é manual */
+        @media (max-width: 767px) {
+            .pricing-nav-arrow {
+                display: flex;
+            }
+        }
+
+        .pricing-nav-arrow:hover {
+            opacity: 1;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .pricing-nav-arrow.prev {
+            left: 5px; /* Posição à esquerda */
+        }
+
+        .pricing-nav-arrow.next {
+            right: 5px; /* Posição à direita */
+        }
+
+        /* Ocultar setas em telas maiores para evitar conflito com centralização desktop */
+        @media (min-width: 768px) {
+            .pricing-nav-arrow {
+                display: none !important;
+            }
+        }
+
+        /* Cor da seta inativa */
+        .pricing-nav-arrow.disabled {
+            opacity: 0.3;
+            cursor: default;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        /* --- FIM Novo CSS para Setas de Navegação de Preços --- */
 
         /* Wrapper para rolagem horizontal em mobile */
         .pricing-wrapper {
@@ -1151,66 +1217,69 @@
     </section>
 
     <section class="pricing-section" id="pricing-section">
-        <div class="container"></div>
-        <h2>Escolha Sua Oferta</h2>
-        <p class="subtitle">Compare e Veja Por Que o Combo é a Melhor Escolha !!</p>
+        <div class="container">
+            <button class="pricing-nav-arrow prev" id="prevPrice" aria-label="Oferta Anterior">❮</button>
+            <button class="pricing-nav-arrow next" id="nextPrice" aria-label="Próxima Oferta">❯</button>
+            <h2>Escolha Sua Oferta</h2>
+            <p class="subtitle">Compare e Veja Por Que o Combo é a Melhor Escolha !!</p>
 
-        <div class="pricing-wrapper">
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3>Manejo de Pintinhos</h3>
-                    <img src="capadospintinhos.png" alt="Capa - Manejo de Pintinhos de Elite" class="cover-image">
-                    <p style="color: #666; font-size: 13px; margin: 10px 0;">Protocolo de Sobrevivência e Crescimento</p>
-                    <div class="price">R$ 54,90</div>
-                    <p style="color: #999; font-size: 12px;">Acesso Vitalício</p>
-                    <ul class="features">
-                        <li>Incubação Perfeita (95% de Taxa)</li>
-                        <li>Ambiente de Elite</li>
-                        <li>Nutrição Essencial</li>
-                        <li>Prevenção de Doenças</li>
-                        <li>Sexagem Profissional</li>
-                    </ul>
-                    <a href="https://pay.kiwify.com.br/PFuaAFH" class="cta-button">COMPRAR AGORA</a>
-                </div>
-
-                <div class="pricing-card">
-                    <h3>Doenças Avícolas</h3>
-                    <img src="capadasdoenças.png" alt="Capa - O Segredo das Doenças Avícolas" class="cover-image">
-                    <p style="color: #666; font-size: 13px; margin: 10px 0;">Identificação, Tratamento e Prevenção</p>
-                    <div class="price">R$ 84,90</div>
-                    <p style="color: #999; font-size: 12px;">Acesso Vitalício</p>
-                    <ul class="features">
-                        <li>11 Doenças Documentadas</li>
-                        <li>Tabelas de Sintomas</li>
-                        <li>Protocolos de Tratamento</li>
-                        <li>Calendário de Vacinação</li>
-                        <li>Economia de até 70%</li>
-                    </ul>
-                    <a href="https://pay.kiwify.com.br/t4bvM9I" class="cta-button">COMPRAR AGORA</a>
-
-                </div>
-
-                <div class="pricing-card featured">
-                    <div class="badge">🎁 MELHOR OFERTA</div>
-                    <h3>Protocolo Elite 360º</h3>
-                    <p style="color: #666; font-size: 13px; margin: 10px 0; font-weight: bold;">Combo Completo + 20% OFF</p>
-                    <div style="display: flex; justify-content: center; gap: 10px; margin: 15px 0;">
-                        <img src="capadospintinhos.png" alt="Capa - Manejo de Pintinhos de Elite" style="width: 70px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);">
-                        <img src="capadasdoenças.png" alt="Capa - O Segredo das Doenças Avícolas" style="width: 70px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);">
+            <div class="pricing-wrapper" id="pricingWrapper">
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3>Manejo de Pintinhos</h3>
+                        <img src="capadospintinhos.png" alt="Capa - Manejo de Pintinhos de Elite" class="cover-image">
+                        <p style="color: #666; font-size: 13px; margin: 10px 0;">Protocolo de Sobrevivência e Crescimento</p>
+                        <div class="price">R$ 54,90</div>
+                        <p style="color: #999; font-size: 12px;">Acesso Vitalício</p>
+                        <ul class="features">
+                            <li>Incubação Perfeita (95% de Taxa)</li>
+                            <li>Ambiente de Elite</li>
+                            <li>Nutrição Essencial</li>
+                            <li>Prevenção de Doenças</li>
+                            <li>Sexagem Profissional</li>
+                        </ul>
+                        <a href="https://pay.kiwify.com.br/PFuaAFH" class="cta-button">COMPRAR AGORA</a>
                     </div>
-                    <div class="original-price">De R$ 139,80</div>
-                    <div class="price">R$ 111,84</div>
-                    <div class="discount-badge">ECONOMIZE R$ 27,96</div>
-                    <p style="color: #666; font-size: 12px; margin: 10px 0;">ou 12x de R$ 9,32</p>
-                    <ul class="features">
-                        <li>Manejo de Pintinhos Elite</li>
-                        <li>Doenças Avícolas Completo</li>
-                        <li>Acesso Vitalício</li>
-                        <li>Futuras Atualizações</li>
-                        <li>Suporte Exclusivo</li>
-                        <li>Garantia 7 Dias</li>
-                    </ul>
-                    <a href="https://pay.kiwify.com.br/hzbzv51" class="cta-button">GARANTIR COMBO AGORA</a>
+
+                    <div class="pricing-card">
+                        <h3>Doenças Avícolas</h3>
+                        <img src="capadasdoenças.png" alt="Capa - O Segredo das Doenças Avícolas" class="cover-image">
+                        <p style="color: #666; font-size: 13px; margin: 10px 0;">Identificação, Tratamento e Prevenção</p>
+                        <div class="price">R$ 84,90</div>
+                        <p style="color: #999; font-size: 12px;">Acesso Vitalício</p>
+                        <ul class="features">
+                            <li>11 Doenças Documentadas</li>
+                            <li>Tabelas de Sintomas</li>
+                            <li>Protocolos de Tratamento</li>
+                            <li>Calendário de Vacinação</li>
+                            <li>Economia de até 70%</li>
+                        </ul>
+                        <a href="https://pay.kiwify.com.br/t4bvM9I" class="cta-button">COMPRAR AGORA</a>
+
+                    </div>
+
+                    <div class="pricing-card featured">
+                        <div class="badge">🎁 MELHOR OFERTA</div>
+                        <h3>Protocolo Elite 360º</h3>
+                        <p style="color: #666; font-size: 13px; margin: 10px 0; font-weight: bold;">Combo Completo + 20% OFF</p>
+                        <div style="display: flex; justify-content: center; gap: 10px; margin: 15px 0;">
+                            <img src="capadospintinhos.png" alt="Capa - Manejo de Pintinhos de Elite" style="width: 70px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);">
+                            <img src="capadasdoenças.png" alt="Capa - O Segredo das Doenças Avícolas" style="width: 70px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);">
+                        </div>
+                        <div class="original-price">De R$ 139,80</div>
+                        <div class="price">R$ 111,84</div>
+                        <div class="discount-badge">ECONOMIZE R$ 27,96</div>
+                        <p style="color: #666; font-size: 12px; margin: 10px 0;">ou 12x de R$ 9,32</p>
+                        <ul class="features">
+                            <li>Manejo de Pintinhos Elite</li>
+                            <li>Doenças Avícolas Completo</li>
+                            <li>Acesso Vitalício</li>
+                            <li>Futuras Atualizações</li>
+                            <li>Suporte Exclusivo</li>
+                            <li>Garantia 7 Dias</li>
+                        </ul>
+                        <a href="https://pay.kiwify.com.br/hzbzv51" class="cta-button">GARANTIR COMBO AGORA</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1409,14 +1478,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                                            <div class="avatar">${testimonial.avatar}</div>
-                                                                                                            <div class="content">
-                                                                                                                <div class="text">${testimonial.text}</div>
-                                                                                                                <div class="author">${testimonial.author}</div>
-                                                                                                                <div class="location">${testimonial.location}</div>
-                                                                                                                <div class="stars">${testimonial.stars}</div>
-                                                                                                            </div>
-                                                                                                        `;
+                                                                                                                            <div class="avatar">${testimonial.avatar}</div>
+                                                                                                                            <div class="content">
+                                                                                                                                <div class="text">${testimonial.text}</div>
+                                                                                                                                <div class="author">${testimonial.author}</div>
+                                                                                                                                <div class="location">${testimonial.location}</div>
+                                                                                                                                <div class="stars">${testimonial.stars}</div>
+                                                                                                                            </div>
+                                                                                                                        `;
                 carouselTrack.appendChild(item);
             });
 
@@ -1425,14 +1494,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                                            <div class="avatar">${testimonial.avatar}</div>
-                                                                                                            <div class="content">
-                                                                                                                <div class="text">${testimonial.text}</div>
-                                                                                                                <div class="author">${testimonial.author}</div>
-                                                                                                                <div class="location">${testimonial.location}</div>
-                                                                                                                <div class="stars">${testimonial.stars}</div>
-                                                                                                            </div>
-                                                                                                        `;
+                                                                                                                            <div class="avatar">${testimonial.avatar}</div>
+                                                                                                                            <div class="content">
+                                                                                                                                <div class="text">${testimonial.text}</div>
+                                                                                                                                <div class="author">${testimonial.author}</div>
+                                                                                                                                <div class="location">${testimonial.location}</div>
+                                                                                                                                <div class="stars">${testimonial.stars}</div>
+                                                                                                                            </div>
+                                                                                                                        `;
                 carouselTrack.appendChild(item);
             });
 
@@ -1522,6 +1591,64 @@
             }, 1000);
         }
 
+        // NOVO CÓDIGO PARA NAVEGAÇÃO NA SEÇÃO DE PREÇOS
+        function initPriceNavigation() {
+            const pricingWrapper = document.getElementById('pricingWrapper');
+            const prevButton = document.getElementById('prevPrice');
+            const nextButton = document.getElementById('nextPrice');
+            const cards = document.querySelectorAll('.pricing-grid .pricing-card');
+
+            if (pricingWrapper && prevButton && nextButton && cards.length > 0) {
+                // A rolagem deve ser baseada na largura do primeiro card + o gap (20px definido no CSS)
+                const scrollAmount = cards[0].offsetWidth + 20;
+
+                // Função para atualizar o estado dos botões (inativo/ativo)
+                const updateButtons = () => {
+                    // +5 ou -5 para compensar pequenas imprecisões de rolagem em navegadores
+                    const maxScrollLeft = pricingWrapper.scrollWidth - pricingWrapper.clientWidth;
+
+                    // Botão Anterior
+                    if (pricingWrapper.scrollLeft <= 5) {
+                        prevButton.classList.add('disabled');
+                    } else {
+                        prevButton.classList.remove('disabled');
+                    }
+
+                    // Botão Próximo
+                    if (pricingWrapper.scrollLeft >= maxScrollLeft - 5) {
+                        nextButton.classList.add('disabled');
+                    } else {
+                        nextButton.classList.remove('disabled');
+                    }
+                };
+
+                // Evento de clique para o botão 'Próximo'
+                nextButton.addEventListener('click', () => {
+                    pricingWrapper.scrollBy({
+                        left: scrollAmount,
+                        behavior: 'smooth'
+                    });
+                    // O evento 'scroll' disparará o updateButtons após a rolagem.
+                });
+
+                // Evento de clique para o botão 'Anterior'
+                prevButton.addEventListener('click', () => {
+                    pricingWrapper.scrollBy({
+                        left: -scrollAmount,
+                        behavior: 'smooth'
+                    });
+                    // O evento 'scroll' disparará o updateButtons após a rolagem.
+                });
+
+                // Evento para atualizar o estado dos botões após rolagem manual ou por clique
+                pricingWrapper.addEventListener('scroll', updateButtons);
+
+                // Inicializa o estado dos botões ao carregar a página
+                updateButtons();
+            }
+        }
+
+
         document.addEventListener('DOMContentLoaded', function () {
             // 24 horas em segundos
             const twentyFourHours = 24 * 60 * 60;
@@ -1534,6 +1661,9 @@
 
             // Chama a função de inicialização do fundo
             initHeroBackground();
+
+            // Chama a função de navegação de preços
+            initPriceNavigation();
         });
     </script>
 </body>
