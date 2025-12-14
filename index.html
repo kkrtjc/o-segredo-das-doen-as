@@ -159,49 +159,101 @@
                 box-shadow: 0 6px 12px rgba(255, 107, 53, 0.6);
             }
 
+        .header-cta-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+            .header-cta-wrapper .countdown-timer {
+                font-size: 10px;
+                font-weight: bold;
+                color: #ffd700; /* Cor de destaque para o timer */
+                text-align: center;
+                line-height: 1.2;
+                padding: 2px 5px;
+                border-radius: 3px;
+                background-color: rgba(0, 0, 0, 0.2);
+            }
+
+                .header-cta-wrapper .countdown-timer .timer-label {
+                    display: block;
+                    font-size: 8px;
+                    font-weight: normal;
+                    opacity: 0.8;
+                }
+
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, #1a3a52 0%, #2d5f7f 100%);
+            position: relative; /* Adicionado para posicionar o vídeo de fundo */
+            background-color: #1a3a52; /* Cor de fallback caso o vídeo não carregue */
             color: white;
-            padding: 40px 20px;
+            padding: 80px 20px; /* Aumentado o padding para dar mais espaço ao vídeo */
             text-align: center;
+            overflow: hidden; /* Para garantir que o vídeo não vaze */
+            min-height: 600px; /* Adicione esta linha */
+            padding: 100px 20px; /* Aumente o padding */
         }
 
             .hero .container {
+                position: relative; /* Para garantir que o conteúdo fique acima do vídeo */
+                z-index: 2;
                 max-width: 1000px;
                 margin: 0 auto;
             }
 
-            .hero h1 {
-                font-size: 36px;
-                margin-bottom: 15px;
-                line-height: 1.3;
-                font-weight: 700;
-            }
+        #hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: 1;
+            transform: translate(-50%, -50%);
+            object-fit: cover; /* Garante que o vídeo cubra toda a área */
+            object-position: center center; /* Centraliza o foco do vídeo */
+            filter: brightness(0.5); /* Escurece o vídeo para o texto ficar legível */
+        }
 
-            .hero .highlight {
-                color: #ffd700;
-                font-weight: bold;
-            }
+        .hero .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
 
-            .hero .subheading {
-                font-size: 18px;
-                margin-bottom: 30px;
-                opacity: 0.95;
-                line-height: 1.5;
-            }
+        .hero h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            line-height: 1.3;
+            font-weight: 700;
+        }
 
-            .hero .urgency-badge {
-                display: inline-block;
-                background-color: #ff6b35;
-                color: white;
-                padding: 8px 16px;
-                border-radius: 20px;
-                font-size: 13px;
-                font-weight: bold;
-                margin-bottom: 20px;
-                animation: pulse 2s infinite;
-            }
+        .hero .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .hero .subheading {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+
+        .hero .urgency-badge {
+            display: inline-block;
+            background-color: #ff6b35;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
 
         @keyframes pulse {
             0%, 100% {
@@ -710,7 +762,7 @@
             width: 100%;
             background-color: #ff6b35;
             color: white;
-            padding: 15px 20px;
+            padding: 10px 20px; /* Reduzido o padding */
             text-align: center;
             font-size: 18px;
             font-weight: bold;
@@ -719,26 +771,88 @@
             display: none; /* Escondido por padrão */
             text-decoration: none;
             transition: background-color 0.3s ease;
+            display: flex; /* Adicionado para alinhar o timer */
+            flex-direction: column; /* Para o timer ficar abaixo do texto */
+            align-items: center;
+            justify-content: center;
+            gap: 5px; /* Espaço entre o texto e o timer */
         }
 
             .sticky-cta:hover {
                 background-color: #e55a2b;
             }
 
+        /* Timer Styles */
+        .cta-timer-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffcc00; /* Amarelo de destaque */
+            color: #1a3a52;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+
+            .countdown-timer span {
+                margin: 0 5px;
+            }
+
+        .timer-label {
+            font-size: 10px;
+            font-weight: normal;
+            display: block;
+            text-align: center;
+            margin-top: -5px;
+        }
+
+        /* Ajuste para o botão final */
+        .final-cta-section .cta-timer-wrapper {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+            .final-cta-section .cta-timer-wrapper .countdown-timer {
+                font-size: 22px;
+                padding: 10px 20px;
+            }
+
+        /* Ajuste para o timer flutuante */
+        .sticky-cta .countdown-timer {
+            font-size: 14px;
+            padding: 5px 10px;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
-            .sticky-cta {
-                display: block; /* Mostra o CTA fixo em telas menores */
-            }
+            /* Removido .sticky-cta */
 
             header {
                 padding: 10px 15px;
                 gap: 10px;
             }
 
-                header .logo {
-                    font-size: 14px;
+            .header-cta-wrapper .countdown-timer {
+                font-size: 10px;
+            }
+
+                .header-cta-wrapper .countdown-timer .timer-label {
+                    font-size: 7px;
                 }
+
+            header .logo {
+                font-size: 14px;
+            }
 
             .header-carousel-container {
                 height: auto;
@@ -803,11 +917,28 @@
                 gap: 8px;
             }
 
-                header .logo {
-                    font-size: 12px;
+            .header-cta-wrapper {
+                width: 100%;
+            }
+
+                .header-cta-wrapper .cta-button {
                     width: 100%;
-                    text-align: center;
                 }
+
+                .header-cta-wrapper .countdown-timer {
+                    font-size: 12px;
+                    padding: 5px 10px;
+                }
+
+                    .header-cta-wrapper .countdown-timer .timer-label {
+                        font-size: 9px;
+                    }
+
+            header .logo {
+                font-size: 12px;
+                width: 100%;
+                text-align: center;
+            }
 
             .header-carousel-container {
                 width: 100%;
@@ -866,16 +997,23 @@
             </div>
         </div>
 
-        <button class="cta-button" onclick="document.querySelector('.pricing-section').scrollIntoView({behavior: 'smooth'})">GARANTIR ACESSO</button>
+        <div class="header-cta-wrapper">
+            <button class="cta-button" onclick="document.querySelector('.pricing-section').scrollIntoView({behavior: 'smooth'})">GARANTIR ACESSO</button>
+            <div class="countdown-timer" data-timer-id="timer-header"></div>
+        </div>
     </header>
 
     <!-- Hero Section -->
     <section class="hero">
+        <video autoplay muted loop playsinline id="hero-video">
+            <source src="videodefundo.mp4" type="video/mp4">
+            Seu navegador não suporta a tag de vídeo.
+        </video>
         <div class="container">
             <div class="urgency-badge">⚡ OFERTA LIMITADA - DESCONTO DE 20%</div>
             <h1>PARE DE PERDER DINHEIRO E SONHOS!</h1>
-            <h1>Descubra o <span class="highlight">Protocolo Completo</span> que <span class="highlight">TRIPLICA</span> a Sobrevivência dos Seus Pintinhos e <span class="highlight">BLINDA</span> Seu Plantel Adulto</h1>
-            <p class="subheading">Deixe de ser um criador amador. Com o Método Elite 360º, você garante aves saudáveis do ovo ao abate, transformando prejuízo em <strong>lucro real</strong>.</p>
+            <p class="subheading">Descubra o Protocolo Completo que <span class="highlight">TRIPLICA</span> a Sobrevivência dos Seus Pintinhos e <span class="highlight">BLINDA</span> Seu Plantel Adulto</p>
+            <p>Deixe de ser um criador amador. Com o Método Elite 360º, você garante aves saudáveis do ovo ao abate, transformando prejuízo em **lucro real**.</p>
         </div>
     </section>
 
@@ -885,7 +1023,7 @@
             <h2>Assista ao Vídeo Explicativo</h2>
             <p class="subtitle">Descubra como milhares de criadores já blindaram seus aviários</p>
             <div class="video-wrapper">
-                <video> src="video1.mp4" alt="Vídeo de Vendas - Protocolo Elite 360º"></video>
+                <video src="video1.mp4" controls autoplay muted playsinline alt="Vídeo de Vendas - Protocolo Elite 360º" style="width: 100%; height: auto; display: block;"></video>
             </div>
             <p style="margin-top: 20px; color: #666; font-size: 14px;">Substitua este placeholder pelo seu vídeo de vendas</p>
         </div>
@@ -894,71 +1032,71 @@
     <!-- Pricing Section -->
     <section class="pricing-section" id="pricing-section">
         <div class="container"></div>
-            <h2>Escolha Sua Oferta</h2>
-            <p class="subtitle">Ancoragem de Preços: Compare e Veja Por Que o Combo é a Melhor Escolha</p>
+        <h2>Escolha Sua Oferta</h2>
+        <p class="subtitle">Ancoragem de Preços: Compare e Veja Por Que o Combo é a Melhor Escolha</p>
 
-            <div class="pricing-wrapper">
-                <!-- Novo wrapper para rolagem horizontal em mobile -->
-                <div class="pricing-grid">
-                    <!-- Produto 1 -->
-                    <div class="pricing-card">
-                        <h3>Manejo de Pintinhos</h3>
-                        <img src="capadospintinhos.png" alt="Capa - Manejo de Pintinhos de Elite" class="cover-image">
-                        <p style="color: #666; font-size: 13px; margin: 10px 0;">Protocolo de Sobrevivência e Crescimento</p>
-                        <div class="price">R$ 54,90</div>
-                        <p style="color: #999; font-size: 12px;">Acesso Vitalício</p>
-                        <ul class="features">
-                            <li>Incubação Perfeita (95% de Taxa)</li>
-                            <li>Ambiente de Elite</li>
-                            <li>Nutrição Essencial</li>
-                            <li>Prevenção de Doenças</li>
-                            <li>Sexagem Profissional</li>
-                        </ul>
-                        <button class="cta-button" onclick="alert('Redirecionando para compra do Produto 1...')">COMPRAR AGORA</button>
-                    </div>
+        <div class="pricing-wrapper">
+            <!-- Novo wrapper para rolagem horizontal em mobile -->
+            <div class="pricing-grid">
+                <!-- Produto 1 -->
+                <div class="pricing-card">
+                    <h3>Manejo de Pintinhos</h3>
+                    <img src="capadospintinhos.png" alt="Capa - Manejo de Pintinhos de Elite" class="cover-image">
+                    <p style="color: #666; font-size: 13px; margin: 10px 0;">Protocolo de Sobrevivência e Crescimento</p>
+                    <div class="price">R$ 54,90</div>
+                    <p style="color: #999; font-size: 12px;">Acesso Vitalício</p>
+                    <ul class="features">
+                        <li>Incubação Perfeita (95% de Taxa)</li>
+                        <li>Ambiente de Elite</li>
+                        <li>Nutrição Essencial</li>
+                        <li>Prevenção de Doenças</li>
+                        <li>Sexagem Profissional</li>
+                    </ul>
+                    <button class="cta-button" onclick="alert('Redirecionando para compra do Produto 1...')">COMPRAR AGORA</button>
+                </div>
 
-                    <!-- Produto 2 -->
-                    <div class="pricing-card">
-                        <h3>Doenças Avícolas</h3>
-                        <img src="capadasdoenças.png" alt="Capa - O Segredo das Doenças Avícolas" class="cover-image">
-                        <p style="color: #666; font-size: 13px; margin: 10px 0;">Identificação, Tratamento e Prevenção</p>
-                        <div class="price">R$ 84,90</div>
-                        <p style="color: #999; font-size: 12px;">Acesso Vitalício</p>
-                        <ul class="features">
-                            <li>11 Doenças Documentadas</li>
-                            <li>Tabelas de Sintomas</li>
-                            <li>Protocolos de Tratamento</li>
-                            <li>Calendário de Vacinação</li>
-                            <li>Economia de até 70%</li>
-                        </ul>
-                        <button class="cta-button" onclick="alert('Redirecionando para compra do Produto 2...')">COMPRAR AGORA</button>
-                    </div>
+                <!-- Produto 2 -->
+                <div class="pricing-card">
+                    <h3>Doenças Avícolas</h3>
+                    <img src="capadasdoenças.png" alt="Capa - O Segredo das Doenças Avícolas" class="cover-image">
+                    <p style="color: #666; font-size: 13px; margin: 10px 0;">Identificação, Tratamento e Prevenção</p>
+                    <div class="price">R$ 84,90</div>
+                    <p style="color: #999; font-size: 12px;">Acesso Vitalício</p>
+                    <ul class="features">
+                        <li>11 Doenças Documentadas</li>
+                        <li>Tabelas de Sintomas</li>
+                        <li>Protocolos de Tratamento</li>
+                        <li>Calendário de Vacinação</li>
+                        <li>Economia de até 70%</li>
+                    </ul>
+                    <button class="cta-button" onclick="alert('Redirecionando para compra do Produto 2...')">COMPRAR AGORA</button>
+                </div>
 
-                    <!-- Combo (Destaque) -->
-                    <div class="pricing-card featured">
-                        <div class="badge">🎁 MELHOR OFERTA</div>
-                        <h3>Protocolo Elite 360º</h3>
-                        <p style="color: #666; font-size: 13px; margin: 10px 0; font-weight: bold;">Combo Completo + 20% OFF</p>
-                        <div style="display: flex; justify-content: center; gap: 10px; margin: 15px 0;">
-                            <img src="capadospintinhos.png" alt="Capa - Manejo de Pintinhos de Elite" style="width: 70px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);">
-                            <img src="capadasdoenças.png" alt="Capa - O Segredo das Doenças Avícolas" style="width: 70px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);">
-                        </div>
-                        <div class="original-price">De R$ 139,80</div>
-                        <div class="price">R$ 111,84</div>
-                        <div class="discount-badge">ECONOMIZE R$ 27,96</div>
-                        <p style="color: #666; font-size: 12px; margin: 10px 0;">ou 12x de R$ 9,32</p>
-                        <ul class="features">
-                            <li>Manejo de Pintinhos Elite</li>
-                            <li>Doenças Avícolas Completo</li>
-                            <li>Acesso Vitalício</li>
-                            <li>Futuras Atualizações</li>
-                            <li>Suporte Exclusivo</li>
-                            <li>Garantia 7 Dias</li>
-                        </ul>
-                        <button class="cta-button" onclick="alert('Redirecionando para compra do Combo...')">GARANTIR COMBO AGORA</button>
+                <!-- Combo (Destaque) -->
+                <div class="pricing-card featured">
+                    <div class="badge">🎁 MELHOR OFERTA</div>
+                    <h3>Protocolo Elite 360º</h3>
+                    <p style="color: #666; font-size: 13px; margin: 10px 0; font-weight: bold;">Combo Completo + 20% OFF</p>
+                    <div style="display: flex; justify-content: center; gap: 10px; margin: 15px 0;">
+                        <img src="capadospintinhos.png" alt="Capa - Manejo de Pintinhos de Elite" style="width: 70px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);">
+                        <img src="capadasdoenças.png" alt="Capa - O Segredo das Doenças Avícolas" style="width: 70px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);">
                     </div>
-                </div> <!-- Fim do pricing-wrapper -->
-            </div>
+                    <div class="original-price">De R$ 139,80</div>
+                    <div class="price">R$ 111,84</div>
+                    <div class="discount-badge">ECONOMIZE R$ 27,96</div>
+                    <p style="color: #666; font-size: 12px; margin: 10px 0;">ou 12x de R$ 9,32</p>
+                    <ul class="features">
+                        <li>Manejo de Pintinhos Elite</li>
+                        <li>Doenças Avícolas Completo</li>
+                        <li>Acesso Vitalício</li>
+                        <li>Futuras Atualizações</li>
+                        <li>Suporte Exclusivo</li>
+                        <li>Garantia 7 Dias</li>
+                    </ul>
+                    <button class="cta-button" onclick="alert('Redirecionando para compra do Combo...')">GARANTIR COMBO AGORA</button>
+                </div>
+            </div> <!-- Fim do pricing-wrapper -->
+        </div>
     </section>
 
     <!-- Guarantee Section -->
@@ -1080,15 +1218,17 @@
                 <span class="original">De R$ 139,80</span> por apenas <strong>R$ 111,84</strong>
             </div>
             <p style="font-size: 14px; margin: 10px 0;">ou 12x de R$ 9,32</p>
-            <button class="final-button" onclick="alert('Redirecionando para compra do Combo Elite 360º...')">SIM! QUERO O PROTOCOLO ELITE 360º AGORA</button>
+            <div class="cta-timer-wrapper">
+                <div class="countdown-timer" data-timer-id="timer-final"></div>
+                <button class="final-button" onclick="alert('Redirecionando para compra do Combo Elite 360º...')">SIM! QUERO O PROTOCOLO ELITE 360º AGORA</button>
+            </div>
             <div class="payment-options">
                 ✓ Acesso Imediato • Vitalício • 7 Dias de Garantia • Sem Risco
             </div>
         </div>
     </section>
 
-    <!-- Sticky CTA Button for Mobile (Hidden on Desktop) -->
-    <a href="#pricing-section" class="sticky-cta" onclick="document.querySelector('.pricing-section').scrollIntoView({behavior: 'smooth'})">GARANTIR ACESSO AGORA!</a>
+
 
     <!-- Footer -->
     <footer>
@@ -1158,14 +1298,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                <div class="avatar">${testimonial.avatar}</div>
-                                <div class="content">
-                                    <div class="text">${testimonial.text}</div>
-                                    <div class="author">${testimonial.author}</div>
-                                    <div class="location">${testimonial.location}</div>
-                                    <div class="stars">${testimonial.stars}</div>
-                                </div>
-                            `;
+                                                    <div class="avatar">${testimonial.avatar}</div>
+                                                    <div class="content">
+                                                        <div class="text">${testimonial.text}</div>
+                                                        <div class="author">${testimonial.author}</div>
+                                                        <div class="location">${testimonial.location}</div>
+                                                        <div class="stars">${testimonial.stars}</div>
+                                                    </div>
+                                                `;
                 carouselTrack.appendChild(item);
             });
 
@@ -1174,14 +1314,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                <div class="avatar">${testimonial.avatar}</div>
-                                <div class="content">
-                                    <div class="text">${testimonial.text}</div>
-                                    <div class="author">${testimonial.author}</div>
-                                    <div class="location">${testimonial.location}</div>
-                                    <div class="stars">${testimonial.stars}</div>
-                                </div>
-                            `;
+                                                    <div class="avatar">${testimonial.avatar}</div>
+                                                    <div class="content">
+                                                        <div class="text">${testimonial.text}</div>
+                                                        <div class="author">${testimonial.author}</div>
+                                                        <div class="location">${testimonial.location}</div>
+                                                        <div class="stars">${testimonial.stars}</div>
+                                                    </div>
+                                                `;
                 carouselTrack.appendChild(item);
             });
         }
@@ -1194,6 +1334,46 @@
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', initCarousel);
+    </script>
+    <script>
+        function startCountdown(duration, display) {
+            let timer = duration;
+            let hours, minutes, seconds;
+
+            const interval = setInterval(function () {
+                hours = parseInt(timer / 3600, 10);
+                minutes = parseInt((timer % 3600) / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                hours = hours < 10 ? "0" + hours : hours;
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                const timeString = hours + "h" + " : " + minutes + "m" + " : " + seconds + "s";
+
+                display.forEach(function (element) {
+                    element.innerHTML = timeString + '<span class="timer-label">TEMPO RESTANTE</span>';
+                });
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    display.forEach(function (element) {
+                        element.innerHTML = "OFERTA EXPIRADA";
+                    });
+                }
+            }, 1000);
+        }
+
+        window.onload = function () {
+            // 24 horas em segundos
+            const twentyFourHours = 24 * 60 * 60;
+
+            // Seleciona todos os elementos do timer
+            const timers = document.querySelectorAll('.countdown-timer');
+
+            // Inicia o timer para todos os elementos
+            startCountdown(twentyFourHours, timers);
+        };
     </script>
 </body>
 </html>
