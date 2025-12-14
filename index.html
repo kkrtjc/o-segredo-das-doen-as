@@ -1142,7 +1142,7 @@
             <div class="video-wrapper">
                 <video src="video1.mp4" controls autoplay muted playsinline alt="Vídeo de Vendas - Protocolo Elite 360º" style="width: 100%; height: auto; display: block;"></video>
             </div>
-            <p style="margin-top: 20px; color: #666; font-size: 14px;"></p>
+            <p style="margin-top: 20px; color: #666; font-size: 14px;">Substitua este placeholder pelo seu vídeo de vendas</p>
         </div>
     </section>
 
@@ -1150,7 +1150,7 @@
     <section class="pricing-section" id="pricing-section">
         <div class="container"></div>
         <h2>Escolha Sua Oferta</h2>
-        <p class="subtitle">Compare e Veja Por Que o Combo é a Melhor Escolha ! </p>
+        <p class="subtitle">Ancoragem de Preços: Compare e Veja Por Que o Combo é a Melhor Escolha</p>
 
         <div class="pricing-wrapper">
             <!-- Novo wrapper para rolagem horizontal em mobile -->
@@ -1450,23 +1450,7 @@
         }
 
         // Initialize on page load
-        // document.addEventListener('DOMContentLoaded', initCarousel); // Removido para inicializar o carrossel imediatamente
-
-        // Otimização do vídeo de fundo: Tenta carregar o vídeo o mais rápido possível
-        initCarousel(); // Inicializa o carrossel imediatamente para carregamento rápido
-
-        const heroVideoElement = document.getElementById('hero-video');
-        if (heroVideoElement) {
-            // heroVideoElement.load(); // Removido, pois o preload="auto" já faz isso e pode ser redundante
-            heroVideoElement.addEventListener('canplaythrough', () => {
-                heroVideoElement.play().catch(error => {
-                    console.log("Autoplay do vídeo de fundo falhou, pode ser devido a restrições do navegador.", error);
-                });
-            }, { once: true });
-            heroVideoElement.play().catch(error => {
-                console.log("Autoplay do vídeo de fundo falhou, pode ser devido a restrições do navegador.", error);
-            });
-        }
+        document.addEventListener('DOMContentLoaded', initCarousel);
     </script>
     <script>
         function startCountdown(duration, display) {
@@ -1508,16 +1492,20 @@
             startCountdown(twentyFourHours, timers);
         });
 
-        // Tenta forçar a reprodução do vídeo de fundo para contornar restrições de navegadores
+        // Correção mais agressiva para o autoplay do vídeo no iOS
         const heroVideo = document.getElementById('hero-video');
         if (heroVideo) {
-            heroVideo.addEventListener('canplaythrough', () => {
-                heroVideo.play().catch(error => {
-                    console.log("Autoplay do vídeo de fundo falhou, pode ser devido a restrições do navegador.", error);
-                });
-            }, { once: true });
+            // Tenta reproduzir o vídeo imediatamente.
+            // O iOS/Safari exige que o vídeo tenha 'muted' e 'playsinline' para autoplay.
+            // O uso de .play() dentro de um .catch() é uma técnica para tentar contornar a restrição.
             heroVideo.play().catch(error => {
-                console.log("Autoplay do vídeo de fundo falhou, pode ser devido a restrições do navegador.", error);
+                console.log("Autoplay do vídeo de fundo falhou. Tentando novamente após o carregamento.", error);
+                // Tenta reproduzir novamente quando o vídeo estiver pronto para tocar
+                heroVideo.addEventListener('loadedmetadata', () => {
+                    heroVideo.play().catch(err => {
+                        console.log("Tentativa de autoplay após loadedmetadata falhou.", err);
+                    });
+                }, { once: true });
             });
         }
     </script>
