@@ -80,13 +80,25 @@
             display: flex;
             gap: 15px;
             animation: scroll-carousel 40s linear infinite;
-            -webkit-transform-style: preserve-3d;
-            transform-style: preserve-3d;
+            /* CORREÇÃO iOS: Força a aceleração por hardware para a animação */
+            transform: translateZ(0);
             will-change: transform;
             width: max-content;
             padding-bottom: 15px; /* Espaço para a nova frase */
         }
 
+        /* CORREÇÃO iOS: Garante a sintaxe de aceleração por hardware nos keyframes */
+        @keyframes scroll-carousel {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(-50%, 0, 0);
+            }
+        }
+
+        /* Mantido prefixo -webkit- para compatibilidade */
         @-webkit-keyframes scroll-carousel {
             0% {
                 -webkit-transform: translate3d(0, 0, 0);
@@ -97,15 +109,6 @@
             }
         }
 
-        @keyframes scroll-carousel {
-            0% {
-                transform: translate3d(0, 0, 0);
-            }
-
-            100% {
-                transform: translate3d(-50%, 0, 0);
-            }
-        }
 
         .header-testimonial-item {
             flex-shrink: 0;
@@ -1102,13 +1105,11 @@
     </style>
 </head>
 <body>
-    <!-- Header with Integrated Carousel -->
     <header>
         <div class="logo">🐔 PROTOCOLO ELITE 360º</div>
 
         <div class="header-carousel-container">
             <div class="header-carousel-track" id="carouselTrack">
-                <!-- Testimonials will be populated here by JavaScript -->
             </div>
             <div class="header-phrase">JÁ AJUDAMOS CENTENAS DE PESSOAS...</div>
         </div>
@@ -1119,11 +1120,10 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero">
         <video autoplay muted loop playsinline id="hero-video" preload="auto">
             <source src="videodefundo.mp4" type="video/mp4">
-            <source src="videodefundo.webm" type="video/webm"> /* Adiciona formato webm para melhor compatibilidade e otimização */
+            <source src="videodefundo.webm" type="video/webm">
             Seu navegador não suporta a tag de vídeo.
         </video>
         <div class="container">
@@ -1134,7 +1134,6 @@
         </div>
     </section>
 
-    <!-- Video Section -->
     <section class="video-section">
         <div class="container">
             <h2>Assista ao Vídeo Explicativo</h2>
@@ -1146,16 +1145,13 @@
         </div>
     </section>
 
-    <!-- Pricing Section -->
     <section class="pricing-section" id="pricing-section">
         <div class="container"></div>
         <h2>Escolha Sua Oferta</h2>
         <p class="subtitle">Ancoragem de Preços: Compare e Veja Por Que o Combo é a Melhor Escolha</p>
 
         <div class="pricing-wrapper">
-            <!-- Novo wrapper para rolagem horizontal em mobile -->
             <div class="pricing-grid">
-                <!-- Produto 1 -->
                 <div class="pricing-card">
                     <h3>Manejo de Pintinhos</h3>
                     <img src="capadospintinhos.png" alt="Capa - Manejo de Pintinhos de Elite" class="cover-image">
@@ -1172,7 +1168,6 @@
                     <a href="https://pay.kiwify.com.br/PFuaAFH" class="cta-button">COMPRAR AGORA</a>
                 </div>
 
-                <!-- Produto 2 -->
                 <div class="pricing-card">
                     <h3>Doenças Avícolas</h3>
                     <img src="capadasdoenças.png" alt="Capa - O Segredo das Doenças Avícolas" class="cover-image">
@@ -1190,7 +1185,6 @@
 
                 </div>
 
-                <!-- Combo (Destaque) -->
                 <div class="pricing-card featured">
                     <div class="badge">🎁 MELHOR OFERTA</div>
                     <h3>Protocolo Elite 360º</h3>
@@ -1213,11 +1207,10 @@
                     </ul>
                     <a href="https://pay.kiwify.com.br/hzbzv51" class="cta-button">GARANTIR COMBO AGORA</a>
                 </div>
-            </div> <!-- Fim do pricing-wrapper -->
+            </div>
         </div>
     </section>
 
-    <!-- Guarantee Section -->
     <section class="guarantee-section">
         <div class="container">
             <div class="shield">🛡️</div>
@@ -1226,7 +1219,6 @@
         </div>
     </section>
 
-    <!-- Benefits Section -->
     <section class="benefits-section">
         <div class="container">
             <h2>O Que Você Vai Conseguir</h2>
@@ -1267,12 +1259,53 @@
                     <h3>Acesso Vitalício</h3>
                     <p>Receba todas as futuras atualizações sem custo adicional, para sempre.</p>
                 </div>
-            </div> <!-- Fim do pricing-wrapper -->
+            </div>
         </div>
     </section>
 
 
-    <!-- FAQ Section -->
+    <section class="testimonials-section">
+        <div class="container">
+            <h2>Quem Já Conseguiu o Protocolo</h2>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="quote">"Salvou minhas galinhas! Perdi 20 galinhas antes de ler esse guia. Podia ter comprado antes."</div>
+                    <div class="author-info">
+                        <div class="avatar">CS</div>
+                        <div class="details">
+                            <div class="author">Carlos Silva</div>
+                            <div class="location">Minas Gerais</div>
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="quote">"Muito bom, consegui identificar a doença da minha galinha na mesma hora e tratei direitinho."</div>
+                    <div class="author-info">
+                        <div class="avatar">MS</div>
+                        <div class="details">
+                            <div class="author">Maria Santos</div>
+                            <div class="location">São Paulo</div>
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="quote">"Vale cada centavo. Aprendi mais aqui do que em 2 anos criando galinhas sem conhecimento."</div>
+                    <div class="author-info">
+                        <div class="avatar">JO</div>
+                        <div class="details">
+                            <div class="author">João Oliveira</div>
+                            <div class="location">Bahia</div>
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="faq-section">
         <div class="container">
             <h2>Perguntas Frequentes</h2>
@@ -1327,7 +1360,6 @@
         </div>
     </section>
 
-    <!-- Final CTA Section -->
     <section class="final-cta-section">
         <div class="container">
             <h2>Não Deixe Mais Aves Morrerem Por Falta de Conhecimento</h2>
@@ -1349,7 +1381,6 @@
 
 
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <p>&copy; 2025 Protocolo Elite 360º. Todos os direitos reservados.</p>
@@ -1415,14 +1446,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                                    <div class="avatar">${testimonial.avatar}</div>
-                                                                                                    <div class="content">
-                                                                                                        <div class="text">${testimonial.text}</div>
-                                                                                                        <div class="author">${testimonial.author}</div>
-                                                                                                        <div class="location">${testimonial.location}</div>
-                                                                                                        <div class="stars">${testimonial.stars}</div>
-                                                                                                    </div>
-                                                                                                `;
+                            <div class="avatar">${testimonial.avatar}</div>
+                            <div class="content">
+                                <div class="text">${testimonial.text}</div>
+                                <div class="author">${testimonial.author}</div>
+                                <div class="location">${testimonial.location}</div>
+                                <div class="stars">${testimonial.stars}</div>
+                            </div>
+                        `;
                 carouselTrack.appendChild(item);
             });
 
@@ -1431,14 +1462,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                                    <div class="avatar">${testimonial.avatar}</div>
-                                                                                                    <div class="content">
-                                                                                                        <div class="text">${testimonial.text}</div>
-                                                                                                        <div class="author">${testimonial.author}</div>
-                                                                                                        <div class="location">${testimonial.location}</div>
-                                                                                                        <div class="stars">${testimonial.stars}</div>
-                                                                                                    </div>
-                                                                                                `;
+                            <div class="avatar">${testimonial.avatar}</div>
+                            <div class="content">
+                                <div class="text">${testimonial.text}</div>
+                                <div class="author">${testimonial.author}</div>
+                                <div class="location">${testimonial.location}</div>
+                                <div class="stars">${testimonial.stars}</div>
+                            </div>
+                        `;
                 carouselTrack.appendChild(item);
             });
         }
@@ -1450,9 +1481,14 @@
         }
 
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', initCarousel);
+        document.addEventListener('DOMContentLoaded', function () {
+            initCarousel();
+            initVideoAutoplay(); // Chama a nova função de inicialização do vídeo
+            startCountdown(24 * 60 * 60, document.querySelectorAll('.countdown-timer'));
+        });
     </script>
     <script>
+        // Função do contador
         function startCountdown(duration, display) {
             let timer = duration;
             let hours, minutes, seconds;
@@ -1481,32 +1517,24 @@
             }, 1000);
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            // 24 horas em segundos
-            const twentyFourHours = 24 * 60 * 60;
-
-            // Seleciona todos os elementos do timer
-            const timers = document.querySelectorAll('.countdown-timer');
-
-            // Inicia o timer para todos os elementos
-            startCountdown(twentyFourHours, timers);
-        });
-
-        // Correção mais agressiva para o autoplay do vídeo no iOS
-        const heroVideo = document.getElementById('hero-video');
-        if (heroVideo) {
-            // Tenta reproduzir o vídeo imediatamente.
-            // O iOS/Safari exige que o vídeo tenha 'muted' e 'playsinline' para autoplay.
-            // O uso de .play() dentro de um .catch() é uma técnica para tentar contornar a restrição.
-            heroVideo.play().catch(error => {
-                console.log("Autoplay do vídeo de fundo falhou. Tentando novamente após o carregamento.", error);
-                // Tenta reproduzir novamente quando o vídeo estiver pronto para tocar
-                heroVideo.addEventListener('loadedmetadata', () => {
-                    heroVideo.play().catch(err => {
-                        console.log("Tentativa de autoplay após loadedmetadata falhou.", err);
-                    });
-                }, { once: true });
-            });
+        // Nova função para forçar o autoplay do vídeo de fundo no iOS
+        function initVideoAutoplay() {
+            const heroVideo = document.getElementById('hero-video');
+            if (heroVideo) {
+                // Tenta reproduzir o vídeo imediatamente.
+                // Isso é essencial no iOS, onde a reprodução só é permitida após uma interação do usuário,
+                // a menos que o vídeo seja 'muted' e 'playsinline'.
+                heroVideo.play().catch(error => {
+                    console.log("Autoplay do vídeo de fundo falhou. Tentando novamente com loadedmetadata.", error);
+                    // Em caso de falha inicial, tenta reproduzir após o evento loadedmetadata
+                    heroVideo.addEventListener('loadedmetadata', () => {
+                        // Nova tentativa de play
+                        heroVideo.play().catch(err => {
+                            console.log("Tentativa final de autoplay após loadedmetadata falhou.", err);
+                        });
+                    }, { once: true });
+                });
+            }
         }
     </script>
 </body>
