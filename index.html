@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo Elite 360º - Criadores de Galinhas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1a3a52 0%, #2d5f7f 100%);
+            color: white;
+            padding: 8px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            min-height: 70px;
+        }
+
+            header .logo {
+                font-size: 16px;
+                font-weight: bold;
+                letter-spacing: 1px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+        /* Carousel Container in Header */
+        .header-carousel-container {
+            flex: 1;
+            min-width: 200px;
+            height: auto;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-carousel-track {
+            display: flex;
+            gap: 15px;
+            animation: scroll-carousel 220s linear infinite;
+            width: max-content;
+        }
+
+        @keyframes scroll-carousel {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .header-testimonial-item {
+            flex-shrink: 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 5px 8px;
+            border-radius: 6px;
+            border-left: 3px solid #ffd700;
+            min-width: 280px;
+        }
+
+            .header-testimonial-item .avatar {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                background-color: #ffd700;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                color: #1a3a52;
+                font-size: 12px;
+                flex-shrink: 0;
+                margin-top: 2px;
+            }
+
+            .header-testimonial-item .content {
+                flex: 1;
+                min-width: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 1px;
+            }
+
+            .header-testimonial-item .text {
+                font-size: 11px;
+                line-height: 1.3;
+                margin: 0;
+                font-style: italic;
+                white-space: normal;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+
+            .header-testimonial-item .author {
+                font-weight: bold;
+                font-size: 10px;
+                margin: 0;
+            }
+
+            .header-testimonial-item .location {
+                font-size: 9px;
+                opacity: 0.8;
+                margin: 0;
+            }
+
+            .header-testimonial-item .stars {
+                font-size: 10px;
+                color: #ffd700;
+                margin: 0;
+                white-space: nowrap;
+            }
+
+        header .cta-button {
+            background-color: #ff6b35;
+            color: white;
+            padding: 12px 25px; /* Aumentado o padding */
+            border: none;
+            border-radius: 8px; /* Borda mais suave */
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px; /* Fonte ligeiramente maior */
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.4); /* Sombra para destaque */
+        }
+
+            header .cta-button:hover {
+                background-color: #e55a2b;
+                transform: translateY(-2px); /* Efeito de "levantar" no hover */
+                box-shadow: 0 6px 12px rgba(255, 107, 53, 0.6);
+            }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1a3a52 0%, #2d5f7f 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+            .hero .container {
+                max-width: 1000px;
+                margin: 0 auto;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+                margin-bottom: 15px;
+                line-height: 1.3;
+                font-weight: 700;
+            }
+
+            .hero .highlight {
+                color: #ffd700;
+                font-weight: bold;
+            }
+
+            .hero .subheading {
+                font-size: 18px;
+                margin-bottom: 30px;
+                opacity: 0.95;
+                line-height: 1.5;
+            }
+
+            .hero .urgency-badge {
+                display: inline-block;
+                background-color: #ff6b35;
+                color: white;
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 13px;
+                font-weight: bold;
+                margin-bottom: 20px;
+                animation: pulse 2s infinite;
+            }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        /* Video Section */
+        .video-section {
+            background-color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+            .video-section .container {
+                max-width: 900px;
+                margin: 0 auto;
+            }
+
+            .video-section h2 {
+                font-size: 28px;
+                margin-bottom: 10px;
+                color: #1a3a52;
+            }
+
+            .video-section .subtitle {
+                color: #666;
+                margin-bottom: 30px;
+                font-size: 16px;
+            }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+            .video-wrapper img {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+
+        /* Pricing Section */
+        .pricing-section {
+            background-color: #f8f9fa;
+            padding: 50px 20px;
+        }
+
+            .pricing-section .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                overflow: hidden; /* Garante que o scroll horizontal não cause problemas de layout */
+            }
+
+            .pricing-section h2 {
+                font-size: 32px;
+                text-align: center;
+                margin-bottom: 15px;
+                color: #1a3a52;
+            }
+
+            .pricing-section .subtitle {
+                text-align: center;
+                color: #666;
+                margin-bottom: 40px;
+                font-size: 16px;
+            }
+
+        /* Wrapper para rolagem horizontal em mobile */
+        .pricing-wrapper {
+            overflow-x: auto;
+            padding-bottom: 15px; /* Espaço para a barra de rolagem */
+            -webkit-overflow-scrolling: touch; /* Melhor rolagem em iOS */
+        }
+
+            .pricing-wrapper::-webkit-scrollbar {
+                height: 8px;
+            }
+
+            .pricing-wrapper::-webkit-scrollbar-thumb {
+                background: #ccc;
+                border-radius: 10px;
+            }
+
+            .pricing-wrapper::-webkit-scrollbar-track {
+                background: #f1f1f1;
+            }
+
+        .pricing-grid {
+            display: flex; /* Mudança para flexbox para forçar o lado a lado */
+            flex-wrap: nowrap; /* Impede a quebra de linha */
+            gap: 20px;
+            margin-bottom: 40px;
+            width: max-content; /* Garante que o grid ocupe o espaço necessário para o scroll */
+        }
+
+        .pricing-card {
+            min-width: 280px; /* Define uma largura mínima para cada card em mobile */
+            flex-shrink: 0; /* Impede que os cards encolham além do min-width */
+        }
+
+            .pricing-card.featured {
+                min-width: 300px; /* Card em destaque um pouco maior */
+            }
+
+        .pricing-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .pricing-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            }
+
+            .pricing-card.featured {
+                border: 3px solid #ff6b35;
+                transform: scale(1.05);
+                background: linear-gradient(135deg, #fff8f0 0%, #ffffff 100%);
+            }
+
+                .pricing-card.featured .badge {
+                    background-color: #ff6b35;
+                    color: white;
+                    padding: 8px 16px;
+                    border-radius: 20px;
+                    font-size: 12px;
+                    font-weight: bold;
+                    margin-bottom: 15px;
+                    display: inline-block;
+                }
+
+            .pricing-card h3 {
+                font-size: 20px;
+                margin-bottom: 15px;
+                color: #1a3a52;
+            }
+
+            .pricing-card .cover-image {
+                width: 100%;
+                max-width: 150px;
+                height: auto;
+                margin: 15px auto;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .pricing-card .price {
+                font-size: 32px;
+                font-weight: bold;
+                color: #ff6b35;
+                margin: 15px 0;
+            }
+
+            .pricing-card .original-price {
+                font-size: 18px;
+                color: #999;
+                text-decoration: line-through;
+                margin-bottom: 10px;
+            }
+
+            .pricing-card .discount-badge {
+                display: inline-block;
+                background-color: #ff6b35;
+                color: white;
+                padding: 8px 12px;
+                border-radius: 5px;
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 15px;
+            }
+
+            .pricing-card .features {
+                text-align: left;
+                margin: 20px 0;
+                font-size: 14px;
+                color: #666;
+            }
+
+                .pricing-card .features li {
+                    list-style: none;
+                    padding: 8px 0;
+                    border-bottom: 1px solid #eee;
+                }
+
+                    .pricing-card .features li:last-child {
+                        border-bottom: none;
+                    }
+
+                    .pricing-card .features li:before {
+                        content: "✓ ";
+                        color: #4caf50;
+                        font-weight: bold;
+                        margin-right: 8px;
+                    }
+
+            .pricing-card .cta-button {
+                background-color: #ff6b35;
+                color: white;
+                padding: 14px 28px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 16px;
+                width: 100%;
+                margin-top: 20px;
+                transition: background-color 0.3s ease;
+            }
+
+                .pricing-card .cta-button:hover {
+                    background-color: #e55a2b;
+                }
+
+            .pricing-card.featured .cta-button {
+                background-color: #ff6b35;
+                font-size: 17px;
+                padding: 16px 32px;
+            }
+
+        /* Benefits Section */
+        .benefits-section {
+            background-color: white;
+            padding: 50px 20px;
+        }
+
+            .benefits-section .container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            .benefits-section h2 {
+                font-size: 32px;
+                text-align: center;
+                margin-bottom: 40px;
+                color: #1a3a52;
+            }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .benefit-card {
+            text-align: center;
+            padding: 30px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            transition: transform 0.3s ease;
+        }
+
+            .benefit-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .benefit-card .icon {
+                font-size: 40px;
+                margin-bottom: 15px;
+            }
+
+            .benefit-card h3 {
+                font-size: 18px;
+                margin-bottom: 10px;
+                color: #1a3a52;
+            }
+
+            .benefit-card p {
+                color: #666;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+
+        /* Testimonials Section */
+        .testimonials-section {
+            background: linear-gradient(135deg, #1a3a52 0%, #2d5f7f 100%);
+            color: white;
+            padding: 50px 20px;
+        }
+
+            .testimonials-section .container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            .testimonials-section h2 {
+                font-size: 32px;
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .testimonial-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid #ffd700;
+        }
+
+            .testimonial-card .text {
+                font-size: 14px;
+                margin-bottom: 15px;
+                line-height: 1.6;
+                font-style: italic;
+            }
+
+            .testimonial-card .author {
+                font-weight: bold;
+                font-size: 14px;
+            }
+
+            .testimonial-card .location {
+                font-size: 12px;
+                opacity: 0.8;
+            }
+
+        /* Guarantee Section */
+        .guarantee-section {
+            background-color: #f0f8ff;
+            padding: 40px 20px;
+            text-align: center;
+            border: 2px solid #1a3a52;
+            margin: 40px 20px;
+            border-radius: 10px;
+        }
+
+            .guarantee-section .container {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
+            .guarantee-section h3 {
+                font-size: 24px;
+                color: #1a3a52;
+                margin-bottom: 15px;
+            }
+
+            .guarantee-section .shield {
+                font-size: 50px;
+                margin-bottom: 15px;
+            }
+
+            .guarantee-section p {
+                font-size: 16px;
+                color: #333;
+                line-height: 1.6;
+            }
+
+        /* FAQ Section */
+        .faq-section {
+            background-color: white;
+            padding: 50px 20px;
+        }
+
+            .faq-section .container {
+                max-width: 900px;
+                margin: 0 auto;
+            }
+
+            .faq-section h2 {
+                font-size: 32px;
+                text-align: center;
+                margin-bottom: 40px;
+                color: #1a3a52;
+            }
+
+        .faq-item {
+            background-color: #f8f9fa;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #1a3a52;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+
+            .faq-question:hover {
+                background-color: #e8ecf1;
+            }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: 0 20px 20px 20px;
+        }
+
+        .faq-toggle {
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        /* Final CTA Section */
+        .final-cta-section {
+            background: linear-gradient(135deg, #ff6b35 0%, #e55a2b 100%);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+            .final-cta-section .container {
+                max-width: 900px;
+                margin: 0 auto;
+            }
+
+            .final-cta-section h2 {
+                font-size: 32px;
+                margin-bottom: 15px;
+            }
+
+            .final-cta-section .price-highlight {
+                font-size: 28px;
+                margin: 20px 0;
+                font-weight: bold;
+            }
+
+            .final-cta-section .original {
+                text-decoration: line-through;
+                opacity: 0.8;
+            }
+
+            .final-cta-section .final-button {
+                background-color: white;
+                color: #ff6b35;
+                padding: 18px 40px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 18px;
+                margin-top: 20px;
+                transition: transform 0.3s ease;
+            }
+
+                .final-cta-section .final-button:hover {
+                    transform: scale(1.05);
+                    box-shadow: 0 6px 15px rgba(255, 255, 255, 0.5); /* Sombra no hover */
+                }
+
+            .final-cta-section .payment-options {
+                margin-top: 20px;
+                font-size: 14px;
+                opacity: 0.9;
+            }
+
+        /* Footer */
+        footer {
+            background-color: #1a3a52;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+            footer a {
+                color: #ffd700;
+                text-decoration: none;
+            }
+
+                footer a:hover {
+                    text-decoration: underline;
+                }
+
+        /* Sticky CTA Button for Mobile */
+        .sticky-cta {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ff6b35;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+            display: none; /* Escondido por padrão */
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+            .sticky-cta:hover {
+                background-color: #e55a2b;
+            }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sticky-cta {
+                display: block; /* Mostra o CTA fixo em telas menores */
+            }
+
+            header {
+                padding: 10px 15px;
+                gap: 10px;
+            }
+
+                header .logo {
+                    font-size: 14px;
+                }
+
+            .header-carousel-container {
+                height: auto;
+                min-width: 150px;
+            }
+
+            .header-testimonial-item {
+                min-width: 250px;
+                padding: 5px 8px;
+            }
+
+                .header-testimonial-item .text {
+                    font-size: 10px;
+                }
+
+                .header-testimonial-item .avatar {
+                    width: 35px;
+                    height: 35px;
+                    font-size: 11px;
+                }
+
+            header .cta-button {
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+
+            .hero h1 {
+                font-size: 26px;
+            }
+
+            .hero .subheading {
+                font-size: 16px;
+            }
+
+            /* Removido o grid-template-columns: 1fr; para manter as ofertas lado a lado conforme solicitado */
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .final-cta-section h2 {
+                font-size: 24px;
+            }
+
+            .final-cta-section .price-highlight {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                flex-direction: column;
+                padding: 8px 10px;
+                gap: 8px;
+            }
+
+                header .logo {
+                    font-size: 12px;
+                    width: 100%;
+                    text-align: center;
+                }
+
+            .header-carousel-container {
+                width: 100%;
+                height: auto;
+            }
+
+            .header-testimonial-item {
+                min-width: 240px;
+                padding: 5px 8px;
+            }
+
+                .header-testimonial-item .text {
+                    font-size: 10px;
+                    -webkit-line-clamp: 2;
+                }
+
+                .header-testimonial-item .avatar {
+                    width: 35px;
+                    height: 35px;
+                    font-size: 11px;
+                }
+
+            header .cta-button {
+                width: 100%;
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+
+            .hero h1 {
+                font-size: 22px;
+            }
+
+            .pricing-card {
+                padding: 20px;
+            }
+
+                .pricing-card .cta-button {
+                    padding: 12px 20px;
+                    font-size: 14px;
+                }
+
+            .guarantee-section {
+                margin: 20px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Integrated Carousel -->
+    <header>
+        <div class="logo">🐔 PROTOCOLO ELITE 360º</div>
+
+        <div class="header-carousel-container">
+            <div class="header-carousel-track" id="carouselTrack">
+                <!-- Testimonials will be populated here by JavaScript -->
+            </div>
+        </div>
+
+        <button class="cta-button" onclick="document.querySelector('.pricing-section').scrollIntoView({behavior: 'smooth'})">GARANTIR ACESSO</button>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="urgency-badge">⚡ OFERTA LIMITADA - DESCONTO DE 20%</div>
+            <h1>PARE DE PERDER DINHEIRO E SONHOS!</h1>
+            <h1>Descubra o <span class="highlight">Protocolo Completo</span> que <span class="highlight">TRIPLICA</span> a Sobrevivência dos Seus Pintinhos e <span class="highlight">BLINDA</span> Seu Plantel Adulto</h1>
+            <p class="subheading">Deixe de ser um criador amador. Com o Método Elite 360º, você garante aves saudáveis do ovo ao abate, transformando prejuízo em <strong>lucro real</strong>.</p>
+        </div>
+    </section>
+
+    <!-- Video Section -->
+    <section class="video-section">
+        <div class="container">
+            <h2>Assista ao Vídeo Explicativo</h2>
+            <p class="subtitle">Descubra como milhares de criadores já blindaram seus aviários</p>
+            <div class="video-wrapper">
+                <video> src="video1.mp4" alt="Vídeo de Vendas - Protocolo Elite 360º"></video>
+            </div>
+            <p style="margin-top: 20px; color: #666; font-size: 14px;">Substitua este placeholder pelo seu vídeo de vendas</p>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section" id="pricing-section">
+        <div class="container"></div>
+            <h2>Escolha Sua Oferta</h2>
+            <p class="subtitle">Ancoragem de Preços: Compare e Veja Por Que o Combo é a Melhor Escolha</p>
+
+            <div class="pricing-wrapper">
+                <!-- Novo wrapper para rolagem horizontal em mobile -->
+                <div class="pricing-grid">
+                    <!-- Produto 1 -->
+                    <div class="pricing-card">
+                        <h3>Manejo de Pintinhos</h3>
+                        <img src="capadospintinhos.png" alt="Capa - Manejo de Pintinhos de Elite" class="cover-image">
+                        <p style="color: #666; font-size: 13px; margin: 10px 0;">Protocolo de Sobrevivência e Crescimento</p>
+                        <div class="price">R$ 54,90</div>
+                        <p style="color: #999; font-size: 12px;">Acesso Vitalício</p>
+                        <ul class="features">
+                            <li>Incubação Perfeita (95% de Taxa)</li>
+                            <li>Ambiente de Elite</li>
+                            <li>Nutrição Essencial</li>
+                            <li>Prevenção de Doenças</li>
+                            <li>Sexagem Profissional</li>
+                        </ul>
+                        <button class="cta-button" onclick="alert('Redirecionando para compra do Produto 1...')">COMPRAR AGORA</button>
+                    </div>
+
+                    <!-- Produto 2 -->
+                    <div class="pricing-card">
+                        <h3>Doenças Avícolas</h3>
+                        <img src="capadasdoenças.png" alt="Capa - O Segredo das Doenças Avícolas" class="cover-image">
+                        <p style="color: #666; font-size: 13px; margin: 10px 0;">Identificação, Tratamento e Prevenção</p>
+                        <div class="price">R$ 84,90</div>
+                        <p style="color: #999; font-size: 12px;">Acesso Vitalício</p>
+                        <ul class="features">
+                            <li>11 Doenças Documentadas</li>
+                            <li>Tabelas de Sintomas</li>
+                            <li>Protocolos de Tratamento</li>
+                            <li>Calendário de Vacinação</li>
+                            <li>Economia de até 70%</li>
+                        </ul>
+                        <button class="cta-button" onclick="alert('Redirecionando para compra do Produto 2...')">COMPRAR AGORA</button>
+                    </div>
+
+                    <!-- Combo (Destaque) -->
+                    <div class="pricing-card featured">
+                        <div class="badge">🎁 MELHOR OFERTA</div>
+                        <h3>Protocolo Elite 360º</h3>
+                        <p style="color: #666; font-size: 13px; margin: 10px 0; font-weight: bold;">Combo Completo + 20% OFF</p>
+                        <div style="display: flex; justify-content: center; gap: 10px; margin: 15px 0;">
+                            <img src="capadospintinhos.png" alt="Capa - Manejo de Pintinhos de Elite" style="width: 70px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);">
+                            <img src="capadasdoenças.png" alt="Capa - O Segredo das Doenças Avícolas" style="width: 70px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);">
+                        </div>
+                        <div class="original-price">De R$ 139,80</div>
+                        <div class="price">R$ 111,84</div>
+                        <div class="discount-badge">ECONOMIZE R$ 27,96</div>
+                        <p style="color: #666; font-size: 12px; margin: 10px 0;">ou 12x de R$ 9,32</p>
+                        <ul class="features">
+                            <li>Manejo de Pintinhos Elite</li>
+                            <li>Doenças Avícolas Completo</li>
+                            <li>Acesso Vitalício</li>
+                            <li>Futuras Atualizações</li>
+                            <li>Suporte Exclusivo</li>
+                            <li>Garantia 7 Dias</li>
+                        </ul>
+                        <button class="cta-button" onclick="alert('Redirecionando para compra do Combo...')">GARANTIR COMBO AGORA</button>
+                    </div>
+                </div> <!-- Fim do pricing-wrapper -->
+            </div>
+    </section>
+
+    <!-- Guarantee Section -->
+    <section class="guarantee-section">
+        <div class="container">
+            <div class="shield">🛡️</div>
+            <h3>Garantia Incondicional de 7 Dias</h3>
+            <p>Se você não ficar 100% satisfeito com o conteúdo, devolvemos todo o seu dinheiro. Sem perguntas, sem burocracia. Você não tem nada a perder!</p>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits-section">
+        <div class="container">
+            <h2>O Que Você Vai Conseguir</h2>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="icon">📊</div>
+                    <h3>Triplique a Sobrevivência</h3>
+                    <p>Protocolo de manejo de pintinhos validado que garante até 95% de taxa de eclosão.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="icon">🛡️</div>
+                    <h3>Plantel Blindado</h3>
+                    <p>Identifique e trate doenças em 5 minutos com tabelas visuais e sintomas claros.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="icon">💰</div>
+                    <h3>Economia de R$ 2.000+/ano</h3>
+                    <p>Reduza custos com medicamentos e veterinários em até 70% ao ano.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="icon">📈</div>
+                    <h3>Crescimento Explosivo</h3>
+                    <p>Nutrição e ambiente ideais para aves de elite com aumento de até 40% na produção.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="icon">🥚</div>
+                    <h3>Mais Ovos de Qualidade</h3>
+                    <p>Galinhas saudáveis produzem mais ovos e de melhor qualidade para venda.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="icon">📋</div>
+                    <h3>Acesso Vitalício</h3>
+                    <p>Receba todas as futuras atualizações sem custo adicional, para sempre.</p>
+                </div>
+            </div> <!-- Fim do pricing-wrapper -->
+        </div>
+    </section>
+
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <h2>Perguntas Frequentes</h2>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>O acesso ao guia é vitalício?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">Sim! Ao adquirir o Protocolo Elite 360º, você terá acesso vitalício a todo o conteúdo, incluindo futuras atualizações sem custo adicional.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>O guia serve para qualquer tipo de ave?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">O foco principal é em galinhas, mas os princípios de prevenção, identificação e muitos dos protocolos de tratamento são aplicáveis a outras aves de criação, como patos, gansos e codornas.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Quais são as formas de pagamento?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">Aceitamos Cartão de Crédito (com parcelamento em 12x), Pix e Boleto Bancário. O acesso é liberado imediatamente após a confirmação do pagamento (Pix e Cartão).</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>E se eu não gostar do conteúdo?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">Oferecemos uma Garantia Incondicional de 7 Dias. Se por qualquer motivo você não estiver 100% satisfeito, basta solicitar o reembolso dentro deste período e devolveremos 100% do seu dinheiro, sem perguntas.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Preciso de internet para acessar o guia?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">Para baixar o guia inicialmente, sim. No entanto, o guia é um e-book (PDF) que você pode baixar e salvar em seu celular ou computador, permitindo o acesso offline a qualquer momento.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Tenho suporte ao comprar o produto?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">Sim! Ao realizar a compra e fazer o cadastro, em até 12 horas você recebe no seu WhatsApp uma mensagem de um de nossos colaboradores para tratar dúvidas e você tem a opção de participar do grupo de membros exclusivo.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-cta-section">
+        <div class="container">
+            <h2>Não Deixe Mais Aves Morrerem Por Falta de Conhecimento</h2>
+            <p style="font-size: 18px; margin: 15px 0;">Invista agora e economize milhares em perdas futuras</p>
+            <div class="price-highlight">
+                <span class="original">De R$ 139,80</span> por apenas <strong>R$ 111,84</strong>
+            </div>
+            <p style="font-size: 14px; margin: 10px 0;">ou 12x de R$ 9,32</p>
+            <button class="final-button" onclick="alert('Redirecionando para compra do Combo Elite 360º...')">SIM! QUERO O PROTOCOLO ELITE 360º AGORA</button>
+            <div class="payment-options">
+                ✓ Acesso Imediato • Vitalício • 7 Dias de Garantia • Sem Risco
+            </div>
+        </div>
+    </section>
+
+    <!-- Sticky CTA Button for Mobile (Hidden on Desktop) -->
+    <a href="#pricing-section" class="sticky-cta" onclick="document.querySelector('.pricing-section').scrollIntoView({behavior: 'smooth'})">GARANTIR ACESSO AGORA!</a>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Protocolo Elite 360º. Todos os direitos reservados.</p>
+            <p>
+                <a href="#">Política de Privacidade</a> |
+                <a href="#">Termos de Uso</a> |
+                <a href="#">Contato</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Testimonials data
+        const testimonials = [
+            {
+                text: '"Salvou minhas galinhas! Perdi 20 galinhas antes de ler esse guia. Podia ter comprado antes."',
+                author: 'Carlos Silva',
+                location: 'Minas Gerais',
+                stars: '⭐⭐⭐⭐⭐',
+                avatar: 'CS'
+            },
+            {
+                text: '"Muito bom, consegui identificar a doença da minha galinha na mesma hora e tratei direitinho."',
+                author: 'Maria Santos',
+                location: 'São Paulo',
+                stars: '⭐⭐⭐⭐⭐',
+                avatar: 'MS'
+            },
+            {
+                text: '"Vale cada centavo. Aprendi mais aqui do que em 2 anos criando galinhas sem conhecimento."',
+                author: 'João Oliveira',
+                location: 'Bahia',
+                stars: '⭐⭐⭐⭐⭐',
+                avatar: 'JO'
+            },
+            {
+                text: '"Recomendo muiiito! Meu negócio de ovos cresceu 40% depois que comecei a aplicar as técnicas."',
+                author: 'Ana Costa',
+                location: 'Rio de Janeiro',
+                stars: '⭐⭐⭐⭐⭐',
+                avatar: 'AC'
+            },
+            {
+                text: '"Top demais, finalmente entendi por que minhas galinhas ficavam doentes. Prevenção é tudo!"',
+                author: 'Pedro Alves',
+                location: 'Paraná',
+                stars: '⭐⭐⭐⭐⭐',
+                avatar: 'PA'
+            },
+            {
+                text: '"Esse investimento me deu retorno na hora. Economizei muito em medicamentos!"',
+                author: 'Lucas Martins',
+                location: 'Goiás',
+                stars: '⭐⭐⭐⭐⭐',
+                avatar: 'LM'
+            }
+        ];
+
+        // Initialize carousel
+        function initCarousel() {
+            const carouselTrack = document.getElementById('carouselTrack');
+
+            // Create testimonial items
+            testimonials.forEach(testimonial => {
+                const item = document.createElement('div');
+                item.className = 'header-testimonial-item';
+                item.innerHTML = `
+                                <div class="avatar">${testimonial.avatar}</div>
+                                <div class="content">
+                                    <div class="text">${testimonial.text}</div>
+                                    <div class="author">${testimonial.author}</div>
+                                    <div class="location">${testimonial.location}</div>
+                                    <div class="stars">${testimonial.stars}</div>
+                                </div>
+                            `;
+                carouselTrack.appendChild(item);
+            });
+
+            // Duplicate items for infinite scroll
+            testimonials.forEach(testimonial => {
+                const item = document.createElement('div');
+                item.className = 'header-testimonial-item';
+                item.innerHTML = `
+                                <div class="avatar">${testimonial.avatar}</div>
+                                <div class="content">
+                                    <div class="text">${testimonial.text}</div>
+                                    <div class="author">${testimonial.author}</div>
+                                    <div class="location">${testimonial.location}</div>
+                                    <div class="stars">${testimonial.stars}</div>
+                                </div>
+                            `;
+                carouselTrack.appendChild(item);
+            });
+        }
+
+        // Toggle FAQ
+        function toggleFAQ(element) {
+            const faqItem = element.parentElement;
+            faqItem.classList.toggle('active');
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initCarousel);
+    </script>
+</body>
+</html>
