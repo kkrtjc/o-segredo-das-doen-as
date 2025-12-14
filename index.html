@@ -57,7 +57,7 @@
         .header-carousel-track {
             display: flex;
             gap: 15px;
-            animation: scroll-carousel 35s linear infinite;
+            animation: scroll-carousel 220s linear infinite;
             width: max-content;
         }
 
@@ -1135,8 +1135,7 @@
                         <li>Suporte Exclusivo</li>
                         <li>Garantia 7 Dias</li>
                     </ul>
-                    <a href="https://pay.kiwify.com.br/hzbzv51" class="cta-button">GARANTIR COMBO AGORA</a>
-                </div>
+                    <a href="https://pay.kiwify.com.br/hzbzv51" class="cta-button">GARANTIR COMBO AGORA</a>                </div>
             </div> <!-- Fim do pricing-wrapper -->
         </div>
     </section>
@@ -1278,7 +1277,7 @@
         <div class="container">
             <p>&copy; 2025 Protocolo Elite 360º. Todos os direitos reservados.</p>
             <p>
-
+               
             </p>
         </div>
     </footer>
@@ -1339,14 +1338,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                    <div class="avatar">${testimonial.avatar}</div>
-                                                                    <div class="content">
-                                                                        <div class="text">${testimonial.text}</div>
-                                                                        <div class="author">${testimonial.author}</div>
-                                                                        <div class="location">${testimonial.location}</div>
-                                                                        <div class="stars">${testimonial.stars}</div>
-                                                                    </div>
-                                                                `;
+                                                            <div class="avatar">${testimonial.avatar}</div>
+                                                            <div class="content">
+                                                                <div class="text">${testimonial.text}</div>
+                                                                <div class="author">${testimonial.author}</div>
+                                                                <div class="location">${testimonial.location}</div>
+                                                                <div class="stars">${testimonial.stars}</div>
+                                                            </div>
+                                                        `;
                 carouselTrack.appendChild(item);
             });
 
@@ -1355,14 +1354,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                    <div class="avatar">${testimonial.avatar}</div>
-                                                                    <div class="content">
-                                                                        <div class="text">${testimonial.text}</div>
-                                                                        <div class="author">${testimonial.author}</div>
-                                                                        <div class="location">${testimonial.location}</div>
-                                                                        <div class="stars">${testimonial.stars}</div>
-                                                                    </div>
-                                                                `;
+                                                            <div class="avatar">${testimonial.avatar}</div>
+                                                            <div class="content">
+                                                                <div class="text">${testimonial.text}</div>
+                                                                <div class="author">${testimonial.author}</div>
+                                                                <div class="location">${testimonial.location}</div>
+                                                                <div class="stars">${testimonial.stars}</div>
+                                                            </div>
+                                                        `;
                 carouselTrack.appendChild(item);
             });
         }
@@ -1405,7 +1404,7 @@
             }, 1000);
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // 24 horas em segundos
             const twentyFourHours = 24 * 60 * 60;
 
