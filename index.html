@@ -368,6 +368,20 @@
                 min-width: 300px; /* Card em destaque um pouco maior */
             }
 
+        /* Centralização para telas maiores (computadores) */
+        @media (min-width: 768px) {
+            .pricing-wrapper {
+                display: flex;
+                justify-content: center;
+                overflow-x: hidden; /* Desativa a rolagem horizontal em telas grandes */
+            }
+
+            .pricing-grid {
+                width: auto; /* Permite que o flexbox controle a largura */
+                justify-content: center; /* Centraliza os cards dentro do grid */
+            }
+        }
+
         .pricing-card {
             background-color: white;
             border-radius: 10px;
