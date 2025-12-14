@@ -79,26 +79,19 @@
         .header-carousel-track {
             display: flex;
             gap: 15px;
-            animation: scroll-carousel 40s linear infinite;
-            /* CORREÇÃO iOS: Força a aceleração por hardware para a animação */
-            transform: translateZ(0);
+            /* REMOVIDO: animation: scroll-carousel 40s linear infinite; -- Será adicionado via JS */
+            -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
             will-change: transform;
             width: max-content;
             padding-bottom: 15px; /* Espaço para a nova frase */
         }
 
-        /* CORREÇÃO iOS: Garante a sintaxe de aceleração por hardware nos keyframes */
-        @keyframes scroll-carousel {
-            0% {
-                transform: translate3d(0, 0, 0);
+            /* NOVO: Classe para iniciar a animação via JavaScript */
+            .header-carousel-track.animate {
+                animation: scroll-carousel 40s linear infinite;
             }
 
-            100% {
-                transform: translate3d(-50%, 0, 0);
-            }
-        }
-
-        /* Mantido prefixo -webkit- para compatibilidade */
         @-webkit-keyframes scroll-carousel {
             0% {
                 -webkit-transform: translate3d(0, 0, 0);
@@ -109,6 +102,15 @@
             }
         }
 
+        @keyframes scroll-carousel {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(-50%, 0, 0);
+            }
+        }
 
         .header-testimonial-item {
             flex-shrink: 0;
@@ -1121,9 +1123,9 @@
     </header>
 
     <section class="hero">
-        <video autoplay muted loop playsinline id="hero-video" preload="auto">
+        <video autoplay muted loop playsinline id="hero-video">
             <source src="videodefundo.mp4" type="video/mp4">
-            <source src="videodefundo.webm" type="video/webm">
+            <source src="videodefundo.webm" type="video/webm"> /* Adiciona formato webm para melhor compatibilidade e otimização */
             Seu navegador não suporta a tag de vídeo.
         </video>
         <div class="container">
@@ -1263,48 +1265,6 @@
         </div>
     </section>
 
-
-    <section class="testimonials-section">
-        <div class="container">
-            <h2>Quem Já Conseguiu o Protocolo</h2>
-
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="quote">"Salvou minhas galinhas! Perdi 20 galinhas antes de ler esse guia. Podia ter comprado antes."</div>
-                    <div class="author-info">
-                        <div class="avatar">CS</div>
-                        <div class="details">
-                            <div class="author">Carlos Silva</div>
-                            <div class="location">Minas Gerais</div>
-                            <div class="stars">⭐⭐⭐⭐⭐</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="quote">"Muito bom, consegui identificar a doença da minha galinha na mesma hora e tratei direitinho."</div>
-                    <div class="author-info">
-                        <div class="avatar">MS</div>
-                        <div class="details">
-                            <div class="author">Maria Santos</div>
-                            <div class="location">São Paulo</div>
-                            <div class="stars">⭐⭐⭐⭐⭐</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="quote">"Vale cada centavo. Aprendi mais aqui do que em 2 anos criando galinhas sem conhecimento."</div>
-                    <div class="author-info">
-                        <div class="avatar">JO</div>
-                        <div class="details">
-                            <div class="author">João Oliveira</div>
-                            <div class="location">Bahia</div>
-                            <div class="stars">⭐⭐⭐⭐⭐</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <section class="faq-section">
         <div class="container">
@@ -1446,14 +1406,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                            <div class="avatar">${testimonial.avatar}</div>
-                            <div class="content">
-                                <div class="text">${testimonial.text}</div>
-                                <div class="author">${testimonial.author}</div>
-                                <div class="location">${testimonial.location}</div>
-                                <div class="stars">${testimonial.stars}</div>
-                            </div>
-                        `;
+                                                                                                            <div class="avatar">${testimonial.avatar}</div>
+                                                                                                            <div class="content">
+                                                                                                                <div class="text">${testimonial.text}</div>
+                                                                                                                <div class="author">${testimonial.author}</div>
+                                                                                                                <div class="location">${testimonial.location}</div>
+                                                                                                                <div class="stars">${testimonial.stars}</div>
+                                                                                                            </div>
+                                                                                                        `;
                 carouselTrack.appendChild(item);
             });
 
@@ -1462,16 +1422,20 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                            <div class="avatar">${testimonial.avatar}</div>
-                            <div class="content">
-                                <div class="text">${testimonial.text}</div>
-                                <div class="author">${testimonial.author}</div>
-                                <div class="location">${testimonial.location}</div>
-                                <div class="stars">${testimonial.stars}</div>
-                            </div>
-                        `;
+                                                                                                            <div class="avatar">${testimonial.avatar}</div>
+                                                                                                            <div class="content">
+                                                                                                                <div class="text">${testimonial.text}</div>
+                                                                                                                <div class="author">${testimonial.author}</div>
+                                                                                                                <div class="location">${testimonial.location}</div>
+                                                                                                                <div class="stars">${testimonial.stars}</div>
+                                                                                                            </div>
+                                                                                                        `;
                 carouselTrack.appendChild(item);
             });
+
+            // CORREÇÃO: Adiciona a classe 'animate' para iniciar a animação CSS APÓS o conteúdo ser carregado.
+            // Isso resolve o problema de a animação só começar ao rolar a página.
+            carouselTrack.classList.add('animate');
         }
 
         // Toggle FAQ
@@ -1481,14 +1445,9 @@
         }
 
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function () {
-            initCarousel();
-            initVideoAutoplay(); // Chama a nova função de inicialização do vídeo
-            startCountdown(24 * 60 * 60, document.querySelectorAll('.countdown-timer'));
-        });
+        document.addEventListener('DOMContentLoaded', initCarousel);
     </script>
     <script>
-        // Função do contador
         function startCountdown(duration, display) {
             let timer = duration;
             let hours, minutes, seconds;
@@ -1517,24 +1476,32 @@
             }, 1000);
         }
 
-        // Nova função para forçar o autoplay do vídeo de fundo no iOS
-        function initVideoAutoplay() {
-            const heroVideo = document.getElementById('hero-video');
-            if (heroVideo) {
-                // Tenta reproduzir o vídeo imediatamente.
-                // Isso é essencial no iOS, onde a reprodução só é permitida após uma interação do usuário,
-                // a menos que o vídeo seja 'muted' e 'playsinline'.
-                heroVideo.play().catch(error => {
-                    console.log("Autoplay do vídeo de fundo falhou. Tentando novamente com loadedmetadata.", error);
-                    // Em caso de falha inicial, tenta reproduzir após o evento loadedmetadata
-                    heroVideo.addEventListener('loadedmetadata', () => {
-                        // Nova tentativa de play
-                        heroVideo.play().catch(err => {
-                            console.log("Tentativa final de autoplay após loadedmetadata falhou.", err);
-                        });
-                    }, { once: true });
-                });
-            }
+        document.addEventListener('DOMContentLoaded', function () {
+            // 24 horas em segundos
+            const twentyFourHours = 24 * 60 * 60;
+
+            // Seleciona todos os elementos do timer
+            const timers = document.querySelectorAll('.countdown-timer');
+
+            // Inicia o timer para todos os elementos
+            startCountdown(twentyFourHours, timers);
+        });
+
+        // Correção mais agressiva para o autoplay do vídeo no iOS
+        const heroVideo = document.getElementById('hero-video');
+        if (heroVideo) {
+            // Tenta reproduzir o vídeo imediatamente.
+            // O iOS/Safari exige que o vídeo tenha 'muted' e 'playsinline' para autoplay.
+            // O uso de .play() dentro de um .catch() é uma técnica para tentar contornar a restrição.
+            heroVideo.play().catch(error => {
+                console.log("Autoplay do vídeo de fundo falhou. Tentando novamente após o carregamento.", error);
+                // Tenta reproduzir novamente quando o vídeo estiver pronto para tocar
+                heroVideo.addEventListener('loadedmetadata', () => {
+                    heroVideo.play().catch(err => {
+                        console.log("Tentativa de autoplay após loadedmetadata falhou.", err);
+                    });
+                }, { once: true });
+            });
         }
     </script>
 </body>
