@@ -236,7 +236,7 @@
         /* Hero Section */
         .hero {
             position: relative;
-            background-color: #1a3a52;
+            background-color: #1a3a52; /* Cor de fallback para navegadores que não renderizam vídeo nem imagem */
             color: white;
             padding: 80px 20px;
             text-align: center;
@@ -252,7 +252,8 @@
                 margin: 0 auto;
             }
 
-        #hero-video {
+        /* Estilo comum para Video e Imagem de Fundo */
+        #hero-video, #hero-image {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -264,19 +265,15 @@
             transform: translate(-50%, -50%);
             object-fit: cover;
             object-position: center center;
-            filter: brightness(0.5);
-            /* Correção Agresiva para iOS/Safari: Remove a interação com o usuário */
-            pointer-events: none;
+            filter: brightness(0.5); /* Escurecimento aplicado a ambos */
+            pointer-events: none; /* Impede que o usuário interaja com o fundo */
+            display: none; /* Ambos escondidos por padrão. O JS decide qual mostrar. */
         }
 
-            /* Correção para garantir que nenhum controle padrão do browser apareça no vídeo de fundo */
-            #hero-video::-webkit-media-controls {
-                display: none !important;
-            }
-
-            #hero-video::-webkit-media-controls-start-playback-button {
-                display: none !important;
-            }
+        #hero-video {
+            /* Regras de CSS de compatibilidade */
+            -webkit-media-controls: none !important;
+        }
 
         .hero .container {
             max-width: 1000px;
@@ -1130,6 +1127,9 @@
             <source src="videodefundo.webm" type="video/webm">
             Seu navegador não suporta a tag de vídeo.
         </video>
+
+        <img src="background.png" id="hero-image" alt="Fundo Estático de Galinhas" style="display: none;">
+
         <div class="container">
             <div class="urgency-badge">⚡ OFERTA LIMITADA - DESCONTO DE 20%</div>
             <h1>PARE DE PERDER DINHEIRO E SONHOS!</h1>
@@ -1449,6 +1449,50 @@
         document.addEventListener('DOMContentLoaded', initCarousel);
     </script>
     <script>
+        // Função de Detecção do iOS
+        function isIOS() {
+            // Verifica se o User Agent contém 'iPad', 'iPhone', ou 'iPod'
+            // Além disso, verifica 'MacIntel' com touch (para novos iPads no Safari)
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        }
+
+        // Inicialização do Fundo (Vídeo ou Imagem)
+        function initHeroBackground() {
+            const heroVideo = document.getElementById('hero-video');
+            const heroImage = document.getElementById('hero-image');
+
+            if (isIOS()) {
+                // Modo iOS: Mostrar Imagem, Esconder Vídeo
+                if (heroVideo) heroVideo.style.display = 'none';
+                if (heroImage) heroImage.style.display = 'block';
+                console.log("Modo iOS: Fundo estático ativado (background.png).");
+            } else {
+                // Modo Android/Desktop/Outros: Mostrar Vídeo, Esconder Imagem
+                if (heroImage) heroImage.style.display = 'none';
+
+                if (heroVideo) {
+                    heroVideo.style.display = 'block';
+
+                    // Lógica robusta para iniciar o autoplay (principalmente para Android/Desktop)
+                    const tryPlay = () => {
+                        heroVideo.play().then(() => {
+                            console.log("Vídeo de fundo iniciado com sucesso (Non-iOS).");
+                        }).catch(error => {
+                            console.log("Autoplay falhou (Non-iOS). Motivo:", error.name);
+                        });
+                    };
+
+                    // Tenta reproduzir imediatamente
+                    tryPlay();
+                    // Tenta novamente após o carregamento dos metadados
+                    heroVideo.addEventListener('loadeddata', tryPlay, { once: true });
+                }
+                console.log("Modo Non-iOS: Tentando autoplay do vídeo.");
+            }
+        }
+
+        // Inicialização do Contador
         function startCountdown(duration, display) {
             let timer = duration;
             let hours, minutes, seconds;
@@ -1486,44 +1530,10 @@
 
             // Inicia o timer para todos os elementos
             startCountdown(twentyFourHours, timers);
+
+            // Chama a função de inicialização do fundo
+            initHeroBackground();
         });
-
-        // CORREÇÃO DEFINITIVA DO AUTOPLAY DE VÍDEO
-        function initVideoAutoplay() {
-            const heroVideo = document.getElementById('hero-video');
-
-            if (!heroVideo) return;
-
-            // Função de tentativa de reprodução
-            const tryPlay = () => {
-                // Tenta reproduzir o vídeo. Isso deve ser bem-sucedido no iOS se 'muted' e 'playsinline' estiverem presentes.
-                heroVideo.play().then(() => {
-                    console.log("Video de fundo iniciado com sucesso.");
-                    // Remove listeners após o sucesso para evitar execuções desnecessárias.
-                    heroVideo.removeEventListener('loadeddata', tryPlay);
-                    heroVideo.removeEventListener('canplay', tryPlay);
-                    heroVideo.removeEventListener('canplaythrough', tryPlay);
-                }).catch(error => {
-                    // Se falhar (ex: usuário em modo de economia de dados), registra o erro.
-                    console.error("Autoplay do vídeo de fundo falhou. Tentativa de recuperação em 100ms. Motivo: ", error.name);
-                });
-            };
-
-            // 1. Tenta reproduzir imediatamente
-            tryPlay();
-
-            // 2. Tenta novamente após os eventos de prontidão do vídeo
-            // Adiciona listener para garantir a reprodução assim que o navegador permitir
-            heroVideo.addEventListener('loadeddata', tryPlay, { once: true });
-            heroVideo.addEventListener('canplay', tryPlay, { once: true });
-            heroVideo.addEventListener('canplaythrough', tryPlay, { once: true });
-
-            // 3. Adiciona um fallback de 100ms (ajuda em problemas de prioridade do event loop)
-            setTimeout(tryPlay, 100);
-        }
-
-        // Chama a função de inicialização após o DOM estar pronto
-        document.addEventListener('DOMContentLoaded', initVideoAutoplay);
     </script>
 </body>
 </html>
