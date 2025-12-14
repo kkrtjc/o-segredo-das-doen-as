@@ -22,7 +22,7 @@
         header {
             background: linear-gradient(135deg, #1a3a52 0%, #2d5f7f 100%);
             color: white;
-            padding: 5px 15px;
+            padding: 3px 15px; /* Reduzido o padding vertical para diminuir a altura do header */
             position: sticky;
             top: 0;
             z-index: 100;
@@ -110,10 +110,10 @@
         .header-testimonial-item {
             flex-shrink: 0;
             display: flex;
-            align-items: flex-start;
+            align-items: center; /* Centraliza verticalmente para reduzir a altura */
             gap: 10px; /* Aumentar o espaçamento */
             background-color: #2c506b; /* Fundo mais sólido e contrastante */
-            padding: 5px 10px; /* Reduzido o padding para diminuir a espessura */
+            padding: 3px 8px; /* Reduzido o padding para diminuir a espessura */
             border-radius: 12px; /* Borda mais suave e moderna */
             min-width: 280px; /* Reduzido a largura mínima para melhor adaptação em telas menores */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Sombra para profundidade */
@@ -125,8 +125,8 @@
             }
 
             .header-testimonial-item .avatar {
-                width: 30px; /* Reduzido o avatar para diminuir a espessura */
-                height: 30px;
+                width: 25px; /* Reduzido o avatar para diminuir a espessura */
+                height: 25px;
                 border-radius: 50%;
                 background-color: #00FFFF; /* Novo destaque: Ciano */
                 display: flex;
@@ -134,7 +134,7 @@
                 justify-content: center;
                 font-weight: bold;
                 color: #1a3a52;
-                font-size: 12px;
+                font-size: 10px; /* Reduzido o tamanho da fonte do avatar */
                 flex-shrink: 0;
                 border: 3px solid white; /* Borda branca para destacar */
             }
@@ -143,12 +143,13 @@
                 flex: 1;
                 min-width: 0;
                 display: flex;
-                flex-direction: column;
-                gap: 2px;
+                flex-direction: row; /* Muda para layout horizontal */
+                align-items: center; /* Alinha verticalmente os itens do conteúdo */
+                gap: 5px; /* Aumenta o espaçamento horizontal entre os elementos */
             }
 
             .header-testimonial-item .text {
-                font-size: 9px; /* Reduzido o tamanho da fonte para diminuir a espessura */
+                font-size: 8px; /* Reduzido o tamanho da fonte para diminuir a espessura */
                 line-height: 1.4;
                 margin: 0;
                 font-style: italic;
@@ -156,28 +157,28 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 display: -webkit-box;
-                -webkit-line-clamp: 2;
-	                line-clamp: 2;
+                -webkit-line-clamp: 1; /* Limita a 1 linha para reduzir a altura */
+                line-clamp: 1;
                 -webkit-box-orient: vertical;
                 color: #e0e0e0; /* Texto mais claro para contraste */
             }
 
             .header-testimonial-item .author {
                 font-weight: bold;
-                font-size: 9px;
+                font-size: 8px; /* Reduzido o tamanho da fonte do autor */
                 margin: 0;
                 color: white; /* Nome do autor em branco */
             }
 
             .header-testimonial-item .location {
-                font-size: 9px;
+                font-size: 8px; /* Reduzido o tamanho da fonte da localização */
                 opacity: 0.8;
                 margin: 0;
                 color: #b0b0b0; /* Localização em cinza claro */
             }
 
             .header-testimonial-item .stars {
-                font-size: 10px; /* Estrelas menores para diminuir a espessura */
+                font-size: 8px; /* Estrelas menores para diminuir a espessura */
                 color: #00FFFF; /* Estrelas no novo destaque: Ciano */
                 margin: 0;
                 white-space: nowrap;
@@ -239,7 +240,7 @@
             text-align: center;
             overflow: hidden; /* Para garantir que o vídeo não vaze */
             min-height: 600px; /* Adicione esta linha */
-            padding: 100px 20px; /* Aumente o padding */
+            padding: 80px 20px; /* Reduzido o padding para mobile */
         }
 
             .hero .container {
@@ -636,56 +637,90 @@
             background-color: rgba(255, 255, 255, 0.1);
             padding: 25px;
             border-radius: 10px;
-            border-left: 4px solid #ffd700;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
         }
 
-            .testimonial-card .text {
-                font-size: 14px;
-                margin-bottom: 15px;
+            .testimonial-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .testimonial-card .quote {
+                font-size: 16px;
                 line-height: 1.6;
+                margin-bottom: 15px;
                 font-style: italic;
+            }
+
+            .testimonial-card .author-info {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                margin-top: 20px;
+            }
+
+            .testimonial-card .avatar {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background-color: #ff6b35;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                color: white;
+                font-size: 18px;
+                flex-shrink: 0;
+            }
+
+            .testimonial-card .details {
+                text-align: left;
             }
 
             .testimonial-card .author {
                 font-weight: bold;
-                font-size: 14px;
+                font-size: 16px;
+                margin: 0;
             }
 
             .testimonial-card .location {
                 font-size: 12px;
                 opacity: 0.8;
+                margin: 0;
+            }
+
+            .testimonial-card .stars {
+                color: #ffd700;
+                font-size: 14px;
+                margin-top: 5px;
             }
 
         /* Guarantee Section */
         .guarantee-section {
-            background-color: #f0f8ff;
-            padding: 40px 20px;
+            background-color: #fff8f0;
+            padding: 30px 20px;
             text-align: center;
-            border: 2px solid #1a3a52;
-            margin: 40px 20px;
             border-radius: 10px;
+            margin: 30px auto;
+            max-width: 600px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
-            .guarantee-section .container {
-                max-width: 800px;
-                margin: 0 auto;
+            .guarantee-section .shield {
+                font-size: 40px;
+                margin-bottom: 10px;
             }
 
             .guarantee-section h3 {
-                font-size: 24px;
-                color: #1a3a52;
-                margin-bottom: 15px;
-            }
-
-            .guarantee-section .shield {
-                font-size: 50px;
-                margin-bottom: 15px;
+                font-size: 22px;
+                color: #ff6b35;
+                margin-bottom: 10px;
             }
 
             .guarantee-section p {
-                font-size: 12px;
-                color: #333;
-                line-height: 1.6;
+                font-size: 14px;
+                color: #666;
+                line-height: 1.5;
             }
 
         /* FAQ Section */
@@ -695,107 +730,118 @@
         }
 
             .faq-section .container {
-                max-width: 900px;
+                max-width: 800px;
                 margin: 0 auto;
             }
 
             .faq-section h2 {
                 font-size: 32px;
                 text-align: center;
-                margin-bottom: 40px;
+                margin-bottom: 30px;
                 color: #1a3a52;
             }
 
         .faq-item {
-            background-color: #f8f9fa;
-            margin-bottom: 15px;
+            border: 1px solid #eee;
             border-radius: 8px;
+            margin-bottom: 15px;
             overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
         .faq-question {
-            padding: 20px;
+            background-color: #f8f9fa;
+            padding: 15px 20px;
             cursor: pointer;
-            font-weight: bold;
-            color: #1a3a52;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-weight: bold;
+            color: #1a3a52;
             transition: background-color 0.3s ease;
         }
 
             .faq-question:hover {
-                background-color: #e8ecf1;
+                background-color: #f1f1f1;
             }
 
         .faq-answer {
             padding: 0 20px;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s ease;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            background-color: white;
             color: #666;
+            font-size: 14px;
             line-height: 1.6;
         }
 
         .faq-item.active .faq-answer {
-            max-height: 500px;
-            padding: 0 20px 20px 20px;
-        }
-
-        .faq-toggle {
-            font-size: 20px;
-            transition: transform 0.3s ease;
+            max-height: 500px; /* Valor grande o suficiente para a expansão */
+            padding: 15px 20px;
         }
 
         .faq-item.active .faq-toggle {
             transform: rotate(180deg);
         }
 
+        .faq-toggle {
+            transition: transform 0.3s ease;
+            font-size: 12px;
+        }
+
         /* Final CTA Section */
         .final-cta-section {
-            background: linear-gradient(135deg, #ff6b35 0%, #e55a2b 100%);
+            background-color: #1a3a52;
             color: white;
             padding: 50px 20px;
             text-align: center;
         }
 
             .final-cta-section .container {
-                max-width: 900px;
+                max-width: 800px;
                 margin: 0 auto;
             }
 
             .final-cta-section h2 {
-                font-size: 32px;
-                margin-bottom: 15px;
+                font-size: 36px;
+                margin-bottom: 10px;
             }
 
             .final-cta-section .price-highlight {
-                font-size: 28px;
-                margin: 20px 0;
+                font-size: 30px;
                 font-weight: bold;
+                color: #ffd700;
+                margin: 20px 0;
             }
 
-            .final-cta-section .original {
-                text-decoration: line-through;
-                opacity: 0.8;
-            }
+                .final-cta-section .price-highlight .original {
+                    font-size: 20px;
+                    color: #b0b0b0;
+                    text-decoration: line-through;
+                    margin-right: 10px;
+                }
 
             .final-cta-section .final-button {
-                background-color: white;
-                color: #ff6b35;
-                padding: 18px 40px;
+                background-color: #ff6b35;
+                color: white;
+                padding: 18px 35px;
                 border: none;
-                border-radius: 5px;
+                border-radius: 10px;
                 cursor: pointer;
                 font-weight: bold;
-                font-size: 18px;
-                margin-top: 20px;
-                transition: transform 0.3s ease;
+                font-size: 20px;
+                text-decoration: none;
+                display: inline-block;
+                margin-top: 15px;
+                transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+                box-shadow: 0 6px 15px rgba(255, 107, 53, 0.5);
             }
 
                 .final-cta-section .final-button:hover {
-                    transform: scale(1.05);
-                    box-shadow: 0 6px 15px rgba(255, 255, 255, 0.5); /* Sombra no hover */
+                    background-color: #e55a2b;
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 20px rgba(255, 107, 53, 0.7);
                 }
 
             .final-cta-section .payment-options {
@@ -1021,7 +1067,7 @@
                 .header-testimonial-item .text {
                     font-size: 9px;
                     -webkit-line-clamp: 2;
-	                line-clamp: 2;
+                    line-clamp: 2;
                 }
 
                 .header-testimonial-item .avatar {
@@ -1075,8 +1121,9 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <video autoplay muted loop playsinline id="hero-video">
+        <video autoplay muted loop playsinline id="hero-video" preload="auto">
             <source src="videodefundo.mp4" type="video/mp4">
+            <source src="videodefundo.webm" type="video/webm"> /* Adiciona formato webm para melhor compatibilidade e otimização */
             Seu navegador não suporta a tag de vídeo.
         </video>
         <div class="container">
@@ -1095,7 +1142,7 @@
             <div class="video-wrapper">
                 <video src="video1.mp4" controls autoplay muted playsinline alt="Vídeo de Vendas - Protocolo Elite 360º" style="width: 100%; height: auto; display: block;"></video>
             </div>
-            <p style="margin-top: 20px; color: #666; font-size: 14px;"></p>
+            <p style="margin-top: 20px; color: #666; font-size: 14px;">Substitua este placeholder pelo seu vídeo de vendas</p>
         </div>
     </section>
 
@@ -1103,7 +1150,7 @@
     <section class="pricing-section" id="pricing-section">
         <div class="container"></div>
         <h2>Escolha Sua Oferta</h2>
-        <p class="subtitle">Compare e Veja Por Que o Combo é a Melhor Escolha !</p>
+        <p class="subtitle">Ancoragem de Preços: Compare e Veja Por Que o Combo é a Melhor Escolha</p>
 
         <div class="pricing-wrapper">
             <!-- Novo wrapper para rolagem horizontal em mobile -->
@@ -1368,14 +1415,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                <div class="avatar">${testimonial.avatar}</div>
-                                                                                <div class="content">
-                                                                                    <div class="text">${testimonial.text}</div>
-                                                                                    <div class="author">${testimonial.author}</div>
-                                                                                    <div class="location">${testimonial.location}</div>
-                                                                                    <div class="stars">${testimonial.stars}</div>
-                                                                                </div>
-                                                                            `;
+                                                                                            <div class="avatar">${testimonial.avatar}</div>
+                                                                                            <div class="content">
+                                                                                                <div class="text">${testimonial.text}</div>
+                                                                                                <div class="author">${testimonial.author}</div>
+                                                                                                <div class="location">${testimonial.location}</div>
+                                                                                                <div class="stars">${testimonial.stars}</div>
+                                                                                            </div>
+                                                                                        `;
                 carouselTrack.appendChild(item);
             });
 
@@ -1384,14 +1431,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                <div class="avatar">${testimonial.avatar}</div>
-                                                                                <div class="content">
-                                                                                    <div class="text">${testimonial.text}</div>
-                                                                                    <div class="author">${testimonial.author}</div>
-                                                                                    <div class="location">${testimonial.location}</div>
-                                                                                    <div class="stars">${testimonial.stars}</div>
-                                                                                </div>
-                                                                            `;
+                                                                                            <div class="avatar">${testimonial.avatar}</div>
+                                                                                            <div class="content">
+                                                                                                <div class="text">${testimonial.text}</div>
+                                                                                                <div class="author">${testimonial.author}</div>
+                                                                                                <div class="location">${testimonial.location}</div>
+                                                                                                <div class="stars">${testimonial.stars}</div>
+                                                                                            </div>
+                                                                                        `;
                 carouselTrack.appendChild(item);
             });
         }
@@ -1404,6 +1451,15 @@
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', initCarousel);
+
+        // Otimização do vídeo de fundo: Tenta carregar o vídeo o mais rápido possível
+        const heroVideoElement = document.getElementById('hero-video');
+        if (heroVideoElement) {
+            heroVideoElement.load();
+            heroVideoElement.play().catch(error => {
+                console.log("Autoplay do vídeo de fundo falhou, pode ser devido a restrições do navegador.", error);
+            });
+        }
     </script>
     <script>
         function startCountdown(duration, display) {
@@ -1444,6 +1500,14 @@
             // Inicia o timer para todos os elementos
             startCountdown(twentyFourHours, timers);
         });
+
+        // Tenta forçar a reprodução do vídeo de fundo para contornar restrições de navegadores
+        const heroVideo = document.getElementById('hero-video');
+        if (heroVideo) {
+            heroVideo.play().catch(error => {
+                console.log("Autoplay do vídeo de fundo falhou, pode ser devido a restrições do navegador.", error);
+            });
+        }
     </script>
 </body>
 </html>
