@@ -22,7 +22,7 @@
         header {
             background: linear-gradient(135deg, #1a3a52 0%, #2d5f7f 100%);
             color: white;
-            padding: 8px 20px;
+            padding: 5px 15px;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -32,11 +32,11 @@
             align-items: center;
             gap: 15px;
             flex-wrap: wrap;
-            min-height: 70px;
+            min-height: 50px;
         }
 
             header .logo {
-                font-size: 16px;
+                font-size: 12px;
                 font-weight: bold;
                 letter-spacing: 1px;
                 white-space: nowrap;
@@ -49,16 +49,42 @@
             min-width: 200px;
             height: auto;
             display: flex;
+            flex-direction: column; /* Para empilhar o carrossel e a frase */
+            justify-content: center;
             align-items: center;
             overflow: hidden;
             position: relative;
         }
 
+        .header-phrase {
+            font-size: 9px; /* Tamanho pequeno para caber na barra reduzida */
+            font-weight: bold;
+            color: #ffd700; /* Cor de destaque */
+            text-align: center;
+            margin-top: 2px; /* Espaço entre o carrossel e a frase */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            /* Garante que a frase não force o aumento da altura do carrossel */
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.2); /* Fundo sutil para destaque */
+            padding: 1px 0;
+        }
+
         .header-carousel-track {
             display: flex;
             gap: 15px;
-            animation: scroll-carousel 35s linear infinite;
+            animation: scroll-carousel 40s linear infinite;
+            -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            will-change: transform;
             width: max-content;
+            padding-bottom: 15px; /* Espaço para a nova frase */
         }
 
         @-webkit-keyframes scroll-carousel {
@@ -87,9 +113,9 @@
             align-items: flex-start;
             gap: 10px; /* Aumentar o espaçamento */
             background-color: #2c506b; /* Fundo mais sólido e contrastante */
-            padding: 10px 15px; /* Aumentar o padding */
+            padding: 5px 10px; /* Reduzido o padding para diminuir a espessura */
             border-radius: 12px; /* Borda mais suave e moderna */
-            min-width: 320px; /* Aumentar a largura mínima */
+            min-width: 280px; /* Reduzido a largura mínima para melhor adaptação em telas menores */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Sombra para profundidade */
             transition: transform 0.3s ease;
         }
@@ -99,8 +125,8 @@
             }
 
             .header-testimonial-item .avatar {
-                width: 45px; /* Aumentar o avatar */
-                height: 45px;
+                width: 30px; /* Reduzido o avatar para diminuir a espessura */
+                height: 30px;
                 border-radius: 50%;
                 background-color: #00FFFF; /* Novo destaque: Ciano */
                 display: flex;
@@ -108,7 +134,7 @@
                 justify-content: center;
                 font-weight: bold;
                 color: #1a3a52;
-                font-size: 16px;
+                font-size: 12px;
                 flex-shrink: 0;
                 border: 3px solid white; /* Borda branca para destacar */
             }
@@ -122,7 +148,7 @@
             }
 
             .header-testimonial-item .text {
-                font-size: 12px; /* Ligeiramente maior */
+                font-size: 9px; /* Reduzido o tamanho da fonte para diminuir a espessura */
                 line-height: 1.4;
                 margin: 0;
                 font-style: italic;
@@ -137,20 +163,20 @@
 
             .header-testimonial-item .author {
                 font-weight: bold;
-                font-size: 11px;
+                font-size: 9px;
                 margin: 0;
                 color: white; /* Nome do autor em branco */
             }
 
             .header-testimonial-item .location {
-                font-size: 10px;
+                font-size: 9px;
                 opacity: 0.8;
                 margin: 0;
                 color: #b0b0b0; /* Localização em cinza claro */
             }
 
             .header-testimonial-item .stars {
-                font-size: 12px; /* Estrelas maiores */
+                font-size: 10px; /* Estrelas menores para diminuir a espessura */
                 color: #00FFFF; /* Estrelas no novo destaque: Ciano */
                 margin: 0;
                 white-space: nowrap;
@@ -159,12 +185,12 @@
         header .cta-button {
             background-color: #ff6b35;
             color: white;
-            padding: 12px 25px; /* Aumentado o padding */
+            padding: 8px 15px; /* Reduzido o padding para diminuir a espessura */
             border: none;
             border-radius: 8px; /* Borda mais suave */
             cursor: pointer;
             font-weight: bold;
-            font-size: 15px; /* Fonte ligeiramente maior */
+            font-size: 13px; /* Fonte menor para diminuir a espessura */
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             white-space: nowrap;
             flex-shrink: 0;
@@ -186,7 +212,7 @@
         }
 
             .header-cta-wrapper .countdown-timer {
-                font-size: 10px;
+                font-size: 9px;
                 font-weight: bold;
                 color: #ffd700; /* Cor de destaque para o timer */
                 text-align: center;
@@ -198,7 +224,7 @@
 
                 .header-cta-wrapper .countdown-timer .timer-label {
                     display: block;
-                    font-size: 8px;
+                    font-size: 7px;
                     font-weight: normal;
                     opacity: 0.8;
                 }
@@ -304,7 +330,7 @@
             .video-section .subtitle {
                 color: #666;
                 margin-bottom: 30px;
-                font-size: 16px;
+                font-size: 12px;
             }
 
         .video-wrapper {
@@ -355,7 +381,7 @@
                 text-align: center;
                 color: #666;
                 margin-bottom: 40px;
-                font-size: 16px;
+                font-size: 12px;
             }
 
         /* Wrapper para rolagem horizontal em mobile */
@@ -512,7 +538,7 @@
                 border-radius: 5px;
                 cursor: pointer;
                 font-weight: bold;
-                font-size: 16px;
+                font-size: 12px;
                 width: 100%;
                 margin-top: 20px;
                 transition: background-color 0.3s ease;
@@ -656,7 +682,7 @@
             }
 
             .guarantee-section p {
-                font-size: 16px;
+                font-size: 12px;
                 color: #333;
                 line-height: 1.6;
             }
@@ -850,7 +876,7 @@
             }
 
         .timer-label {
-            font-size: 10px;
+            font-size: 9px;
             font-weight: normal;
             display: block;
             text-align: center;
@@ -884,7 +910,7 @@
             }
 
             .header-cta-wrapper .countdown-timer {
-                font-size: 10px;
+                font-size: 9px;
             }
 
                 .header-cta-wrapper .countdown-timer .timer-label {
@@ -906,13 +932,13 @@
             }
 
                 .header-testimonial-item .text {
-                    font-size: 10px;
+                    font-size: 9px;
                 }
 
                 .header-testimonial-item .avatar {
                     width: 35px;
                     height: 35px;
-                    font-size: 11px;
+                    font-size: 9px;
                 }
 
             header .cta-button {
@@ -925,7 +951,7 @@
             }
 
             .hero .subheading {
-                font-size: 16px;
+                font-size: 12px;
             }
 
             /* Removido o grid-template-columns: 1fr; para manter as ofertas lado a lado conforme solicitado */
@@ -992,14 +1018,14 @@
             }
 
                 .header-testimonial-item .text {
-                    font-size: 10px;
+                    font-size: 9px;
                     -webkit-line-clamp: 2;
                 }
 
                 .header-testimonial-item .avatar {
                     width: 35px;
                     height: 35px;
-                    font-size: 11px;
+                    font-size: 9px;
                 }
 
             header .cta-button {
@@ -1036,6 +1062,7 @@
             <div class="header-carousel-track" id="carouselTrack">
                 <!-- Testimonials will be populated here by JavaScript -->
             </div>
+            <div class="header-phrase">JÁ AJUDAMOS CENTENAS DE PESSOAS...</div>
         </div>
 
         <div class="header-cta-wrapper">
@@ -1066,7 +1093,7 @@
             <div class="video-wrapper">
                 <video src="video1.mp4" controls autoplay muted playsinline alt="Vídeo de Vendas - Protocolo Elite 360º" style="width: 100%; height: auto; display: block;"></video>
             </div>
-            <p style="margin-top: 20px; color: #666; font-size: 14px;">PARE DE PERDER GALINHAS AGORA</p>
+            <p style="margin-top: 20px; color: #666; font-size: 14px;">Substitua este placeholder pelo seu vídeo de vendas</p>
         </div>
     </section>
 
@@ -1135,7 +1162,8 @@
                         <li>Suporte Exclusivo</li>
                         <li>Garantia 7 Dias</li>
                     </ul>
-                    <a href="https://pay.kiwify.com.br/hzbzv51" class="cta-button">GARANTIR COMBO AGORA</a>                </div>
+                    <a href="https://pay.kiwify.com.br/hzbzv51" class="cta-button">GARANTIR COMBO AGORA</a>
+                </div>
             </div> <!-- Fim do pricing-wrapper -->
         </div>
     </section>
@@ -1277,7 +1305,7 @@
         <div class="container">
             <p>&copy; 2025 Protocolo Elite 360º. Todos os direitos reservados.</p>
             <p>
-               
+
             </p>
         </div>
     </footer>
@@ -1338,14 +1366,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                            <div class="avatar">${testimonial.avatar}</div>
-                                                            <div class="content">
-                                                                <div class="text">${testimonial.text}</div>
-                                                                <div class="author">${testimonial.author}</div>
-                                                                <div class="location">${testimonial.location}</div>
-                                                                <div class="stars">${testimonial.stars}</div>
-                                                            </div>
-                                                        `;
+                                                                                <div class="avatar">${testimonial.avatar}</div>
+                                                                                <div class="content">
+                                                                                    <div class="text">${testimonial.text}</div>
+                                                                                    <div class="author">${testimonial.author}</div>
+                                                                                    <div class="location">${testimonial.location}</div>
+                                                                                    <div class="stars">${testimonial.stars}</div>
+                                                                                </div>
+                                                                            `;
                 carouselTrack.appendChild(item);
             });
 
@@ -1354,14 +1382,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                            <div class="avatar">${testimonial.avatar}</div>
-                                                            <div class="content">
-                                                                <div class="text">${testimonial.text}</div>
-                                                                <div class="author">${testimonial.author}</div>
-                                                                <div class="location">${testimonial.location}</div>
-                                                                <div class="stars">${testimonial.stars}</div>
-                                                            </div>
-                                                        `;
+                                                                                <div class="avatar">${testimonial.avatar}</div>
+                                                                                <div class="content">
+                                                                                    <div class="text">${testimonial.text}</div>
+                                                                                    <div class="author">${testimonial.author}</div>
+                                                                                    <div class="location">${testimonial.location}</div>
+                                                                                    <div class="stars">${testimonial.stars}</div>
+                                                                                </div>
+                                                                            `;
                 carouselTrack.appendChild(item);
             });
         }
@@ -1404,7 +1432,7 @@
             }, 1000);
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // 24 horas em segundos
             const twentyFourHours = 24 * 60 * 60;
 
