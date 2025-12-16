@@ -19,15 +19,150 @@
             background-color: #f8f9fa;
         }
 
-        /* Header */
+        /* ===== CARREGAMENTO OTIMIZADO DE FONTES ===== */
+
+        /* Usar fontes do sistema com fallback para Google Fonts */
+        @font-face {
+            font-family: 'System UI';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Segoe UI'), local('Roboto'), local('Helvetica Neue'), local('Arial'), sans-serif;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'System UI';
+            font-style: normal;
+            font-weight: 700;
+            src: local('Segoe UI Bold'), local('Roboto Bold'), local('Helvetica Neue Bold'), local('Arial Bold'), sans-serif;
+            font-display: swap;
+        }
+
+        /* Aplicar fontes do sistema com fallback */
+        body, html {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            font-display: swap;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Garantir que todos os elementos de texto usem font-display: swap */
+        h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, select, a {
+            font-display: swap;
+        }
+
+        /* Reduzir o FOIT com font-weight e font-style específicos */
+        strong, b, .bold {
+            font-weight: 700;
+        }
+
+        em, i, .italic {
+            font-style: italic;
+        }
+
+
+
+
+        /* Garantir que o CTA button tenha dimensões fixas */
+        header .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+            min-height: 38px;
+            width: auto;
+            height: auto;
+            will-change: background-color;
+        }
+
+        /* Garantir que o countdown timer não mude de tamanho */
+        .header-cta-wrapper .countdown-timer {
+            display: block;
+            min-height: 30px;
+            min-width: 80px;
+        }
+
+        /* Otimizar paint timing para renderização mais rápida */
         header {
-            background: linear-gradient(135deg, #1a3a52 0%, #2d5f7f 100%);
+            contain: layout paint;
+            will-change: auto;
+            backface-visibility: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+            header .cta-button {
+                backface-visibility: hidden;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                pointer-events: auto;
+            }
+
+        /* Otimizar rendering de seções não críticas */
+        .video-section, .testimonials-section, .pricing-section, .faq-section {
+            content-visibility: auto;
+        }
+
+        /* ===== OTIMIZAÇÕES PARA MOBILE ===== */
+        @media (max-width: 768px) {
+            header .cta-button {
+                font-size: 12px;
+                padding: 7px 12px;
+                min-width: 100px;
+                min-height: 36px;
+            }
+
+            .header-cta-wrapper .countdown-timer {
+                font-size: 8px;
+                min-height: 28px;
+                min-width: 75px;
+            }
+        }
+
+
+        /* Novo estilo para o Selo de Especialista */
+        .expert-badge {
+            background-color: #ffd700; /* Amarelo/Dourado para destaque */
+            color: #1a3a52;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 5px;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            text-transform: uppercase;
+            box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+            display: inline-block;
+        }
+
+        /* Cor única para o CTA da barra flutuante */
+        header .cta-button {
+            background-color: #39FF14 !important; /* Verde Limão Vibrante */
+            box-shadow: 0 4px 10px rgba(57, 255, 20, 0.4) !important;
+        }
+
+            header .cta-button:hover {
+                background-color: #2EDC12 !important;
+                box-shadow: 0 6px 12px rgba(57, 255, 20, 0.6) !important;
+            }
+
+        /* Novo estilo par/* Header */
+        header {
+            /* Estilo Translúcido e Arredondado */
+            background: rgba(26, 58, 82, 0.9); /* Fundo original com transparência */
+            backdrop-filter: blur(5px); /* Efeito de desfoque */
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            margin: 0 10px; /* Margem para afastar das bordas da tela */
+            width: calc(100% - 20px); /* Ajuste de largura */
+            left: 10px; /* Centralizar */
+            /* Estilos originais mantidos */
             color: white;
             padding: 3px 15px;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Sombra mais forte para destacar */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -44,7 +179,9 @@
                 flex-shrink: 0;
             }
 
-        /* Carousel Container in Header */
+        /* Carousel Container
+
+        /* Header */
         .header-carousel-container {
             flex: 1;
             min-width: 200px;
@@ -196,7 +333,7 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 13px;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            transition: background-color 0.2s ease;
             white-space: nowrap;
             flex-shrink: 0;
             box-shadow: 0 4px 10px rgba(255, 107, 53, 0.4);
@@ -322,6 +459,90 @@
             }
         }
 
+        /* Selo de Garantia Abaixo do Vídeo */
+        .guarantee-badge-video {
+            margin: 25px auto 15px auto;
+            padding: 10px 20px;
+            background-color: #f8f8f8;
+            border: 2px solid #00a86b; /* Verde de garantia */
+            border-radius: 8px;
+            max-width: 450px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: left;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+            .guarantee-badge-video .icon {
+                font-size: 30px;
+                color: #00a86b;
+                flex-shrink: 0;
+            }
+
+            .guarantee-badge-video .text {
+                font-size: 14px;
+                color: #333;
+                line-height: 1.4;
+            }
+
+                .guarantee-badge-video .text strong {
+                    color: #1a3a52;
+                }
+
+        /* Seção de Prova Social Abaixo do Vídeo */
+        .social-proof-video {
+            margin: 20px auto 0 auto;
+            max-width: 450px;
+            text-align: center;
+        }
+
+            .social-proof-video .count {
+                font-size: 24px;
+                font-weight: bold;
+                color: #1a3a52;
+                margin-bottom: 5px;
+            }
+
+            .social-proof-video .caption {
+                font-size: 12px;
+                color: #666;
+                margin-bottom: 15px;
+            }
+
+        .avatar-stack {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .avatar-item {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: #ccc;
+            border: 2px solid white;
+            margin-left: -10px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #333;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+            .avatar-item:first-child {
+                margin-left: 0;
+            }
+
+            .avatar-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
         /* Video Section */
         .video-section {
             background-color: white;
@@ -398,8 +619,8 @@
 
         /* Contêiner para a grade e setas - JÁ EXISTENTE, APENAS COPIADO ACIMA */
         /* .pricing-section .container {
-            position: relative;
-        } */
+                    position: relative;
+                } */
 
         /* Estilo Base das Setas */
         .pricing-nav-arrow {
@@ -909,7 +1130,7 @@
                 text-decoration: none;
                 display: inline-block;
                 margin-top: 15px;
-                transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+                transition: background-color 0.2s ease;
                 box-shadow: 0 6px 15px rgba(255, 107, 53, 0.5);
             }
 
@@ -1170,7 +1391,22 @@
                 margin: 20px 10px;
             }
         }
+
+
+        /* Otimizar renderização após carregamento de fontes */
+        .fonts-loaded body, .fonts-loaded h1, .fonts-loaded h2, .fonts-loaded h3, .fonts-loaded h4, .fonts-loaded h5, .fonts-loaded h6 {
+            font-display: auto;
+        }
+
+        /* Reduzir layout shift ao carregar fontes */
+        .fonts-loaded {
+            --font-display: auto;
+        }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap">
 </head>
 <body>
     <header>
@@ -1183,6 +1419,7 @@
         </div>
 
         <div class="header-cta-wrapper">
+            <span class="expert-badge">✅ PROTOCOLO VALIDADO</span>
             <button class="cta-button" onclick="document.querySelector('.pricing-section').scrollIntoView({behavior: 'smooth'})">GARANTIR ACESSO</button>
             <div class="countdown-timer" data-timer-id="timer-header"></div>
         </div>
@@ -1195,13 +1432,13 @@
             Seu navegador não suporta a tag de vídeo.
         </video>
 
-        <img src="background.png" id="hero-image" alt="Fundo Estático de Galinhas" style="display: none;">
+        <img src="background.png" id="hero-image" alt="Fundo Estático de Galinhas" width="1920" height="1080" style="display: none;">
 
         <div class="container">
             <div class="urgency-badge">⚡ OFERTA LIMITADA - DESCONTO DE 20%</div>
-            <h1>PARE DE PERDER GALINHAS E DINHEIRO !</h1>
-            <p class="subheading">Descubra o Protocolo Completo que <span class="highlight">TRIPLICA</span> a Sobrevivência dos Seus Pintinhos e <span class="highlight">BLINDA</span> Seu Plantel Adulto Contra as principais Doenças</p>
-            <p>Deixe de ser um criador amador. Com o Método Elite 360º, você garante aves saudáveis desde o ovo, para um resultado espetacular.</p>
+            <h1>PARE DE PERDER <strong>GALINHAS</strong> E <strong>DINHEIRO</strong> !</h1>
+            <p class="subheading">Descubra o <strong>Protocolo Completo</strong> que <span class="highlight">TRIPLICA</span> a <strong>Sobrevivência</strong> dos Seus Pintinhos e <span class="highlight">BLINDA</span> Seu <strong>Plantel Adulto</strong> Contra as principais Doenças</p>
+            <p>Deixe de ser um <strong>criador amador</strong>. Com o <strong>Método Elite 360º</strong>, você garante <strong>aves saudáveis</strong> desde o ovo, para um <strong>resultado espetacular</strong>.</p>
         </div>
     </section>
 
@@ -1213,6 +1450,24 @@
                 <video src="video1.mp4" poster="capa-video-principal.png" controls playsinline alt="Vídeo de Vendas - Protocolo Elite 360º" style="width: 100%; height: auto; display: block;"></video>
             </div>
             <p style="margin-top: 20px; color: #666; font-size: 14px;"></p>
+
+            <!-- Selo de Garantia -->
+            <div class="guarantee-badge-video">
+                <span class="icon">🔒</span>
+                <p class="text">Sua compra é <strong>100% segura</strong> e garantida por 7 dias. Se não gostar, devolvemos seu dinheiro.</p>
+            </div>
+
+            <!-- Prova Social (Pequena) -->
+            <div class="social-proof-video">
+                <div class="count">Ja são Centenas</div>
+                <div class="caption">De criadores que confiam no nosso protocolo</div>
+                <div class="avatar-stack">
+                    <div class="avatar-item"><img src="foto1.jpg" alt="Foto de usuário 1"></div>
+                    <div class="avatar-item"><img src="foto2.png" alt="Foto de usuário 2"></div>
+                    <div class="avatar-item"><img src="foto3.jpeg" alt="Foto de usuário 3"></div>
+                    <div class="avatar-item">+</div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1227,7 +1482,7 @@
                 <div class="pricing-grid">
                     <div class="pricing-card">
                         <h3>Manejo de Pintinhos</h3>
-                        <img src="capadospintinhos.png" alt="Capa - Manejo de Pintinhos de Elite" class="cover-image">
+                        <img src="capadospintinhos.png" alt="Capa - Manejo de Pintinhos de Elite" class="cover-image" width="300" height="400" loading="lazy">
                         <p style="color: #666; font-size: 13px; margin: 10px 0;">Protocolo de Sobrevivência e Crescimento</p>
                         <div class="price">R$ 54,90</div>
                         <p style="color: #999; font-size: 12px;">Acesso Vitalício</p>
@@ -1243,7 +1498,7 @@
 
                     <div class="pricing-card">
                         <h3>Doenças Avícolas</h3>
-                        <img src="capadasdoenças.png" alt="Capa - O Segredo das Doenças Avícolas" class="cover-image">
+                        <img src="capadasdoenças.png" alt="Capa - O Segredo das Doenças Avícolas" class="cover-image" width="300" height="400" loading="lazy">
                         <p style="color: #666; font-size: 13px; margin: 10px 0;">Identificação, Tratamento e Prevenção</p>
                         <div class="price">R$ 84,90</div>
                         <p style="color: #999; font-size: 12px;">Acesso Vitalício</p>
@@ -1263,8 +1518,8 @@
                         <h3>Protocolo Elite 360º</h3>
                         <p style="color: #666; font-size: 13px; margin: 10px 0; font-weight: bold;">Combo Completo + 20% OFF</p>
                         <div style="display: flex; justify-content: center; gap: 10px; margin: 15px 0;">
-                            <img src="capadospintinhos.png" alt="Capa - Manejo de Pintinhos de Elite" style="width: 70px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);">
-                            <img src="capadasdoenças.png" alt="Capa - O Segredo das Doenças Avícolas" style="width: 70px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);">
+                            <img src="capadospintinhos.png" alt="Capa - Manejo de Pintinhos de Elite" width="70" height="93" style="width: 70px; height: 93px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);">
+                            <img src="capadasdoenças.png" alt="Capa - O Segredo das Doenças Avícolas" width="70" height="93" style="width: 70px; height: 93px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);">
                         </div>
                         <div class="original-price">De R$ 139,80</div>
                         <div class="price">R$ 111,84</div>
@@ -1422,7 +1677,7 @@
         </div>
     </footer>
 
-    <script>
+    <script defer>
         // Testimonials data
         const testimonials = [
             {
@@ -1478,14 +1733,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                                                            <div class="avatar">${testimonial.avatar}</div>
-                                                                                                                            <div class="content">
-                                                                                                                                <div class="text">${testimonial.text}</div>
-                                                                                                                                <div class="author">${testimonial.author}</div>
-                                                                                                                                <div class="location">${testimonial.location}</div>
-                                                                                                                                <div class="stars">${testimonial.stars}</div>
-                                                                                                                            </div>
-                                                                                                                        `;
+                                                                                                                                            <div class="avatar">${testimonial.avatar}</div>
+                                                                                                                                            <div class="content">
+                                                                                                                                                <div class="text">${testimonial.text}</div>
+                                                                                                                                                <div class="author">${testimonial.author}</div>
+                                                                                                                                                <div class="location">${testimonial.location}</div>
+                                                                                                                                                <div class="stars">${testimonial.stars}</div>
+                                                                                                                                            </div>
+                                                                                                                                        `;
                 carouselTrack.appendChild(item);
             });
 
@@ -1494,14 +1749,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                                                            <div class="avatar">${testimonial.avatar}</div>
-                                                                                                                            <div class="content">
-                                                                                                                                <div class="text">${testimonial.text}</div>
-                                                                                                                                <div class="author">${testimonial.author}</div>
-                                                                                                                                <div class="location">${testimonial.location}</div>
-                                                                                                                                <div class="stars">${testimonial.stars}</div>
-                                                                                                                            </div>
-                                                                                                                        `;
+                                                                                                                                            <div class="avatar">${testimonial.avatar}</div>
+                                                                                                                                            <div class="content">
+                                                                                                                                                <div class="text">${testimonial.text}</div>
+                                                                                                                                                <div class="author">${testimonial.author}</div>
+                                                                                                                                                <div class="location">${testimonial.location}</div>
+                                                                                                                                                <div class="stars">${testimonial.stars}</div>
+                                                                                                                                            </div>
+                                                                                                                                        `;
                 carouselTrack.appendChild(item);
             });
 
@@ -1518,7 +1773,7 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', initCarousel);
     </script>
-    <script>
+    <script defer>
         // Função de Detecção do iOS
         function isIOS() {
             // Verifica se o User Agent contém 'iPad', 'iPhone', ou 'iPod'
@@ -1666,5 +1921,22 @@
             initPriceNavigation();
         });
     </script>
+
+    <script>
+        // Carregar fontes de forma assíncrona para evitar FOIT
+        if ('fonts' in document) {
+            document.fonts.ready.then(function () {
+                document.documentElement.classList.add('fonts-loaded');
+            });
+        }
+
+        // Fallback para navegadores que não suportam Font Loading API
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                document.documentElement.classList.add('fonts-loaded');
+            }, 1000);
+        });
+    </script>
+
 </body>
 </html>
