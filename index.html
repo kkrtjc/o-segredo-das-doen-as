@@ -7,29 +7,32 @@
 
     <!-- Meta Pixel Code -->
     <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1346740157465853');
-    fbq('track', 'PageView');
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1346740157465853');
+        fbq('track', 'PageView');
     </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=1346740157465853&ev=PageView&noscript=1"
-    /></noscript>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+             src="https://www.facebook.com/tr?id=1346740157465853&ev=PageView&noscript=1" />
+    </noscript>
     <!-- End Meta Pixel Code -->
-
     <!-- TikTok Pixel Code -->
     <script>
-    !function (w, d, t) {
-      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","load","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=d.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=d.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
-      ttq.load('D4VFSO3C77U98L8KBEF0');
-      ttq.page();
-    }(window, document, 'ttq');
+        !function (w, d, t) {
+            w.TiktokAnalyticsObject = t; var ttq = w[t] = w[t] || []; ttq.methods = ["page", "track", "identify", "instances", "load", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie"], ttq.setAndDefer = function (t, e) { t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }; for (var i = 0; i < ttq.methods.length; i++)ttq.setAndDefer(ttq, ttq.methods[i]); ttq.instance = function (t) { for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++)ttq.setAndDefer(e, ttq.methods[n]); return e }, ttq.load = function (e, n) { var i = "https://analytics.tiktok.com/i18n/pixel/events.js"; ttq._i = ttq._i || {}, ttq._i[e] = [], ttq._i[e]._u = i, ttq._t = ttq._t || {}, ttq._t[e] = +new Date, ttq._o = ttq._o || {}, ttq._o[e] = n || {}; var o = d.createElement("script"); o.type = "text/javascript", o.async = !0, o.src = i + "?sdkid=" + e + "&lib=" + t; var a = d.getElementsByTagName("script")[0]; a.parentNode.insertBefore(o, a) };
+            ttq.load('D4VFSO3C77U98L8KBEF0');
+            ttq.page();
+        }(window, document, 'ttq');
     </script>
     <!-- End TikTok Pixel Code -->
     <style>
@@ -97,15 +100,17 @@
             align-items: center;
             justify-content: center;
             min-width: 120px;
-            min-height: 38px;
+            min-height: 30px; /* Altura reduzida */
             width: auto;
             height: auto;
             will-change: background-color;
+            font-size: 12px; /* Fonte reduzida */
+            padding: 5px 10px; /* Padding reduzido */
         }
 
         /* Garantir que o countdown timer não mude de tamanho */
         .header-cta-wrapper .countdown-timer {
-            display: block;
+            display: none; /* Oculta o contador, pois o pedido foi para deixar apenas o logo e o CTA */
             min-height: 30px;
             min-width: 80px;
         }
@@ -133,17 +138,20 @@
 
         /* ===== OTIMIZAÇÕES PARA MOBILE ===== */
         @media (max-width: 768px) {
-            header .cta-button {
-                font-size: 12px;
-                padding: 7px 12px;
-                min-width: 100px;
-                min-height: 36px;
+            header {
+                min-height: 30px; /* Ainda mais fino no mobile */
+                padding: 3px 10px;
             }
 
+                header .cta-button {
+                    font-size: 10px; /* Fonte menor no mobile */
+                    padding: 5px 10px;
+                    min-width: 80px;
+                    min-height: 25px;
+                }
+
             .header-cta-wrapper .countdown-timer {
-                font-size: 8px;
-                min-height: 28px;
-                min-width: 75px;
+                display: none; /* Oculta o contador */
             }
         }
 
@@ -176,27 +184,27 @@
 
         /* Novo estilo par/* Header */
         header {
-            /* Estilo Translúcido e Arredondado */
-            background: rgba(26, 58, 82, 0.9); /* Fundo original com transparência */
-            backdrop-filter: blur(5px); /* Efeito de desfoque */
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-            margin: 0 10px; /* Margem para afastar das bordas da tela */
-            width: calc(100% - 20px); /* Ajuste de largura */
-            left: 10px; /* Centralizar */
+            /* Estilo Flutuante e 100% Largura */
+            background: rgba(26, 58, 82, 0.95); /* Fundo com mais opacidade */
+            backdrop-filter: blur(8px); /* Efeito de desfoque mais forte */
+            /* Removendo bordas arredondadas e margens laterais para ocupar 100% */
+            border-radius: 0;
+            margin: 0;
+            width: 100%; /* Ocupa 100% da largura */
+            left: 0;
             /* Estilos originais mantidos */
             color: white;
-            padding: 3px 15px;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Sombra mais forte para destacar */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra mais forte para parecer mais "flutuante" */
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 15px;
-            flex-wrap: wrap;
-            min-height: 50px;
+            flex-wrap: nowrap;
+            min-height: 35px;
+            padding: 5px 20px; /* Padding horizontal um pouco maior */
         }
 
             header .logo {
@@ -205,13 +213,16 @@
                 letter-spacing: 1px;
                 white-space: nowrap;
                 flex-shrink: 0;
+                flex-grow: 1; /* Permite que o logo ocupe espaço */
+                text-align: left;
             }
 
         /* Carousel Container
 
         /* Header */
+        /* O carrossel foi movido para fora do header, mas mantemos o estilo para a nova seção */
         .header-carousel-container {
-            flex: 1;
+            /* flex: 1; - Removido */
             min-width: 200px;
             height: auto;
             display: flex;
@@ -383,10 +394,12 @@
 
         .header-cta-wrapper {
             display: flex;
-            flex-direction: column;
+            flex-direction: row; /* Alinha horizontalmente */
             align-items: center;
+            justify-content: center; /* Centraliza o CTA */
             gap: 5px;
             flex-shrink: 0;
+            flex-grow: 1; /* Permite que o CTA ocupe espaço para centralização */
         }
 
             .header-cta-wrapper .countdown-timer {
@@ -1480,18 +1493,9 @@
 </head>
 <body>
     <header>
-        <div class="logo">🐔 PROTOCOLO ELITE 360º</div>
-
-        <div class="header-carousel-container">
-            <div class="header-carousel-track" id="carouselTrack">
-            </div>
-            <div class="header-phrase">JÁ AJUDAMOS CENTENAS DE PESSOAS...</div>
-        </div>
-
+        <div class="logo">Protocolo Elite 360º</div>
         <div class="header-cta-wrapper">
-            <span class="expert-badge">✅ PROTOCOLO VALIDADO</span>
             <button class="cta-button" onclick="document.querySelector('.pricing-section').scrollIntoView({behavior: 'smooth'})">GARANTIR ACESSO</button>
-            <div class="countdown-timer" data-timer-id="timer-header"></div>
         </div>
     </header>
 
@@ -1537,6 +1541,20 @@
                     <div class="avatar-item"><img src="foto3.jpeg" alt="Foto de usuário 3"></div>
                     <div class="avatar-item">+</div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Carrossel de Depoimentos Movido do Header -->
+    <section class="testimonials-section" style="padding: 20px 0; background-color: white;">
+        <div class="container" style="max-width: 100%; overflow: hidden;">
+            <h2 id="testimonials-title" style="text-align: center; margin-bottom: 20px; color: #1a3a52; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">O Que Dizem Nossos Clientes</h2>
+            <div class="header-carousel-container" style="flex: none; min-width: auto; height: auto; display: block; margin: 0 auto;">
+                <div class="header-carousel-track animate" id="carouselTrackNew" style="padding-bottom: 0; margin: 0 auto;">
+                    <!-- Os itens do carrossel serão injetados aqui pelo JavaScript -->
+                </div>
+                <div class="header-phrase" id="satisfied-creators-phrase" style="position: static; transform: none; margin-top: 10px; background-color: transparent; color: #1a3a52; font-size: 16px; font-weight: bold; text-shadow: 0 0 1px #1a3a52;">Mais de 10.000 criadores satisfeitos!</div>
+                <div class="guarantee-phrase" style="text-align: center; font-size: 14px; font-weight: bold; color: #00a86b; margin-top: 5px; text-shadow: 0 0 1px #00a86b;">Protocolo Garantido</div>
             </div>
         </div>
     </section>
@@ -1796,21 +1814,21 @@
 
         // Initialize carousel
         function initCarousel() {
-            const carouselTrack = document.getElementById('carouselTrack');
+            const carouselTrack = document.getElementById('carouselTrackNew');
 
             // Create testimonial items
             testimonials.forEach(testimonial => {
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                                                                                    <div class="avatar"><img src="${testimonial.avatar}" alt="${testimonial.author}" loading="lazy" /></div>
-                                                                                                                                                    <div class="content">
-                                                                                                                                                        <div class="text">${testimonial.text}</div>
-                                                                                                                                                        <div class="author">${testimonial.author}</div>
-                                                                                                                                                        <div class="location">${testimonial.location}</div>
-                                                                                                                                                        <div class="stars">${testimonial.stars}</div>
-                                                                                                                                                    </div>
-                                                                                                                                                `;
+                            <div class="avatar"><img src="${testimonial.avatar}" alt="${testimonial.author}" loading="lazy" /></div>
+                            <div class="content">
+                                <div class="text">${testimonial.text}</div>
+                                <div class="author">${testimonial.author}</div>
+                                <div class="location">${testimonial.location}</div>
+                                <div class="stars">${testimonial.stars}</div>
+                            </div>
+                        `;
                 carouselTrack.appendChild(item);
             });
 
@@ -1819,14 +1837,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                                                                                    <div class="avatar"><img src="${testimonial.avatar}" alt="${testimonial.author}" loading="lazy" /></div>
-                                                                                                                                                    <div class="content">
-                                                                                                                                                        <div class="text">${testimonial.text}</div>
-                                                                                                                                                        <div class="author">${testimonial.author}</div>
-                                                                                                                                                        <div class="location">${testimonial.location}</div>
-                                                                                                                                                        <div class="stars">${testimonial.stars}</div>
-                                                                                                                                                    </div>
-                                                                                                                                                `;
+                                                                                                                                                            <div class="avatar"><img src="${testimonial.avatar}" alt="${testimonial.author}" loading="lazy" /></div>
+                                                                                                                                                            <div class="content">
+                                                                                                                                                                <div class="text">${testimonial.text}</div>
+                                                                                                                                                                <div class="author">${testimonial.author}</div>
+                                                                                                                                                                <div class="location">${testimonial.location}</div>
+                                                                                                                                                                <div class="stars">${testimonial.stars}</div>
+                                                                                                                                                            </div>
+                                                                                                                                                        `;
                 carouselTrack.appendChild(item);
             });
 
