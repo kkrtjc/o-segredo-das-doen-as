@@ -246,6 +246,8 @@
         .header-carousel-track {
             display: flex;
             gap: 15px;
+            -webkit-transform: translateZ(0); /* Força aceleração de hardware no iOS */
+            transform: translateZ(0);
             -webkit-transform-style: preserve-3d;
             transform-style: preserve-3d;
             will-change: transform;
@@ -254,6 +256,7 @@
         }
 
             .header-carousel-track.animate {
+                -webkit-animation: scroll-carousel 100s linear infinite; /* Adicione esta linha */
                 animation: scroll-carousel 100s linear infinite;
             }
 
@@ -1841,7 +1844,12 @@
             });
 
             // Adiciona a classe 'animate' para iniciar a animação CSS APÓS o conteúdo ser carregado.
-            carouselTrack.classList.add('animate');
+            // Aguarda o próximo quadro de renderização para iniciar a animação (corrige bug do iOS)
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    carouselTrack.classList.add('animate');
+                }, 100);
+            });
         }
 
         // Toggle FAQ
