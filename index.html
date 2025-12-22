@@ -7,29 +7,32 @@
 
     <!-- Meta Pixel Code -->
     <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1346740157465853');
-    fbq('track', 'PageView');
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1346740157465853');
+        fbq('track', 'PageView');
     </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=1346740157465853&ev=PageView&noscript=1"
-    /></noscript>
+    <noscript>
+         <img height="1" width="1" style="display:none"
+             src="https://www.facebook.com/tr?id=1346740157465853&ev=PageView&noscript=1" />
+    </noscript>
     <!-- End Meta Pixel Code -->
-
     <!-- TikTok Pixel Code -->
     <script>
-    !function (w, d, t) {
-      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","load","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=d.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=d.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
-      ttq.load('D4VFSO3C77U98L8KBEF0');
-      ttq.page();
-    }(window, document, 'ttq');
+        !function (w, d, t) {
+            w.TiktokAnalyticsObject = t; var ttq = w[t] = w[t] || []; ttq.methods = ["page", "track", "identify", "instances", "load", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie"], ttq.setAndDefer = function (t, e) { t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }; for (var i = 0; i < ttq.methods.length; i++)ttq.setAndDefer(ttq, ttq.methods[i]); ttq.instance = function (t) { for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++)ttq.setAndDefer(e, ttq.methods[n]); return e }, ttq.load = function (e, n) { var i = "https://analytics.tiktok.com/i18n/pixel/events.js"; ttq._i = ttq._i || {}, ttq._i[e] = [], ttq._i[e]._u = i, ttq._t = ttq._t || {}, ttq._t[e] = +new Date, ttq._o = ttq._o || {}, ttq._o[e] = n || {}; var o = d.createElement("script"); o.type = "text/javascript", o.async = !0, o.src = i + "?sdkid=" + e + "&lib=" + t; var a = d.getElementsByTagName("script")[0]; a.parentNode.insertBefore(o, a) };
+            ttq.load('D4VFSO3C77U98L8KBEF0');
+            ttq.page();
+        }(window, document, 'ttq');
     </script>
     <!-- End TikTok Pixel Code -->
     <style>
@@ -211,7 +214,9 @@
 
         /* Header */
         .header-carousel-container {
-            flex: 1;
+            width: 100%;
+            margin-top: 30px;
+            margin-bottom: 25px;
             min-width: 200px;
             height: auto;
             display: flex;
@@ -223,22 +228,19 @@
         }
 
         .header-phrase {
-            font-size: 9px;
+            font-size: 11px; /* Aumentei um pouco para facilitar a leitura */
             font-weight: bold;
-            color: #ffd700;
+            color: #ffffff; /* Verde Vivo / Limão Vibrante  */
             text-align: center;
-            margin-top: 2px;
+            margin-top: 15px; /* Este é o espaço entre o carrossel e a frase  */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 100%;
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
             width: 100%;
-            background-color: rgba(0, 0, 0, 0.2);
-            padding: 1px 0;
+            background-color: #1a3a52;
+            padding: 5px 0;
+            /* Remova as linhas de 'position: absolute', 'bottom' e 'transform' para o espaço de margem funcionar */
         }
 
         .header-carousel-track {
@@ -1482,11 +1484,7 @@
     <header>
         <div class="logo">🐔 PROTOCOLO ELITE 360º</div>
 
-        <div class="header-carousel-container">
-            <div class="header-carousel-track" id="carouselTrack">
-            </div>
-            <div class="header-phrase">JÁ AJUDAMOS CENTENAS DE PESSOAS...</div>
-        </div>
+        
 
         <div class="header-cta-wrapper">
             <span class="expert-badge">✅ PROTOCOLO VALIDADO</span>
@@ -1521,6 +1519,7 @@
             </div>
             <p style="margin-top: 20px; color: #666; font-size: 14px;"></p>
 
+
             <!-- Selo de Garantia -->
             <div class="guarantee-badge-video">
                 <span class="icon">🔒</span>
@@ -1536,8 +1535,19 @@
                     <div class="avatar-item"><img src="foto2.png" alt="Foto de usuário 2"></div>
                     <div class="avatar-item"><img src="foto3.jpeg" alt="Foto de usuário 3"></div>
                     <div class="avatar-item">+</div>
+                   
                 </div>
             </div>
+        </div>
+        <div class="header-carousel-container">
+
+            <div class="header-carousel-track" id="carouselTrack">
+
+            </div>
+
+            <div class="header-phrase">JÁ AJUDAMOS CENTENAS DE PESSOAS...
+            </div>
+
         </div>
     </section>
 
@@ -1803,14 +1813,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                                                                                    <div class="avatar"><img src="${testimonial.avatar}" alt="${testimonial.author}" loading="lazy" /></div>
-                                                                                                                                                    <div class="content">
-                                                                                                                                                        <div class="text">${testimonial.text}</div>
-                                                                                                                                                        <div class="author">${testimonial.author}</div>
-                                                                                                                                                        <div class="location">${testimonial.location}</div>
-                                                                                                                                                        <div class="stars">${testimonial.stars}</div>
-                                                                                                                                                    </div>
-                                                                                                                                                `;
+                                                                                                                                                            <div class="avatar"><img src="${testimonial.avatar}" alt="${testimonial.author}" loading="lazy" /></div>
+                                                                                                                                                            <div class="content">
+                                                                                                                                                                <div class="text">${testimonial.text}</div>
+                                                                                                                                                                <div class="author">${testimonial.author}</div>
+                                                                                                                                                                <div class="location">${testimonial.location}</div>
+                                                                                                                                                                <div class="stars">${testimonial.stars}</div>
+                                                                                                                                                            </div>
+                                                                                                                                                        `;
                 carouselTrack.appendChild(item);
             });
 
@@ -1819,14 +1829,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                                                                                    <div class="avatar"><img src="${testimonial.avatar}" alt="${testimonial.author}" loading="lazy" /></div>
-                                                                                                                                                    <div class="content">
-                                                                                                                                                        <div class="text">${testimonial.text}</div>
-                                                                                                                                                        <div class="author">${testimonial.author}</div>
-                                                                                                                                                        <div class="location">${testimonial.location}</div>
-                                                                                                                                                        <div class="stars">${testimonial.stars}</div>
-                                                                                                                                                    </div>
-                                                                                                                                                `;
+                                                                                                                                                            <div class="avatar"><img src="${testimonial.avatar}" alt="${testimonial.author}" loading="lazy" /></div>
+                                                                                                                                                            <div class="content">
+                                                                                                                                                                <div class="text">${testimonial.text}</div>
+                                                                                                                                                                <div class="author">${testimonial.author}</div>
+                                                                                                                                                                <div class="location">${testimonial.location}</div>
+                                                                                                                                                                <div class="stars">${testimonial.stars}</div>
+                                                                                                                                                            </div>
+                                                                                                                                                        `;
                 carouselTrack.appendChild(item);
             });
 
