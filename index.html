@@ -22,7 +22,7 @@
         fbq('track', 'PageView');
     </script>
     <noscript>
-         <img height="1" width="1" style="display:none"
+        <img height="1" width="1" style="display:none"
              src="https://www.facebook.com/tr?id=1346740157465853&ev=PageView&noscript=1" />
     </noscript>
     <!-- End Meta Pixel Code -->
@@ -1487,7 +1487,7 @@
     <header>
         <div class="logo">🐔 PROTOCOLO ELITE 360º</div>
 
-        
+
 
         <div class="header-cta-wrapper">
             <span class="expert-badge">✅ PROTOCOLO VALIDADO</span>
@@ -1538,7 +1538,7 @@
                     <div class="avatar-item"><img src="foto2.png" alt="Foto de usuário 2"></div>
                     <div class="avatar-item"><img src="foto3.jpeg" alt="Foto de usuário 3"></div>
                     <div class="avatar-item">+</div>
-                   
+
                 </div>
             </div>
         </div>
@@ -1548,7 +1548,8 @@
 
             </div>
 
-            <div class="header-phrase">JÁ AJUDAMOS CENTENAS DE PESSOAS...
+            <div class="header-phrase">
+                JÁ AJUDAMOS CENTENAS DE PESSOAS...
             </div>
 
         </div>
@@ -1816,14 +1817,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                                                                                            <div class="avatar"><img src="${testimonial.avatar}" alt="${testimonial.author}" loading="lazy" /></div>
-                                                                                                                                                            <div class="content">
-                                                                                                                                                                <div class="text">${testimonial.text}</div>
-                                                                                                                                                                <div class="author">${testimonial.author}</div>
-                                                                                                                                                                <div class="location">${testimonial.location}</div>
-                                                                                                                                                                <div class="stars">${testimonial.stars}</div>
-                                                                                                                                                            </div>
-                                                                                                                                                        `;
+                                                                                                                                                                        <div class="avatar"><img src="${testimonial.avatar}" alt="${testimonial.author}" loading="lazy" /></div>
+                                                                                                                                                                        <div class="content">
+                                                                                                                                                                            <div class="text">${testimonial.text}</div>
+                                                                                                                                                                            <div class="author">${testimonial.author}</div>
+                                                                                                                                                                            <div class="location">${testimonial.location}</div>
+                                                                                                                                                                            <div class="stars">${testimonial.stars}</div>
+                                                                                                                                                                        </div>
+                                                                                                                                                                    `;
                 carouselTrack.appendChild(item);
             });
 
@@ -1832,14 +1833,14 @@
                 const item = document.createElement('div');
                 item.className = 'header-testimonial-item';
                 item.innerHTML = `
-                                                                                                                                                            <div class="avatar"><img src="${testimonial.avatar}" alt="${testimonial.author}" loading="lazy" /></div>
-                                                                                                                                                            <div class="content">
-                                                                                                                                                                <div class="text">${testimonial.text}</div>
-                                                                                                                                                                <div class="author">${testimonial.author}</div>
-                                                                                                                                                                <div class="location">${testimonial.location}</div>
-                                                                                                                                                                <div class="stars">${testimonial.stars}</div>
-                                                                                                                                                            </div>
-                                                                                                                                                        `;
+                                                                                                                                                                        <div class="avatar"><img src="${testimonial.avatar}" alt="${testimonial.author}" loading="lazy" /></div>
+                                                                                                                                                                        <div class="content">
+                                                                                                                                                                            <div class="text">${testimonial.text}</div>
+                                                                                                                                                                            <div class="author">${testimonial.author}</div>
+                                                                                                                                                                            <div class="location">${testimonial.location}</div>
+                                                                                                                                                                            <div class="stars">${testimonial.stars}</div>
+                                                                                                                                                                        </div>
+                                                                                                                                                                    `;
                 carouselTrack.appendChild(item);
             });
 
@@ -2025,6 +2026,18 @@
             }, 1000);
         });
     </script>
-
+    <script>
+        setTimeout(function () {
+            // Disparo para o Meta Pixel (Facebook)
+            if (typeof fbq === 'function') {
+                fbq('track', 'ViewContent');
+            }
+            // Disparo para o TikTok Pixel
+            if (typeof ttq === 'object') {
+                ttq.track('ViewContent');
+            }
+            console.log('Evento de permanência disparado: ViewContent');
+        }, 8000); // 8 segundos
+    </script>
 </body>
 </html>
