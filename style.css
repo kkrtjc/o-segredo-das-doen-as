@@ -292,7 +292,7 @@ ul {
     text-align: center;
     overflow: hidden;
     background: #000;
-    min-height: 70vh;
+    min-height: -50vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -305,9 +305,10 @@ ul {
     width: 100%;
     height: 100%;
     z-index: 0;
+    zoom: -30%;
     background-image: url('optimized_hero_bg.jpg');
     background-size: cover;
-    background-position: center;
+    background-position: 50%;
     background-repeat: no-repeat;
 }
 
@@ -1374,8 +1375,9 @@ footer {
 .btn-primary {
     background: #000;
     color: #fff;
-    border: none;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border: 2px solid #D4AF37;
+    /* Visible Gold Border */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .btn-primary:hover {
@@ -2272,5 +2274,17 @@ footer {
     .label-elite {
         padding: 8px 12px;
         font-size: 0.7rem;
+    }
+
+    /* Mobile Hero Adjustment to "Zoom Out" */
+    .hero {
+        /* 
+           COMO AJUSTAR O "ZOOM":
+           - 55vh = Mais longe (aparece mais imagem)
+           - 70vh = Mais perto (imagem maior)
+           Mude o valor abaixo para controlar.
+        */
+        min-height: 55vh;
+        padding: 100px 0 60px;
     }
 }
