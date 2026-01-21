@@ -443,8 +443,8 @@ async function handlePayment(method) {
 
         // --- 🛡️ PIX LOGIC (ALWAYS NEW) ---
         // We removed the "Reuse Only" logic to fix the "Stuck" issue.
-        // If the user clicks "Pay", they want a specific action now.
-        // The background check on load handles the "paid but close" scenario.
+        const totalAmount = items.reduce((acc, item) => acc + Number(item.price), 0);
+        const itemIds = items.map(i => i.id).sort().join(',');
 
         btn.innerText = 'Gerando Pix...';
         btn.disabled = true;
