@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seus Downloads | O Segredo das Galinhas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Meta Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1346740157465853');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=1346740157465853&ev=PageView&noscript=1" />
+    </noscript>
+    <!-- End Meta Pixel Code -->
+    <!-- TikTok Pixel Code -->
+    <script>
+        !function (w, d, t) {
+            w.TiktokAnalyticsObject = t; var ttq = w[t] = w[t] || []; ttq.methods = ["page", "track", "identify", "instances", "load", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie"], ttq.setAndDefer = function (t, e) { t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }; for (var i = 0; i < ttq.methods.length; i++)ttq.setAndDefer(ttq, ttq.methods[i]); ttq.instance = function (t) { for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++)ttq.setAndDefer(e, ttq.methods[n]); return e }, ttq.load = function (e, n) { var i = "https://analytics.tiktok.com/i18n/pixel/events.js"; ttq._i = ttq._i || {}, ttq._i[e] = [], ttq._i[e]._u = i, ttq._t = ttq._t || {}, ttq._t[e] = +new Date, ttq._o = ttq._o || {}, ttq._o[e] = n || {}; var o = d.createElement("script"); o.type = "text/javascript", o.async = !0, o.src = i + "?sdkid=" + e + "&lib=" + t; var a = d.getElementsByTagName("script")[0]; a.parentNode.insertBefore(o, a) };
+            ttq.load('D4VFSO3C77U98L8KBEF0');
+            ttq.page();
+        }(window, document, 'ttq');
+    </script>
+    <!-- End TikTok Pixel Code -->
+    <style>
+        :root {
+            --color-primary: #D4AF37;
+            --color-secondary: #FFD700;
+            --font-body: 'Inter', sans-serif;
+            --font-heading: 'Outfit', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #050505;
+            background-image: radial-gradient(circle at 50% 0, #1a1a1a 0%, #000 70%);
+            color: #fff;
+            font-family: var(--font-body);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            padding: 3rem 2rem;
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo {
+            height: 60px;
+            margin-bottom: 1.5rem;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .downloads-section {
+            margin: 2rem 0;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .download-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .download-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--color-secondary);
+            transform: translateY(-2px);
+        }
+
+        .download-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1rem;
+        }
+
+        .download-icon {
+            width: 60px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #000;
+            flex-shrink: 0;
+        }
+
+        .download-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+            font-family: var(--font-heading);
+        }
+
+        .download-info p {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .btn-download {
+            background: var(--color-secondary);
+            color: #000;
+            font-weight: 800;
+            font-size: 1rem;
+            padding: 1rem 1.5rem;
+            width: 100%;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            background: #FFE55C;
+        }
+
+        .btn-download i {
+            font-size: 1.2rem;
+        }
+
+        .whatsapp-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-whatsapp {
+            background: rgba(37, 211, 102, 0.1);
+            color: #25D366;
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            font-weight: 600;
+            padding: 1rem;
+            width: 100%;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-whatsapp:hover {
+            background: rgba(37, 211, 102, 0.2);
+            border-color: #25D366;
+            transform: translateY(-1px);
+        }
+
+        .footer-note {
+            font-size: 0.85rem;
+            margin-top: 2rem;
+            color: #555;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .download-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .download-icon {
+                width: 50px;
+                height: 70px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="logo.png" alt="Galos Mura Brasil" class="logo">
+            <div class="success-icon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h1>Pagamento Aprovado!</h1>
+            <p class="subtitle" id="success-msg">Seus materiais estão prontos para download.</p>
+        </div>
+
+        <div class="downloads-section">
+            <div class="section-title">
+                <i class="fa-solid fa-download"></i>
+                <span>Seus E-books</span>
+            </div>
+
+            <!-- Manejo de Pintinhos -->
+            <div class="download-item" id="item-manejo" style="display: none;">
+                <div class="download-header">
+                    <div class="download-icon">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <div class="download-info">
+                        <h3>Manual de Manejo de Pintinhos</h3>
+                        <p>Guia completo para criação de pintinhos saudáveis</p>
+                    </div>
+                </div>
+                <a href="https://teste-m1kq.onrender.com/download/manejo" class="btn-download">
+                    <i class="fa-solid fa-cloud-arrow-down"></i>
+                    <span>Baixar Manual de Pintinhos</span>
+                </a>
+            </div>
+
+            <!-- Doenças Avícolas -->
+            <div class="download-item" id="item-doencas" style="display: none;">
+                <div class="download-header">
+                    <div class="download-icon">
+                        <i class="fa-solid fa-book-medical"></i>
+                    </div>
+                    <div class="download-info">
+                        <h3>Guia de Doenças Avícolas</h3>
+                        <p>11 doenças documentadas com protocolos de tratamento</p>
+                    </div>
+                </div>
+                <a href="https://teste-m1kq.onrender.com/download/doencas" class="btn-download">
+                    <i class="fa-solid fa-cloud-arrow-down"></i>
+                    <span>Baixar Guia de Doenças</span>
+                </a>
+            </div>
+
+            <!-- Order Bump -->
+            <div class="download-item" id="item-orderbump" style="display: none;">
+                <div class="download-header">
+                    <div class="download-icon">
+                        <i class="fa-solid fa-table"></i>
+                    </div>
+                    <div class="download-info">
+                        <h3>Tabela de Ração Completa</h3>
+                        <p>Produza sua própria ração e economize até 65%</p>
+                    </div>
+                </div>
+                <a href="https://teste-m1kq.onrender.com/download/orderbump" class="btn-download">
+                    <i class="fa-solid fa-cloud-arrow-down"></i>
+                    <span>Baixar Tabela de Ração</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="whatsapp-section">
+            <a href="#" class="btn-whatsapp" id="whatsapp-btn">
+                <i class="fa-brands fa-whatsapp"></i>
+                Receber também no WhatsApp
+            </a>
+        </div>
+
+        <div class="footer-note">
+            <p><i class="fa-solid fa-envelope"></i> Enviamos os dados de acesso para o seu e-mail.<br>
+                Verifique a caixa de entrada e o spam.</p>
+        </div>
+    </div>
+
+    <script>
+        // Parse URL parameters to detect purchased items
+        const params = new URLSearchParams(window.location.search);
+        const itemsParam = params.get('items') || '';
+        const items = itemsParam.split(',').filter(i => i.trim());
+
+        console.log('Purchased items:', items);
+
+        // Elements
+        const itemManejo = document.getElementById('item-manejo');
+        const itemDoencas = document.getElementById('item-doencas');
+        const itemOrderbump = document.getElementById('item-orderbump');
+        const successMsg = document.getElementById('success-msg');
+        const whatsappBtn = document.getElementById('whatsapp-btn');
+
+        // Detection logic
+        let hasManejo = false;
+        let hasDoencas = false;
+        let hasOrderbump = false;
+        let isCombo = false;
+
+        // Check for combo
+        if (items.includes('combo-elite') || items.includes('combo')) {
+            isCombo = true;
+            hasManejo = true;
+            hasDoencas = true;
+        }
+
+        // Check for individual products
+        if (items.includes('ebook-manejo') || items.includes('manejo')) {
+            hasManejo = true;
+        }
+        if (items.includes('ebook-doencas') || items.includes('doencas')) {
+            hasDoencas = true;
+        }
+
+        // Check for order bump (multiple possible IDs)
+        if (items.some(item => item.includes('bump'))) {
+            hasOrderbump = true;
+        }
+
+        // Show purchased items
+        if (hasManejo) itemManejo.style.display = 'block';
+        if (hasDoencas) itemDoencas.style.display = 'block';
+        if (hasOrderbump) itemOrderbump.style.display = 'block';
+
+        // Update success message
+        if (isCombo && hasOrderbump) {
+            successMsg.innerText = 'Seu Combo Elite 360º + Bônus foi liberado!';
+        } else if (isCombo) {
+            successMsg.innerText = 'Seu Combo Elite 360º foi liberado!';
+        } else if (hasManejo && hasDoencas && hasOrderbump) {
+            successMsg.innerText = 'Seus e-books + bônus foram liberados!';
+        } else if (hasManejo && hasDoencas) {
+            successMsg.innerText = 'Seus e-books foram liberados!';
+        } else if (hasManejo && hasOrderbump) {
+            successMsg.innerText = 'Seu Manual de Pintinhos + Bônus foi liberado!';
+        } else if (hasDoencas && hasOrderbump) {
+            successMsg.innerText = 'Seu Guia de Doenças + Bônus foi liberado!';
+        } else if (hasManejo) {
+            successMsg.innerText = 'Seu Manual de Pintinhos foi liberado!';
+        } else if (hasDoencas) {
+            successMsg.innerText = 'Seu Guia de Doenças foi liberado!';
+        }
+
+        // WhatsApp Logic
+        whatsappBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const phone = "5538999832950";
+            const productList = [];
+            if (hasManejo) productList.push('Manual de Pintinhos');
+            if (hasDoencas) productList.push('Guia de Doenças');
+            if (hasOrderbump) productList.push('Tabela de Ração');
+
+            const text = encodeURIComponent(`Olá! Acabei de adquirir: ${productList.join(', ')}. Gostaria de receber meu acesso por aqui também.`);
+            window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+        });
+
+        // --- Marketing Tracking: Purchase ---
+        const total = parseFloat(params.get('total') || '0');
+        if (items.length > 0) {
+            if (typeof fbq === 'function') {
+                fbq('track', 'Purchase', {
+                    value: total,
+                    currency: 'BRL',
+                    content_ids: items,
+                    content_type: 'product'
+                });
+            }
+            if (typeof ttq === 'object') {
+                ttq.track('CompletePayment', {
+                    value: total,
+                    currency: 'BRL',
+                    contents: items.map(id => ({ content_id: id }))
+                });
+            }
+            console.log('✅ Purchase tracked:', { total, items });
+        }
+
+        // Fallback: if no items detected, show all (safety measure)
+        if (!hasManejo && !hasDoencas && !hasOrderbump) {
+            console.warn('No items detected in URL, showing all items as fallback');
+            itemManejo.style.display = 'block';
+            itemDoencas.style.display = 'block';
+            successMsg.innerText = 'Seus materiais foram liberados!';
+        }
+    </script>
+</body>
+
+</html>

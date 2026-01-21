@@ -1,4 +1,3 @@
-r
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -9,15 +8,13 @@ r
     <meta name="description"
         content="Pare de perder dinheiro e triplique sua produção. Descubra o método profissional de manejo para criadores de elite que blinda seu plantel.">
 
-    <!-- Performance Optimization: Checkout Preloading -->
-    <link rel="preconnect" href="https://pay.kiwify.com.br">
-    <link rel="prefetch" href="https://pay.kiwify.com.br/hzbzv51"> <!-- Featured Combo -->
-    <link rel="prefetch" href="https://pay.kiwify.com.br/PFuaAFH"> <!-- Manejo -->
-    <link rel="prefetch" href="https://pay.kiwify.com.br/t4bvM9I"> <!-- Doenças -->
+    <!-- Fonts -->
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Performance Optimization: Preconnect Payment Gateway -->
+    <link rel="preconnect" href="https://api.mercadopago.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@400;700;800&display=swap"
         rel="stylesheet">
@@ -26,7 +23,8 @@ r
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=9">
+    <link rel="stylesheet" href="order_bump_modal.css">
 
     <!-- Meta Pixel Code -->
     <script>
@@ -62,13 +60,7 @@ r
 
 <body>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="logo">Elite<span>360º</span></div>
-            <a href="#offers" class="btn btn-primary btn-sm">Garantir Acesso</a>
-        </div>
-    </header>
+
 
     <!-- Hero Section -->
     <section class="hero" id="home">
@@ -112,7 +104,7 @@ r
         style="background: #000; padding: 5rem 0; border-bottom: 1px solid rgba(212, 175, 55, 0.1);">
         <div class="container">
             <div class="text-center" style="margin-bottom: 4rem;">
-                <span class="badge-featured" style="display:inline-block; margin-bottom:1rem;">ESTUDOS DE CASO</span>
+
                 <h2>Resultados Que <span class="text-highlight">Falam Por Si</span></h2>
                 <p style="max-width: 600px; margin: 1rem auto 0; opacity: 0.8; font-size: 1.1rem;">Veja na prática a
                     diferença brutal entre a criação amadora e o Protocolo Elite 360º.</p>
@@ -311,72 +303,16 @@ r
             <div class="text-center" style="margin-bottom: var(--spacing-lg);">
                 <h2>ESCOLHA SUA OFERTA</h2>
                 <p>O conhecimento que separa o prejuízo do lucro.</p>
+                <p class="mobile-scroll-hint"
+                    style="display: none; color: var(--color-secondary); font-size: 0.85rem; margin-top: 0.5rem;">
+                    <i class="fa-solid fa-hand-point-right"></i> Deslize para ver todas as ofertas <i
+                        class="fa-solid fa-hand-point-left"></i>
+                </p>
             </div>
 
             <div class="pricing-wrapper">
-                <div class="pricing-grid">
-
-                    <!-- Card 1: Manejo -->
-                    <div class="price-card">
-                        <h3 class="price-title">Manejo de Pintinhos</h3>
-                        <img src="capadospintinhos.png" alt="Capa Manejo" loading="lazy"
-                            style="max-width: 120px; margin: 10px auto; display: block;" width="120" height="160">
-                        <span class="price-amount">R$ 54<small>,90</small></span>
-                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">Acesso Vitalício</p>
-                        <ul class="price-features">
-                            <li><span class="check-icon">✓</span> Incubação Perfeita</li>
-                            <li><span class="check-icon">✓</span> Ambiente de Elite</li>
-                            <li><span class="check-icon">✓</span> Nutrição Essencial</li>
-                        </ul>
-                        <a href="https://pay.kiwify.com.br/PFuaAFH" class="btn btn-secondary"
-                            style="width:100%;">COMPRAR AGORA</a>
-                    </div>
-
-                    <!-- Card 2: Combo (Featured) -->
-                    <div class="price-card featured" id="offer-focus">
-                        <span class="badge-featured">MAIS VENDIDO • 20% OFF</span>
-                        <h3 class="price-title">Protocolo Elite 360º</h3>
-                        <p><strong>Combo Completo</strong></p>
-
-                        <!-- Combo Dual Visual -->
-                        <div class="combo-visual">
-                            <img src="capadospintinhos.png" class="combo-img" alt="Manejo" loading="lazy" width="120"
-                                height="160">
-                            <img src="capadasdoencas.png" class="combo-img" alt="Doenças" loading="lazy" width="120"
-                                height="160">
-                        </div>
-
-                        <div style="text-decoration: line-through; color: #999; margin-top: 10px;">De R$ 139,80</div>
-                        <span class="price-amount" style="color: var(--color-secondary);">R$
-                            111<small>,84</small></span>
-                        <p style="font-size: 0.9rem; color: #666;">ou 12x de R$ 11,21</p>
-
-                        <ul class="price-features" style="margin-top: 1.5rem;">
-                            <li><span class="check-icon">✓</span> <strong>Manejo de Pintinhos Elite</strong></li>
-                            <li><span class="check-icon">✓</span> <strong>Doenças Avícolas Completo</strong></li>
-                            <li><span class="check-icon">✓</span> Suporte Exclusivo</li>
-                            <li><span class="check-icon">✓</span> Garantia de 7 Dias</li>
-                        </ul>
-                        <a href="https://pay.kiwify.com.br/hzbzv51" class="btn btn-primary btn-pulse"
-                            style="width:100%;">QUERO SALVAR MINHA CRIAÇÃO</a>
-                    </div>
-
-                    <!-- Card 3: Doenças -->
-                    <div class="price-card">
-                        <h3 class="price-title">Doenças Avícolas</h3>
-                        <img src="capadasdoencas.png" alt="Capa Doenças" loading="lazy"
-                            style="max-width: 120px; margin: 10px auto; display: block;" width="120" height="160">
-                        <span class="price-amount">R$ 84<small>,90</small></span>
-                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">Acesso Vitalício</p>
-                        <ul class="price-features">
-                            <li><span class="check-icon">✓</span> 11 Doenças Documentadas</li>
-                            <li><span class="check-icon">✓</span> Tabelas de Sintomas</li>
-                            <li><span class="check-icon">✓</span> Protocolos de Tratamento</li>
-                        </ul>
-                        <a href="https://pay.kiwify.com.br/t4bvM9I" class="btn btn-secondary"
-                            style="width:100%;">COMPRAR AGORA</a>
-                    </div>
-
+                <div class="pricing-grid" id="home-products-container">
+                    <!-- Dinamicamente preenchido pelo script.js -->
                 </div>
             </div>
 
@@ -392,8 +328,8 @@ r
 
                 <!-- Rooster Image Area -->
                 <div class="guarantee-Visual">
-                    <img src="hero_background.png" alt="Garantia Rooster" class="guarantee-img" loading="lazy"
-                        width="600" height="600">
+                    <img src="galo_garantia.png" alt="Garantia Rooster" class="guarantee-img" loading="lazy" width="600"
+                        height="600">
                 </div>
 
                 <!-- Text Content -->
@@ -448,24 +384,30 @@ r
         </div>
     </section>
 
-    <!-- Sticky CTA Bar -->
     <div class="sticky-cta-bar">
-        <div class="container">
-            <div class="sticky-info" style="display: flex; align-items: center; gap: 10px;">
-                <span class="desktop-only text-sm" style="font-weight: 600;">OFERTA DISPONÍVEL</span>
-            </div>
-            <a href="https://pay.kiwify.com.br/hzbzv51" class="btn btn-primary btn-sm"
-                style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">
-                ACESSAR PROTOCOLO <i class="fa-solid fa-chevron-right" style="margin-left: 5px;"></i>
+        <div class="container"
+            style="position: relative; display: flex; justify-content: center; align-items: center; height: 100%;">
+            <a href="#offers" class="btn btn-primary btn-sm btn-pulse"
+                style="padding: 0.8rem 2.5rem; font-size: 1rem; text-decoration: none; z-index: 2; min-width: 250px; text-align: center;">
+                GARANTIR ACESSO AGORA
             </a>
+            <img src="logo.png" alt="Logo" class="sticky-right-logo">
         </div>
     </div>
 
     <footer class="main-footer">
         <div class="container footer-grid">
             <div class="footer-col footer-about">
-                <h4>PROTOCOLO ELITE 360º</h4>
-                <p>O Segredo das Galinhas - Criando com Excelência.</p>
+                <img src="logo.png" alt="Galos Mura Brasil" class="logo-footer">
+                <p>Galos Mura Brasil - Criando com Excelência.</p>
+                <div class="footer-social-main">
+                    <a href="https://www.instagram.com/galosmurabrasill/" target="_blank"><i
+                            class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=61578338141942" target="_blank"><i
+                            class="fa-brands fa-facebook"></i></a>
+                    <a href="https://www.tiktok.com/@galosmurabrasil" target="_blank"><i
+                            class="fa-brands fa-tiktok"></i></a>
+                </div>
                 <div class="footer-info">
                     <p class="text-sm">Suporte especializado para criadores de elite.</p>
                 </div>
@@ -479,12 +421,16 @@ r
                     <i class="fa-solid fa-lock" title="Checkout Protegido"></i>
                     <i class="fa-solid fa-certificate" title="Qualidade Garantida"></i>
                 </div>
-                <p class="text-sm" style="margin-top: 10px;">Pagamentos seguros processados via Kiwify</p>
+                <p class="text-sm" style="margin-top: 10px;">Pagamentos seguros processados via Mercado Pago</p>
             </div>
         </div>
         <div class="footer-bottom">
             <div class="container text-center">
                 <p>&copy; 2025 Protocolo Elite 360º. Todos os direitos reservados.</p>
+                <div class="business-info"
+                    style="margin: 10px 0; color: rgba(255,255,255,0.4); font-size: 0.8rem; font-weight: 600;">
+                    GALOS MURA BRASIL | CNPJ: 63.665.824/0001-09 | Minas Gerais
+                </div>
                 <div class="vsl-disclaimer">
                     Este site não é afiliado ao Facebook ou à Google. As informações fornecidas são de caráter
                     educacional.
@@ -500,7 +446,295 @@ r
 
 
 
+    <!-- Checkout Modal (Restored) -->
+    <div id="checkout-modal" class="checkout-modal">
+        <div class="checkout-overlay"></div>
+        <div class="checkout-container">
+            <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
 
+            <div class="checkout-header-logo">
+                <img src="logo.png" alt="Logo" class="checkout-logo-main">
+            </div>
+
+            <div id="checkout-main-view">
+                <div class="checkout-header">
+                    <h3>Finalizar Compra</h3>
+                    <p><i class="fa-solid fa-shield-check"></i> Ambiente Seguro</p>
+                </div>
+
+                <!-- 1. TOP LEVEL TOGGLE -->
+                <div class="method-selector top-toggle">
+                    <button type="button" class="method-btn active" data-method="pix">
+                        <i class="fa-brands fa-pix"></i> PIX (Imediato)
+                    </button>
+                    <button type="button" class="method-btn" data-method="card">
+                        <i class="fa-regular fa-credit-card"></i> Cartão
+                    </button>
+                </div>
+
+                <!-- Product Summary -->
+                <div class="checkout-product-summary">
+                    <div class="p-icon-wrapper" id="product-icon-container">
+                        <!-- Dynamic -->
+                    </div>
+                    <div class="p-main-info">
+                        <span class="p-label">RESUMO DO PEDIDO:</span>
+                        <h4 id="checkout-product-name" class="p-title">Carregando...</h4>
+                    </div>
+                    <div class="p-price-tag" id="checkout-product-price-display">
+                        R$ --,--
+                    </div>
+                </div>
+
+
+                <!-- REMOVED: Order Bump Area - Now using slide-in modal -->
+
+                <div class="checkout-authority-box" style="margin-bottom: 2rem;">
+                    <div class="authority-badge-v2">
+                        <i class="fa-solid fa-medal"></i>
+                        <span style="color: #fff;">Garantia Incondicional de 7 Dias.</span>
+                    </div>
+                </div>
+
+                <form id="payment-form" class="checkout-form">
+
+                    <!-- 2. COMMON CONTACT FIELDS (Always Visible) -->
+                    <div class="checkout-section">
+                        <div class="step-title">
+                            <i class="fa-solid fa-address-book"></i>
+                            <span>Onde enviamos seu acesso?</span>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-envelope"></i>
+                                <input type="email" id="payer-email" placeholder="E-mail Principal" autocomplete="email"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <i class="fa-brands fa-whatsapp"></i>
+                                <input type="tel" id="payer-phone" placeholder="WhatsApp (Para Recuperação)"
+                                    maxlength="15" autocomplete="tel" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. PIX SPECIFIC IDENTITY (Visible only for PIX) -->
+                    <div id="pix-identity-section" class="checkout-section">
+                        <div class="step-title">
+                            <i class="fa-solid fa-user"></i>
+                            <span>Quem está pagando?</span>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-user-tag"></i>
+                                <input type="text" id="payer-name" placeholder="Nome Completo - Quem está pagando?"
+                                    autocomplete="name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-id-card"></i>
+                                <input type="text" id="payer-cpf" placeholder="CPF do Pagador" maxlength="14">
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- 4. PAYMENT ACTIONS AREA -->
+                    <div class="checkout-section payment-options-section" style="margin-top: 1rem;">
+
+                        <!-- PIX ACTION -->
+                        <div id="pix-area" class="payment-area" style="display: block;">
+                            <div class="price-summary-box">
+                                <div class="price-row">
+                                    <span>Total no PIX:</span>
+                                    <strong class="checkout-total-display">R$ --,--</strong>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-pay-now" id="btn-pay-pix">
+                                GERAR PIX AGORA <i class="fa-brands fa-pix"></i>
+                            </button>
+                        </div>
+
+
+                        <!-- CARD FORM & ACTION (Visible only for Card) -->
+                        <div id="card-area" class="payment-area" style="display: none;">
+                            <div class="step-title" style="margin-bottom: 1rem;">
+                                <i class="fa-solid fa-credit-card"></i>
+                                <span>Dados do Cartão</span>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-user"></i>
+                                    <input type="text" id="card-holder" placeholder="Nome Impresso no Cartão"
+                                        autocomplete="cc-name">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-id-card"></i>
+                                    <input type="text" id="card-cpf" placeholder="CPF do Titular do Cartão"
+                                        maxlength="14">
+                                </div>
+                            </div>
+
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-credit-card"></i>
+                                <input type="text" id="card-number" name="cardNumber" placeholder="NÚMERO DO CARTÃO"
+                                    autocomplete="cc-number">
+                            </div>
+
+                            <div class="form-row-compact" style="margin-top: 15px;">
+                                <div class="form-group">
+                                    <div class="input-wrapper">
+                                        <i class="fa-solid fa-calendar"></i>
+                                        <input type="text" id="card-expiration" placeholder="Validade"
+                                            autocomplete="cc-exp">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-wrapper">
+                                        <i class="fa-solid fa-lock"></i>
+                                        <input type="text" id="card-cvv" placeholder="CVV" maxlength="4"
+                                            autocomplete="cc-csc">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <select id="card-installments" class="custom-select">
+                                    <option value="1">1x de R$ --,-- (Sem juros)</option>
+                                </select>
+                            </div>
+
+                            <div class="price-summary-box">
+                                <div class="price-row">
+                                    <span>Total no Cartão:</span>
+                                    <strong class="checkout-total-display">R$ --,--</strong>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-pay-now" id="btn-pay-card">
+                                FINALIZAR PAGAMENTO <i class="fa-solid fa-check-circle"></i>
+                            </button>
+                        </div>
+
+                        <div class="secure-badges-mini" style="margin-top: 1.5rem; justify-content: center;">
+                            <i class="fa-solid fa-lock"></i> Dados protegidos com criptografia SSL
+                        </div>
+
+                        <!-- Checkout Footer Social Links -->
+                        <div class="checkout-footer-social">
+                            <div class="social-links-checkout">
+                                <a href="https://www.instagram.com/galosmurabrasill/" target="_blank"
+                                    class="social-icon insta"><i class="fa-brands fa-instagram"></i></a>
+                                <a href="https://www.facebook.com/profile.php?id=61578338141942" target="_blank"
+                                    class="social-icon face"><i class="fa-brands fa-facebook"></i></a>
+                                <a href="https://www.tiktok.com/@galosmurabrasil" target="_blank"
+                                    class="social-icon tiktok"><i class="fa-brands fa-tiktok"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div id="pix-result" class="hidden">
+                <div class="pix-instructions">📲 FACILITE SEU PAGAMENTO: CLIQUE ABAIXO PARA COPIAR</div>
+
+                <div class="qr-container">
+                    <img id="qr-code-img" src="" alt="QR Code PIX">
+                </div>
+
+                <div class="copy-paste-area">
+                    <textarea id="pix-copy-paste" readonly></textarea>
+                    <button id="btn-copy-pix">
+                        <i class="fa-solid fa-copy"></i> COPIAR CÓDIGO PIX
+                    </button>
+                </div>
+
+                <div class="waiting-payment">
+                    <div class="logo-pulse-wrapper">
+                        <img src="logo.png" alt="Logo" class="pulsing-logo-check">
+                    </div>
+                    <p>Aguardando confirmação do pagamento...</p>
+                    <small>Não feche esta tela. O acesso será liberado em segundos.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Bump Slide-in Modal -->
+    <div id="order-bump-modal" class="order-bump-slide-modal">
+        <div class="order-bump-slide-content">
+            <button class="order-bump-close" onclick="closeOrderBumpModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="order-bump-header">
+                <i class="fa-solid fa-gift" style="font-size: 2rem; color: var(--color-secondary);"></i>
+                <h3>Olha só, uma oferta pra você criador!</h3>
+            </div>
+
+            <div class="order-bump-body">
+                <img src="tabela_racao_v2.png" alt="Tabela de Ração" class="order-bump-image">
+                <p class="order-bump-text">
+                    <strong>Economize até 65% na sua ração</strong>, produzindo sua própria ração com nossa
+                    <span style="color: var(--color-secondary);">tabela de alimentação do nascimento ao
+                        crescimento</span>.
+                </p>
+                <div class="order-bump-price-tag">
+                    <span class="old-price">De R$ 47,00</span>
+                    <span class="new-price">Por apenas R$ 1,00</span>
+                </div>
+                <span class="order-bump-badge">OFERTA ÚNICA</span>
+            </div>
+
+            <div class="order-bump-actions">
+                <button class="btn-accept-bump" onclick="acceptOrderBump()">
+                    <i class="fa-solid fa-check"></i> SIM, QUERO ECONOMIZAR!
+                </button>
+                <button class="btn-decline-bump" onclick="closeOrderBumpModal()">
+                    Não, obrigado
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secure Loading Overlay -->
+    <div id="secure-loading" class="secure-loading">
+        <div class="secure-content">
+            <img src="logo.png" alt="Detail" class="logo-transparent"
+                style="height: 30px; opacity: 0.5; margin-bottom: 25px;">
+            <div class="lock-icon">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h3>Ambiente Seguro</h3>
+            <p id="secure-text">Estabelecendo conexão criptografada...</p>
+            <div class="secure-progress-bar">
+                <div class="secure-progress-fill"></div>
+            </div>
+            <div class="secure-badges">
+                <i class="fa-brands fa-aws"></i>
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>SSL 256-bit</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Logo Animation Overlay -->
+    <div id="checkout-logo-overlay" class="checkout-logo-overlay">
+        <div class="animate-logo-container">
+            <img src="logo.png" alt="Logo" class="animate-logo">
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script src="order_bump_modal.js"></script>
     <script src="script.js"></script>
 </body>
 
