@@ -247,7 +247,8 @@ app.post('/api/history/clear', (req, res) => {
             trustClicks: 0,
             mobileSessions: 0,
             desktopSessions: 0,
-            slowLoads: 0
+            slowLoads: 0,
+            pageViews: 0
         }, null, 4));
 
         console.log(`✅ [ADMIN] HISTORY_PATH: ${HISTORY_PATH} resetado.`);
@@ -271,6 +272,7 @@ app.post('/api/track', (req, res) => {
     else if (type === 'trust_click') analytics.trustClicks++;
     else if (type === 'slow_load') analytics.slowLoads++;
     else if (type === 'session_start') {
+        analytics.pageViews = (analytics.pageViews || 0) + 1;
         if (isMobile) analytics.mobileSessions++;
         else analytics.desktopSessions++;
     }

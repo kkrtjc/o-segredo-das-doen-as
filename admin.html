@@ -862,9 +862,14 @@
             </div>
         </nav>
 
-        <!-- Dashboard Tab -->
         <div id="tab-dashboard" class="tab-content active">
             <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="label"><i class="fa-solid fa-eye" style="color: #10b981;"></i> VISUALIZAÇÕES TOTAIS
+                    </div>
+                    <div class="value" id="dash-views">0</div>
+                    <div class="trend neutral">Acessos à Página</div>
+                </div>
                 <div class="stat-card">
                     <div class="label"><i class="fa-solid fa-wallet" style="color: var(--accent);"></i> FATURAMENTO
                         TOTAL</div>
@@ -1002,285 +1007,302 @@
                 <i class="fa-solid fa-chart-line"
                     style="font-size: 4rem; color: var(--accent); margin-bottom: 20px; opacity: 0.5;"></i>
                 <h3>Relatórios Avançados</h3>
-                <p style="color: var(--text-dim); max-width: 400px; margin: 0 auto;">Em breve: Mapas de calor, tempo
-                    médio de preenchimento e análise de abandono por campo.</p>
+                <div class="actions hidden">
+                    <button class="btn btn-secondary" onclick="discardChanges()">DESCARTAR</button>
+                    <button class="btn btn-primary" style="flex: 2; height: 50px;" onclick="saveAll()">SALVAR ALTERAÇÕES
+                        GERAIS</button>
+                </div>
             </div>
-        </div>
 
-        <div class="actions">
-            <button class="btn btn-secondary" onclick="loadData()">DESCARTAR</button>
-            <button class="btn btn-primary" style="flex: 2; height: 50px;" onclick="saveAll()">SALVAR ALTERAÇÕES
-                GERAIS</button>
-        </div>
-    </div>
-
-    <!-- New Bump Modal -->
-    <div id="bump-modal" class="modal hidden">
-        <div class="modal-body">
-            <h3 style="margin-top:0">Novo Order Bump</h3>
-            <div class="input-group" style="grid-template-columns: 1fr;">
-                <div class="control"><label>Título</label><input type="text" id="nb-title"
-                        placeholder="Ex: Acelerar Resultado"></div>
-                <div class="control"><label>Preço (R$)</label><input type="number" id="nb-price" step="0.01"
-                        value="19.90"></div>
-                <div class="control"><label>Descrição</label><textarea id="nb-desc" rows="2"></textarea></div>
-                <div class="control">
-                    <label>Imagem da Oferta</label>
-                    <div class="upload-area">
-                        <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
-                        <span style="font-size: 0.8rem; color: var(--text-dim);">Clique para subir foto</span>
-                        <input type="file" onchange="previewImg(this, 'nb-preview-img', 'nb-img-url')">
+            <!-- New Bump Modal -->
+            <div id="bump-modal" class="modal hidden">
+                <div class="modal-body">
+                    <h3 style="margin-top:0">Novo Order Bump</h3>
+                    <div class="input-group" style="grid-template-columns: 1fr;">
+                        <div class="control"><label>Título</label><input type="text" id="nb-title"
+                                placeholder="Ex: Acelerar Resultado"></div>
+                        <div class="control"><label>Preço (R$)</label><input type="number" id="nb-price" step="0.01"
+                                value="19.90"></div>
+                        <div class="control"><label>Descrição</label><textarea id="nb-desc" rows="2"></textarea></div>
+                        <div class="control">
+                            <label>Imagem da Oferta</label>
+                            <div class="upload-area">
+                                <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                                <span style="font-size: 0.8rem; color: var(--text-dim);">Clique para subir foto</span>
+                                <input type="file" onchange="previewImg(this, 'nb-preview-img', 'nb-img-url')">
+                            </div>
+                            <div id="nb-preview" style="margin-top: 10px; display: none; text-align: center;">
+                                <img id="nb-preview-img" class="bump-preview"
+                                    style="width: 100px; height: 100px; border: 1px solid var(--accent);">
+                                <input type="hidden" id="nb-img-url">
+                            </div>
+                        </div>
                     </div>
-                    <div id="nb-preview" style="margin-top: 10px; display: none; text-align: center;">
-                        <img id="nb-preview-img" class="bump-preview"
-                            style="width: 100px; height: 100px; border: 1px solid var(--accent);">
-                        <input type="hidden" id="nb-img-url">
+                    <div class="actions" style="margin-top: 20px; position: static;">
+                        <button class="btn btn-secondary" onclick="closeModal('bump-modal')">CANCELAR</button>
+                        <button class="btn btn-primary" onclick="createNewBump()">CADASTRAR BUMP</button>
                     </div>
                 </div>
             </div>
-            <div class="actions" style="margin-top: 20px; position: static;">
-                <button class="btn btn-secondary" onclick="closeModal('bump-modal')">CANCELAR</button>
-                <button class="btn btn-primary" onclick="createNewBump()">CADASTRAR BUMP</button>
-            </div>
-        </div>
-    </div>
 
-    <!-- New Product Modal -->
-    <div id="product-modal" class="modal hidden">
-        <div class="modal-body">
-            <h3 style="margin-top:0">Novo Produto</h3>
-            <div class="input-group" style="grid-template-columns: 1fr;">
-                <div class="control"><label>Título</label><input type="text" id="np-title"
-                        placeholder="Ex: Manual de Rações"></div>
-                <div class="control"><label>Preço (R$)</label><input type="number" id="np-price" step="0.01"
-                        value="49.90"></div>
-                <div class="control"><label>Original (R$)</label><input type="number" id="np-orig" step="0.01"
-                        value="97.00"></div>
-                <div class="control"><label>Descrição</label><input type="text" id="np-desc"
-                        placeholder="Ex: Acesso Vitalício"></div>
-                <div class="control"><label>Vantagem 1</label><input type="text" class="np-feat"
-                        placeholder="Ex: Planilha de Custos"></div>
-                <div class="control"><label>Vantagem 2</label><input type="text" class="np-feat"
-                        placeholder="Ex: Vídeo Aula"></div>
-                <div class="control"><label>Vantagem 3</label><input type="text" class="np-feat"
-                        placeholder="Ex: Ebook PDF"></div>
-                <div class="control"><label>Vantagem 4</label><input type="text" class="np-feat"
-                        placeholder="Ex: Protocolo de Vacinas"></div>
-                <div class="control"><label>Vantagem 5</label><input type="text" class="np-feat"
-                        placeholder="Ex: Suporte VIP"></div>
-                <div class="control">
-                    <label>Capa do Produto</label>
-                    <div class="upload-area">
-                        <i class="fa-solid fa-image upload-icon"></i>
-                        <span style="font-size: 0.8rem; color: var(--text-dim);">Clique para escolher capa</span>
-                        <input type="file" onchange="previewImg(this, 'np-preview-img', 'np-img-url')">
+            <!-- New Product Modal -->
+            <div id="product-modal" class="modal hidden">
+                <div class="modal-body">
+                    <h3 style="margin-top:0">Novo Produto</h3>
+                    <div class="input-group" style="grid-template-columns: 1fr;">
+                        <div class="control"><label>Título</label><input type="text" id="np-title"
+                                placeholder="Ex: Manual de Rações"></div>
+                        <div class="control"><label>Preço (R$)</label><input type="number" id="np-price" step="0.01"
+                                value="49.90"></div>
+                        <div class="control"><label>Original (R$)</label><input type="number" id="np-orig" step="0.01"
+                                value="97.00"></div>
+                        <div class="control"><label>Descrição</label><input type="text" id="np-desc"
+                                placeholder="Ex: Acesso Vitalício"></div>
+                        <div class="control"><label>Vantagem 1</label><input type="text" class="np-feat"
+                                placeholder="Ex: Planilha de Custos"></div>
+                        <div class="control"><label>Vantagem 2</label><input type="text" class="np-feat"
+                                placeholder="Ex: Vídeo Aula"></div>
+                        <div class="control"><label>Vantagem 3</label><input type="text" class="np-feat"
+                                placeholder="Ex: Ebook PDF"></div>
+                        <div class="control"><label>Vantagem 4</label><input type="text" class="np-feat"
+                                placeholder="Ex: Protocolo de Vacinas"></div>
+                        <div class="control"><label>Vantagem 5</label><input type="text" class="np-feat"
+                                placeholder="Ex: Suporte VIP"></div>
+                        <div class="control">
+                            <label>Capa do Produto</label>
+                            <div class="upload-area">
+                                <i class="fa-solid fa-image upload-icon"></i>
+                                <span style="font-size: 0.8rem; color: var(--text-dim);">Clique para escolher
+                                    capa</span>
+                                <input type="file" onchange="previewImg(this, 'np-preview-img', 'np-img-url')">
+                            </div>
+                            <div id="np-preview" style="margin-top: 10px; display: none; text-align: center;">
+                                <img id="np-preview-img" class="bump-preview"
+                                    style="width: 100px; height: 100px; border: 1px solid var(--accent);">
+                                <input type="hidden" id="np-img-url">
+                            </div>
+                        </div>
                     </div>
-                    <div id="np-preview" style="margin-top: 10px; display: none; text-align: center;">
-                        <img id="np-preview-img" class="bump-preview"
-                            style="width: 100px; height: 100px; border: 1px solid var(--accent);">
-                        <input type="hidden" id="np-img-url">
+                    <div class="actions" style="margin-top: 20px; position: static;">
+                        <button class="btn btn-secondary" onclick="closeModal('product-modal')">CANCELAR</button>
+                        <button class="btn btn-primary" onclick="createNewProduct()">CADASTRAR PRODUTO</button>
                     </div>
                 </div>
             </div>
-            <div class="actions" style="margin-top: 20px; position: static;">
-                <button class="btn btn-secondary" onclick="closeModal('product-modal')">CANCELAR</button>
-                <button class="btn btn-primary" onclick="createNewProduct()">CADASTRAR PRODUTO</button>
-            </div>
-        </div>
-    </div>
 
-    <script>
-        let db = { products: {}, orderBumps: {} };
-        let historyData = [];
-        let masterPass = '';
-        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'http://localhost:3000'
-            : 'https://teste-m1kq.onrender.com';
+            <script>
+                let db = { products: {}, orderBumps: {} };
+                let originalDb = null;
+                let historyData = [];
+                let masterPass = '';
+                const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://localhost:3000'
+                    : 'https://teste-m1kq.onrender.com';
 
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.classList.add('active');
-            setTimeout(() => t.classList.remove('active'), 3000);
-        }
-
-        function switchTab(name, el) {
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
-            if (el) {
-                el.classList.add('active');
-            } else {
-                const item = document.querySelector(`.nav-item[onclick*="'${name}'"]`);
-                if (item) item.classList.add('active');
-            }
-
-            document.getElementById(`tab-${name}`).classList.add('active');
-
-            if (name === 'dashboard') loadAnalytics();
-            if (name === 'history') loadHistory();
-            if (name === 'analytics') loadAnalytics();
-        }
-
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-        async function checkAuth() {
-            const pass = document.getElementById('admin-pass').value;
-            if (pass === 'mura2026') {
-                masterPass = pass;
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('admin-panel').classList.remove('hidden');
-                loadData();
-                loadAnalytics();
-            } else alert('Senha Incorreta!');
-        }
-
-        async function loadData() {
-            const res = await fetch(`${API_URL}/api/config?t=${Date.now()}`);
-            db = await res.json();
-            renderAdmin();
-        }
-
-        async function loadHistory() {
-            const res = await fetch(`${API_URL}/api/history?t=${Date.now()}`, {
-                headers: { 'x-admin-password': masterPass }
-            });
-            historyData = await res.json();
-            renderHistory(historyData);
-        }
-
-        async function loadAnalytics() {
-            const res = await fetch(`${API_URL}/api/analytics?t=${Date.now()}`, {
-                headers: { 'x-admin-password': masterPass }
-            });
-            const data = await res.json();
-
-            // Dashboard
-            const revenue = Number(data.totalRevenue || 0);
-            document.getElementById('dash-revenue').innerText = revenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            document.getElementById('dash-sales').innerText = data.approvedCount || 0;
-
-            const starts = data.checkoutStarts || 0;
-            const sales = data.approvedCount || 0;
-            const conv = starts > 0 ? ((sales / starts) * 100).toFixed(1) : 0;
-            document.getElementById('dash-conversion').innerText = conv + '%';
-            document.getElementById('dash-starts-label').innerText = `${starts} checkouts iniciais`;
-
-            const avg = sales > 0 ? (revenue / sales) : 0;
-            document.getElementById('dash-avg').innerText = avg.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-            // Funnel
-            document.getElementById('funnel-clicks').innerText = data.clicks || 0;
-            document.getElementById('funnel-opens').innerText = data.checkoutOpens || 0;
-            document.getElementById('funnel-starts').innerText = data.checkoutStarts || 0;
-            document.getElementById('funnel-sales').innerText = data.approvedCount || 0;
-
-            // Mobile Presence
-            const totalSessions = (data.mobileSessions || 0) + (data.desktopSessions || 0);
-            const mobilePerc = totalSessions > 0 ? Math.round((data.mobileSessions / totalSessions) * 100) : 100;
-            document.getElementById('dash-mobile-perc').innerText = mobilePerc + '%';
-            document.getElementById('dash-mobile-label').innerText = `${data.mobileSessions || 0} acessos mobile`;
-
-            // AI Logic
-            runAIInsights(data);
-        }
-
-        function runAIInsights(data) {
-            const msgEl = document.getElementById('ai-response');
-            let insights = [];
-
-            const clicks = data.clicks || 0;
-            const opens = data.checkoutOpens || 0;
-            const starts = data.checkoutStarts || 0;
-            const sales = data.approvedCount || 0;
-            const uiErrors = data.uiErrors || 0;
-            const trusts = data.trustClicks || 0;
-            const slows = data.slowLoads || 0;
-
-            // 1. Bottleneck: Landing -> Checkout
-            if (clicks > 0 && (opens / clicks) < 0.4) {
-                insights.push("⚠️ <strong>Gargalo Inicial:</strong> Muitos clicam em 'Comprar' mas o checkout não abre. Verifique se o carregamento mobile está lento ou se o botão está difícil de clicar no celular.");
-            }
-
-            // 2. Bottleneck: Form Friction
-            if (opens > 0 && (starts / opens) < 0.5) {
-                insights.push("🛑 <strong>Fricção no Formulário:</strong> Os clientes abrem o checkout mas não começam a digitar. O formulário pode estar parecendo muito longo. Tente remover campos desnecessários.");
-            }
-
-            // 3. UI Errors
-            if (uiErrors > 10 || (uiErrors > 0 && uiErrors / opens > 0.5)) {
-                insights.push("❌ <strong>Erro de UI detectado:</strong> Há um alto índice de erros de validação (CPF ou Cartão). Verifique se as máscaras de digitação estão funcionando bem em teclados de celular.");
-            }
-
-            // 4. Slow Loads
-            if (slows > 0 && (slows / (data.mobileSessions || 1)) > 0.2) {
-                insights.push("🐢 <strong>Lentidão Crítica:</strong> Detectei conexões lentas (provavelmente 3G). Sua página está pesada. Comprima as imagens para não perder vendas por desistência no carregamento.");
-            }
-
-            // 5. Trust Gap
-            if (trusts > 10 && sales < 2) {
-                insights.push("🛡️ <strong>Desejo de Segurança:</strong> Muitos clicam nos selos de garantia mas não finalizam. Eles estão inseguros. Adicione um depoimento em vídeo logo acima do botão de pagamento.");
-            }
-
-            if (insights.length === 0) {
-                if (clicks > 0) insights.push("💪 <strong>Saúde do Funil:</strong> Seu fluxo está saudável! Continue escalando o tráfego mobile. Nenhuma anomalia técnica detectada no momento.");
-                else insights.push("⏳ <strong>Aguardando Tráfego:</strong> Ainda não tenho dados suficientes para concluir. Assim que os primeiros clientes mobile entrarem, eu te darei os diagnósticos.");
-            }
-
-            // Typing Effect
-            const fullText = insights.join('<br><br>');
-            if (window.aiTypingInterval) clearInterval(window.aiTypingInterval);
-            typeWriter(msgEl, fullText);
-        }
-
-        function typeWriter(el, text) {
-            el.innerHTML = '';
-            let i = 0;
-            window.aiTypingInterval = setInterval(() => {
-                el.innerHTML = text.slice(0, i) + '<span style="border-right: 2px solid var(--accent); margin-left:2px; animation: blink 0.7s infinite;"></span>';
-                i++;
-                if (i > text.length) {
-                    clearInterval(window.aiTypingInterval);
-                    el.innerHTML = text;
+                function showToast(msg) {
+                    const t = document.getElementById('toast');
+                    t.innerText = msg;
+                    t.classList.add('active');
+                    setTimeout(() => t.classList.remove('active'), 3000);
                 }
-            }, 10);
-        }
 
-        function filterHistory() {
-            const query = document.getElementById('history-search').value.toLowerCase();
-            const filtered = historyData.filter(h =>
-                h.name.toLowerCase().includes(query) ||
-                h.email.toLowerCase().includes(query) ||
-                h.items.some(i => i.toLowerCase().includes(query))
-            );
-            renderHistory(filtered);
-        }
+                function switchTab(name, el) {
+                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
-        function exportHistory() {
-            if (!historyData.length) return alert('Sem dados para exportar.');
-            let csv = 'Data,Nome,Email,Telefone,Metodo,Valor,Produtos\n';
-            historyData.forEach(h => {
-                csv += `"${h.date}","${h.name}","${h.email}","${h.phone}","${h.method}","${h.total}","${h.items.join('|')}"\n`;
-            });
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.setAttribute('hidden', '');
-            a.setAttribute('href', url);
-            a.setAttribute('download', 'relatorio_vendas_mura.csv');
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
+                    if (el) {
+                        el.classList.add('active');
+                    } else {
+                        const item = document.querySelector(`.nav-item[onclick*="'${name}'"]`);
+                        if (item) item.classList.add('active');
+                    }
 
-        function renderHistory(data) {
-            const hList = document.getElementById('history-list');
-            hList.innerHTML = data.length ? '' : '<tr><td colspan="6" style="text-align:center; padding: 40px; color: var(--text-dim);">Nenhuma venda encontrada.</td></tr>';
+                    document.getElementById(`tab-${name}`).classList.add('active');
 
-            [...data].reverse().forEach(h => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
+                    if (name === 'dashboard') loadAnalytics();
+                    if (name === 'history') loadHistory();
+                    if (name === 'analytics') loadAnalytics();
+                }
+
+                function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+                function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+                async function checkAuth() {
+                    const pass = document.getElementById('admin-pass').value;
+                    if (pass === 'mura2026') {
+                        masterPass = pass;
+                        document.getElementById('login-screen').classList.add('hidden');
+                        document.getElementById('admin-panel').classList.remove('hidden');
+                        loadData();
+                        loadAnalytics();
+                    } else alert('Senha Incorreta!');
+                }
+
+                async function loadData() {
+                    const res = await fetch(`${API_URL}/api/config?t=${Date.now()}`);
+                    db = await res.json();
+                    originalDb = JSON.parse(JSON.stringify(db));
+                    renderAdmin();
+                    checkChanges();
+                }
+
+                function checkChanges() {
+                    const hasChanges = JSON.stringify(db) !== JSON.stringify(originalDb);
+                    const actions = document.querySelector('.actions');
+                    if (hasChanges) actions.classList.remove('hidden');
+                    else actions.classList.add('hidden');
+                    return hasChanges;
+                }
+
+                function discardChanges() {
+                    if (confirm('Descartar todas as alterações não salvas?')) {
+                        db = JSON.parse(JSON.stringify(originalDb));
+                        renderAdmin();
+                        checkChanges();
+                        showToast('Alterações descartadas.');
+                    }
+                }
+
+                async function loadHistory() {
+                    const res = await fetch(`${API_URL}/api/history?t=${Date.now()}`, {
+                        headers: { 'x-admin-password': masterPass }
+                    });
+                    historyData = await res.json();
+                    renderHistory(historyData);
+                }
+
+                async function loadAnalytics() {
+                    const res = await fetch(`${API_URL}/api/analytics?t=${Date.now()}`, {
+                        headers: { 'x-admin-password': masterPass }
+                    });
+                    const data = await res.json();
+
+                    // Dashboard
+                    const revenue = Number(data.totalRevenue || 0);
+                    document.getElementById('dash-revenue').innerText = revenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    document.getElementById('dash-sales').innerText = data.approvedCount || 0;
+                    document.getElementById('dash-views').innerText = data.pageViews || 0;
+
+                    const starts = data.checkoutStarts || 0;
+                    const sales = data.approvedCount || 0;
+                    const conv = starts > 0 ? ((sales / starts) * 100).toFixed(1) : 0;
+                    document.getElementById('dash-conversion').innerText = conv + '%';
+                    document.getElementById('dash-starts-label').innerText = `${starts} checkouts iniciais`;
+
+                    const avg = sales > 0 ? (revenue / sales) : 0;
+                    document.getElementById('dash-avg').innerText = avg.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+                    // Funnel
+                    document.getElementById('funnel-clicks').innerText = data.clicks || 0;
+                    document.getElementById('funnel-opens').innerText = data.checkoutOpens || 0;
+                    document.getElementById('funnel-starts').innerText = data.checkoutStarts || 0;
+                    document.getElementById('funnel-sales').innerText = data.approvedCount || 0;
+
+                    // Mobile Presence
+                    const totalSessions = (data.mobileSessions || 0) + (data.desktopSessions || 0);
+                    const mobilePerc = totalSessions > 0 ? Math.round((data.mobileSessions / totalSessions) * 100) : 100;
+                    document.getElementById('dash-mobile-perc').innerText = mobilePerc + '%';
+                    document.getElementById('dash-mobile-label').innerText = `${data.mobileSessions || 0} acessos mobile`;
+
+                    // AI Logic
+                    setTimeout(() => runAIInsights(data), 500);
+                }
+
+                function runAIInsights(data) {
+                    const msgEl = document.getElementById('ai-response');
+                    let insights = [];
+
+                    const clicks = data.clicks || 0;
+                    const opens = data.checkoutOpens || 0;
+                    const starts = data.checkoutStarts || 0;
+                    const sales = data.approvedCount || 0;
+                    const uiErrors = data.uiErrors || 0;
+                    const trusts = data.trustClicks || 0;
+                    const slows = data.slowLoads || 0;
+
+                    // 1. Bottleneck: Landing -> Checkout
+                    if (clicks > 0 && (opens / clicks) < 0.4) {
+                        insights.push("⚠️ <strong>Gargalo Inicial:</strong> Muitos clicam em 'Comprar' mas o checkout não abre. Verifique se o carregamento mobile está lento ou se o botão está difícil de clicar no celular.");
+                    }
+
+                    // 2. Bottleneck: Form Friction
+                    if (opens > 0 && (starts / opens) < 0.5) {
+                        insights.push("🛑 <strong>Fricção no Formulário:</strong> Os clientes abrem o checkout mas não começam a digitar. O formulário pode estar parecendo muito longo. Tente remover campos desnecessários.");
+                    }
+
+                    // 3. UI Errors
+                    if (uiErrors > 10 || (uiErrors > 0 && uiErrors / opens > 0.5)) {
+                        insights.push("❌ <strong>Erro de UI detectado:</strong> Há um alto índice de erros de validação (CPF ou Cartão). Verifique se as máscaras de digitação estão funcionando bem em teclados de celular.");
+                    }
+
+                    // 4. Slow Loads
+                    if (slows > 0 && (slows / (data.mobileSessions || 1)) > 0.2) {
+                        insights.push("🐢 <strong>Lentidão Crítica:</strong> Detectei conexões lentas (provavelmente 3G). Sua página está pesada. Comprima as imagens para não perder vendas por desistência no carregamento.");
+                    }
+
+                    // 5. Trust Gap
+                    if (trusts > 10 && sales < 2) {
+                        insights.push("🛡️ <strong>Desejo de Segurança:</strong> Muitos clicam nos selos de garantia mas não finalizam. Eles estão inseguros. Adicione um depoimento em vídeo logo acima do botão de pagamento.");
+                    }
+
+                    if (insights.length === 0) {
+                        if (clicks > 0) insights.push("💪 <strong>Saúde do Funil:</strong> Seu fluxo está saudável! Continue escalando o tráfego mobile. Nenhuma anomalia técnica detectada no momento.");
+                        else insights.push("⏳ <strong>Aguardando Tráfego:</strong> Ainda não tenho dados suficientes para concluir. Assim que os primeiros clientes mobile entrarem, eu te darei os diagnósticos.");
+                    }
+
+                    // Typing Effect
+                    const fullText = insights.join('<br><br>');
+                    if (window.aiTypingInterval) clearInterval(window.aiTypingInterval);
+                    typeWriter(msgEl, fullText);
+                }
+
+                function typeWriter(el, text) {
+                    el.innerHTML = '';
+                    let i = 0;
+                    window.aiTypingInterval = setInterval(() => {
+                        el.innerHTML = text.slice(0, i) + '<span style="border-right: 2px solid var(--accent); margin-left:2px; animation: blink 0.7s infinite;"></span>';
+                        i++;
+                        if (i > text.length) {
+                            clearInterval(window.aiTypingInterval);
+                            el.innerHTML = text;
+                        }
+                    }, 10);
+                }
+
+                function filterHistory() {
+                    const query = document.getElementById('history-search').value.toLowerCase();
+                    const filtered = historyData.filter(h =>
+                        h.name.toLowerCase().includes(query) ||
+                        h.email.toLowerCase().includes(query) ||
+                        h.items.some(i => i.toLowerCase().includes(query))
+                    );
+                    renderHistory(filtered);
+                }
+
+                function exportHistory() {
+                    if (!historyData.length) return alert('Sem dados para exportar.');
+                    let csv = 'Data,Nome,Email,Telefone,Metodo,Valor,Produtos\n';
+                    historyData.forEach(h => {
+                        csv += `"${h.date}","${h.name}","${h.email}","${h.phone}","${h.method}","${h.total}","${h.items.join('|')}"\n`;
+                    });
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.setAttribute('hidden', '');
+                    a.setAttribute('href', url);
+                    a.setAttribute('download', 'relatorio_vendas_mura.csv');
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }
+
+                function renderHistory(data) {
+                    const hList = document.getElementById('history-list');
+                    hList.innerHTML = data.length ? '' : '<tr><td colspan="6" style="text-align:center; padding: 40px; color: var(--text-dim);">Nenhuma venda encontrada.</td></tr>';
+
+                    [...data].reverse().forEach(h => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
                     <td>
                         <span style="font-size: 0.8rem; font-weight: 700;">${new Date(h.date).toLocaleDateString('pt-BR')}</span><br>
                         <span style="font-size: 0.7rem; color: var(--text-dim);">${new Date(h.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
@@ -1294,19 +1316,19 @@
                     <td><span style="font-size: 0.7rem; background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px; text-transform: uppercase;">${h.method || 'cartão'}</span></td>
                     <td><span style="background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 5px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; border: 1px solid rgba(16, 185, 129, 0.2);">APROVADO</span></td>
                 `;
-                hList.appendChild(row);
-            });
-        }
+                        hList.appendChild(row);
+                    });
+                }
 
-        function renderAdmin() {
-            // PRODUCTS RENDERING
-            const pList = document.getElementById('products-list');
-            pList.innerHTML = '';
-            Object.keys(db.products).forEach(id => {
-                const p = db.products[id];
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
+                function renderAdmin() {
+                    // PRODUCTS RENDERING
+                    const pList = document.getElementById('products-list');
+                    pList.innerHTML = '';
+                    Object.keys(db.products).forEach(id => {
+                        const p = db.products[id];
+                        const card = document.createElement('div');
+                        card.className = 'product-card';
+                        card.innerHTML = `
                     <div class="card-header-main">
                         <div class="img-container">
                             <img src="${p.cover === 'combo' ? 'logo.png' : p.cover}">
@@ -1330,11 +1352,11 @@
                     </div>
                     <div class="collapsible-content">
                         <div class="input-group">
-                            <div class="control"><label>Título</label><input type="text" value="${p.title}" onchange="db.products['${id}'].title=this.value"></div>
-                            <div class="control"><label>Preço (R$)</label><input type="number" step="0.01" value="${p.price}" onchange="db.products['${id}'].price=parseFloat(this.value)"></div>
-                            <div class="control"><label>Original (R$)</label><input type="number" step="0.01" value="${p.originalPrice || 0}" onchange="db.products['${id}'].originalPrice=parseFloat(this.value)"></div>
+                            <div class="control"><label>Título</label><input type="text" value="${p.title}" onchange="db.products['${id}'].title=this.value; checkChanges()"></div>
+                            <div class="control"><label>Preço (R$)</label><input type="number" step="0.01" value="${p.price}" onchange="db.products['${id}'].price=parseFloat(this.value); checkChanges()"></div>
+                            <div class="control"><label>Original (R$)</label><input type="number" step="0.01" value="${p.originalPrice || 0}" onchange="db.products['${id}'].originalPrice=parseFloat(this.value); checkChanges()"></div>
                         </div>
-                        <div class="control" style="margin-top:15px"><label>Descrição curta</label><input type="text" value="${p.description || ''}" onchange="db.products['${id}'].description=this.value"></div>
+                        <div class="control" style="margin-top:15px"><label>Descrição curta</label><input type="text" value="${p.description || ''}" onchange="db.products['${id}'].description=this.value; checkChanges()"></div>
                     </div>
 
                     <!-- Benefícios (Vantagens) -->
@@ -1355,19 +1377,19 @@
                         <div class="bump-selector" id="sel-${id}"></div>
                     </div>
                 `;
-                pList.appendChild(card);
-                renderProductFeatures(id, card.querySelector(`#feat-${id}`));
-                renderBumpSelector(id, card.querySelector(`#sel-${id}`));
-            });
+                        pList.appendChild(card);
+                        renderProductFeatures(id, card.querySelector(`#feat-${id}`));
+                        renderBumpSelector(id, card.querySelector(`#sel-${id}`));
+                    });
 
-            // BUMPS RENDERING
-            const bList = document.getElementById('bumps-list');
-            bList.innerHTML = '';
-            Object.keys(db.orderBumps).forEach(id => {
-                const b = db.orderBumps[id];
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
+                    // BUMPS RENDERING
+                    const bList = document.getElementById('bumps-list');
+                    bList.innerHTML = '';
+                    Object.keys(db.orderBumps).forEach(id => {
+                        const b = db.orderBumps[id];
+                        const card = document.createElement('div');
+                        card.className = 'product-card';
+                        card.innerHTML = `
                     <div class="card-header-main" style="margin-bottom:0">
                         <div class="img-container" style="width:80px; height:80px">
                             <img src="${b.image || 'https://via.placeholder.com/80'}">
@@ -1384,167 +1406,181 @@
                         </div>
                     </div>
                 `;
-                bList.appendChild(card);
-            });
-        }
+                        bList.appendChild(card);
+                    });
+                }
 
-        function toggleCollapsible(el, isManual = false) {
-            const trigger = isManual ? el.previousElementSibling : el;
-            const content = isManual ? el : el.nextElementSibling;
-            trigger.classList.toggle('active');
-            content.classList.toggle('active');
-        }
+                function toggleCollapsible(el, isManual = false) {
+                    const trigger = isManual ? el.previousElementSibling : el;
+                    const content = isManual ? el : el.nextElementSibling;
+                    trigger.classList.toggle('active');
+                    content.classList.toggle('active');
+                }
 
-        function renderBumpSelector(prodId, container) {
-            Object.keys(db.orderBumps).forEach(bumpId => {
-                const b = db.orderBumps[bumpId];
-                const isActive = db.products[prodId].orderBumps.includes(bumpId);
-                const chip = document.createElement('div');
-                chip.className = `bump-chip ${isActive ? 'active' : ''}`;
-                chip.innerHTML = `${isActive ? '<i class="fa-solid fa-check"></i>' : ''} ${b.title}`;
-                chip.onclick = () => {
-                    const idx = db.products[prodId].orderBumps.indexOf(bumpId);
-                    if (idx > -1) db.products[prodId].orderBumps.splice(idx, 1);
-                    else db.products[prodId].orderBumps.push(bumpId);
-                    renderAdmin();
-                };
-                container.appendChild(chip);
-            });
-        }
+                function renderBumpSelector(prodId, container) {
+                    Object.keys(db.orderBumps).forEach(bumpId => {
+                        const b = db.orderBumps[bumpId];
+                        const isActive = db.products[prodId].orderBumps.includes(bumpId);
+                        const chip = document.createElement('div');
+                        chip.className = `bump-chip ${isActive ? 'active' : ''}`;
+                        chip.innerHTML = `${isActive ? '<i class="fa-solid fa-check"></i>' : ''} ${b.title}`;
+                        chip.onclick = () => {
+                            const idx = db.products[prodId].orderBumps.indexOf(bumpId);
+                            if (idx > -1) db.products[prodId].orderBumps.splice(idx, 1);
+                            else db.products[prodId].orderBumps.push(bumpId);
+                            renderAdmin();
+                            checkChanges();
+                        };
+                        container.appendChild(chip);
+                    });
+                }
 
-        function renderProductFeatures(prodId, container) {
-            const features = db.products[prodId].features || [];
-            features.forEach((feat, idx) => {
-                const item = document.createElement('div');
-                item.className = 'feature-item';
-                item.innerHTML = `
+                function renderProductFeatures(prodId, container) {
+                    const features = db.products[prodId].features || [];
+                    features.forEach((feat, idx) => {
+                        const item = document.createElement('div');
+                        item.className = 'feature-item';
+                        item.innerHTML = `
                     <span style="color:var(--accent); font-size: 0.8rem;">✓</span>
-                    <input type="text" value="${feat}" onchange="db.products['${prodId}'].features[${idx}]=this.value">
+                    <input type="text" value="${feat}" onchange="db.products['${prodId}'].features[${idx}]=this.value; checkChanges()">
                     <button class="btn-icon danger" style="font-size: 0.8rem;" onclick="removeFeature('${prodId}', ${idx})"><i class="fa-solid fa-xmark"></i></button>
                 `;
-                container.appendChild(item);
-            });
-            if (features.length < 5) {
-                const addBtn = document.createElement('button');
-                addBtn.className = 'btn btn-secondary';
-                addBtn.style.width = '100%'; addBtn.style.padding = '8px'; addBtn.style.fontSize = '0.7rem'; addBtn.style.marginTop = '10px';
-                addBtn.innerHTML = '<i class="fa-solid fa-plus"></i> ADICIONAR ITEM';
-                addBtn.onclick = () => {
-                    if (!db.products[prodId].features) db.products[prodId].features = [];
-                    db.products[prodId].features.push('Novo Benefício');
+                        container.appendChild(item);
+                    });
+                    if (features.length < 5) {
+                        const addBtn = document.createElement('button');
+                        addBtn.className = 'btn btn-secondary';
+                        addBtn.style.width = '100%'; addBtn.style.padding = '8px'; addBtn.style.fontSize = '0.7rem'; addBtn.style.marginTop = '10px';
+                        addBtn.innerHTML = '<i class="fa-solid fa-plus"></i> ADICIONAR ITEM';
+                        addBtn.onclick = () => {
+                            if (!db.products[prodId].features) db.products[prodId].features = [];
+                            db.products[prodId].features.push('Novo Benefício');
+                            renderAdmin();
+                            checkChanges();
+                        };
+                        container.appendChild(addBtn);
+                    }
+                }
+
+                function removeFeature(prodId, idx) {
+                    db.products[prodId].features.splice(idx, 1);
                     renderAdmin();
-                };
-                container.appendChild(addBtn);
-            }
-        }
-
-        function removeFeature(prodId, idx) {
-            db.products[prodId].features.splice(idx, 1);
-            renderAdmin();
-        }
-
-        async function previewImg(input, imgId, hiddenId, callback) {
-            const file = input.files[0];
-            if (!file) return;
-            const formData = new FormData();
-            formData.append('image', file);
-            try {
-                const res = await fetch(`${API_URL}/api/upload`, { method: 'POST', body: formData });
-                const data = await res.json();
-                if (imgId) {
-                    document.getElementById(imgId).parentElement.style.display = 'block';
-                    document.getElementById(imgId).src = data.url;
+                    checkChanges();
                 }
-                if (hiddenId) document.getElementById(hiddenId).value = data.url;
-                if (callback) callback(data.url);
-            } catch (e) { alert('Erro ao subir imagem.'); }
-        }
 
-        async function createNewBump() {
-            const id = 'bump-' + Date.now().toString().slice(-4);
-            const title = document.getElementById('nb-title').value;
-            const price = parseFloat(document.getElementById('nb-price').value);
-            const description = document.getElementById('nb-desc').value;
-            const image = document.getElementById('nb-img-url').value;
-
-            if (!title) return alert('Dê um título!');
-
-            db.orderBumps[id] = { id, title, price, description, image };
-            closeModal('bump-modal');
-            renderAdmin();
-            showToast('Bump Adicionado!');
-        }
-
-        async function createNewProduct() {
-            const titleEl = document.getElementById('np-title');
-            const id = 'ebook-' + titleEl.value.toLowerCase().replace(/\s+/g, '-').slice(0, 10) + '-' + Date.now().toString().slice(-2);
-
-            db.products[id] = {
-                title: titleEl.value,
-                price: parseFloat(document.getElementById('np-price').value),
-                originalPrice: parseFloat(document.getElementById('np-orig').value),
-                description: document.getElementById('np-desc').value,
-                cover: document.getElementById('np-img-url').value,
-                features: Array.from(document.querySelectorAll('.np-feat')).map(i => i.value).filter(v => v),
-                orderBumps: []
-            };
-
-            closeModal('product-modal');
-            renderAdmin();
-            showToast('Produto Adicionado!');
-        }
-
-        function deleteProduct(id) {
-            if (confirm('Excluir permanentemente?')) {
-                delete db.products[id];
-                renderAdmin();
-                showToast('Produto Removido.');
-            }
-        }
-
-        function deleteBump(id) {
-            if (confirm('Excluir permanentemente?')) {
-                delete db.orderBumps[id];
-                Object.keys(db.products).forEach(pId => {
-                    db.products[pId].orderBumps = db.products[pId].orderBumps.filter(bId => bId !== id);
-                });
-                renderAdmin();
-                showToast('Bump Removido.');
-            }
-        }
-
-        async function saveAll() {
-            try {
-                const res = await fetch(`${API_URL}/api/config/update`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: masterPass, data: db })
-                });
-                if ((await res.json()).success) showToast('Sistema Sincronizado!');
-            } catch (e) { alert('Erro ao salvar.'); }
-        }
-
-        async function clearHistory() {
-            if (!confirm('⚠️ ATENÇÃO: Isso apagará permanentemente todo o histórico de vendas e zerará as estatísticas do dashboard. Deseja continuar?')) return;
-
-            try {
-                const res = await fetch(`${API_URL}/api/history/clear`, {
-                    method: 'POST',
-                    headers: { 'x-admin-password': masterPass }
-                });
-                const data = await res.json();
-                if (data.success) {
-                    showToast('Logs limpos com sucesso!');
-                    loadHistory();
-                    loadAnalytics();
-                } else {
-                    alert('Erro: ' + (data.error || 'Falha ao limpar logs'));
+                async function previewImg(input, imgId, hiddenId, callback) {
+                    const file = input.files[0];
+                    if (!file) return;
+                    const formData = new FormData();
+                    formData.append('image', file);
+                    try {
+                        const res = await fetch(`${API_URL}/api/upload`, { method: 'POST', body: formData });
+                        const data = await res.json();
+                        if (imgId) {
+                            document.getElementById(imgId).parentElement.style.display = 'block';
+                            document.getElementById(imgId).src = data.url;
+                        }
+                        if (hiddenId) document.getElementById(hiddenId).value = data.url;
+                        if (callback) callback(data.url);
+                    } catch (e) { alert('Erro ao subir imagem.'); }
                 }
-            } catch (e) {
-                alert('Erro de conexão ao tentar limpar logs.');
-            }
-        }
-    </script>
+
+                async function createNewBump() {
+                    const id = 'bump-' + Date.now().toString().slice(-4);
+                    const title = document.getElementById('nb-title').value;
+                    const price = parseFloat(document.getElementById('nb-price').value);
+                    const description = document.getElementById('nb-desc').value;
+                    const image = document.getElementById('nb-img-url').value;
+
+                    if (!title) return alert('Dê um título!');
+
+                    db.orderBumps[id] = { id, title, price, description, image };
+                    closeModal('bump-modal');
+                    renderAdmin();
+                    checkChanges();
+                    showToast('Bump Adicionado!');
+                }
+
+                async function createNewProduct() {
+                    const titleEl = document.getElementById('np-title');
+                    const id = 'ebook-' + titleEl.value.toLowerCase().replace(/\s+/g, '-').slice(0, 10) + '-' + Date.now().toString().slice(-2);
+
+                    db.products[id] = {
+                        title: titleEl.value,
+                        price: parseFloat(document.getElementById('np-price').value),
+                        originalPrice: parseFloat(document.getElementById('np-orig').value),
+                        description: document.getElementById('np-desc').value,
+                        cover: document.getElementById('np-img-url').value,
+                        features: Array.from(document.querySelectorAll('.np-feat')).map(i => i.value).filter(v => v),
+                        orderBumps: []
+                    };
+
+                    closeModal('product-modal');
+                    renderAdmin();
+                    checkChanges();
+                    showToast('Produto Adicionado!');
+                }
+
+                function deleteProduct(id) {
+                    if (confirm('Excluir permanentemente?')) {
+                        delete db.products[id];
+                        renderAdmin();
+                        checkChanges();
+                        showToast('Produto Removido.');
+                    }
+                }
+
+                function deleteBump(id) {
+                    if (confirm('Excluir permanentemente?')) {
+                        delete db.orderBumps[id];
+                        Object.keys(db.products).forEach(pId => {
+                            db.products[pId].orderBumps = db.products[pId].orderBumps.filter(bId => bId !== id);
+                        });
+                        renderAdmin();
+                        checkChanges();
+                        showToast('Bump Removido.');
+                    }
+                }
+
+                async function saveAll() {
+                    try {
+                        const res = await fetch(`${API_URL}/api/config/update`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ password: masterPass, data: db })
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            originalDb = JSON.parse(JSON.stringify(db));
+                            checkChanges();
+                            showToast('Sistema Sincronizado!');
+                        } else {
+                            alert('Erro ao salvar: ' + (data.error || 'Acesso negado'));
+                        }
+                    } catch (e) { alert('Erro de conexão ao salvar.'); }
+                }
+
+                async function clearHistory() {
+                    if (!confirm('⚠️ ATENÇÃO: Isso apagará permanentemente todo o histórico de vendas e zerará as estatísticas do dashboard. Deseja continuar?')) return;
+
+                    try {
+                        const res = await fetch(`${API_URL}/api/history/clear`, {
+                            method: 'POST',
+                            headers: { 'x-admin-password': masterPass }
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            showToast('Logs limpos com sucesso!');
+                            loadHistory();
+                            loadAnalytics();
+                        } else {
+                            alert('Erro: ' + (data.error || 'Falha ao limpar logs'));
+                        }
+                    } catch (e) {
+                        alert('Erro de conexão ao tentar limpar logs.');
+                    }
+                }
+            </script>
 </body>
 
 </html>
