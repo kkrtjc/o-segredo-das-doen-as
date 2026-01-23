@@ -112,26 +112,29 @@ function saveHistory(data) { fs.writeFileSync(HISTORY_PATH, JSON.stringify(data,
 
 function getAnalytics() {
     try {
-        const analytics = JSON.parse(fs.readFileSync(ANALYTICS_PATH, 'utf8'));
-        const history = getHistory();
+        let analytics = {
+            clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
+            uiErrors: 0, trustClicks: 0, mobileSessions: 0,
+            desktopSessions: 0, slowLoads: 0
+        };
 
-        // Calculate dynamic stats from history
-        const approvedSales = history.filter(h => h.total > 0);
-        const totalRevenue = approvedSales.reduce((acc, s) => acc + Number(s.total), 0);
+        if (fs.existsSync(ANALYTICS_PATH)) {
+            const fileData = JSON.parse(fs.readFileSync(ANALYTICS_PATH, 'utf8'));
+            analytics = { ...analytics, ...fileData };
+        }
+
+        const history = getHistory();
+        const approvedSales = history.filter(h => h && h.total > 0);
+        const totalRevenue = approvedSales.reduce((acc, s) => acc + (Number(s.total) || 0), 0);
 
         return {
             ...analytics,
             totalRevenue: totalRevenue,
             approvedCount: approvedSales.length,
-            historyCount: history.length,
-            // Ensure defaults for new fields
-            uiErrors: analytics.uiErrors || 0,
-            trustClicks: analytics.trustClicks || 0,
-            mobileSessions: analytics.mobileSessions || 0,
-            desktopSessions: analytics.desktopSessions || 0,
-            slowLoads: analytics.slowLoads || 0
+            historyCount: history.length
         };
     } catch (e) {
+        console.error("❌ [ANALYTICS ERROR]", e.message);
         return {
             clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
             totalRevenue: 0, approvedCount: 0, uiErrors: 0,
@@ -139,19 +142,23 @@ function getAnalytics() {
         };
     }
 }
+
 function saveAnalytics(data) {
-    // We only save the raw counters
-    const toSave = {
-        clicks: data.clicks || 0,
-        checkoutOpens: data.checkoutOpens || 0,
-        checkoutStarts: data.checkoutStarts || 0,
-        uiErrors: data.uiErrors || 0,
-        trustClicks: data.trustClicks || 0,
-        mobileSessions: data.mobileSessions || 0,
-        desktopSessions: data.desktopSessions || 0,
-        slowLoads: data.slowLoads || 0
-    };
-    fs.writeFileSync(ANALYTICS_PATH, JSON.stringify(toSave, null, 4));
+    try {
+        const toSave = {
+            clicks: Number(data.clicks) || 0,
+            checkoutOpens: Number(data.checkoutOpens) || 0,
+            checkoutStarts: Number(data.checkoutStarts) || 0,
+            uiErrors: Number(data.uiErrors) || 0,
+            trustClicks: Number(data.trustClicks) || 0,
+            mobileSessions: Number(data.mobileSessions) || 0,
+            desktopSessions: Number(data.desktopSessions) || 0,
+            slowLoads: Number(data.slowLoads) || 0
+        };
+        fs.writeFileSync(ANALYTICS_PATH, JSON.stringify(toSave, null, 4));
+    } catch (e) {
+        console.error("❌ [SAVE ANALYTICS ERROR]", e.message);
+    }
 }
 
 async function logSale(customer, items, paymentId, method = 'cartão') {

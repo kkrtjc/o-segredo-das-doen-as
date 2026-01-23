@@ -884,17 +884,18 @@
 
             // Typing Effect
             const fullText = insights.join('<br><br>');
+            if (window.aiTypingInterval) clearInterval(window.aiTypingInterval);
             typeWriter(msgEl, fullText);
         }
 
         function typeWriter(el, text) {
             el.innerHTML = '';
             let i = 0;
-            const interval = setInterval(() => {
+            window.aiTypingInterval = setInterval(() => {
                 el.innerHTML = text.slice(0, i) + '<span style="border-right: 2px solid var(--accent); margin-left:2px; animation: blink 0.7s infinite;"></span>';
                 i++;
                 if (i > text.length) {
-                    clearInterval(interval);
+                    clearInterval(window.aiTypingInterval);
                     el.innerHTML = text;
                 }
             }, 10);
