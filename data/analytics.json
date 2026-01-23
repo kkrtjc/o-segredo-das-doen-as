@@ -1,10 +1,11 @@
 {
-    "clicks": 0,
-    "checkoutOpens": 0,
-    "checkoutStarts": 0,
+    "clicks": 2,
+    "checkoutOpens": 2,
+    "checkoutStarts": 1,
     "uiErrors": 0,
     "trustClicks": 0,
     "mobileSessions": 0,
-    "desktopSessions": 0,
-    "slowLoads": 0
+    "desktopSessions": 2,
+    "slowLoads": 0,
+    "pageViews": 2
 }

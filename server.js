@@ -153,7 +153,8 @@ function saveAnalytics(data) {
             trustClicks: Number(data.trustClicks) || 0,
             mobileSessions: Number(data.mobileSessions) || 0,
             desktopSessions: Number(data.desktopSessions) || 0,
-            slowLoads: Number(data.slowLoads) || 0
+            slowLoads: Number(data.slowLoads) || 0,
+            pageViews: Number(data.pageViews) || 0
         };
         fs.writeFileSync(ANALYTICS_PATH, JSON.stringify(toSave, null, 4));
     } catch (e) {
@@ -263,6 +264,7 @@ app.post('/api/history/clear', (req, res) => {
 
 app.post('/api/track', (req, res) => {
     const { type, isMobile } = req.body;
+    console.log(`📈 [TRACK] Evento: ${type}, Mobile: ${isMobile}`);
     const analytics = getAnalytics();
 
     if (type === 'click') analytics.clicks++;
