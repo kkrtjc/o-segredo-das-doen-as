@@ -673,5 +673,15 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`\n🚀 Mura Engine running on port ${PORT}`));
+const HOST = '0.0.0.0';
+
+console.log('⏳ Starting Mura Engine Server...');
+app.listen(PORT, HOST, () => {
+    console.log('\n' + '='.repeat(40));
+    console.log(`🚀 Mura Engine Online!`);
+    console.log(`📡 Port: ${PORT}`);
+    console.log(`🌐 Host: ${HOST}`);
+    console.log(`📅 Time: ${new Date().toLocaleString()}`);
+    console.log('='.repeat(40) + '\n');
+});
 
