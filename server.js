@@ -8,9 +8,11 @@ const fs = require('fs');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
 
+
 dotenv.config();
 
 const app = express();
+
 
 // Configuração de Segurança CORS (Simplificada para Testes e Produção)
 app.use(cors({
@@ -32,6 +34,7 @@ const DATA_DIR = fs.existsSync(MOUNTED_DISK_PATH) ? MOUNTED_DISK_PATH : path.joi
 
 const DB_PATH = path.join(DATA_DIR, 'db.json');
 const HISTORY_PATH = path.join(DATA_DIR, 'history.json');
+const ANALYTICS_PATH = path.join(DATA_DIR, 'analytics.json');
 const UPLOADS_DIR = path.join(DATA_DIR, 'uploads'); // Move uploads to disk too!
 
 // Ensure directories exist
@@ -58,6 +61,16 @@ if (DATA_DIR === MOUNTED_DISK_PATH) {
 }
 
 if (!fs.existsSync(HISTORY_PATH)) fs.writeFileSync(HISTORY_PATH, '[]');
+if (!fs.existsSync(ANALYTICS_PATH)) fs.writeFileSync(ANALYTICS_PATH, JSON.stringify({
+    clicks: 0,
+    checkoutOpens: 0,
+    checkoutStarts: 0,
+    uiErrors: 0,
+    trustClicks: 0,
+    mobileSessions: 0,
+    desktopSessions: 0,
+    slowLoads: 0
+}, null, 4));
 
 // Serve static files
 app.use(express.static(__dirname));
@@ -96,6 +109,50 @@ function getHistory() {
     }
 }
 function saveHistory(data) { fs.writeFileSync(HISTORY_PATH, JSON.stringify(data, null, 4)); }
+
+function getAnalytics() {
+    try {
+        const analytics = JSON.parse(fs.readFileSync(ANALYTICS_PATH, 'utf8'));
+        const history = getHistory();
+
+        // Calculate dynamic stats from history
+        const approvedSales = history.filter(h => h.total > 0);
+        const totalRevenue = approvedSales.reduce((acc, s) => acc + Number(s.total), 0);
+
+        return {
+            ...analytics,
+            totalRevenue: totalRevenue,
+            approvedCount: approvedSales.length,
+            historyCount: history.length,
+            // Ensure defaults for new fields
+            uiErrors: analytics.uiErrors || 0,
+            trustClicks: analytics.trustClicks || 0,
+            mobileSessions: analytics.mobileSessions || 0,
+            desktopSessions: analytics.desktopSessions || 0,
+            slowLoads: analytics.slowLoads || 0
+        };
+    } catch (e) {
+        return {
+            clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
+            totalRevenue: 0, approvedCount: 0, uiErrors: 0,
+            trustClicks: 0, mobileSessions: 0, desktopSessions: 0, slowLoads: 0
+        };
+    }
+}
+function saveAnalytics(data) {
+    // We only save the raw counters
+    const toSave = {
+        clicks: data.clicks || 0,
+        checkoutOpens: data.checkoutOpens || 0,
+        checkoutStarts: data.checkoutStarts || 0,
+        uiErrors: data.uiErrors || 0,
+        trustClicks: data.trustClicks || 0,
+        mobileSessions: data.mobileSessions || 0,
+        desktopSessions: data.desktopSessions || 0,
+        slowLoads: data.slowLoads || 0
+    };
+    fs.writeFileSync(ANALYTICS_PATH, JSON.stringify(toSave, null, 4));
+}
 
 async function logSale(customer, items, paymentId, method = 'cartão') {
     try {
@@ -160,6 +217,31 @@ app.get('/api/history', (req, res) => {
     res.json(getHistory());
 });
 
+app.get('/api/analytics', (req, res) => {
+    const password = req.headers['x-admin-password'];
+    if (password !== 'mura2026') return res.status(401).json({ error: 'Acesso Negado' });
+    res.json(getAnalytics());
+});
+
+app.post('/api/track', (req, res) => {
+    const { type, isMobile } = req.body;
+    const analytics = getAnalytics();
+
+    if (type === 'click') analytics.clicks++;
+    else if (type === 'checkout_start') analytics.checkoutStarts++;
+    else if (type === 'checkout_open') analytics.checkoutOpens++;
+    else if (type === 'ui_error') analytics.uiErrors++;
+    else if (type === 'trust_click') analytics.trustClicks++;
+    else if (type === 'slow_load') analytics.slowLoads++;
+    else if (type === 'session_start') {
+        if (isMobile) analytics.mobileSessions++;
+        else analytics.desktopSessions++;
+    }
+
+    saveAnalytics(analytics);
+    res.json({ success: true });
+});
+
 app.get('/api/products/:id', (req, res) => {
     const db = getDB();
     const product = db.products[req.params.id];
@@ -182,6 +264,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+// Email Sender Function
 // Email Sender Function
 async function sendEmail(customer, items) {
     console.log(`📧 [EMAIL] Preparando envio via GMAIL para: ${customer.email}`);

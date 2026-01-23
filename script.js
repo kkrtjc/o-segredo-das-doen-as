@@ -134,6 +134,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- 7. NEW: Mobile-First Tracking ---
+    const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    trackEvent('session_start', isMobile);
+
+    // Track Slow Load
+    window.addEventListener('load', () => {
+        const perf = window.performance.timing;
+        const loadTime = (perf.loadEventEnd - perf.navigationStart) / 1000;
+        if (loadTime > 5) trackEvent('slow_load', isMobile);
+    });
+
+    // Track Trust Clicks (Seals, Guarantee)
+    document.querySelectorAll('.trust-seal, .guarantee-section, .secure-info').forEach(el => {
+        el.addEventListener('click', () => trackEvent('trust_click', isMobile));
+    });
+
     // Pixels tracking
     setTimeout(() => {
         if (typeof fbq === 'function') {
@@ -148,7 +164,20 @@ document.addEventListener('DOMContentLoaded', () => {
 const mp = new MercadoPago('APP_USR-2502a3c7-5f59-45b0-8365-1cfcad7b0fa5');
 const checkoutModal = document.getElementById('checkout-modal');
 
+async function trackEvent(type, isMobile = null) {
+    if (isMobile === null) isMobile = window.innerWidth <= 768;
+    try {
+        await fetch(`${API_URL}/api/track`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type, isMobile })
+        });
+    } catch (e) { console.warn("Track failed", e); }
+}
+
 async function openCheckout(productId) {
+    trackEvent('checkout_open');
+    trackEvent('click');
     // Pixel Tracking: AddToCart & InitiateCheckout
     if (typeof fbq === 'function') {
         fbq('track', 'AddToCart', { content_ids: [productId], content_type: 'product' });
@@ -651,6 +680,16 @@ const masks = {
 };
 
 function setupFields() {
+    // Track Checkout Start
+    const inputs = document.querySelectorAll('#checkout-modal input');
+    inputs.forEach(input => {
+        input.addEventListener('blur', () => {
+            if (input.value.trim().length > 2 && !sessionStorage.getItem('checkout_started')) {
+                sessionStorage.setItem('checkout_started', 'true');
+                trackEvent('checkout_start');
+            }
+        });
+    });
     // 2. Real-time Formatting & Validation
     const fieldMapping = {
         'payer-cpf': 'cpf',
@@ -721,6 +760,9 @@ function validateField(el, type) {
         el.classList.add('is-valid');
         el.classList.remove('is-invalid');
     } else {
+        if (!el.classList.contains('is-invalid')) {
+            trackEvent('ui_error'); // Only track first time per blur
+        }
         el.classList.add('is-invalid');
         el.classList.remove('is-valid');
     }
