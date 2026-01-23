@@ -221,13 +221,43 @@ app.post('/api/config/update', (req, res) => {
 app.get('/api/history', (req, res) => {
     const password = req.headers['x-admin-password'];
     if (password !== 'mura2026') return res.status(401).json({ error: 'Acesso Negado' });
+    res.set('Cache-Control', 'no-store');
     res.json(getHistory());
 });
 
 app.get('/api/analytics', (req, res) => {
     const password = req.headers['x-admin-password'];
     if (password !== 'mura2026') return res.status(401).json({ error: 'Acesso Negado' });
+    res.set('Cache-Control', 'no-store');
     res.json(getAnalytics());
+});
+
+app.post('/api/history/clear', (req, res) => {
+    const password = req.headers['x-admin-password'];
+    if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
+
+    try {
+        console.log(`🧹 [ADMIN] Iniciando limpeza de dados...`);
+        fs.writeFileSync(HISTORY_PATH, '[]');
+        fs.writeFileSync(ANALYTICS_PATH, JSON.stringify({
+            clicks: 0,
+            checkoutOpens: 0,
+            checkoutStarts: 0,
+            uiErrors: 0,
+            trustClicks: 0,
+            mobileSessions: 0,
+            desktopSessions: 0,
+            slowLoads: 0
+        }, null, 4));
+
+        console.log(`✅ [ADMIN] HISTORY_PATH: ${HISTORY_PATH} resetado.`);
+        console.log(`✅ [ADMIN] ANALYTICS_PATH: ${ANALYTICS_PATH} resetado.`);
+
+        res.json({ success: true });
+    } catch (e) {
+        console.error("❌ [ADMIN ERROR] Falha ao limpar arquivos:", e.message);
+        res.status(500).json({ error: 'Erro ao limpar dados no servidor', details: e.message });
+    }
 });
 
 app.post('/api/track', (req, res) => {
@@ -672,7 +702,7 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 const HOST = '0.0.0.0';
 
 console.log('⏳ Starting Mura Engine Server...');

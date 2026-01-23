@@ -463,6 +463,350 @@
             text-transform: uppercase;
         }
 
+        /* Product & Bump Cards Overhaul */
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 24px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px var(--accent-glow);
+        }
+
+        .card-header-main {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 5px;
+        }
+
+        .img-container {
+            width: 85px;
+            height: 85px;
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+            background: #111;
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.5s;
+        }
+
+        .product-card:hover .img-container img {
+            transform: scale(1.1);
+        }
+
+        .img-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 900;
+            opacity: 0;
+            transition: 0.3s;
+            cursor: pointer;
+            z-index: 2;
+            text-transform: uppercase;
+        }
+
+        .img-container:hover .img-overlay {
+            opacity: 1;
+        }
+
+        .compact-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .compact-info strong {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+
+        .compact-info span {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            font-weight: 600;
+            opacity: 0.7;
+        }
+
+        .price-tag {
+            background: linear-gradient(135deg, var(--accent), #f3d47a);
+            color: #000;
+            padding: 8px 14px;
+            border-radius: 14px;
+            font-weight: 900;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 12px var(--accent-glow);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .collapsible-trigger {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 14px 20px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .collapsible-trigger:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .collapsible-trigger.active {
+            border-color: var(--accent);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .collapsible-trigger i:last-child {
+            transition: transform 0.4s;
+            font-size: 0.7rem;
+            color: var(--accent);
+        }
+
+        .collapsible-trigger.active i:last-child {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            visibility: hidden;
+            padding: 0 10px;
+        }
+
+        .collapsible-content.active {
+            max-height: 500px;
+            opacity: 1;
+            visibility: visible;
+            padding: 15px 10px;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .control {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .control input,
+        .control textarea {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            padding: 12px 15px;
+            border-radius: 12px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .control input:focus,
+        .control textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(212, 175, 55, 0.05);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 8px 12px;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .feature-item input {
+            background: transparent;
+            border: none;
+            padding: 0;
+            font-size: 0.85rem;
+            flex: 1;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .btn-icon.danger:hover {
+            background: #ef4444;
+            color: #fff;
+            transform: rotate(8deg) scale(1.1);
+        }
+
+        .bump-chip {
+            padding: 10px 18px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-dim);
+        }
+
+        .bump-chip:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .bump-chip.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #000;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .bump-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 18px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent);
+            background: rgba(212, 175, 55, 0.03);
+        }
+
+        .upload-icon {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .modal-body {
+            background: #0a0a0a;
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.5);
+            animation: modalIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: scale(0.9) translateY(40px);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header-row h3 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 50px;
+            position: sticky;
+            bottom: 20px;
+            background: rgba(5, 5, 5, 0.8);
+            padding: 15px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            z-index: 100;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -631,6 +975,8 @@
                     </div>
                     <button class="btn btn-secondary" onclick="exportHistory()"><i class="fa-solid fa-download"></i>
                         EXPORTAR CSV</button>
+                    <button class="btn btn-primary" style="background: #ef4444; border: none;"
+                        onclick="clearHistory()"><i class="fa-solid fa-trash-can"></i> LIMPAR LOGS</button>
                 </div>
                 <div style="overflow-x: auto;">
                     <table>
@@ -791,13 +1137,13 @@
         }
 
         async function loadData() {
-            const res = await fetch(`${API_URL}/api/config`);
+            const res = await fetch(`${API_URL}/api/config?t=${Date.now()}`);
             db = await res.json();
             renderAdmin();
         }
 
         async function loadHistory() {
-            const res = await fetch(`${API_URL}/api/history`, {
+            const res = await fetch(`${API_URL}/api/history?t=${Date.now()}`, {
                 headers: { 'x-admin-password': masterPass }
             });
             historyData = await res.json();
@@ -805,7 +1151,7 @@
         }
 
         async function loadAnalytics() {
-            const res = await fetch(`${API_URL}/api/analytics`, {
+            const res = await fetch(`${API_URL}/api/analytics?t=${Date.now()}`, {
                 headers: { 'x-admin-password': masterPass }
             });
             const data = await res.json();
@@ -1176,6 +1522,27 @@
                 });
                 if ((await res.json()).success) showToast('Sistema Sincronizado!');
             } catch (e) { alert('Erro ao salvar.'); }
+        }
+
+        async function clearHistory() {
+            if (!confirm('⚠️ ATENÇÃO: Isso apagará permanentemente todo o histórico de vendas e zerará as estatísticas do dashboard. Deseja continuar?')) return;
+
+            try {
+                const res = await fetch(`${API_URL}/api/history/clear`, {
+                    method: 'POST',
+                    headers: { 'x-admin-password': masterPass }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Logs limpos com sucesso!');
+                    loadHistory();
+                    loadAnalytics();
+                } else {
+                    alert('Erro: ' + (data.error || 'Falha ao limpar logs'));
+                }
+            } catch (e) {
+                alert('Erro de conexão ao tentar limpar logs.');
+            }
         }
     </script>
 </body>

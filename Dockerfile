@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Expõe a porta que o servidor usa
-EXPOSE 3000
+EXPOSE 10000
 
-# Comando para iniciar
-CMD ["npm", "start"]
+# Comando para iniciar diretamente (melhor para Docker)
+CMD ["node", "server.js"]
