@@ -987,11 +987,11 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>DATA</th>
+                                <th>DATA/HORA</th>
                                 <th>CLIENTE</th>
-                                <th>PRODUTOS</th>
-                                <th>VALOR</th>
-                                <th>MÉTODO</th>
+                                <th>CONTATO</th>
+                                <th>EMAIL</th>
+                                <th>PAGAMENTO</th>
                                 <th>STATUS</th>
                             </tr>
                         </thead>
@@ -1096,7 +1096,7 @@
                 let historyData = [];
                 let masterPass = '';
                 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                    ? 'http://localhost:3000'
+                    ? 'http://localhost:10000'
                     : 'https://teste-m1kq.onrender.com';
 
                 function showToast(msg) {
@@ -1272,9 +1272,10 @@
                 function filterHistory() {
                     const query = document.getElementById('history-search').value.toLowerCase();
                     const filtered = historyData.filter(h =>
-                        h.name.toLowerCase().includes(query) ||
-                        h.email.toLowerCase().includes(query) ||
-                        h.items.some(i => i.toLowerCase().includes(query))
+                        (h.name || '').toLowerCase().includes(query) ||
+                        (h.email || '').toLowerCase().includes(query) ||
+                        (h.phone || '').toString().includes(query) ||
+                        (h.items || []).some(i => i.toLowerCase().includes(query))
                     );
                     renderHistory(filtered);
                 }
@@ -1301,20 +1302,36 @@
                     hList.innerHTML = data.length ? '' : '<tr><td colspan="6" style="text-align:center; padding: 40px; color: var(--text-dim);">Nenhuma venda encontrada.</td></tr>';
 
                     [...data].reverse().forEach(h => {
+                        const date = new Date(h.date);
                         const row = document.createElement('tr');
+                        const cleanPhone = (h.phone || '').toString().replace(/\D/g, '');
+                        const waUrl = cleanPhone ? `https://wa.me/${cleanPhone.startsWith('55') ? cleanPhone : '55' + cleanPhone}` : '#';
+
                         row.innerHTML = `
                     <td>
-                        <span style="font-size: 0.8rem; font-weight: 700;">${new Date(h.date).toLocaleDateString('pt-BR')}</span><br>
-                        <span style="font-size: 0.7rem; color: var(--text-dim);">${new Date(h.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
+                        <div style="font-size: 0.85rem; font-weight: 800; color: #fff;">${date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</div>
+                        <div style="font-size: 0.7rem; color: var(--text-dim);">${date.toLocaleDateString('pt-BR')}</div>
                     </td>
                     <td>
-                        <strong style="color: var(--accent);">${h.name}</strong><br>
-                        <span style="font-size: 0.75rem; color: var(--text-dim);">${h.email}</span>
+                        <strong style="color: #fff; font-size: 0.9rem;">${h.name || 'Cliente'}</strong>
                     </td>
-                    <td style="max-width: 200px; font-size: 0.8rem;">${h.items.join(', ')}</td>
-                    <td style="font-weight: 800; color: #fff;">R$ ${Number(h.total).toFixed(2)}</td>
-                    <td><span style="font-size: 0.7rem; background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px; text-transform: uppercase;">${h.method || 'cartão'}</span></td>
-                    <td><span style="background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 5px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; border: 1px solid rgba(16, 185, 129, 0.2);">APROVADO</span></td>
+                    <td>
+                        ${cleanPhone ? `
+                            <a href="${waUrl}" target="_blank" style="color: #25d366; text-decoration: none; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-brands fa-whatsapp"></i> ${h.phone}
+                            </a>
+                        ` : '<span style="color: var(--text-dim);">N/A</span>'}
+                    </td>
+                    <td>
+                        <span style="font-size: 0.8rem; color: var(--text-dim);">${h.email || 'N/A'}</span>
+                    </td>
+                    <td>
+                        <div style="font-weight: 800; color: var(--accent); font-size: 0.9rem;">R$ ${Number(h.total).toFixed(2)}</div>
+                        <span style="font-size: 0.65rem; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">${h.method || 'cartão'}</span>
+                    </td>
+                    <td>
+                        <span style="background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 5px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; border: 1px solid rgba(16, 185, 129, 0.2);">APROVADO</span>
+                    </td>
                 `;
                         hList.appendChild(row);
                     });
