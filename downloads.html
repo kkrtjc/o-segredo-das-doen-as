@@ -347,7 +347,8 @@
         </div>
 
         <div class="whatsapp-section">
-            <a href="#" class="btn-whatsapp" id="whatsapp-btn">
+            <a href="https://wa.me/5538999832950?text=Oi,%20acabei%20de%20comprar%20e%20gostaria%20de%20receber%20o%20material%20por%20aqui%20também."
+                target="_blank" class="btn-whatsapp" id="whatsapp-btn">
                 <i class="fa-brands fa-whatsapp"></i>
                 Receber também no WhatsApp
             </a>
@@ -438,15 +439,21 @@
             hasDoencas = true;
         }
 
+        // DOM Elements
+        const itemManejo = document.getElementById('item-manejo');
+        const itemDoencas = document.getElementById('item-doencas');
+        const itemOrderbump = document.getElementById('item-orderbump');
+        const whatsappBtn = document.getElementById('whatsapp-btn');
+
         // Check for order bump
         if (hasKeyword('bump') || hasKeyword('racao') || hasKeyword('tabela')) {
             hasOrderbump = true;
         }
 
         // Show purchased items
-        if (hasManejo) itemManejo.style.display = 'block';
-        if (hasDoencas) itemDoencas.style.display = 'block';
-        if (hasOrderbump) itemOrderbump.style.display = 'block';
+        if (hasManejo && itemManejo) itemManejo.style.display = 'block';
+        if (hasDoencas && itemDoencas) itemDoencas.style.display = 'block';
+        if (hasOrderbump && itemOrderbump) itemOrderbump.style.display = 'block';
 
         // Update success message
         if (isCombo && hasOrderbump) {
@@ -468,17 +475,19 @@
         }
 
         // WhatsApp Logic
-        whatsappBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            const phone = "5538999832950";
-            const productList = [];
-            if (hasManejo) productList.push('Manual de Pintinhos');
-            if (hasDoencas) productList.push('Guia de Doenças');
-            if (hasOrderbump) productList.push('Tabela de Ração');
+        if (whatsappBtn) {
+            whatsappBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const phone = "5538999832950";
+                const productList = [];
+                if (hasManejo) productList.push('Manual de Pintinhos');
+                if (hasDoencas) productList.push('Guia de Doenças');
+                if (hasOrderbump) productList.push('Tabela de Ração');
 
-            const text = encodeURIComponent(`Olá! Acabei de adquirir: ${productList.join(', ')}. Gostaria de receber meu acesso por aqui também.`);
-            window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
-        });
+                const text = encodeURIComponent(`Olá! Acabei de adquirir: ${productList.join(', ')}. Gostaria de receber meu acesso por aqui também.`);
+                window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+            });
+        }
 
         // --- Marketing Tracking: Purchase ---
         const total = parseFloat(params.get('total') || '0');
@@ -504,8 +513,9 @@
         // Fallback: if no items detected, show all (safety measure)
         if (!hasManejo && !hasDoencas && !hasOrderbump) {
             console.warn('No items detected in URL, showing all items as fallback');
-            itemManejo.style.display = 'block';
-            itemDoencas.style.display = 'block';
+            if (itemManejo) itemManejo.style.display = 'block';
+            if (itemDoencas) itemDoencas.style.display = 'block';
+            if (itemOrderbump) itemOrderbump.style.display = 'block';
             successMsg.innerText = 'Seus materiais foram liberados!';
         }
     </script>
