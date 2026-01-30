@@ -1,11 +1,29 @@
 {
-    "clicks": 2,
-    "checkoutOpens": 2,
-    "checkoutStarts": 1,
-    "uiErrors": 0,
-    "trustClicks": 0,
-    "mobileSessions": 0,
-    "desktopSessions": 2,
-    "slowLoads": 0,
-    "pageViews": 2
+    "totals": {
+        "clicks": 98,
+        "checkoutOpens": 83,
+        "checkoutStarts": 19,
+        "uiErrors": 8,
+        "trustClicks": 3,
+        "mobileSessions": 0,
+        "desktopSessions": 48,
+        "slowLoads": 0,
+        "pageViews": 48
+    },
+    "daily": {
+        "2026-01-30": {
+            "clicks": 39,
+            "checkoutOpens": 24,
+            "checkoutStarts": 4,
+            "uiErrors": 0,
+            "trustClicks": 0,
+            "mobileSessions": 0,
+            "desktopSessions": 14,
+            "slowLoads": 0,
+            "pageViews": 14,
+            "ctaClicks": {
+                "hero-primary": 15
+            }
+        }
+    }
 }

@@ -13,6 +13,27 @@ dotenv.config();
 
 const app = express();
 
+// Configuração do Nodemailer
+const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: process.env.SMTP_PORT || 587,
+    secure: false, // true para 465, false para outros
+    auth: {
+        user: process.env.SMTP_USER || 'seu-email@gmail.com',
+        pass: process.env.SMTP_PASS || 'sua-senha-de-app'
+    }
+});
+
+// Verificar conexão do e-mail
+transporter.verify((error, success) => {
+    if (error) {
+        console.log('❌ [EMAIL] Erro na configuração:', error.message);
+        console.log('⚠️ Configure as variáveis SMTP_USER e SMTP_PASS no .env');
+    } else {
+        console.log('✅ [EMAIL] Servidor de e-mail pronto para enviar mensagens');
+    }
+});
+
 
 // Configuração de Segurança CORS (Simplificada para Testes e Produção)
 app.use(cors({
@@ -62,14 +83,13 @@ if (DATA_DIR === MOUNTED_DISK_PATH) {
 
 if (!fs.existsSync(HISTORY_PATH)) fs.writeFileSync(HISTORY_PATH, '[]');
 if (!fs.existsSync(ANALYTICS_PATH)) fs.writeFileSync(ANALYTICS_PATH, JSON.stringify({
-    clicks: 0,
-    checkoutOpens: 0,
-    checkoutStarts: 0,
-    uiErrors: 0,
-    trustClicks: 0,
-    mobileSessions: 0,
-    desktopSessions: 0,
-    slowLoads: 0
+    totals: {
+        clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
+        uiErrors: 0, trustClicks: 0, mobileSessions: 0,
+        desktopSessions: 0, slowLoads: 0, pageViews: 0,
+        emailClicks: 0
+    },
+    daily: {}
 }, null, 4));
 
 // Serve static files
@@ -113,14 +133,24 @@ function saveHistory(data) { fs.writeFileSync(HISTORY_PATH, JSON.stringify(data,
 function getAnalytics() {
     try {
         let analytics = {
-            clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
-            uiErrors: 0, trustClicks: 0, mobileSessions: 0,
-            desktopSessions: 0, slowLoads: 0
+            totals: {
+                clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
+                uiErrors: 0, trustClicks: 0, mobileSessions: 0,
+                desktopSessions: 0, slowLoads: 0, pageViews: 0,
+                emailClicks: 0
+            },
+            daily: {}
         };
 
         if (fs.existsSync(ANALYTICS_PATH)) {
             const fileData = JSON.parse(fs.readFileSync(ANALYTICS_PATH, 'utf8'));
-            analytics = { ...analytics, ...fileData };
+
+            // Migration for old flat structure
+            if (!fileData.totals && fileData.pageViews !== undefined) {
+                analytics.totals = { ...analytics.totals, ...fileData };
+            } else {
+                analytics = { ...analytics, ...fileData };
+            }
         }
 
         const history = getHistory();
@@ -136,9 +166,14 @@ function getAnalytics() {
     } catch (e) {
         console.error("❌ [ANALYTICS ERROR]", e.message);
         return {
-            clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
-            totalRevenue: 0, approvedCount: 0, uiErrors: 0,
-            trustClicks: 0, mobileSessions: 0, desktopSessions: 0, slowLoads: 0
+            totals: {
+                clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
+                uiErrors: 0, trustClicks: 0, mobileSessions: 0,
+                desktopSessions: 0, slowLoads: 0, pageViews: 0,
+                emailClicks: 0
+            },
+            daily: {},
+            totalRevenue: 0, approvedCount: 0, historyCount: 0
         };
     }
 }
@@ -146,15 +181,8 @@ function getAnalytics() {
 function saveAnalytics(data) {
     try {
         const toSave = {
-            clicks: Number(data.clicks) || 0,
-            checkoutOpens: Number(data.checkoutOpens) || 0,
-            checkoutStarts: Number(data.checkoutStarts) || 0,
-            uiErrors: Number(data.uiErrors) || 0,
-            trustClicks: Number(data.trustClicks) || 0,
-            mobileSessions: Number(data.mobileSessions) || 0,
-            desktopSessions: Number(data.desktopSessions) || 0,
-            slowLoads: Number(data.slowLoads) || 0,
-            pageViews: Number(data.pageViews) || 0
+            totals: data.totals,
+            daily: data.daily
         };
         fs.writeFileSync(ANALYTICS_PATH, JSON.stringify(toSave, null, 4));
     } catch (e) {
@@ -263,20 +291,43 @@ app.post('/api/history/clear', (req, res) => {
 });
 
 app.post('/api/track', (req, res) => {
-    const { type, isMobile } = req.body;
-    console.log(`📈 [TRACK] Evento: ${type}, Mobile: ${isMobile}`);
+    const { type, isMobile, ctaId } = req.body;
+    console.log(`📈 [TRACK] Evento: ${type}, Mobile: ${isMobile}, CTA: ${ctaId}`);
     const analytics = getAnalytics();
+    const today = new Date().toISOString().split('T')[0];
 
-    if (type === 'click') analytics.clicks++;
-    else if (type === 'checkout_start') analytics.checkoutStarts++;
-    else if (type === 'checkout_open') analytics.checkoutOpens++;
-    else if (type === 'ui_error') analytics.uiErrors++;
-    else if (type === 'trust_click') analytics.trustClicks++;
-    else if (type === 'slow_load') analytics.slowLoads++;
+    // Ensure today's bucket exists
+    if (!analytics.daily[today]) {
+        analytics.daily[today] = {
+            clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
+            uiErrors: 0, trustClicks: 0, mobileSessions: 0,
+            desktopSessions: 0, slowLoads: 0, pageViews: 0,
+            ctaClicks: {}
+        };
+    }
+
+    const t = analytics.totals;
+    const d = analytics.daily[today];
+
+    const increment = (key) => {
+        if (t[key] !== undefined) t[key]++;
+        if (d[key] !== undefined) d[key]++;
+    };
+
+    if (type === 'click') increment('clicks');
+    else if (type === 'checkout_start') increment('checkoutStarts');
+    else if (type === 'checkout_open') increment('checkoutOpens');
+    else if (type === 'ui_error') increment('uiErrors');
+    else if (type === 'trust_click') increment('trustClicks');
+    else if (type === 'slow_load') increment('slowLoads');
     else if (type === 'session_start') {
-        analytics.pageViews = (analytics.pageViews || 0) + 1;
-        if (isMobile) analytics.mobileSessions++;
-        else analytics.desktopSessions++;
+        increment('pageViews');
+        if (isMobile) increment('mobileSessions');
+        else increment('desktopSessions');
+    } else if (type === 'cta_click' && ctaId) {
+        d.ctaClicks[ctaId] = (d.ctaClicks[ctaId] || 0) + 1;
+        // Optionally increment click total too if not already tracked
+        increment('clicks');
     }
 
     saveAnalytics(analytics);
@@ -305,42 +356,73 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Email Sender Function
-// Email Sender Function
-async function sendEmail(customer, items) {
-    console.log(`📧 [EMAIL] Preparando envio via GMAIL para: ${customer.email}`);
-    const downloadLink = 'https://osegredodasgalinhas.pages.dev/downloads.html?items=' + items.map(i => i.id || i.title).join(',');
+// --- 3. SECURITY: Expiring Download Tokens ---
+const crypto = require('crypto');
+const SECRET_KEY = process.env.JWT_SECRET || 'mura-galinhas-secret-2026';
+
+function generateDownloadToken(email, items, paymentId = null) {
+    const expires = Date.now() + (12 * 60 * 60 * 1000); // 12 horas (Segurança Estrita)
+    const data = `${email}|${items.map(i => i.id || i.title).join(',')}|${expires}${paymentId ? `|${paymentId}` : ''}`;
+    const hash = crypto.createHmac('sha256', SECRET_KEY).update(data).digest('hex');
+    return Buffer.from(`${data}|${hash}`).toString('base64');
+}
+
+// Email Sender Function con Design Premium y Seguridad
+async function sendEmail(customer, items, paymentId = null) {
+    console.log(`📧 [EMAIL] Preparando envio PREMIUM para: ${customer.email}`);
+
+    const token = generateDownloadToken(customer.email, items, paymentId);
+    const downloadLink = `${process.env.BASE_URL || 'https://teste-m1kq.onrender.com'}/api/access/${token}`;
 
     const htmlContent = `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f9f9f9; padding: 20px; border-radius: 10px;">
-            <div style="background-color: #000; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
-                <h1 style="color: #FFD700; margin: 0;">Pagamento Aprovado!</h1>
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                .email-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #fdfdfd; }
+                .header { background: linear-gradient(135deg, #000 0%, #1a1a1a 100%); padding: 40px 20px; text-align: center; border-radius: 12px 12px 0 0; border-bottom: 3px solid #D4AF37; }
+                .content { padding: 40px 30px; background: #fff; border: 1px solid #eee; border-top: none; borderRadius: 0 0 12px 12px; }
+                .btn { display: inline-block; background: #D4AF37; background: linear-gradient(to bottom, #FFD700, #D4AF37); color: #000 !important; padding: 18px 35px; text-decoration: none; font-weight: 900; border-radius: 50px; font-size: 18px; text-transform: uppercase; box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); margin: 20px 0; }
+                .item-card { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #D4AF37; }
+                .security-note { font-size: 12px; color: #999; margin-top: 30px; text-align: center; border-top: 1px solid #eee; padding-top: 20px; }
+                .badge { background: #2ecc71; color: #fff; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+            </style>
+        </head>
+        <body class="email-body">
+            <div class="header">
+                <img src="https://osegredodasgalinhas.pages.dev/logo.png" alt="Logo" style="height: 50px; margin-bottom: 15px;">
+                <h1 style="color: #FFD700; margin: 0; font-size: 26px;">ACESSO LIBERADO! 🚀</h1>
             </div>
             
-            <div style="background-color: #fff; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                <p style="font-size: 16px; color: #333;">Olá, <strong>${customer.name}</strong>!</p>
-                <p style="font-size: 16px; color: #333;">Seu pagamento foi confirmado com sucesso. Abaixo está o link para acessar seus materiais agora mesmo:</p>
+            <div class="content">
+                <p style="font-size: 18px;">Olá, <strong>${customer.name}</strong>!</p>
+                <p>Parabéns pela sua decisão. Seu pagamento foi confirmado e seus materiais já estão prontos para você começar hoje mesmo.</p>
                 
-                <div style="text-align: center; margin: 30px 0;">
-                    <a href="${downloadLink}" style="background-color: #FFD700; color: #000; padding: 15px 30px; text-decoration: none; font-weight: bold; border-radius: 30px; font-size: 18px; display: inline-block;">BAIXAR AGORA ➔</a>
+                <div style="text-align: center; margin: 40px 0;">
+                    <a href="${downloadLink}" class="btn">ACESSAR MEUS MATERIAIS ➔</a>
+                    <p style="color: #e74c3c; font-size: 13px; font-weight: bold; margin-top: 15px;">⚠️ LINK EXCLUSIVO E EXPIRÁVEL (12H)</p>
                 </div>
                 
-                <p style="font-size: 14px; color: #666;">Se o botão não funcionar, copie e cole este link no navegador:</p>
-                <p style="font-size: 12px; color: #888; word-break: break-all;">${downloadLink}</p>
+                <h3 style="color: #000; font-size: 16px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">ITENS DO SEU PEDIDO:</h3>
+                ${items.map(item => `
+                    <div class="item-card">
+                        <span class="badge">APROVADO</span>
+                        <div style="margin-top: 5px; font-weight: bold; color: #1a1a1a;">${item.title}</div>
+                    </div>
+                `).join('')}
                 
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
-                
-                <h3 style="color: #333;">Resumo do Pedido:</h3>
-                <ul style="list-style: none; padding: 0;">
-                    ${items.map(item => `
-                        <li style="padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
-                            <span>${item.title}</span>
-                            <strong>R$ ${Number(item.price).toFixed(2).replace('.', ',')}</strong>
-                        </li>
-                    `).join('')}
-                </ul>
+                <div class="security-note">
+                    <p><strong>PRECISA DE AJUDA?</strong></p>
+                    <a href="https://wa.me/5538999832950?text=Olá,%20preciso%20de%20ajuda%20com%20meu%20acesso" 
+                       style="display: inline-block; background: #25D366; color: white; padding: 12px 25px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 10px 0;">
+                        📱 Falar no WhatsApp
+                    </a>
+                    <p style="margin-top: 20px;"><strong>DICA DE SEGURANÇA:</strong> Por proteção ao seu conteúdo, este link é rastreável e expira em 12 horas. Caso precise de ajuda, chame no suporte via WhatsApp.</p>
+                    <p>© 2026 Galos Mura Brasil - Todos os direitos reservados.</p>
+                </div>
             </div>
-        </div>
+        </body>
+        </html>
     `;
 
     try {
@@ -443,7 +525,7 @@ app.post('/api/checkout/pix', async (req, res) => {
     console.log(`🆕 [PIX] Nova solicitação: ${customer.email}`);
     console.log(`📦 Itens:`, JSON.stringify(items));
 
-    const totalAmount = items.reduce((acc, item) => acc + Number(item.price), 0);
+    const totalAmount = Number(items.reduce((acc, item) => acc + Number(item.price), 0).toFixed(2));
     console.log(`💰 Total Calculado: ${totalAmount}`);
 
     if (totalAmount <= 0) {
@@ -497,6 +579,13 @@ app.post('/api/checkout/pix', async (req, res) => {
         console.time(`⏱️ [MP_PIX] ${customer.email}`);
         const response = await payment.create({ body });
         console.timeEnd(`⏱️ [MP_PIX] ${customer.email}`);
+
+        // DEEP DEBUG LOGGING
+        console.log(`✅ [PIX SUCCESS] Response for ${customer.email}:`, JSON.stringify({
+            id: response.id,
+            status: response.status,
+            has_qr: !!(response.point_of_interaction && response.point_of_interaction.transaction_data && response.point_of_interaction.transaction_data.qr_code)
+        }));
 
         res.json({
             qr_code: response.point_of_interaction.transaction_data.qr_code,
@@ -597,7 +686,7 @@ app.post('/api/checkout/card', async (req, res) => {
         if (response.status === 'approved') {
             console.log(`✅ [CARTÃO] Pagamento aprovado! ID: ${response.id}`);
             logSale(customer, items, response.id, 'cartão');
-            sendEmail(customer, items);
+            sendEmail(customer, items, response.id);
             res.json({ status: 'approved', id: response.id });
 
         } else {
@@ -692,7 +781,7 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
 
 
                 console.log(`📤 [WEBHOOK] Enviando e-mail automático...`);
-                sendEmail(customer, items);
+                sendEmail(customer, items, paymentId);
 
                 console.log(`📦 Venda registrada via Webhook: ${customer.name} - ${itemTitles.join(', ')}`);
             }
@@ -703,6 +792,77 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
         }
     } else {
         res.sendStatus(200);
+    }
+});
+
+// --- 4. ADMIN: Resend & Tracking ---
+
+app.post('/api/history/resend-email', (req, res) => {
+    const { paymentId, password } = req.body;
+    if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
+
+    const history = getHistory();
+    const sale = history.find(h => h.paymentId === paymentId);
+
+    if (!sale) return res.status(404).json({ error: 'Venda não encontrada' });
+
+    const customer = {
+        name: sale.name,
+        email: sale.email,
+        phone: sale.phone
+    };
+
+    // Note: sale.items is currently just titles in the history log. 
+    // sendEmail uses them for display and token generation.
+    const items = (sale.items || []).map(title => ({ title: title }));
+
+    sendEmail(customer, items, paymentId)
+        .then(success => {
+            if (success) res.json({ success: true });
+            else res.status(500).json({ error: 'Falha ao enviar e-mail' });
+        })
+        .catch(err => res.status(500).json({ error: err.message }));
+});
+
+// Click Tracking Redirect
+app.get('/api/access/:token', (req, res) => {
+    const token = req.params.token;
+    try {
+        const decoded = Buffer.from(token, 'base64').toString();
+        const parts = decoded.split('|');
+        // Parts: email, items, expires, [paymentId], hash
+        // The length depends on if paymentId was included (old vs new tokens)
+
+        const analytics = getAnalytics();
+        const today = new Date().toISOString().split('T')[0];
+        if (!analytics.daily[today]) analytics.daily[today] = { clicks: 0, checkoutOpens: 0, checkoutStarts: 0, uiErrors: 0, trustClicks: 0, mobileSessions: 0, desktopSessions: 0, slowLoads: 0, pageViews: 0, emailClicks: 0, ctaClicks: {} };
+
+        analytics.totals.emailClicks = (analytics.totals.emailClicks || 0) + 1;
+        if (analytics.daily[today]) analytics.daily[today].emailClicks = (analytics.daily[today].emailClicks || 0) + 1;
+        saveAnalytics(analytics);
+
+        // Update history if paymentId is present
+        let paymentId = null;
+        if (parts.length === 5) { // email|items|expires|paymentId|hash
+            paymentId = parts[3];
+        }
+
+        if (paymentId) {
+            const history = getHistory();
+            const saleIdx = history.findIndex(h => h.paymentId === paymentId);
+            if (saleIdx > -1) {
+                history[saleIdx].clickedEmail = true;
+                history[saleIdx].clickDate = new Date().toISOString();
+                saveHistory(history);
+                console.log(`🕵️ [TRACK] Cliente ${history[saleIdx].email} clicou no e-mail.`);
+            }
+        }
+
+        // Redirect to actual downloads page
+        res.redirect(`https://osegredodasgalinhas.pages.dev/downloads.html?t=${encodeURIComponent(token)}`);
+    } catch (e) {
+        console.error("Tracking error:", e);
+        res.redirect(`https://osegredodasgalinhas.pages.dev/downloads.html?t=${token}`);
     }
 });
 

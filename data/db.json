@@ -1,35 +1,5 @@
 {
     "products": {
-        "ebook-manejo": {
-            "title": "Manejo de Pintinhos",
-            "price": 69.90,
-            "originalPrice": 69.90,
-            "description": "Acesso Vitalício",
-            "features": [
-                "Incubação Perfeita",
-                "Ambiente de Elite",
-                "Nutrição Essencial"
-            ],
-            "cover": "ebook_pintinhos_3d.png",
-            "orderBumps": [
-                "bump-6361"
-            ]
-        },
-        "ebook-doencas": {
-            "title": "Doenças Avícolas",
-            "price": 89.90,
-            "originalPrice": 89.90,
-            "description": "Acesso Vitalício",
-            "features": [
-                "11 Doenças Documentadas",
-                "Tabelas de Sintomas",
-                "Protocolos de Tratamento"
-            ],
-            "cover": "ebook_doencas_3d.png",
-            "orderBumps": [
-                "bump-6361"
-            ]
-        },
         "combo-elite": {
             "title": "Protocolo Elite 360º (Combo)",
             "price": 127.84,
@@ -44,6 +14,36 @@
                 "Garantia de 7 Dias"
             ],
             "cover": "combo",
+            "orderBumps": [
+                "bump-6361"
+            ]
+        },
+        "ebook-manejo": {
+            "title": "Manejo de Pintinhos",
+            "price": 69.90,
+            "originalPrice": 69.90,
+            "description": "Acesso Vitalício",
+            "features": [
+                "Incubação Perfeita",
+                "Ambiente de Elite",
+                "Nutrição Essencial"
+            ],
+            "cover": "capadospintinhos.png",
+            "orderBumps": [
+                "bump-6361"
+            ]
+        },
+        "ebook-doencas": {
+            "title": "Doenças Avícolas",
+            "price": 89.90,
+            "originalPrice": 89.90,
+            "description": "Acesso Vitalício",
+            "features": [
+                "11 Doenças Documentadas",
+                "Tabelas de Sintomas",
+                "Protocolos de Tratamento"
+            ],
+            "cover": "capadasdoencas.png",
             "orderBumps": [
                 "bump-6361"
             ]
