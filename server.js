@@ -680,7 +680,10 @@ app.post('/api/checkout/card', async (req, res) => {
             console.log(`✅ [CARTÃO] Pagamento aprovado! ID: ${response.id}`);
             logSale(customer, items, response.id, 'cartão');
             sendEmail(customer, items, response.id);
-            res.json({ status: 'approved', id: response.id });
+
+            // Generate Secure Token
+            const token = generateDownloadToken(customer.email, items, response.id);
+            res.json({ status: 'approved', id: response.id, redirectToken: token });
 
         } else {
             console.warn(`❌ [CARTÃO] Pagamento Recusado: ${response.status} (${response.status_detail})`);
@@ -728,6 +731,15 @@ app.get('/api/payment/:id', async (req, res) => {
             }));
 
             logSale(customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão');
+
+            // Generate Secure Token for Redirect
+            const token = generateDownloadToken(customer.email, items, result.id);
+            return res.json({
+                id: result.id,
+                status: result.status,
+                status_detail: result.status_detail,
+                redirectToken: token
+            });
         }
 
 

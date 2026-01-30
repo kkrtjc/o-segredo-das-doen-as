@@ -20,9 +20,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const s = await fetch(`${API_URL}/api/payment/${session.data.id}`);
                     const sd = await s.json();
                     if (sd.status === 'approved') {
-                        // User paid! Redirect immediately.
+                        // User paid! Redirect immediately with secure token or fallback
                         localStorage.removeItem('active_pix_session');
-                        window.location.href = `downloads.html?items=RECOVERED_SESSION`; // Simplified for recovery
+                        if (sd.redirectToken) {
+                            window.location.href = `downloads.html?t=${sd.redirectToken}`;
+                        } else {
+                            // Fallback in case token is missing (should not happen with new server logic)
+                            window.location.href = `downloads.html?items=${session.itemIds}&total=${session.total.toFixed(2)}`;
+                        }
                     } else {
                         // Not paid. User reloaded -> They probably want a fresh start.
                         // Clear storage so the modal starts clean.
@@ -640,8 +645,12 @@ async function handlePayment(method) {
 
             const result = await res.json();
             if (result.status === 'approved') {
-                const totalVal = document.querySelector('.checkout-total-display').innerText.replace(/[^\d,]/g, '').replace(',', '.');
-                window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
+                if (result.redirectToken) {
+                    window.location.href = `downloads.html?t=${result.redirectToken}`;
+                } else {
+                    const totalVal = document.querySelector('.checkout-total-display').innerText.replace(/[^\d,]/g, '').replace(',', '.');
+                    window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
+                }
             } else {
                 let msg = 'Pagamento Recusado.';
                 if (result.status_detail) msg += ` Motivo: ${result.status_detail}`;
@@ -882,8 +891,13 @@ function showPixResult(data, items) {
                 if (window.activePixPoll) clearTimeout(window.activePixPoll);
                 window.activePixPoll = null;
                 localStorage.removeItem('active_pix_session');
-                const totalVal = document.querySelector('.checkout-total-display').innerText.replace(/[^\d,]/g, '').replace(',', '.');
-                window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
+
+                if (sd.redirectToken) {
+                    window.location.href = `downloads.html?t=${sd.redirectToken}`;
+                } else {
+                    const totalVal = document.querySelector('.checkout-total-display').innerText.replace(/[^\d,]/g, '').replace(',', '.');
+                    window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
+                }
             } else {
                 // If not approved yet, schedule next poll
                 attempts++;
