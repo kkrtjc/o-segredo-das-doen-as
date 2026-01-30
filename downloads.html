@@ -380,8 +380,8 @@
                 // Lógica de Detecção
                 const hasKeyword = (k) => items.some(i => i.toLowerCase().includes(k.toLowerCase()));
 
-                let showManejo = hasKeyword('manejo') || hasKeyword('pintinho');
-                let showDoencas = hasKeyword('doenca') || hasKeyword('saude') || hasKeyword('guia');
+                let showManejo = hasKeyword('manejo') || hasKeyword('pintinho') || hasKeyword('combo') || hasKeyword('elite');
+                let showDoencas = hasKeyword('doenca') || hasKeyword('saude') || hasKeyword('guia') || hasKeyword('combo') || hasKeyword('elite');
                 let showBump = hasKeyword('bump') || hasKeyword('racao') || hasKeyword('tabela');
 
                 // 🚨 FALLBACK DE SEGURANÇA: Se nenhum item for detectado na URL, MOSTRAR TUDO.
