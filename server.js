@@ -19,8 +19,8 @@ const transporter = nodemailer.createTransport({
     port: process.env.SMTP_PORT || 587,
     secure: false, // true para 465, false para outros
     auth: {
-        user: process.env.SMTP_USER || 'seu-email@gmail.com',
-        pass: process.env.SMTP_PASS || 'sua-senha-de-app'
+        user: process.env.SMTP_USER || process.env.EMAIL_USER || 'galosmurabrasill@gmail.com',
+        pass: process.env.SMTP_PASS || process.env.EMAIL_PASS || 'sua-senha-de-app'
     }
 });
 
@@ -347,14 +347,7 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
     res.json({ url: `/uploads/${req.file.filename}` });
 });
 
-// Nodemailer Config (Gmail)
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER || 'galosmurabrasill@gmail.com',
-        pass: process.env.EMAIL_PASS || 'wcaisazhfjsoeglr' // Fallback to the known App Password
-    }
-});
+
 
 // --- 3. SECURITY: Expiring Download Tokens ---
 const crypto = require('crypto');
