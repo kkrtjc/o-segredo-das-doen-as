@@ -135,9 +135,9 @@ function getAnalytics() {
         let analytics = {
             totals: {
                 clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
-                uiErrors: 0, trustClicks: 0, mobileSessions: 0,
-                desktopSessions: 0, slowLoads: 0, pageViews: 0,
-                emailClicks: 0
+                uiErrors: 0, trustClicks: 0,
+                mobileSessions: 0, desktopSessions: 0, slowLoads: 0, pageViews: 0,
+                emailClicks: 0, uniqueVisits: 0, ctaClicks: 0, checkoutAbandons: 0 // New Metrics
             },
             daily: {}
         };
@@ -170,7 +170,7 @@ function getAnalytics() {
                 clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
                 uiErrors: 0, trustClicks: 0, mobileSessions: 0,
                 desktopSessions: 0, slowLoads: 0, pageViews: 0,
-                emailClicks: 0
+                emailClicks: 0, uniqueVisits: 0, ctaClicks: 0, checkoutAbandons: 0
             },
             daily: {},
             totalRevenue: 0, approvedCount: 0, historyCount: 0
@@ -190,109 +190,35 @@ function saveAnalytics(data) {
     }
 }
 
-async function logSale(customer, items, paymentId, method = 'cartão') {
-    try {
-        // SYNCHRONOUS LOCK (Blocking) - Prevents Race Conditions/Data Loss
-        // For this scale, blocking for 2ms is better than losing a sale record.
-        let history = [];
-        try {
-            if (fs.existsSync(HISTORY_PATH)) {
-                const data = fs.readFileSync(HISTORY_PATH, 'utf8');
-                history = JSON.parse(data);
-            }
-        } catch (e) { history = []; }
+// ... existing logSale ...
 
-        // Prevent duplicate logs
-        if (paymentId && history.some(h => h.paymentId === paymentId)) {
-            console.log(`ℹ️ [HISTÓRICO] Venda já registrada para o ID: ${paymentId}`);
-            return true;
-        }
+// ... existing MP clients ...
 
-        const sale = {
-            date: new Date().toISOString(),
-            paymentId: paymentId || `manual-${Date.now()}`,
-            name: customer.name,
-            email: customer.email,
-            phone: customer.phone,
-            method: method,
-            items: items.map(i => i.title),
-            total: items.reduce((acc, i) => acc + Number(i.price), 0)
-        };
-        history.push(sale);
+// ... existing /api/config ...
 
-        fs.writeFileSync(HISTORY_PATH, JSON.stringify(history, null, 4));
-        console.log(`✅ [HISTÓRICO] Venda salva [${method}] para ${customer.email}.`);
-        return true;
-    } catch (e) {
-        console.error(`❌ [HISTÓRICO ERROR] Falha ao salvar venda:`, e.message);
-        return false;
-    }
-}
+// ... existing /api/config/update ...
 
+// ... existing /api/history ...
 
-// Mercado Pago - MODO PRODUÇÃO
-const client = new mercadopago.MercadoPagoConfig({
-    accessToken: process.env.MP_ACCESS_TOKEN || 'APP_USR-8523040676915858-010416-38801bbcf39a1cf4c2d6e3680e247ab7-3111470347'
-});
-const payment = new mercadopago.Payment(client);
+// ... existing /api/analytics ...
 
-// API Routes
-app.get('/api/config', (req, res) => res.json(getDB()));
-
-app.post('/api/config/update', (req, res) => {
-    const { password, data } = req.body;
-    // CRITICAL: Ensure 'mura2026' is set as an environment variable in production
-    if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
-    saveDB(data);
-    res.json({ success: true });
-});
-
-app.get('/api/history', (req, res) => {
-    const password = req.headers['x-admin-password'];
-    if (password !== 'mura2026') return res.status(401).json({ error: 'Acesso Negado' });
-    res.set('Cache-Control', 'no-store');
-    res.json(getHistory());
-});
-
-app.get('/api/analytics', (req, res) => {
-    const password = req.headers['x-admin-password'];
-    if (password !== 'mura2026') return res.status(401).json({ error: 'Acesso Negado' });
-    res.set('Cache-Control', 'no-store');
-    res.json(getAnalytics());
-});
-
-app.post('/api/history/clear', (req, res) => {
-    const password = req.headers['x-admin-password'];
-    if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
-
-    try {
-        console.log(`🧹 [ADMIN] Iniciando limpeza de dados...`);
-        fs.writeFileSync(HISTORY_PATH, '[]');
-        fs.writeFileSync(ANALYTICS_PATH, JSON.stringify({
-            clicks: 0,
-            checkoutOpens: 0,
-            checkoutStarts: 0,
-            uiErrors: 0,
-            trustClicks: 0,
-            mobileSessions: 0,
-            desktopSessions: 0,
-            slowLoads: 0,
-            pageViews: 0
-        }, null, 4));
-
-        console.log(`✅ [ADMIN] HISTORY_PATH: ${HISTORY_PATH} resetado.`);
-        console.log(`✅ [ADMIN] ANALYTICS_PATH: ${ANALYTICS_PATH} resetado.`);
-
-        res.json({ success: true });
-    } catch (e) {
-        console.error("❌ [ADMIN ERROR] Falha ao limpar arquivos:", e.message);
-        res.status(500).json({ error: 'Erro ao limpar dados no servidor', details: e.message });
-    }
-});
+// ... existing /api/history/clear ...
 
 app.post('/api/track', (req, res) => {
-    const { type, isMobile, ctaId } = req.body;
-    console.log(`📈 [TRACK] Evento: ${type}, Mobile: ${isMobile}, CTA: ${ctaId}`);
+    const { type, isMobile, ctaId, details } = req.body;
+
+    // LOGGING MELHORADO PARA O RENDER
+    if (type === 'payment_method_selected') {
+        const icon = details === 'card' ? '💳' : '💠';
+        console.log(`${icon} [CHECKOUT UI] Cliente alterou para: ${details ? details.toUpperCase() : 'N/A'}`);
+    }
+    else if (type === 'checkout_error' || type === 'ui_error') {
+        console.error(`❌ [CHECKOUT UI ERROR] ${details || 'Erro desconhecido'}`);
+    }
+    else {
+        console.log(`📈 [TRACK] Evento: ${type}, Mobile: ${isMobile}, CTA: ${ctaId || 'N/A'}`);
+    }
+
     const analytics = getAnalytics();
     const today = new Date().toISOString().split('T')[0];
 
@@ -302,32 +228,39 @@ app.post('/api/track', (req, res) => {
             clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
             uiErrors: 0, trustClicks: 0, mobileSessions: 0,
             desktopSessions: 0, slowLoads: 0, pageViews: 0,
-            ctaClicks: {}
+            emailClicks: 0, uniqueVisits: 0, ctaClicks: 0, checkoutAbandons: 0,
+            ctaBreakdown: {} // Detailed CTA ID breakdown
         };
     }
 
     const t = analytics.totals;
     const d = analytics.daily[today];
 
+    // Helper to safely increment
     const increment = (key) => {
-        if (t[key] !== undefined) t[key]++;
-        if (d[key] !== undefined) d[key]++;
+        if (t[key] !== undefined) t[key]++; else t[key] = 1;
+        if (d[key] !== undefined) d[key]++; else d[key] = 1;
     };
 
     if (type === 'click') increment('clicks');
-    else if (type === 'checkout_start') increment('checkoutStarts');
+    else if (type === 'unique_visit') increment('uniqueVisits');
+    else if (type === 'cta_click') {
+        increment('ctaClicks');
+        if (ctaId) {
+            d.ctaBreakdown = d.ctaBreakdown || {};
+            d.ctaBreakdown[ctaId] = (d.ctaBreakdown[ctaId] || 0) + 1;
+        }
+    }
     else if (type === 'checkout_open') increment('checkoutOpens');
-    else if (type === 'ui_error') increment('uiErrors');
+    else if (type === 'checkout_start') increment('checkoutStarts');
+    else if (type === 'checkout_abandon') increment('checkoutAbandons');
+    else if (type === 'ui_error' || type === 'checkout_error') increment('uiErrors');
     else if (type === 'trust_click') increment('trustClicks');
     else if (type === 'slow_load') increment('slowLoads');
     else if (type === 'session_start') {
         increment('pageViews');
         if (isMobile) increment('mobileSessions');
         else increment('desktopSessions');
-    } else if (type === 'cta_click' && ctaId) {
-        d.ctaClicks[ctaId] = (d.ctaClicks[ctaId] || 0) + 1;
-        // Optionally increment click total too if not already tracked
-        increment('clicks');
     }
 
     saveAnalytics(analytics);
@@ -513,10 +446,36 @@ app.get('/downloads', (req, res) => {
     res.sendFile(path.join(__dirname, 'downloads.html'));
 });
 
+// Helper Function for detailed Error Logging
+function formatErrorLog(context, customer, error) {
+    let msg = `❌ [${context} ERROR]`;
+    if (customer && customer.email) msg += ` Cliente: ${customer.email} |`;
+
+    if (error.response && error.response.data && error.response.data.cause) {
+        const causes = error.response.data.cause;
+        const mainCause = Array.isArray(causes) ? causes[0] : causes;
+
+        // Mapeamento de erros comuns do Mercado Pago
+        if (mainCause.code === 2067) msg += ` CPF inválido ou mal formatado.`;
+        else if (mainCause.code === 324) msg += ` CPF inválido (Não existente).`;
+        else if (mainCause.code === 325) msg += ` Mês de validade inválido.`;
+        else if (mainCause.code === 326) msg += ` Ano de validade inválido.`;
+        else if (mainCause.code === 221) msg += ` Sobrenome ausente ou inválido.`;
+        else if (mainCause.code === 214) msg += ` CPF ausente.`;
+        else if (mainCause.code === 205) msg += ` Número do cartão nulo/inválido.`;
+        else msg += ` Erro API: ${mainCause.description || JSON.stringify(mainCause)}`;
+    }
+    else if (error.message) {
+        msg += ` Erro: ${error.message}`;
+    }
+
+    return msg;
+}
+
 app.post('/api/checkout/pix', async (req, res) => {
     const { items, customer, deliveryMethod } = req.body;
-    console.log(`🆕 [PIX] Nova solicitação: ${customer.email}`);
-    console.log(`📦 Itens:`, JSON.stringify(items));
+    console.log(`💠 [PIX] Nova solicitação Iniciada`);
+    console.log(`👤 Cliente: ${customer.name} (${customer.email})`);
 
     const totalAmount = Number(items.reduce((acc, item) => acc + Number(item.price), 0).toFixed(2));
     console.log(`💰 Total Calculado: ${totalAmount}`);
@@ -588,15 +547,9 @@ app.post('/api/checkout/pix', async (req, res) => {
         });
     } catch (error) {
         console.timeEnd(`⏱️ [MP_PIX] ${customer.email}`);
-        console.error(`❌ [PIX ERROR] Falha ao gerar PIX:`, error.message);
 
-        // Deep debug logging
-        if (error.response) {
-            console.error('⚠️ [DEBUG MP PIX] Response Data:', JSON.stringify(error.response.data || {}, null, 2));
-            console.error('⚠️ [DEBUG MP PIX] Status:', error.response.status);
-        } else if (error.cause) {
-            console.error('⚠️ [DEBUG MP PIX] Cause:', JSON.stringify(error.cause, null, 2));
-        }
+        // LOG DE ERRO MELHORADO
+        console.error(formatErrorLog('PIX', customer, error));
 
         res.status(500).json({
             error: 'Erro ao gerar PIX',
@@ -609,8 +562,9 @@ app.post('/api/checkout/pix', async (req, res) => {
 app.post('/api/checkout/card', async (req, res) => {
     try {
         const { items, customer, token, installments, issuer_id, payment_method_id } = req.body;
-        console.log(`💳 [CARTÃO] Iniciando Processamento: ${customer.email}`);
-        console.log(`📦 Itens:`, JSON.stringify(items));
+        console.log(`💳 [CARTÃO] Iniciando Processamento`);
+        console.log(`👤 Cliente: ${customer.name} (${customer.email})`);
+        console.log(`📦 Itens: ${items.length}`);
         console.log(`🔢 Parcelas: ${installments}, Method: ${payment_method_id}`);
 
         const totalAmount = items.reduce((acc, item) => acc + Number(item.price), 0);
@@ -690,17 +644,8 @@ app.post('/api/checkout/card', async (req, res) => {
             res.status(400).json({ status: response.status, status_detail: response.status_detail });
         }
     } catch (error) {
-        console.error('❌ [CARTÃO ERROR] Falha Crítica:', error.message);
-
-        // DEEP DEBUG LOGGING FOR USER
-        if (error.response) {
-            console.error('⚠️ [DEBUG MP RESPONSE] Data:', JSON.stringify(error.response.data || {}, null, 2));
-            console.error('⚠️ [DEBUG MP RESPONSE] Status:', error.response.status);
-        } else if (error.cause) {
-            console.error('⚠️ [DEBUG MP CAUSE] Cause:', JSON.stringify(error.cause, null, 2));
-        } else {
-            console.error('⚠️ [DEBUG ERROR OBJ]', JSON.stringify(error, Object.getOwnPropertyNames(error)));
-        }
+        const customerRef = req.body.customer || { email: 'desconhecido' };
+        console.error(formatErrorLog('CARTÃO', customerRef, error));
 
         res.status(500).json({
             error: 'Erro ao processar pagamento',
