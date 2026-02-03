@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css?v=12">
+    <link rel="stylesheet" href="style.css?v=18">
     <link rel="stylesheet" href="order_bump_modal.css">
 
     <!-- Meta Pixel Code -->
@@ -80,8 +80,7 @@
                     profissional e sustentável.</p>
                 <div class="hero-actions" style="margin-top: 2rem;">
                     <a href="#offer-focus" class="btn btn-primary btn-lg btn-pulse" data-cta="hero-primary">
-                        QUERO ELEVAR MINHA PRODUÇÃO <i class="fa-solid fa-arrow-right"
-                            style="margin-left: 10px;"></i>
+                        QUERO ELEVAR MINHA PRODUÇÃO <i class="fa-solid fa-arrow-right" style="margin-left: 10px;"></i>
                     </a>
                 </div>
             </div>
@@ -456,12 +455,14 @@
     <!-- Checkout Modal (Restored) -->
     <div id="checkout-modal" class="checkout-modal">
         <div class="checkout-overlay"></div>
+
+        <!-- Logo como marca d'água fixa no fundo -->
+        <div class="checkout-watermark">
+            <img src="logo.png" alt="Logo">
+        </div>
+
         <div class="checkout-container">
             <button class="close-modal"><i class="fa-solid fa-xmark"></i></button>
-
-            <div class="checkout-header-logo">
-                <img src="logo.png" alt="Logo" class="checkout-logo-main">
-            </div>
 
             <div id="checkout-main-view">
                 <div class="checkout-authority-box"
@@ -563,7 +564,7 @@
                         </div>
                         <div class="form-group">
                             <div class="input-wrapper">
-                                <input type="text" id="payer-cpf" placeholder="CPF" maxlength="14">
+                                <input type="text" id="payer-cpf" placeholder="CPF do Titular do Cartão" maxlength="14">
                             </div>
                             <span class="mura-error" id="error-payer-cpf">Por favor, verifique o CPF digitado.</span>
                         </div>
@@ -590,10 +591,6 @@
 
                         <!-- CARD FORM & ACTION (Visible only for Card) -->
                         <div id="card-area" class="payment-area" style="display: none;">
-                            <div class="step-title" style="margin-bottom: 1rem;">
-                                <i class="fa-solid fa-credit-card"></i>
-                                <span>Dados do Cartão</span>
-                            </div>
 
                             <div class="form-group">
                                 <div class="input-wrapper">
@@ -603,12 +600,7 @@
                                 <span class="mura-error" id="error-card-holder">Nome exatamente como no cartão.</span>
                             </div>
 
-                            <div class="form-group">
-                                <div class="input-wrapper">
-                                    <input type="text" id="card-cpf" placeholder="CPF do Titular" maxlength="14">
-                                </div>
-                                <span class="mura-error" id="error-card-cpf">Opa! CPF do titular incorreto.</span>
-                            </div>
+
 
                             <div class="form-group">
                                 <div class="input-wrapper">
@@ -636,10 +628,15 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <select id="card-installments" class="custom-select">
-                                    <option value="1">1x de R$ --,-- (Sem juros)</option>
-                                </select>
+                            <div class="installments-toggle">
+                                <label class="installment-option">
+                                    <input type="radio" name="installments" value="1" checked>
+                                    <span class="installment-box">1x <strong id="price-1x">R$ --,--</strong></span>
+                                </label>
+                                <label class="installment-option">
+                                    <input type="radio" name="installments" value="2">
+                                    <span class="installment-box">2x <strong id="price-2x">R$ --,--</strong></span>
+                                </label>
                             </div>
 
                             <div class="favorecido-info-card"
@@ -691,6 +688,12 @@
                                 <a href="https://www.tiktok.com/@galosmurabrasil" target="_blank"
                                     class="social-icon tiktok"><i class="fa-brands fa-tiktok"></i></a>
                             </div>
+                        </div>
+
+                        <!-- Dados da Empresa -->
+                        <div class="checkout-company-info">
+                            <span>GALOS MURA BRASIL OFICIAL</span>
+                            <span>CNPJ: 63.665.824/0001-09</span>
                         </div>
                     </div>
                 </form>

@@ -4135,13 +4135,14 @@ body {
     width: 100%;
 }
 
-.checkout-form input {
+.checkout-form input,
+.checkout-form select {
     width: 100%;
     background: rgba(255, 255, 255, 0.03) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     border-radius: 12px !important;
     padding: 12px 15px !important;
-    color: #fff !important;
+    color: #ffffff !important;
     transition: all 0.3s ease;
 }
 
@@ -5025,4 +5026,227 @@ img.checkout-logo-main {
 /* Modal Smoothness */
 .checkout-modal {
     transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s ease !important;
+}
+
+/* Custom Select for Installments */
+.custom-select {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05) url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23D4AF37%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E') no-repeat right 15px center;
+    background-size: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 12px;
+    padding: 12px 15px;
+    padding-right: 40px;
+    color: #ffffff !important;
+    /* TEXTO BRANCO FORÇADO */
+    font-size: 0.95rem;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.custom-select:focus {
+    border-color: var(--color-secondary);
+    outline: none;
+    background-color: #1a1a1a;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+}
+
+.custom-select option {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+    padding: 10px;
+}
+
+/* ========================================
+   COMPACT INSTALLMENTS TOGGLE
+   ======================================== */
+.installments-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.installment-option {
+    flex: 1;
+    cursor: pointer;
+}
+
+.installment-option input[type="radio"] {
+    display: none;
+}
+
+.installment-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    color: #777;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    text-align: center;
+}
+
+.installment-box strong {
+    color: #aaa;
+    font-size: 0.9rem;
+    margin-top: 2px;
+}
+
+.installment-option input[type="radio"]:checked+.installment-box {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: var(--color-secondary);
+    color: var(--color-secondary);
+}
+
+.installment-option input[type="radio"]:checked+.installment-box strong {
+    color: #fff;
+}
+
+/* ========================================
+   CHECKOUT COMPACTNESS (Mobile Optimization)
+   ======================================== */
+.checkout-section {
+    margin-bottom: 0 !important;
+}
+
+.checkout-section-compact {
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+}
+
+.checkout-section-compact .form-group {
+    margin-bottom: 10px !important;
+}
+
+.checkout-form .form-group {
+    margin-bottom: 10px !important;
+}
+
+.checkout-header-logo {
+    margin-bottom: 0.3rem !important;
+    padding: 0 !important;
+}
+
+.checkout-header-logo img {
+    max-height: 40px !important;
+}
+
+.checkout-authority-box {
+    margin-bottom: 0.8rem !important;
+    padding-bottom: 0.8rem !important;
+}
+
+.checkout-header {
+    margin-bottom: 0.4rem !important;
+}
+
+.method-selector {
+    margin-bottom: 12px !important;
+}
+
+.checkout-product-summary {
+    margin-bottom: 0.5rem !important;
+    padding: 8px 10px !important;
+}
+
+.payment-options-section {
+    margin-top: 0.5rem !important;
+}
+
+.price-summary-box {
+    padding: 10px !important;
+    margin-top: 8px !important;
+}
+
+.btn-pay-now {
+    padding: 14px !important;
+    margin-top: 8px !important;
+}
+
+.checkout-premium-guarantee {
+    margin-top: 12px !important;
+    padding: 10px !important;
+}
+
+.delivery-highlight-box {
+    margin-top: 8px !important;
+    padding: 8px !important;
+}
+
+.secure-badges-mini {
+    margin-top: 10px !important;
+}
+
+.checkout-footer-social {
+    margin-top: 10px !important;
+}
+
+.form-row-compact {
+    margin-top: 8px !important;
+}
+
+/* Reduce padding in card area */
+#card-area .form-group {
+    margin-bottom: 10px !important;
+}
+
+.favorecido-info-card {
+    margin-bottom: 10px !important;
+    padding: 6px !important;
+    font-size: 0.75rem !important;
+}
+
+/* ========================================
+   CHECKOUT WATERMARK (Fixed Background Logo)
+   ======================================== */
+.checkout-watermark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5002;
+    pointer-events: none;
+    opacity: 0.12;
+}
+
+.checkout-watermark img {
+    width: 500px;
+    height: auto;
+    filter: grayscale(100%) brightness(1.5) drop-shadow(0 0 15px rgba(212, 175, 55, 0.4));
+}
+
+/* ========================================
+   CHECKOUT COMPANY INFO
+   ======================================== */
+.checkout-company-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    margin-top: 15px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+.checkout-company-info span {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.35);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.checkout-company-info span:first-child {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.45);
+    font-weight: 700;
 }

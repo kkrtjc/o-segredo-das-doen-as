@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ebook Preview</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        .scene {
+            width: 400px;
+            height: 560px;
+            perspective: 1500px;
+            position: relative;
+        }
+
+        .book {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .page {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: left center;
+            transform-style: preserve-3d;
+            transition: transform 1.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+            cursor: pointer;
+            background-color: white;
+            /* Fallback */
+        }
+
+        .page img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            backface-visibility: hidden;
+            /* Hide back when flipped */
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Back of the page - simple white or texture */
+        .page-back {
+            width: 100%;
+            height: 100%;
+            background-color: #f0f0f0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: rotateY(180deg);
+            backface-visibility: hidden;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1), transparent);
+        }
+
+        .page.flipped {
+            transform: rotateY(-180deg);
+        }
+
+        /* Z-index management to stack pages correctly */
+        #p1 {
+            z-index: 5;
+        }
+
+        #p2 {
+            z-index: 4;
+        }
+
+        #p3 {
+            z-index: 3;
+        }
+
+        #p4 {
+            z-index: 2;
+        }
+
+        #p5 {
+            z-index: 1;
+        }
+
+        /* Shadows for depth */
+        .page::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.2), transparent 10%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .page.flipped::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="scene">
+        <div class="book">
+            <!-- Cover -->
+            <div class="page" id="p1" onclick="flip(1)">
+                <img src="videos_assets/cover.png" alt="Capa">
+                <div class="page-back"></div>
+            </div>
+
+            <!-- Page 1 -->
+            <div class="page" id="p2" onclick="flip(2)">
+                <img src="videos_assets/page1.png" alt="Página 1">
+                <div class="page-back"></div>
+            </div>
+
+            <!-- Page 2 -->
+            <div class="page" id="p3" onclick="flip(3)">
+                <img src="videos_assets/page2.png" alt="Página 2">
+                <div class="page-back"></div>
+            </div>
+
+            <!-- Page 3 -->
+            <div class="page" id="p4" onclick="flip(4)">
+                <img src="videos_assets/page3.png" alt="Página 3">
+                <div class="page-back"></div>
+            </div>
+
+            <!-- Back Cover / Last Page Base -->
+            <div class="page" id="p5">
+                <div
+                    style="width:100%; height:100%; background: #333; color: white; display:flex; justify-content:center; align-items:center;">
+                    <h2>Fim</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 4;
+
+        function flip(pageNum) {
+            const page = document.getElementById(`p${pageNum}`);
+            if (page) {
+                page.classList.add('flipped');
+                currentPage++;
+            }
+        }
+
+        function autoPlay() {
+            setTimeout(() => {
+                if (currentPage <= totalPages) {
+                    flip(currentPage);
+                    autoPlay(); // Recursive call for next page
+                }
+            }, 2000); // Wait 2s before flipping next
+        }
+
+        // Start auto-play after a short delay to let user see cover
+        window.onload = () => {
+            setTimeout(autoPlay, 1000);
+        };
+    </script>
+</body>
+
+</html>

@@ -1,14 +1,17 @@
 {
     "totals": {
-        "clicks": 103,
-        "checkoutOpens": 88,
-        "checkoutStarts": 22,
-        "uiErrors": 8,
+        "clicks": 117,
+        "checkoutOpens": 102,
+        "checkoutStarts": 26,
+        "uiErrors": 11,
         "trustClicks": 3,
         "mobileSessions": 0,
         "desktopSessions": 48,
         "slowLoads": 0,
-        "pageViews": 48
+        "pageViews": 48,
+        "ctaClicks": 20,
+        "uniqueVisits": 3,
+        "checkoutAbandons": 4
     },
     "daily": {
         "2026-01-30": {
@@ -23,6 +26,43 @@
             "pageViews": 14,
             "ctaClicks": {
                 "hero-primary": 15
+            }
+        },
+        "2026-01-31": {
+            "clicks": 0,
+            "checkoutOpens": 0,
+            "checkoutStarts": 0,
+            "uiErrors": 0,
+            "trustClicks": 0,
+            "mobileSessions": 0,
+            "desktopSessions": 0,
+            "slowLoads": 0,
+            "pageViews": 0,
+            "emailClicks": 0,
+            "uniqueVisits": 1,
+            "ctaClicks": 7,
+            "checkoutAbandons": 0,
+            "ctaBreakdown": {
+                "generic_cta": 2,
+                "hero-primary": 5
+            }
+        },
+        "2026-02-03": {
+            "clicks": 14,
+            "checkoutOpens": 14,
+            "checkoutStarts": 4,
+            "uiErrors": 3,
+            "trustClicks": 0,
+            "mobileSessions": 0,
+            "desktopSessions": 0,
+            "slowLoads": 0,
+            "pageViews": 0,
+            "emailClicks": 0,
+            "uniqueVisits": 2,
+            "ctaClicks": 13,
+            "checkoutAbandons": 4,
+            "ctaBreakdown": {
+                "hero-primary": 13
             }
         }
     }

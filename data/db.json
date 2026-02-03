@@ -2,8 +2,8 @@
     "products": {
         "combo-elite": {
             "title": "Protocolo Elite 360º (Combo)",
-            "price": 127.84,
-            "originalPrice": 159.8,
+            "price": 2,
+            "originalPrice": 2,
             "description": "Combo Completo",
             "isFeatured": true,
             "badge": "MAIS VENDIDO • 20% OFF",
@@ -20,7 +20,7 @@
         },
         "ebook-manejo": {
             "title": "Manejo de Pintinhos",
-            "price": 1,
+            "price": 59.9,
             "originalPrice": 69.9,
             "description": "Acesso Vitalício",
             "features": [

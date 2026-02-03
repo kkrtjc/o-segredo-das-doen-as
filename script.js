@@ -419,6 +419,12 @@ function updateTotal() {
         }
     });
 
+    // CORREÇÃO: Atualizar também o preço no resumo do topo (perto da capa)
+    const topPriceDisplay = document.getElementById('checkout-product-price-display');
+    if (topPriceDisplay) {
+        topPriceDisplay.innerText = formatBRL(total);
+    }
+
     updateInstallments(total);
 }
 
@@ -540,16 +546,16 @@ function switchMethod(method) {
 }
 
 function updateInstallments(price) {
-    const select = document.getElementById('card-installments');
-    if (!select) return;
-    select.innerHTML = '';
-    for (let i = 1; i <= 12; i++) {
-        const total = i === 1 ? price : price * (1 + (0.015 * i));
-        const parcel = total / i;
-        const option = document.createElement('option');
-        option.value = i;
-        option.innerText = `${i}x de ${formatBRL(parcel)} ${i === 1 ? '(Sem juros)' : ''}`;
-        select.appendChild(option);
+    // NEW: Update toggle-style installments (1x and 2x only)
+    const price1x = document.getElementById('price-1x');
+    const price2x = document.getElementById('price-2x');
+
+    if (price1x) price1x.innerText = formatBRL(price);
+    if (price2x) {
+        // 2x with small interest (1.5% per installment = 3% total for 2x)
+        const total2x = price * 1.03;
+        const parcel2x = total2x / 2;
+        price2x.innerText = formatBRL(parcel2x);
     }
 }
 
@@ -570,10 +576,11 @@ async function handlePayment(method) {
         };
     } else {
         // CARD MODE: Use Cardholder Data as Customer Data
+        // CPF now comes from common field (payer-cpf)
         customer = {
             ...commonData,
             name: document.getElementById('card-holder').value,
-            cpf: document.getElementById('card-cpf').value ? document.getElementById('card-cpf').value.replace(/\D/g, '') : ''
+            cpf: document.getElementById('payer-cpf').value ? document.getElementById('payer-cpf').value.replace(/\D/g, '') : ''
         };
     }
 
@@ -673,6 +680,7 @@ async function handlePayment(method) {
         try {
             // CRITICAL FIX: Ensure CPF is clean and valid (exactly 11 digits)
             const cleanCPF = customer.cpf.replace(/\D/g, '');
+            console.log("Processando Cartão - CPF Limpo:", cleanCPF);
 
             if (cleanCPF.length !== 11) {
                 alert('CPF inválido. Por favor, verifique o CPF digitado (deve ter 11 dígitos).');
@@ -688,11 +696,17 @@ async function handlePayment(method) {
                 cardExpirationYear: '20' + cardExpiry.split('/')[1],
                 securityCode: cardCVV,
                 identificationType: 'CPF',
-                identificationNumber: cleanCPF  // Use cleaned CPF
+                identificationNumber: cleanCPF
             };
+            console.log("Token Params:", { ...cardTokenParams, cardNumber: '***', securityCode: '***' });
 
             const token = await mp.createCardToken(cardTokenParams);
-            if (!token || !token.id) throw new Error("Erro ao gerar token do cartão.");
+            console.log("Token MP gerado:", token);
+
+            if (!token || !token.id) {
+                console.error("Erro Token MP:", token);
+                throw new Error("Não foi possível validar o cartão. Verifique os dados.");
+            }
 
             // Show Processing View (Reusing the pulsing logo UI)
             document.getElementById('checkout-main-view').classList.add('hidden');
@@ -709,26 +723,42 @@ async function handlePayment(method) {
             const copyArea = processingView.querySelector('.copy-paste-area');
             if (copyArea) copyArea.style.display = 'none';
 
+            const payload = {
+                items, customer, token: token.id,
+                installments: document.querySelector('input[name="installments"]:checked')?.value || '1',
+                payment_method_id: getPaymentMethodId(cardNumber),
+                issuer_id: null,
+                deviceId: (mp && typeof mp.getDeviceId === 'function') ? mp.getDeviceId() : null
+            };
+            console.log("Enviando Payload API:", payload);
+
             const res = await fetch(`${API_URL}/api/checkout/card`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    items, customer, token: token.id,
-                    installments: document.getElementById('card-installments').value,
-                    payment_method_id: getPaymentMethodId(cardNumber),
-                    issuer_id: null,
-                    deviceId: (mp && typeof mp.getDeviceId === 'function') ? mp.getDeviceId() : null
-                })
+                body: JSON.stringify(payload)
             });
 
             const result = await res.json();
+            console.log("Resposta API:", result);
+
             if (result.status === 'approved') {
                 const totalVal = document.querySelector('.checkout-total-display').innerText.replace(/[^\d,]/g, '').replace(',', '.');
                 window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
+            } else if (result.status === 'in_process' || result.status === 'pending') {
+                // NOVO: Pagamento em análise - tratar como sucesso parcial
+                alert('✅ Seu pagamento está sendo processado!\n\nVocê receberá a confirmação por e-mail em até 2 dias úteis.\n\nSe precisar de ajuda, entre em contato pelo WhatsApp.');
+                checkoutModal.classList.remove('active');
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+                btn.disabled = false;
+                btn.innerText = originalText;
             } else {
                 let msg = 'Pagamento Recusado.';
                 if (result.status_detail) msg += ` Motivo: ${result.status_detail}`;
-                if (result.error) msg += `\nErro: ${result.message || result.error}`;
+
+                // Melhor tratamento para mensagem de erro
+                if (result.message && result.message !== 'Payment failed') msg = result.message;
+                if (result.error) msg = typeof result.error === 'string' ? result.error : JSON.stringify(result.error);
 
                 // Mensagens simplificadas para o cliente
                 const map = {
@@ -737,24 +767,25 @@ async function handlePayment(method) {
                     'cc_rejected_bad_filled_date': 'Data de validade incorreta.',
                     'cc_rejected_bad_filled_security_code': 'Código CVV incorreto.',
                     'cc_rejected_insufficient_amount': 'Saldo insuficiente no cartão.',
-                    'cc_rejected_high_risk': 'Cartão recusado por segurança. Tente outro cartão.',
-                    'cc_rejected_other_reason': 'Cartão recusado pelo banco.',
-                    'cc_rejected_call_for_authorize': 'Entre em contato com seu banco para autorizar.',
+                    'cc_rejected_high_risk': 'Cartão recusado por segurança. Tente outro cartão ou pague via PIX.',
+                    'cc_rejected_other_reason': 'Cartão recusado pelo banco. Tente outro cartão.',
+                    'cc_rejected_call_for_authorize': 'Seu banco precisa autorizar. Ligue para o banco e tente novamente.',
                     'cc_rejected_card_disabled': 'Cartão bloqueado. Entre em contato com seu banco.',
-                    'cc_rejected_duplicated_payment': 'Pagamento duplicado detectado.',
-                    'cc_rejected_max_attempts': 'Limite de tentativas excedido. Tente novamente mais tarde.',
-                    'cc_rejected_blacklist': 'Cartão não autorizado.',
-                    'cc_rejected_invalid_installments': 'Número de parcelas inválido.',
-                    'pending_review_manual': 'Pagamento em análise. Você receberá confirmação por e-mail.',
-                    'pending_contingency': 'Processando pagamento. Aguarde a confirmação.',
-                    'rejected': 'Pagamento recusado.',
-                    'cc_rejected_bad_filled_security_code': 'Código de segurança incorreto.'
+                    'cc_rejected_duplicated_payment': 'Pagamento duplicado. Verifique seu e-mail.',
+                    'cc_rejected_max_attempts': 'Muitas tentativas. Aguarde alguns minutos.',
+                    'cc_rejected_blacklist': 'Cartão não autorizado. Tente outro cartão.',
+                    'cc_rejected_invalid_installments': 'Parcelas inválidas. Escolha outra opção.',
+                    'pending_review_manual': 'Pagamento em análise. Aguarde confirmação por e-mail.',
+                    'pending_contingency': 'Processando. Aguarde a confirmação.',
+                    'rejected': 'Pagamento recusado. Tente outro cartão ou PIX.'
                 };
 
-                if (map[result.status_detail]) msg = map[result.status_detail];
-                else if (result.error) msg += `\nErro: ${result.message || result.error}`;
-
-                alert(msg + '\n\nTente conferir os dados ou pagar via PIX.');
+                if (result.status_detail && map[result.status_detail]) {
+                    alert(map[result.status_detail] + '\n\n💡 Dica: O PIX tem aprovação instantânea!');
+                } else {
+                    console.error("Erro detalhado:", result);
+                    alert(`Pagamento não autorizado.\n\nDetalhe: ${msg}\n\nTente usar outro cartão ou PIX.`);
+                }
 
                 // Return to form if failed
                 document.getElementById('checkout-main-view').classList.remove('hidden');
@@ -767,8 +798,17 @@ async function handlePayment(method) {
                 btn.innerText = originalText;
             }
         } catch (e) {
-            trackEvent('checkout_error', null, null, `Erro Cartão (JS): ${e.message}`);
-            alert('Erro no cartão: ' + e.message);
+            console.error("ERRO CRÍTICO CARTÃO:", e);
+            let errDisplay = 'Erro desconhecido';
+
+            if (e && e.message) errDisplay = e.message;
+            else if (e && e.cause) errDisplay = JSON.stringify(e.cause);
+            else if (typeof e === 'string') errDisplay = e;
+            else if (typeof e === 'object') errDisplay = JSON.stringify(e);
+
+            trackEvent('checkout_error', null, null, `Erro Cartão (JS): ${errDisplay}`);
+            alert('Houve um erro ao processar seu cartão.\n\nDetalhe técnico: ' + errDisplay + '\n\nTente novamente ou use o PIX.');
+
             document.getElementById('checkout-main-view').classList.remove('hidden');
             document.getElementById('pix-result').classList.add('hidden');
             btn.disabled = false;
@@ -852,7 +892,6 @@ function setupFields() {
     // 2. Real-time Formatting & Validation
     const fieldMapping = {
         'payer-cpf': 'cpf',
-        'card-cpf': 'cpf', // ADDED
         'payer-phone': 'phone',
         'card-number': 'card',
         'card-expiration': 'date',
@@ -1278,7 +1317,7 @@ function validateCheckoutInputs(method) {
     if (method === 'pix') {
         fields.push('payer-name', 'payer-cpf');
     } else {
-        fields.push('card-holder', 'card-cpf', 'card-number', 'card-expiration', 'card-cvv');
+        fields.push('card-holder', 'payer-cpf', 'card-number', 'card-expiration', 'card-cvv');
     }
 
     fields.forEach(id => {
