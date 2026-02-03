@@ -219,6 +219,7 @@ function logSale(customer, items, paymentId, method) {
 
 // 3. API Config (Required for Frontend Products)
 app.get('/api/config', (req, res) => {
+    res.set('Cache-Control', 'no-store');
     // Return the cached DB which contains products and bumps
     res.json(getDB());
 });
@@ -228,6 +229,28 @@ app.post('/api/config/update', (req, res) => {
     if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
     saveDB(data);
     res.json({ success: true });
+});
+
+app.post('/api/config/reset', (req, res) => {
+    const { password } = req.body;
+    if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
+
+    // FACTORY RESET LOGIC
+    try {
+        if (fs.existsSync(LOCAL_DB)) {
+            // Overwrite persistence with source code DB
+            fs.copyFileSync(LOCAL_DB, DB_PATH);
+            cacheDB = null; // Clear RAM cache
+
+            console.log('🚨 [RESET] Sistema restaurado para padrão de fábrica pelo Admin.');
+            res.json({ success: true });
+        } else {
+            res.status(500).json({ error: 'Arquivo original de fábrica não encontrado.' });
+        }
+    } catch (e) {
+        console.error("Reset Error:", e);
+        res.status(500).json({ error: 'Falha ao restaurar sistema.' });
+    }
 });
 
 // 4. Admin History & Analytics API
@@ -316,6 +339,7 @@ app.post('/api/track', (req, res) => {
 });
 
 app.get('/api/products/:id', (req, res) => {
+    res.set('Cache-Control', 'no-store');
     const db = getDB();
     const product = db.products[req.params.id];
     if (!product) return res.status(404).json({ error: 'Produto não encontrado' });

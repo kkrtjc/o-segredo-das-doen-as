@@ -1593,6 +1593,9 @@
                     <button class="btn btn-primary"
                         style="background: #ef4444; border: none; padding: 8px 12px; font-size: 0.8rem;"
                         onclick="clearHistory()"><i class="fa-solid fa-trash-can"></i> LIMPAR</button>
+                    <button class="btn btn-primary"
+                        style="background: #111; border: 1px solid #333; padding: 8px 12px; font-size: 0.8rem;"
+                        onclick="factoryReset()"><i class="fa-solid fa-rotate-left"></i> RESETAR FÁBRICA</button>
                 </div>
                 <div style="overflow-x: auto;">
                     <table>
@@ -2426,6 +2429,29 @@
                 }
             } catch (e) {
                 alert('Erro de conexão ao tentar limpar logs.');
+            }
+        }
+
+        async function factoryReset() {
+            if (!confirm('🚨 PERIGO: Isso vai APAGAR todas as alterações de preço, bumps e textos que você fez no painel e restaurar o site para o original de fábrica (código). \n\nIsso é útil para corrigir erros no "Disco Persistente" do Render. \n\nDeseja continuar?')) return;
+
+            try {
+                const res = await fetch(`${API_URL}/api/config/reset`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: masterPass })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    alert('✅ Sistema restaurado com sucesso! A página será recarregada.');
+                    location.reload();
+                } else {
+                    alert('Erro ao restaurar: ' + (data.error || 'Erro desconhecido'));
+                }
+            } catch (e) {
+                alert('Erro de conexão. Verifique se o servidor está online.');
             }
         }
     </script>

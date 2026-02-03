@@ -288,7 +288,7 @@ async function openCheckout(productId) {
     }
 
     try {
-        const response = await fetch(`${API_URL}/api/products/${productId}`);
+        const response = await fetch(`${API_URL}/api/products/${productId}?t=${Date.now()}`);
         const productData = await response.json();
 
         if (productData.error) throw new Error(productData.error);
@@ -440,7 +440,7 @@ async function renderHomeProducts() {
     showSkeletons(container);
 
     try {
-        const res = await fetch(`${API_URL}/api/config`);
+        const res = await fetch(`${API_URL}/api/config?t=${Date.now()}`);
         if (!res.ok) throw new Error("Fetch failed");
 
         const db = await res.json();
