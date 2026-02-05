@@ -533,10 +533,19 @@ function switchMethod(method) {
         if (pixArea) { pixArea.style.display = 'block'; setTimeout(() => pixArea.style.opacity = '1', 50); }
         if (pixIdentity) { pixIdentity.style.display = 'block'; }
         if (cardArea) { cardArea.style.opacity = '0'; setTimeout(() => cardArea.style.display = 'none', 300); }
+
+        // CORREÇÃO: Placeholder do CPF para PIX
+        const cpfInput = document.getElementById('payer-cpf');
+        if (cpfInput) cpfInput.placeholder = 'Seu CPF';
+
     } else {
         if (cardArea) { cardArea.style.display = 'block'; setTimeout(() => cardArea.style.opacity = '1', 50); }
         if (pixIdentity) { pixIdentity.style.display = 'none'; }
         if (pixArea) { pixArea.style.opacity = '0'; setTimeout(() => pixArea.style.display = 'none', 300); }
+
+        // CORREÇÃO: Placeholder do CPF para Cartão
+        const cpfInput = document.getElementById('payer-cpf');
+        if (cpfInput) cpfInput.placeholder = 'CPF do Titular do Cartão';
     }
 
     // RECALCULATE TOTAL WHEN SWITCHING
