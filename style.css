@@ -223,6 +223,39 @@ ul {
     }
 }
 
+/* Video Responsive Container */
+.video-responsive {
+    overflow: hidden;
+    padding-bottom: 56.25%;
+    position: relative;
+    height: 0;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    background: #000;
+}
+
+.video-responsive iframe {
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.vsl-section {
+    background: #050505;
+    padding: var(--spacing-lg) 0;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.vsl-wrapper {
+    max-width: 700px;
+    /* Reduzi de 900px para 700px para ficar mais elegante */
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
 /* Header */
 .header {
     background: rgba(0, 0, 0, 0.95);

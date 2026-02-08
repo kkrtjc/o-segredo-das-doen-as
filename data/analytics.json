@@ -1,7 +1,7 @@
 {
     "totals": {
-        "clicks": 117,
-        "checkoutOpens": 102,
+        "clicks": 119,
+        "checkoutOpens": 104,
         "checkoutStarts": 26,
         "uiErrors": 11,
         "trustClicks": 3,
@@ -9,9 +9,9 @@
         "desktopSessions": 48,
         "slowLoads": 0,
         "pageViews": 48,
-        "ctaClicks": 20,
-        "uniqueVisits": 3,
-        "checkoutAbandons": 4
+        "ctaClicks": 24,
+        "uniqueVisits": 8,
+        "checkoutAbandons": 5
     },
     "daily": {
         "2026-01-30": {
@@ -63,6 +63,60 @@
             "checkoutAbandons": 4,
             "ctaBreakdown": {
                 "hero-primary": 13
+            }
+        },
+        "2026-02-05": {
+            "clicks": 1,
+            "checkoutOpens": 1,
+            "checkoutStarts": 0,
+            "uiErrors": 0,
+            "trustClicks": 0,
+            "mobileSessions": 0,
+            "desktopSessions": 0,
+            "slowLoads": 0,
+            "pageViews": 0,
+            "emailClicks": 0,
+            "uniqueVisits": 2,
+            "ctaClicks": 2,
+            "checkoutAbandons": 0,
+            "ctaBreakdown": {
+                "hero-primary": 2
+            }
+        },
+        "2026-02-07": {
+            "clicks": 1,
+            "checkoutOpens": 1,
+            "checkoutStarts": 0,
+            "uiErrors": 0,
+            "trustClicks": 0,
+            "mobileSessions": 0,
+            "desktopSessions": 0,
+            "slowLoads": 0,
+            "pageViews": 0,
+            "emailClicks": 0,
+            "uniqueVisits": 0,
+            "ctaClicks": 1,
+            "checkoutAbandons": 1,
+            "ctaBreakdown": {
+                "generic_cta": 1
+            }
+        },
+        "2026-02-08": {
+            "clicks": 0,
+            "checkoutOpens": 0,
+            "checkoutStarts": 0,
+            "uiErrors": 0,
+            "trustClicks": 0,
+            "mobileSessions": 0,
+            "desktopSessions": 0,
+            "slowLoads": 0,
+            "pageViews": 0,
+            "emailClicks": 0,
+            "uniqueVisits": 3,
+            "ctaClicks": 1,
+            "checkoutAbandons": 0,
+            "ctaBreakdown": {
+                "generic_cta": 1
             }
         }
     }

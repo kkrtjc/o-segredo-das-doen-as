@@ -1382,6 +1382,8 @@
             <div class="nav-item" onclick="switchTab('history', this)"><i class="fa-solid fa-receipt"></i> Vendas</div>
             <div class="nav-item" onclick="switchTab('analytics', this)"><i class="fa-solid fa-bullseye"></i> Funil
             </div>
+            <div class="nav-item" onclick="switchTab('leads', this)"><i class="fa-solid fa-users"></i> Leads (Isca)
+            </div>
         </nav>
 
         <!-- Botão Flutuante de Salvar -->
@@ -1698,6 +1700,40 @@
         </div>
     </div>
 
+    <!-- TAB: LEADS -->
+    <div id="tab-leads" class="tab-content">
+        <div class="header-content" style="padding:0; margin-bottom:20px; justify-content:space-between;">
+            <h2 style="font-family:'Outfit'; font-size:1.5rem;">Leads Capturados</h2>
+            <button class="btn btn-primary" onclick="exportLeads()"><i class="fa fa-download"></i> Exportar CSV</button>
+        </div>
+        <div class="content-card">
+            <div class="table-controls">
+                <div class="search-wrapper">
+                    <i class="fa fa-search"></i>
+                    <input type="text" id="leadSearch" placeholder="Buscar por nome ou telefone..."
+                        onkeyup="filterLeads()">
+                </div>
+                <div style="color:var(--text-dim); font-size:0.9rem;">Total: <span id="leadsCount"
+                        style="color:#fff; font-weight:bold;">0</span></div>
+            </div>
+            <div style="overflow-x:auto;">
+                <table id="leadsTable">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>WhatsApp</th>
+                            <th>Origem</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Leads injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <script>
         let db = { products: {}, orderBumps: {} };
         let originalDb = null;
@@ -1730,6 +1766,82 @@
             if (name === 'dashboard') loadAnalytics();
             if (name === 'history') loadHistory();
             if (name === 'analytics') loadAnalytics();
+            if (name === 'leads') loadLeads();
+        }
+
+        async function loadLeads() {
+            const tbody = document.querySelector('#leadsTable tbody');
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Carregando...</td></tr>';
+
+            try {
+                const res = await fetch(`${API_URL}/api/leads`, {
+                    headers: { 'x-admin-password': masterPass }
+                });
+                const leads = await res.json();
+
+                document.getElementById('leadsCount').innerText = leads.length;
+                tbody.innerHTML = '';
+
+                if (Array.isArray(leads)) {
+                    // Sort descending by date
+                    leads.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                    leads.forEach(lead => {
+                        const date = new Date(lead.date).toLocaleString('pt-BR');
+                        const row = `
+                            <tr>
+                                <td style="font-weight:bold; color:#fff;">${lead.name || '-'}</td>
+                                <td>
+                                    <a href="https://wa.me/55${lead.phone}" target="_blank" style="color:#25D366; text-decoration:none;">
+                                        <i class="fab fa-whatsapp"></i> ${lead.phone}
+                                    </a>
+                                </td>
+                                <td><span class="badge" style="background:rgba(212,175,55,0.2); color:#D4AF37; padding:2px 6px; border-radius:4px; font-size:0.75rem;">${lead.source}</span></td>
+                                <td style="color:#888; font-size:0.85rem;">${date}</td>
+                            </tr>
+                        `;
+                        tbody.innerHTML += row;
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+                tbody.innerHTML = '<tr><td colspan="4" style="color:red; text-align:center;">Erro ao carregar leads.</td></tr>';
+            }
+        }
+
+        function filterLeads() {
+            const term = document.getElementById('leadSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#leadsTable tbody tr');
+
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(term) ? '' : 'none';
+            });
+        }
+
+        function exportLeads() {
+            const rows = document.querySelectorAll('#leadsTable tbody tr');
+            let csv = 'Nome,WhatsApp,Origem,Data\n';
+
+            rows.forEach(row => {
+                if (row.style.display !== 'none') {
+                    const cols = row.querySelectorAll('td');
+                    if (cols.length > 0) {
+                        const name = cols[0].innerText;
+                        const phone = cols[1].innerText.replace(/\D/g, ''); // Clean phone
+                        const source = cols[2].innerText;
+                        const date = cols[3].innerText;
+                        csv += `"${name}","${phone}","${source}","${date}"\n`;
+                    }
+                }
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'leads_mura.csv';
+            a.click();
         }
 
         function toggleMetricGroup(header) {
@@ -2091,7 +2203,9 @@
 
                 // Tracking labels
                 const clicked = h.clickedEmail;
+                const downloaded = h.downloaded;
                 const clickDate = h.clickDate ? new Date(h.clickDate) : null;
+                const downDate = h.downloadDate ? new Date(h.downloadDate) : null;
 
                 row.innerHTML = `
                     <td>
@@ -2119,7 +2233,12 @@
                         <span style="font-size: 0.6rem; background: rgba(255,255,255,0.05); padding: 1px 4px; border-radius: 4px; text-transform: uppercase;">${h.method || 'cartão'}</span>
                     </td>
                     <td>
-                        ${clicked ? `
+                        ${downloaded ? `
+                            <div style="color: #60a5fa; font-size: 0.7rem; font-weight: 900; display: flex; align-items: center; gap: 5px;">
+                                <i class="fa-solid fa-cloud-arrow-down"></i> BAIXOU
+                            </div>
+                            <div style="font-size: 0.6rem; color: var(--text-dim);">${downDate.toLocaleDateString('pt-BR')}</div>
+                        ` : clicked ? `
                             <div style="color: var(--success); font-size: 0.7rem; font-weight: 900; display: flex; align-items: center; gap: 5px;">
                                 <i class="fa-solid fa-check-double"></i> CLICOU
                             </div>
