@@ -33,25 +33,42 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (cached) {
         try {
             const session = JSON.parse(cached);
-            // Only check if recent (< 1 hour) to avoid zombie checks
             if ((Date.now() - session.timestamp) < 60 * 60 * 1000) {
                 try {
                     const s = await fetch(`${API_URL}/api/payment/${session.data.id}`);
                     const sd = await s.json();
                     if (sd.status === 'approved') {
-                        // User paid! Redirect immediately.
                         localStorage.removeItem('active_pix_session');
                         window.location.href = `downloads.html?items=${session.itemIds}&total=${session.total.toFixed(2)}`;
                     } else {
-                        // Not paid. User reloaded -> They probably want a fresh start.
-                        // Clear storage so the modal starts clean.
                         localStorage.removeItem('active_pix_session');
                     }
                 } catch (e) { console.warn("Background check failed", e); }
             } else {
                 localStorage.removeItem('active_pix_session');
             }
-        } catch (e) { localStorage.removeItem('active_pix_session'); }
+        } catch (e) {
+            localStorage.removeItem('active_pix_session');
+        }
+    }
+
+    // 3. LAZY VIDEO LOADING (Intersection Observer)
+    const lazyVideo = document.getElementById('vsl-video');
+    if (lazyVideo && 'IntersectionObserver' in window) {
+        const videoObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const source = lazyVideo.querySelector('source');
+                    if (source && source.dataset.src) {
+                        source.src = source.dataset.src;
+                        lazyVideo.load();
+                        console.log("📹 [VIDEO] Lazy Source Loaded");
+                    }
+                    observer.unobserve(lazyVideo);
+                }
+            });
+        }, { rootMargin: '200px' });
+        videoObserver.observe(lazyVideo);
     }
 });
 

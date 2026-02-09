@@ -84,30 +84,7 @@
         </div>
     </section>
 
-    <!-- VSL (Video Sales Letter) Section -->
-    <section class="vsl-section">
-        <div class="container">
-            <div class="vsl-wrapper">
-                <div
-                    style="max-width: 450px; margin: 0 auto; width: 100%; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md); border: 2px solid #d4af37;">
-                    <video id="vsl-video" width="100%" height="auto" controls playsinline preload="auto"
-                        poster="video_cover_vsl.png"
-                        style="display: block; width: 100%; aspect-ratio: 1/1; object-fit: cover; object-position: center 60%; background: #000;">
-                        <source src="venda_vsl.mp4" type="video/mp4">
-                        Seu navegador não suporta vídeos HTML5.
-                    </video>
-                </div>
-                <div class="text-center" style="margin-top: 2rem;">
-                    <p style="font-weight: 700; color: var(--color-secondary); letter-spacing: 1px;">ASSISTA O VÍDEO
-                        COMPLETO ACIMA</p>
-                    <a href="#offer-focus" class="btn btn-primary" style="margin-top: 1.5rem;">QUERO ESSA
-                        TRANSFORMAÇÃO</a>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    </section>
 
     <!-- Authority / Social Proof Section -->
     <section class="social-proof-bar">
@@ -234,6 +211,30 @@
 
             <div class="text-center" style="margin-top: 4rem;">
                 <a href="#offer-focus" class="btn btn-primary btn-lg btn-pulse">QUERO ESSA TRANSFORMAÇÃO</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- VSL (Video Sales Letter) Section - MOVED & OPTIMIZED -->
+    <section class="vsl-section" id="vsl-anchor">
+        <div class="container">
+            <div class="vsl-wrapper">
+                <div
+                    style="max-width: 450px; margin: 0 auto; width: 100%; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md); border: 2px solid #d4af37; background: #000;">
+                    <!-- Lazy Loading Video: Source loaded only when visible -->
+                    <video id="vsl-video" width="100%" height="auto" controls playsinline preload="none"
+                        poster="video_cover_vsl.png"
+                        style="display: block; width: 100%; aspect-ratio: 1/1; object-fit: cover; object-position: center 60%;">
+                        <source data-src="venda_vsl.mp4" type="video/mp4">
+                        Seu navegador não suporta vídeos HTML5.
+                    </video>
+                </div>
+                <div class="text-center" style="margin-top: 2rem;">
+                    <p style="font-weight: 700; color: var(--color-secondary); letter-spacing: 1px;">ASSISTA O VÍDEO
+                        COMPLETO ACIMA</p>
+                    <a href="#offer-focus" class="btn btn-primary" style="margin-top: 1.5rem;">QUERO ESSA
+                        TRANSFORMAÇÃO</a>
+                </div>
             </div>
         </div>
     </section>
