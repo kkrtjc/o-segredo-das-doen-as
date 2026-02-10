@@ -133,7 +133,12 @@ document.addEventListener('DOMContentLoaded', () => {
         { text: '"Muito bom, consegui identificar a doença da minha galinha na mesma hora."', author: 'Maria Santos', location: 'São Paulo', stars: 5, avatar: 'carrosel/maria.PNG' },
         { text: '"Vale cada centavo. Aprendi mais aqui do que em 2 anos criando galinhas."', author: 'João Oliveira', location: 'Bahia', stars: 5, avatar: 'carrosel/joao_new.jpg' },
         { text: '"O manejo correto mudou tudo aqui no sítio. Recomendo demais!"', author: 'Ana Costa', location: 'Goiás', stars: 5, avatar: 'carrosel/ana.png' },
-        { text: '"Simples e direto. Parei de gastar com remédio errado."', author: 'Ricardo Lima', location: 'Paraná', stars: 5, avatar: 'carrosel/ricardo.jpeg' }
+        { text: '"Simples e direto. Parei de gastar com remédio errado."', author: 'Ricardo Lima', location: 'Paraná', stars: 5, avatar: 'carrosel/ricardo.jpeg' },
+        { text: '"O Protocolo de Manejo mudou minha visão sobre a criação. Resultados nítidos em 15 dias."', author: 'Pedro Almeida', location: 'Bahia', stars: 5, avatar: 'carrosel/pedro.png' },
+        { text: '"Recuperei minhas matrizes que estavam quase perdidas. O guia de doenças é indispensável."', author: 'Camila Rocha', location: 'Espirito Santo', stars: 5, avatar: 'carrosel/camila.jpeg' },
+        { text: '"Simplesmente o melhor investimento que fiz esse ano. Economia real de tempo e dinheiro."', author: 'Lucas Ferreira', location: 'Mato Grosso', stars: 5, avatar: 'carrosel/lucas.jpeg' },
+        { text: '"Meus pintinhos estão muito mais fortes e saudáveis. O manejo de elite funciona mesmo."', author: 'Isabella Lima', location: 'Santa Catarina', stars: 5, avatar: 'carrosel/isabella.jpeg' },
+        { text: '"Tirei todas as minhas dúvidas sobre nutrição. Minhas galinhas nunca produziram tanto!"', author: 'Juliana Freitas', location: 'Goiás', stars: 5, avatar: 'carrosel/juliana.jpeg' }
     ];
 
     const testimonialsTrack = document.getElementById('testimonials-track');
