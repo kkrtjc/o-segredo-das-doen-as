@@ -507,13 +507,12 @@
                                 style="color: #fff; font-size: 0.9rem; font-weight: 800; line-height: 1.2; margin-bottom: 4px;">
                                 Junte-se a +1.500 alunos satisfeitos</div>
                             <div
-                                style="display: flex; align-items: center; justify-content: center; gap: 8px; color: rgba(255,255,255,0.5); font-size: 0.75rem;">
-                                <span>Garantia de 7 dias</span>
+                                style="display: flex; align-items: center; justify-content: center; gap: 8px; color: rgba(255,255,255,0.7); font-size: 0.75rem; font-weight: 600;">
+                                <i class="fa-solid fa-shield-check" style="color: #2ecc71;"></i>
+                                <span>Ambiente Criptografado</span>
                                 <span style="opacity: 0.3;">•</span>
-                                <span>Ambiente Seguro</span>
-                                <span style="opacity: 0.3;">•</span>
-                                <img src="mercadopago_official.png" title="Mercado Pago" alt="Mercado Pago"
-                                    style="height: 14px; opacity: 0.7; vertical-align: middle;">
+                                <i class="fa-solid fa-medal" style="color: #FFD700;"></i>
+                                <span>Garantia de 7 Dias</span>
                             </div>
                         </div>
                     </div>
@@ -621,6 +620,13 @@
                                         autocomplete="cc-name">
                                 </div>
                                 <span class="mura-error" id="error-card-holder">Nome exatamente como no cartão.</span>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-wrapper">
+                                    <input type="text" id="card-cep" placeholder="CEP da Residência" maxlength="9">
+                                </div>
+                                <span class="mura-error" id="error-card-cep">CEP é necessário para aprovação.</span>
                             </div>
 
 
@@ -761,15 +767,23 @@
                 </div>
 
                 <div class="pix-trust-note-clean">
-                    <div class="trust-row">
-                        <i class="fa-solid fa-shield-check" style="color: #2ecc71;"></i>
-                        <span>Segurança via</span>
-                        <!-- Mercado Pago Logo (Clean PNG) -->
-                        <img src="mercadopago_official.png" alt="Mercado Pago" class="mp-logo-new">
+                    <div class="trust-row ivory-guarantee-box">
+                        <i class="fa-solid fa-shield-halved" style="color: #2ecc71; font-size: 1.2rem;"></i>
+                        <div style="text-align: left;">
+                            <span style="display: block; font-weight: 800; color: #fff; font-size: 0.85rem;">PAGAMENTO
+                                100% SEGURO</span>
+                            <span style="display: block; font-size: 0.7rem; color: rgba(255,255,255,0.5);">Sua compra
+                                está protegida por criptografia bancária.</span>
+                        </div>
                     </div>
-                    <div class="trust-row">
-                        <i class="fa-solid fa-medal" style="color: #FFD700;"></i>
-                        <span>Garantia de 7 dias</span>
+                    <div class="trust-row ivory-guarantee-box" style="margin-top: 10px;">
+                        <i class="fa-solid fa-award" style="color: #FFD700; font-size: 1.2rem;"></i>
+                        <div style="text-align: left;">
+                            <span style="display: block; font-weight: 800; color: #fff; font-size: 0.85rem;">GARANTIA
+                                INCONDICIONAL</span>
+                            <span style="display: block; font-size: 0.7rem; color: rgba(255,255,255,0.5);">7 dias para
+                                testar ou seu dinheiro de volta.</span>
+                        </div>
                     </div>
                 </div>
 

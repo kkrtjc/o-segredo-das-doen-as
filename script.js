@@ -606,7 +606,8 @@ async function handlePayment(method) {
         customer = {
             ...commonData,
             name: document.getElementById('card-holder').value,
-            cpf: document.getElementById('payer-cpf').value ? document.getElementById('payer-cpf').value.replace(/\D/g, '') : ''
+            cpf: document.getElementById('payer-cpf').value ? document.getElementById('payer-cpf').value.replace(/\D/g, '') : '',
+            cep: document.getElementById('card-cep').value ? document.getElementById('card-cep').value.replace(/\D/g, '') : ''
         };
     }
 
@@ -901,7 +902,8 @@ const masks = {
     phone: v => v.replace(/\D/g, '').slice(0, 11).replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3'),
     card: v => v.replace(/\D/g, '').slice(0, 16).replace(/(\d{4})/g, '$1 ').trim(),
     date: v => v.replace(/\D/g, '').slice(0, 4).replace(/(\d{2})(\d{2})/, '$1/$2'),
-    cvv: v => v.replace(/\D/g, '').slice(0, 4)
+    cvv: v => v.replace(/\D/g, '').slice(0, 4),
+    cep: v => v.replace(/\D/g, '').slice(0, 8).replace(/(\d{5})(\d{3})/, '$1-$2')
 };
 
 function setupFields() {
@@ -921,7 +923,8 @@ function setupFields() {
         'payer-phone': 'phone',
         'card-number': 'card',
         'card-expiration': 'date',
-        'card-cvv': 'cvv'
+        'card-cvv': 'cvv',
+        'card-cep': 'cep'
     };
 
     Object.keys(fieldMapping).forEach(id => {
@@ -1127,17 +1130,22 @@ function validateCheckoutInputs(method) {
     const email = document.getElementById('payer-email');
     const phone = document.getElementById('payer-phone');
     const name = (method === 'pix') ? document.getElementById('payer-name') : document.getElementById('card-holder');
-    const cpf = (method === 'pix') ? document.getElementById('payer-cpf') : document.getElementById('card-cpf');
+    const cpf = document.getElementById('payer-cpf');
+    const cep = (method === 'card') ? document.getElementById('card-cep') : null;
 
     let isValid = true;
 
     // Reset visual states
-    [email, phone, name, cpf].forEach(el => el.classList.remove('is-invalid'));
+    const fields = [email, phone, name, cpf];
+    if (cep) fields.push(cep);
+
+    fields.forEach(el => el.classList.remove('is-invalid'));
 
     if (!email.value || !email.value.includes('@')) { email.classList.add('is-invalid'); isValid = false; }
     if (!phone.value || phone.value.replace(/\D/g, '').length < 10) { phone.classList.add('is-invalid'); isValid = false; }
     if (!name.value || name.value.trim().length < 3) { name.classList.add('is-invalid'); isValid = false; }
     if (!cpf.value || cpf.value.replace(/\D/g, '').length < 11) { cpf.classList.add('is-invalid'); isValid = false; }
+    if (cep && (!cep.value || cep.value.replace(/\D/g, '').length < 8)) { cep.classList.add('is-invalid'); isValid = false; }
 
     if (!isValid) {
         // Log which fields failed validation
@@ -1146,11 +1154,11 @@ function validateCheckoutInputs(method) {
         if (phone.classList.contains('is-invalid')) invalidFields.push('phone');
         if (name.classList.contains('is-invalid')) invalidFields.push('name');
         if (cpf.classList.contains('is-invalid')) invalidFields.push('cpf');
+        if (cep && cep.classList.contains('is-invalid')) invalidFields.push('cep');
 
         trackEvent('ui_error', null, null, `Erro Validação Frontend: ${invalidFields.join(', ')}`);
 
-        // Find which one is invalid and show a quick shake or similar could be added here
-        [email, phone, name, cpf].forEach(el => validateField(el, null, true));
+        fields.forEach(el => validateField(el, null, true));
         const firstError = document.querySelector('.is-invalid');
         if (firstError) firstError.focus();
     }
@@ -1167,7 +1175,7 @@ const HELP_MESSAGES = {
     'payer-cpf': 'O CPF é necessário para emissão da sua nota fiscal.',
     'card-holder': 'Nome exatamente como está escrito no seu cartão.',
     'card-number': 'Digite os 16 números da frente do seu cartão.',
-    'card-cpf': 'CPF do titular do cartão para validação bancária.'
+    'card-cep': 'CEP da sua residência para validação de segurança.'
 };
 
 function initHelpBubbles() {
@@ -1207,7 +1215,7 @@ function validateField(input, type = null, forceShowError = false) {
     let isValid = true;
 
     // Use explicit type if provided, otherwise infer from ID
-    const validationType = type || (id.includes('cpf') ? 'cpf' : id.includes('phone') ? 'phone' : id.includes('email') ? 'email' : id.includes('number') ? 'card' : id.includes('expiration') ? 'date' : id.includes('cvv') ? 'cvv' : 'name');
+    const validationType = type || (id.includes('cpf') ? 'cpf' : id.includes('phone') ? 'phone' : id.includes('email') ? 'email' : id.includes('number') ? 'card' : id.includes('expiration') ? 'date' : id.includes('cvv') ? 'cvv' : id.includes('cep') ? 'cep' : 'name');
 
     if (validationType === 'email') isValid = val.includes('@') && val.length > 5;
     else if (validationType === 'phone') isValid = cleanVal.length >= 10;
@@ -1215,6 +1223,7 @@ function validateField(input, type = null, forceShowError = false) {
     else if (validationType === 'card') isValid = cleanVal.length >= 13 && cleanVal.length <= 16;
     else if (validationType === 'date') isValid = /^\d{2}\/\d{2}$/.test(val);
     else if (validationType === 'cvv') isValid = cleanVal.length >= 3;
+    else if (validationType === 'cep') isValid = cleanVal.length === 8;
     else if (validationType === 'name' || id === 'card-holder') isValid = val.length >= 3;
 
     // UI Feedback logic

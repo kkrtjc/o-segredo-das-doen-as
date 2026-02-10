@@ -1,16 +1,16 @@
 {
     "totals": {
-        "clicks": 119,
-        "checkoutOpens": 104,
-        "checkoutStarts": 26,
+        "clicks": 120,
+        "checkoutOpens": 105,
+        "checkoutStarts": 27,
         "uiErrors": 11,
         "trustClicks": 3,
         "mobileSessions": 0,
         "desktopSessions": 48,
         "slowLoads": 0,
         "pageViews": 48,
-        "ctaClicks": 24,
-        "uniqueVisits": 8,
+        "ctaClicks": 25,
+        "uniqueVisits": 9,
         "checkoutAbandons": 5
     },
     "daily": {
@@ -117,6 +117,24 @@
             "checkoutAbandons": 0,
             "ctaBreakdown": {
                 "generic_cta": 1
+            }
+        },
+        "2026-02-10": {
+            "clicks": 1,
+            "checkoutOpens": 1,
+            "checkoutStarts": 1,
+            "uiErrors": 0,
+            "trustClicks": 0,
+            "mobileSessions": 0,
+            "desktopSessions": 0,
+            "slowLoads": 0,
+            "pageViews": 0,
+            "emailClicks": 0,
+            "uniqueVisits": 1,
+            "ctaClicks": 1,
+            "checkoutAbandons": 0,
+            "ctaBreakdown": {
+                "hero-primary": 1
             }
         }
     }

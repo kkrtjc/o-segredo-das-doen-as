@@ -3384,6 +3384,28 @@ footer {
     }
 }
 
+.qr-container-clean {
+    background: #fff;
+    padding: 12px;
+    border-radius: 12px;
+    border: 2px solid var(--color-secondary);
+    display: inline-block;
+    margin: 1.5rem 0;
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
+    transition: all 0.3s ease;
+}
+
+.qr-container-clean:hover {
+    transform: scale(1.02);
+    box-shadow: 0 15px 35px rgba(212, 175, 55, 0.3);
+}
+
+.qr-container-clean img {
+    border-radius: 8px;
+    /* Fina arredondada na imagem também */
+    display: block;
+}
+
 /* Premium Bumps (Refined Compact Version) */
 .order-bump-container {
     background: rgba(255, 255, 255, 0.03);
@@ -3491,6 +3513,29 @@ footer {
     gap: 12px;
     box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
     text-transform: uppercase;
+    overflow: hidden;
+}
+
+.ivory-guarantee-box {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+}
+
+.ivory-guarantee-box:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(212, 175, 55, 0.3);
+}
+
+.pix-trust-note-clean {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 #btn-copy-pix i {

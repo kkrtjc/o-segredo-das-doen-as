@@ -781,14 +781,20 @@ app.post('/api/checkout/card', async (req, res) => {
                         area_code: phoneAreaCode || '11',
                         number: phoneNumber || '999999999'
                     },
-                    registration_date: new Date().toISOString()
+                    registration_date: new Date().toISOString(),
+                    address: {
+                        zip_code: customer.cep || '00000000',
+                        street_name: 'Não Informado',
+                        street_number: 0
+                    }
                 }
             },
             metadata: {
                 delivery_method: 'email',
                 customer_phone: customer.phone,
                 customer_name: customer.name,
-                customer_email: customer.email
+                customer_email: customer.email,
+                customer_cep: customer.cep
             }
         };
 
@@ -883,7 +889,7 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
     if (topic === 'payment' || topic === 'payment.updated') {
         try {
             const paymentResult = await payment.get({ id: paymentId });
-            console.log(`🔔 [WEBHOOK] Status do pagamento ${paymentId}: ${paymentResult.status}`);
+            console.log(`🔔 [WEBHOOK] Status pagamento ${paymentId}: ${paymentResult.status} (${paymentResult.status_detail || 'sem detalhe'})`);
 
             if (paymentResult.status === 'approved') {
                 console.log(`✅ [WEBHOOK] Pagamento Aprovado! ID: ${paymentId}`);
