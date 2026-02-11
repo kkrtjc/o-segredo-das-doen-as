@@ -350,6 +350,41 @@ ul {
     justify-content: center;
 }
 
+.urgency-badge {
+    background: linear-gradient(135deg, var(--color-accent-red) 0%, #660000 100%);
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 25px rgba(204, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    text-transform: uppercase;
+    animation: alert-glow 3s infinite alternate ease-in-out;
+}
+
+.urgency-badge i {
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+@keyframes alert-glow {
+    0% {
+        box-shadow: 0 0 15px rgba(204, 0, 0, 0.4);
+        transform: scale(1);
+    }
+
+    100% {
+        box-shadow: 0 0 35px rgba(204, 0, 0, 0.8);
+        transform: scale(1.02);
+    }
+}
+
 .hero-bg-image {
     position: absolute;
     top: 0;
@@ -569,6 +604,25 @@ ul {
     color: var(--color-secondary);
     display: block;
     margin-bottom: var(--spacing-xs);
+}
+
+/* Despair Scenario Section */
+.despair-scenario {
+    position: relative;
+    overflow: hidden;
+}
+
+.despair-scenario .feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.despair-scenario .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(204, 0, 0, 0.15);
+}
+
+.despair-scenario h2 {
+    text-shadow: 0 0 20px rgba(204, 0, 0, 0.3);
 }
 
 /* Solution Section - Features */
@@ -1067,7 +1121,7 @@ footer {
     /* FORCE NO WRAP */
     width: max-content;
     will-change: transform;
-    animation: scroll 40s linear infinite;
+    animation: scroll 60s linear infinite;
     /* Adjusted speed for 1600px */
     padding: 10px 0;
     pointer-events: none;
