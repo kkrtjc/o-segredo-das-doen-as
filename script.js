@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (source && source.dataset.src) {
                         source.src = source.dataset.src;
                         lazyVideo.load();
-                        console.log("ðŸ“¹ [VIDEO] Lazy Source Loaded");
+                        console.log("🎥 [VIDEO] Lazy Source Loaded");
                     }
                     observer.unobserve(lazyVideo);
                 }
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetElement = document.querySelector(targetId);
 
             if (targetElement) {
-                // Se o alvo for a seÃ§Ã£o de ofertas, tenta focar no Combo Elite
+                // Se o alvo for a seção de ofertas, tenta focar no Combo Elite
                 if (targetId === '#offer-focus' || targetId === '#offers') {
                     const comboCard = document.querySelector('.price-card.featured');
                     if (comboCard) {
@@ -130,16 +130,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 4. Testimonials (Infinite Carousel) ---
     // UPDATED: More impactful testimonials & +1600 students proof
     const testimonials = [
-        { text: 'Meu galo tava com o olho fechado e a cara inchada. Vi o vÃ­deo no insta e resolvi comprar, no mesmo dia jÃ¡ melhorou bastante.', author: 'Carlos Silva', location: 'Minas Gerais', stars: 5, avatar: 'carrosel/carlos.png' },
-        { text: 'Tava perdendo pintinho toda semana, nÃ£o sabia o que fazer. Apliquei o protocolo e hoje nÃ£o morre mais nenhum.', author: 'Maria Santos', location: 'SÃ£o Paulo', stars: 5, avatar: 'carrosel/maria.PNG' },
-        { text: 'Tinha uma galinha que nÃ£o comia, sÃ³ ficava no canto. Segui o passo a passo e em 2 dias ela voltou ao normal.', author: 'JoÃ£o Oliveira', location: 'Bahia', stars: 5, avatar: 'carrosel/joao_new.jpg' },
-        { text: 'Meu galo tava morrendo de coriza, olho espumando e cheirando mal. Fiz o tratamento e salvei ele.', author: 'Ana Costa', location: 'GoiÃ¡s', stars: 5, avatar: 'carrosel/ana.png' },
-        { text: 'Gastava uma fortuna em remÃ©dio e as galinhas continuavam morrendo. Descobri que tava errando no bÃ¡sico.', author: 'Ricardo Lima', location: 'ParanÃ¡', stars: 5, avatar: 'carrosel/ricardo.jpeg' },
+        { text: 'Meu galo tava com o olho fechado e a cara inchada. Vi o vídeo no insta e resolvi comprar, no mesmo dia já melhorou bastante.', author: 'Carlos Silva', location: 'Minas Gerais', stars: 5, avatar: 'carrosel/carlos.png' },
+        { text: 'Tava perdendo pintinho toda semana, não sabia o que fazer. Apliquei o protocolo e hoje não morre mais nenhum.', author: 'Maria Santos', location: 'São Paulo', stars: 5, avatar: 'carrosel/maria.PNG' },
+        { text: 'Tinha uma galinha que não comia, só ficava no canto. Segui o passo a passo e em 2 dias ela voltou ao normal.', author: 'João Oliveira', location: 'Bahia', stars: 5, avatar: 'carrosel/joao_new.jpg' },
+        { text: 'Meu galo tava morrendo de coriza, olho espumando e cheirando mal. Fiz o tratamento e salvei ele.', author: 'Ana Costa', location: 'Goiás', stars: 5, avatar: 'carrosel/ana.png' },
+        { text: 'Gastava uma fortuna em remédio e as galinhas continuavam morrendo. Descobri que tava errando no básico.', author: 'Ricardo Lima', location: 'Paraná', stars: 5, avatar: 'carrosel/ricardo.jpeg' },
         { text: 'Pintinhos nasciam e morriam com 3 dias. Apliquei o manejo de elite e agora todos sobrevivem.', author: 'Pedro Almeida', location: 'Bahia', stars: 5, avatar: 'carrosel/pedro.png' },
-        { text: 'Meus frangos eram raquÃ­ticos, magros demais. Arrumei a raÃ§Ã£o conforme o ebook e explodiram de tamanho.', author: 'Camila Rocha', location: 'Espirito Santo', stars: 5, avatar: 'carrosel/camila.jpeg' },
-        { text: 'Galinha parou de botar e tava com a crista caÃ­da. Segui o protocolo e voltou a produzir normal.', author: 'Lucas Ferreira', location: 'Mato Grosso', stars: 5, avatar: 'carrosel/lucas.jpeg' },
-        { text: 'Tinha galo com a perna torta, achei que ia morrer. O tratamento salvou e hoje ele tÃ¡ perfeito.', author: 'Isabella Lima', location: 'Santa Catarina', stars: 5, avatar: 'carrosel/isabella.jpeg' },
-        { text: 'Perdi 15 aves em um mÃªs antes de comprar. Depois que aprendi o manejo certo, zerou a mortalidade.', author: 'Juliana Freitas', location: 'GoiÃ¡s', stars: 5, avatar: 'carrosel/juliana.jpeg' }
+        { text: 'Meus frangos eram raquíticos, magros demais. Arrumei a ração conforme o ebook e explodiram de tamanho.', author: 'Camila Rocha', location: 'Espirito Santo', stars: 5, avatar: 'carrosel/camila.jpeg' },
+        { text: 'Galinha parou de botar e tava com a crista caída. Segui o protocolo e voltou a produzir normal.', author: 'Lucas Ferreira', location: 'Mato Grosso', stars: 5, avatar: 'carrosel/lucas.jpeg' },
+        { text: 'Tinha galo com a perna torta, achei que ia morrer. O tratamento salvou e hoje ele tá perfeito.', author: 'Isabella Lima', location: 'Santa Catarina', stars: 5, avatar: 'carrosel/isabella.jpeg' },
+        { text: 'Perdi 15 aves em um mês antes de comprar. Depois que aprendi o manejo certo, zerou a mortalidade.', author: 'Juliana Freitas', location: 'Goiás', stars: 5, avatar: 'carrosel/juliana.jpeg' }
     ];
 
     const testimonialsTrack = document.getElementById('testimonials-track');
@@ -327,7 +327,7 @@ async function openCheckout(productId, forceBumps = []) {
         const productData = await response.json();
 
         cart.mainProduct = { ...productData, id: productId };
-        cart.bumps = forceBumps || []; // Adiciona os bumps forÃ§ados pelo funil (ex: Upsell)
+        cart.bumps = forceBumps || []; // Adiciona os bumps forçados pelo funil (ex: Upsell)
 
         document.getElementById('checkout-product-name').innerText = productData.title;
         document.getElementById('checkout-product-price-display').innerText = formatBRL(productData.price);
@@ -338,21 +338,21 @@ async function openCheckout(productId, forceBumps = []) {
                 iconContainer.innerHTML = `
                     <div style="display: flex; gap: 5px; align-items: center;">
                         <img src="capadospintinhos.png" alt="Manejo" style="width: 30px; height: 40px; object-fit: cover; border-radius: 4px;">
-                        <img src="capadasdoencas.png" alt="DoenÃ§as" style="width: 30px; height: 40px; object-fit: cover; border-radius: 4px;">
+                        <img src="capadasdoencas.png" alt="Doenças" style="width: 30px; height: 40px; object-fit: cover; border-radius: 4px;">
                     </div>`;
             } else {
                 iconContainer.innerHTML = `<img src="${productData.cover}" style="width: 50px; height: 65px; object-fit: cover; border-radius: 6px;">`;
             }
         }
 
-        // Define Pix como padrÃ£o E aplica a filtragem correta desde o inÃ­cio
+        // Define Pix como padrão E aplica a filtragem correta desde o início
         currentPaymentMethod = 'pix';
         switchMethod('pix'); // Garante UI state
 
         renderOrderBumps(productData.fullBumps);
         updateTotal();
 
-        // --- Guided Animation Sequence - VERSÃƒO SINCRONIZADA ---
+        // --- Guided Animation Sequence - VERSÃO SINCRONIZADA ---
         setTimeout(() => {
             if (secureOverlay) secureOverlay.classList.remove('active');
 
@@ -361,15 +361,15 @@ async function openCheckout(productId, forceBumps = []) {
                 // 1. Logo aparece deslizando da direita
                 logoOverlay.classList.add('active');
 
-                // 2. ApÃ³s 1.2s (tempo para ver a logo), ela comeÃ§a a se mover para o fundo
+                // 2. Após 1.2s (tempo para ver a logo), ela começa a se mover para o fundo
                 setTimeout(() => {
                     logoOverlay.classList.add('run-left');
 
                     // 3. Checkout aparece ao mesmo tempo que a logo vai para o fundo
                     setTimeout(() => {
                         checkoutModal.classList.add('active');
-                        // NÃƒO remove as classes - mantÃ©m a logo no fundo!
-                        // logoOverlay permanece com 'active' e 'run-left' para ficar visÃ­vel
+                        // NÃO remove as classes - mantém a logo no fundo!
+                        // logoOverlay permanece com 'active' e 'run-left' para ficar visível
                     }, 200); // Pequeno delay para suavizar
 
                 }, 1200); // Tempo para ver a logo antes de ir para o fundo (aumentado de 100ms)
@@ -380,7 +380,7 @@ async function openCheckout(productId, forceBumps = []) {
 
     } catch (err) {
         console.error("Error opening checkout:", err);
-        alert("Erro ao carregar checkout. Verifique sua conexÃ£o.");
+        alert("Erro ao carregar checkout. Verifique sua conexão.");
         if (secureOverlay) secureOverlay.classList.remove('active');
         document.body.style.overflow = '';
         document.documentElement.style.overflow = '';
@@ -391,7 +391,7 @@ function renderOrderBumps(bumps) {
     const area = document.getElementById('order-bump-area');
     if (!area) return;
 
-    // Filtra bumps que nÃ£o devem aparecer (Ex: Tabela no Pix)
+    // Filtra bumps que não devem aparecer (Ex: Tabela no Pix)
     const filteredBumps = (bumps || []).filter(bump => {
         if (currentPaymentMethod === 'pix' && bump.id === 'bump-6361') return false;
         return true;
@@ -411,7 +411,7 @@ function renderOrderBumps(bumps) {
                     <input type="checkbox" class="order-bump-checkbox" id="bump-chk-${bump.id}" ${cart.bumps.includes(bump.id) ? 'checked' : ''}>
                     ${imgSrc ? `<img src="${imgSrc}" style="width: 45px; height: 45px; border-radius: 8px; object-fit: cover;">` : ''}
                     <div class="order-bump-content">
-                        <span class="order-bump-tag">${bump.tag || 'OFERTA ÃšNICA'}</span>
+                        <span class="order-bump-tag">${bump.tag || 'OFERTA ÚNICA'}</span>
                         <strong class="order-bump-title" style="display: block; color: #fff;">${bump.title}</strong>
                         <span class="order-bump-description" style="display: block; color: rgba(255,255,255,0.5); font-size: 0.8rem;">${bump.description}</span>
                         <span class="order-bump-price" style="color: var(--color-secondary); font-weight: 800;">+ ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}</span>
@@ -438,7 +438,7 @@ function updateTotal() {
     let total = basePrice;
     let cardTotal = cardPrice;
 
-    // Adiciona Bumps com preços dinâmicos do banco de dados
+    // Adiciona Bumps com preços Dinâmicos do banco de dados
     cart.bumps.forEach(id => {
         // Busca o bump no array fullBumps do produto
         let bump = cart.mainProduct.fullBumps?.find(b => b.id === id);
@@ -451,23 +451,23 @@ function updateTotal() {
         console.log('ðŸ” DEBUG updateTotal - Bump ID:', id, 'Encontrado:', bump);
 
         if (bump) {
-            // Usa o preÃ§o do banco de dados
+            // Usa o preço do banco de dados
             const bumpPriceForPix = bump.price || 0;
             const bumpPriceForCard = bump.priceCard || bump.price || 0;
 
-            console.log('ðŸ’° PreÃ§os do bump:', { pix: bumpPriceForPix, card: bumpPriceForCard });
+            console.log('ðŸ’° Preços do bump:', { pix: bumpPriceForPix, card: bumpPriceForCard });
 
-            // Regra especial: Tabela grÃ¡tis no PIX
+            // Regra especial: Tabela grátis no PIX
             if (id === 'bump-6361') {
-                total += 0; // GrÃ¡tis no PIX
+                total += 0; // Grátis no PIX
                 cardTotal += bumpPriceForCard;
             } else {
-                // Outros bumps: usa o preÃ§o do banco
+                // Outros bumps: usa o preço do banco
                 total += bumpPriceForPix;
                 cardTotal += bumpPriceForCard;
             }
         } else {
-            console.error('âŒ Bump nÃ£o encontrado em fullBumps:', id);
+            console.error('âŒ Bump não encontrado em fullBumps:', id);
         }
     });
 
@@ -475,11 +475,11 @@ function updateTotal() {
 
     const finalDisplayPrice = currentPaymentMethod === 'pix' ? total : cardTotal;
 
-    // Mostrar BÃ´nus Pix de forma clara
+    // Mostrar Bônus Pix de forma clara
     const bonusDisplay = document.getElementById('pix-bonus-status');
     if (bonusDisplay) {
         if (currentPaymentMethod === 'pix') {
-            bonusDisplay.innerHTML = '<span style="color: #32bcad; font-weight: 800;"><i class="fa-solid fa-gift"></i> TABELA DE RAÃ‡ÃƒO INCLUÃDA (BÃ”NUS)</span>';
+            bonusDisplay.innerHTML = '<span style="color: #32bcad; font-weight: 800;"><i class="fa-solid fa-gift"></i> TABELA DE RAÇÃO INCLUÍDA (BÔNUS)</span>';
             bonusDisplay.style.display = 'block';
         } else {
             bonusDisplay.style.display = 'none';
@@ -493,7 +493,7 @@ function updateTotal() {
             const badge = document.createElement('span');
             badge.className = 'pix-discount-badge';
             badge.style.cssText = 'font-size: 0.75rem; color: #32bcad; background: rgba(50, 188, 173, 0.1); padding: 2px 6px; border-radius: 4px; margin-left: 8px; font-weight: 700; border: 1px solid rgba(50, 188, 173, 0.2);';
-            badge.innerText = 'TABELA GRÃTIS';
+            badge.innerText = 'TABELA GRÁTIS';
             el.appendChild(badge);
         }
     });
@@ -512,12 +512,12 @@ function updateInstallments(total) {
 
     selector.innerHTML = '';
 
-    // De 1x atÃ© 4x (Regra: AtÃ¡ 4x de 34,97 sem juros baseados no 139,90)
+    // De 1x até 4x (Regra: Até 4x de 34,97 sem juros baseados no 139,90)
     for (let i = 1; i <= 4; i++) {
         const val = total / i;
         const opt = document.createElement('option');
         opt.value = i;
-        opt.innerText = `${i}x de ${formatBRL(val)} ${i > 1 ? 'sem juros' : '(Ã€ vista)'}`;
+        opt.innerText = `${i}x de ${formatBRL(val)} ${i > 1 ? 'sem juros' : '(À vista)'}`;
         opt.style.background = "#151515";
         opt.style.color = "#fff";
         selector.appendChild(opt);
@@ -532,7 +532,7 @@ async function renderHomeProducts() {
     const container = document.getElementById('home-products-container');
     if (!container) return;
 
-    showSkeletons(container, 1); // Apenas 1 skeleton para foco Ãºnico
+    showSkeletons(container, 1); // Apenas 1 skeleton para foco único
 
     try {
         const res = await fetch(`${API_URL}/api/config?t=${Date.now()}`);
@@ -542,12 +542,12 @@ async function renderHomeProducts() {
         const products = db.products;
         container.innerHTML = '';
 
-        // Foco apenas no produto principal (DoenÃ§as) conforme planejado
+        // Foco apenas no produto principal (Doenças) conforme planejado
         const mainId = 'ebook-doencas';
         const p = products[mainId];
 
         if (!p) {
-            container.innerHTML = `<p style="color: #fff; text-align: center;">Produto principal nÃ£o encontrado.</p>`;
+            container.innerHTML = `<p style="color: #fff; text-align: center;">Produto principal não encontrado.</p>`;
             return;
         }
 
@@ -555,13 +555,13 @@ async function renderHomeProducts() {
         card.className = `price-card featured`;
         card.id = 'offer-focus';
 
-        const featuresHTML = (p.features || []).map(f => `<li><span class="check-icon">âœ“</span> ${f}</li>`).join('');
+        const featuresHTML = (p.features || []).map(f => `<li><span class="check-icon">✓</span> ${f}</li>`).join('');
 
         const coverHTML = `<img src="${p.cover}" alt="${p.title}" style="max-width: 140px; margin: 10px auto; display: block; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));">`;
         const isDiscounted = p.originalPrice && (p.originalPrice > p.price);
 
         card.innerHTML = `
-            <span class="badge-featured">${p.badge || 'OFERTA ÃšNICA'}</span>
+            <span class="badge-featured">${p.badge || 'OFERTA ÚNICA'}</span>
             <h3 class="price-title">${p.title}</h3>
             <p>${p.description || ''}</p>
             ${coverHTML}
@@ -572,13 +572,13 @@ async function renderHomeProducts() {
                     <span class="price-amount" style="color: var(--color-secondary); font-size: 3.5rem;">
                         R$ 119<small>,90</small>
                     </span>
-                    <span style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 5px;">ou atÃ© 4x de <strong>R$ 34,97</strong> s/ juros</span>
+                    <span style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 5px;">ou até 4x de <strong>R$ 34,97</strong> s/ juros</span>
                 </div>
             </div>
 
             <ul class="price-features" style="margin-top: 1rem;">
                 ${featuresHTML}
-                <li style="color: #32bcad; font-weight: 800;"><span class="check-icon">âœ“</span> + TABELA DE RAÃ‡ÃƒO (GRÃTIS NO PIX)</li>
+                <li style="color: #32bcad; font-weight: 800;"><span class="check-icon">✓</span> + TABELA DE RAÇÃO (GRÁTIS NO PIX)</li>
             </ul>
             
             <button onclick="openCheckout('${mainId}')" class="btn btn-primary btn-pulse" style="width:100%; font-size: 1.3rem; padding: 1.5rem;">
@@ -588,8 +588,8 @@ async function renderHomeProducts() {
         `;
         container.appendChild(card);
     } catch (e) {
-        console.error("ERRO CARGA OFERTA ÃšNICA:", e);
-        container.innerHTML = `<p style="color: #fff; text-align: center; padding: 20px;">NÃ£o foi possÃ­vel carregar a oferta principal.</p>`;
+        console.error("ERRO CARGA OFERTA ÚNICA:", e);
+        container.innerHTML = `<p style="color: #fff; text-align: center; padding: 20px;">Não foi possível carregar a oferta principal.</p>`;
     }
 }
 
@@ -644,7 +644,7 @@ function showSlideInUpsell(method) {
                 <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.8rem; color: #e74c3c;"></i>
                 <h3 style="margin-top: 10px; font-size: 1.1rem; color: #fff; text-transform: uppercase;">
                     OFERTA EXCLUSIVA APENAS AGORA<br>
-                    <span style="font-size: 0.9rem; color: #aaa; font-weight: 400;">VOCÃŠ NÃƒO VAI VER ISSO DE NOVO</span>
+                    <span style="font-size: 0.9rem; color: #aaa; font-weight: 400;">VOCÊ NÃO VAI VER ISSO DE NOVO</span>
                 </h3>
             </div>
 
@@ -656,15 +656,15 @@ function showSlideInUpsell(method) {
             <div class="order-bump-body" style="text-align: center;">
                 <p style="color: #fff; font-size: 0.95rem; margin-bottom: 1rem; line-height: 1.4;">
                     <strong>8 de cada 10 pintinhos</strong> morrem nos primeiros 30 dias por erros de manejo.
-                    NÃ£o jogue seu dinheiro fora!
+                    Não jogue seu dinheiro fora!
                 </p>
                 
                 <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 1rem; text-align: left;">
                     <img src="capadospintinhos.png" style="width: 90px; border-radius: 8px; border: 2px solid #fbbf24; flex-shrink: 0;">
                     <ul style="color: #fff; font-size: 0.8rem; padding: 0; margin: 0; list-style: none; line-height: 1.3;">
                         <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Diminuir taxa de mortalidade</li>
-                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Ambiente adequado p/ evitar doenÃ§as</li>
-                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> AlimentaÃ§Ã£o para crescimento rÃ¡pido</li>
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Ambiente adequado p/ evitar doenças</li>
+                        <li style="margin-bottom: 4px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Alimentação para crescimento rápido</li>
                         <li><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Aumente seu lucro com o Ebook</li>
                     </ul>
                 </div>
@@ -681,7 +681,7 @@ function showSlideInUpsell(method) {
                     SIM! PROTEGER MEUS PINTINHOS
                 </button>
                 <button class="btn-decline-bump" onclick="declineUpsell('${method}')" style="background: none; border: none; color: #888; text-decoration: underline; margin-top: 10px; cursor: pointer; display: block; width: 100%;">
-                    NÃ£o, prefiro arriscar a vida deles.
+                    Não, prefiro arriscar a vida deles.
                 </button>
             </div>
         </div>
@@ -708,7 +708,7 @@ function declineUpsell(method) {
 
 function acceptUpsell() {
     closeFunnelModal();
-    // Adiciona Pintinhos como Bump e abre checkout de DoenÃ§as
+    // Adiciona Pintinhos como Bump e abre checkout de Doenças
     funnelState.upsellAccepted = true;
     openCheckout(funnelState.mainId, ['ebook-manejo']);
 }
@@ -762,11 +762,11 @@ function switchMethod(method) {
         if (pixIdentity) { pixIdentity.style.display = 'block'; }
         if (cardArea) { cardArea.style.opacity = '0'; setTimeout(() => cardArea.style.display = 'none', 300); }
 
-        // CORREÃ‡ÃƒO: Placeholder do CPF para PIX
+        // CORREÇÃO: Placeholder do CPF para PIX
         const cpfInput = document.getElementById('payer-cpf');
         if (cpfInput) cpfInput.placeholder = 'Seu CPF';
 
-        // ADICIONA TABELA DE RAÃ‡ÃƒO AUTOMATICAMENTE NO PIX (GRÃTIS)
+        // ADICIONA TABELA DE RAÇÃO AUTOMATICAMENTE NO PIX (GRÁTIS)
         if (!cart.bumps.includes('bump-6361')) {
             cart.bumps.push('bump-6361');
         }
@@ -776,11 +776,11 @@ function switchMethod(method) {
         if (pixIdentity) { pixIdentity.style.display = 'none'; }
         if (pixArea) { pixArea.style.opacity = '0'; setTimeout(() => pixArea.style.display = 'none', 300); }
 
-        // CORREÃ‡ÃƒO: Placeholder do CPF para CartÃ£o
+        // CORREÇÃO: Placeholder do CPF para Cartão
         const cpfInput = document.getElementById('payer-cpf');
-        if (cpfInput) cpfInput.placeholder = 'CPF do Titular do CartÃ£o';
+        if (cpfInput) cpfInput.placeholder = 'CPF do Titular do Cartão';
 
-        // REMOVE TABELA DE RAÃ‡ÃƒO NO CARTÃƒO (nÃ£o Ã© grÃ¡tis)
+        // REMOVE TABELA DE RAÇÃO NO CARTÃO (não é grátis)
         const tabelaIndex = cart.bumps.indexOf('bump-6361');
         if (tabelaIndex > -1) {
             cart.bumps.splice(tabelaIndex, 1);
@@ -798,7 +798,7 @@ function switchMethod(method) {
 let midCheckoutUpsellPending = true;
 
 async function handlePayment(method) {
-    // InterceptaÃ§Ã£o para Upsell Mid-Checkout (Slide-in)
+    // Interceptação para Upsell Mid-Checkout (Slide-in)
     if (midCheckoutUpsellPending && !cart.bumps.includes('ebook-manejo')) {
         showSlideInUpsell(method);
         return;
@@ -859,10 +859,10 @@ async function handlePayment(method) {
 
             // Aplica preços específicos baseados no método de pagamento
             if (id === 'bump-6361') {
-                // Tabela de RaÃ§Ã£o: GrÃ¡tis no PIX, preÃ§o do banco no CartÃ£o
+                // Tabela de Ração: Grátis no PIX, preço do banco no Cartão
                 bumpPrice = method === 'pix' ? 0 : (b.priceCard || b.price);
             } else if (method === 'card' && b.priceCard) {
-                // Se tiver preÃ§o especÃ­fico para cartÃ£o, usa ele
+                // Se tiver preços específicos para cartão, usa ele
                 bumpPrice = b.priceCard;
             }
 
@@ -899,7 +899,7 @@ async function handlePayment(method) {
                 if (btn.innerText === 'Gerando Pix...') {
                     btn.disabled = false;
                     btn.innerText = 'Tentar Novamente';
-                    alert('O servidor estÃ¡ demorando para responder. Tente clicar novamente ou verifique se sua internet estÃ¡ estÃ¡vel.');
+                    alert('O servidor está demorando para responder. Tente clicar novamente ou verifique se sua internet está estável.');
                 }
             }, 15000);
 
@@ -951,10 +951,10 @@ async function handlePayment(method) {
         try {
             // CRITICAL FIX: Ensure CPF is clean and valid (exactly 11 digits)
             const cleanCPF = customer.cpf.replace(/\D/g, '');
-            console.log("Processando CartÃ£o - CPF Limpo:", cleanCPF);
+            console.log("Processando Cartão - CPF Limpo:", cleanCPF);
 
             if (cleanCPF.length !== 11) {
-                alert('CPF invÃ¡lido. Por favor, verifique o CPF digitado (deve ter 11 dÃ­gitos).');
+                alert('CPF inválido. Por favor, verifique o CPF digitado (deve ter 11 dígitos).');
                 btn.disabled = false;
                 btn.innerText = originalText;
                 return;
@@ -976,7 +976,7 @@ async function handlePayment(method) {
 
             if (!token || !token.id) {
                 console.error("Erro Token MP:", token);
-                throw new Error("NÃ£o foi possÃ­vel validar o cartÃ£o. Verifique os dados.");
+                throw new Error("Não foi possível validar o cartão. Verifique os dados.");
             }
 
             // Show Processing View (Reusing the pulsing logo UI)
@@ -1016,8 +1016,8 @@ async function handlePayment(method) {
                 const totalVal = document.querySelector('.checkout-total-display').innerText.replace(/[^\d,]/g, '').replace(',', '.');
                 window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
             } else if (result.status === 'in_process' || result.status === 'pending') {
-                // NOVO: Pagamento em anÃ¡lise - tratar como sucesso parcial
-                alert('âœ… Seu pagamento estÃ¡ sendo processado!\n\nVocÃª receberÃ¡ a confirmaÃ§Ã£o por e-mail em atÃ© 2 dias Ãºteis.\n\nSe precisar de ajuda, entre em contato pelo WhatsApp.');
+                // NOVO: Pagamento em análise - tratar como sucesso parcial
+                alert('âœ… Seu pagamento está sendo processado!\n\nVocê receberá a confirmação por e-mail em até 2 dias úteis.\n\nSe precisar de ajuda, entre em contato pelo WhatsApp.');
                 checkoutModal.classList.remove('active');
                 document.body.style.overflow = '';
                 document.documentElement.style.overflow = '';
@@ -1033,29 +1033,29 @@ async function handlePayment(method) {
 
                 // Mensagens simplificadas para o cliente
                 const map = {
-                    'cc_rejected_bad_filled_other': 'CPF invÃ¡lido. Verifique os dados e tente novamente.',
-                    'cc_rejected_bad_filled_card_number': 'NÃºmero do cartÃ£o invÃ¡lido.',
+                    'cc_rejected_bad_filled_other': 'CPF inválido. Verifique os dados e tente novamente.',
+                    'cc_rejected_bad_filled_card_number': 'Número do cartão inválido.',
                     'cc_rejected_bad_filled_date': 'Data de validade incorreta.',
-                    'cc_rejected_bad_filled_security_code': 'CÃ³digo CVV incorreto.',
-                    'cc_rejected_insufficient_amount': 'Saldo insuficiente no cartÃ£o.',
-                    'cc_rejected_high_risk': 'CartÃ£o recusado por seguranÃ§a. Tente outro cartÃ£o ou pague via PIX.',
-                    'cc_rejected_other_reason': 'CartÃ£o recusado pelo banco. Tente outro cartÃ£o.',
+                    'cc_rejected_bad_filled_security_code': 'Código CVV incorreto.',
+                    'cc_rejected_insufficient_amount': 'Saldo insuficiente no cartão.',
+                    'cc_rejected_high_risk': 'Cartão recusado por segurança. Tente outro cartão ou pague via PIX.',
+                    'cc_rejected_other_reason': 'Cartão recusado pelo banco. Tente outro cartão.',
                     'cc_rejected_call_for_authorize': 'Seu banco precisa autorizar. Ligue para o banco e tente novamente.',
-                    'cc_rejected_card_disabled': 'CartÃ£o bloqueado. Entre em contato com seu banco.',
+                    'cc_rejected_card_disabled': 'Cartão bloqueado. Entre em contato com seu banco.',
                     'cc_rejected_duplicated_payment': 'Pagamento duplicado. Verifique seu e-mail.',
                     'cc_rejected_max_attempts': 'Muitas tentativas. Aguarde alguns minutos.',
-                    'cc_rejected_blacklist': 'CartÃ£o nÃ£o autorizado. Tente outro cartÃ£o.',
-                    'cc_rejected_invalid_installments': 'Parcelas invÃ¡lidas. Escolha outra opÃ§Ã£o.',
-                    'pending_review_manual': 'Pagamento em anÃ¡lise. Aguarde confirmaÃ§Ã£o por e-mail.',
-                    'pending_contingency': 'Processando. Aguarde a confirmaÃ§Ã£o.',
-                    'rejected': 'Pagamento recusado. Tente outro cartÃ£o ou PIX.'
+                    'cc_rejected_blacklist': 'Cartão não autorizado. Tente outro cartão.',
+                    'cc_rejected_invalid_installments': 'Parcelas inválidas. Escolha outra opção.',
+                    'pending_review_manual': 'Pagamento em análise. Aguarde confirmação por e-mail.',
+                    'pending_contingency': 'Processando. Aguarde a confirmação.',
+                    'rejected': 'Pagamento recusado. Tente outro cartão ou PIX.'
                 };
 
                 if (result.status_detail && map[result.status_detail]) {
-                    alert(map[result.status_detail] + '\n\nðŸ’¡ Dica: O PIX tem aprovaÃ§Ã£o instantÃ¢nea!');
+                    alert(map[result.status_detail] + '\n\nðŸ’¡ Dica: O PIX tem aprovação instantÃ¢nea!');
                 } else {
                     console.error("Erro detalhado:", result);
-                    alert(`Pagamento nÃ£o autorizado.\n\nDetalhe: ${msg}\n\nTente usar outro cartÃ£o ou PIX.`);
+                    alert(`Pagamento não autorizado.\n\nDetalhe: ${msg}\n\nTente usar outro cartão ou PIX.`);
                 }
 
                 // Return to form if failed
@@ -1069,7 +1069,7 @@ async function handlePayment(method) {
                 btn.innerText = originalText;
             }
         } catch (e) {
-            console.error("ERRO CRÃTICO CARTÃƒO:", e);
+            console.error("ERRO CRÃTICO CARTÃO:", e);
             let errDisplay = 'Erro desconhecido';
 
             if (e && e.message) errDisplay = e.message;
@@ -1077,8 +1077,8 @@ async function handlePayment(method) {
             else if (typeof e === 'string') errDisplay = e;
             else if (typeof e === 'object') errDisplay = JSON.stringify(e);
 
-            trackEvent('checkout_error', null, null, `Erro CartÃ£o (JS): ${errDisplay}`);
-            alert('Houve um erro ao processar seu cartÃ£o.\n\nDetalhe tÃ©cnico: ' + errDisplay + '\n\nTente novamente ou use o PIX.');
+            trackEvent('checkout_error', null, null, `Erro Cartão (JS): ${errDisplay}`);
+            alert('Houve um erro ao processar seu cartão.\n\nDetalhe técnico: ' + errDisplay + '\n\nTente novamente ou use o PIX.');
 
             document.getElementById('checkout-main-view').classList.remove('hidden');
             document.getElementById('pix-result').classList.add('hidden');
@@ -1126,7 +1126,7 @@ document.querySelector('.close-modal')?.addEventListener('click', () => {
     const btnCard = document.getElementById('btn-pay-card');
     if (btnCard) {
         btnCard.disabled = false;
-        btnCard.innerText = 'PAGAR COM CARTÃƒO';
+        btnCard.innerText = 'PAGAR COM CARTÃO';
     }
 
     // Reset State logic for next open
@@ -1237,7 +1237,7 @@ function showPixResult(data, items) {
                         <i class="fa-solid fa-check"></i>
                     </div>
                     <div class="toast-content">
-                        <h4>CÃ³digo PIX Copiado!</h4>
+                        <h4>Código PIX Copiado!</h4>
                         <p>Cole no app do seu banco para pagar.</p>
                     </div>
                 `;
@@ -1261,7 +1261,7 @@ function showPixResult(data, items) {
                     <i class="fa-solid fa-check"></i>
                 </div>
                 <div class="toast-content">
-                    <h4>CÃ³digo PIX Copiado!</h4>
+                    <h4>Código PIX Copiado!</h4>
                     <p>Cole no app do seu banco para pagar.</p>
                 </div>
             `;
@@ -1310,13 +1310,13 @@ function showPixResult(data, items) {
 
 // --- 5. FLOATING TOASTS LOGIC ---
 const toastData = [
-    { name: 'Ricardo S.', city: 'PR', text: 'Comprei e nÃ£o me arrependo, conteÃºdo excelente!', avatar: 'carrosel/ricardo.jpeg' },
+    { name: 'Ricardo S.', city: 'PR', text: 'Comprei e não me arrependo, conteúdo excelente!', avatar: 'carrosel/ricardo.jpeg' },
     { name: 'Ana Costa', city: 'GO', text: 'Meus pintinhos pararam de morrer.', avatar: 'carrosel/ana.png' },
-    { name: 'JoÃ£o O.', city: 'BA', text: 'O suporte foi muito atencioso.', avatar: 'carrosel/joao_new.jpg' },
+    { name: 'João O.', city: 'BA', text: 'O suporte foi muito atencioso.', avatar: 'carrosel/joao_new.jpg' },
     { name: 'Carlos M.', city: 'MG', text: 'Material super completo, valeu a pena.', avatar: 'carrosel/carlos.png' },
     { name: 'Fernanda L.', city: 'SP', text: 'Recuperei meu galo favorito com o guia!', avatar: 'carrosel/fernanda.png' },
-    { name: 'Roberto J.', city: 'RS', text: 'Entrega imediata, jÃ¡ estou estudando.', avatar: 'https://ui-avatars.com/api/?name=Roberto+J&background=random' },
-    { name: 'Maria S.', city: 'SC', text: 'Muito bem explicado, parabÃ©ns.', avatar: 'carrosel/maria.PNG' }
+    { name: 'Roberto J.', city: 'RS', text: 'Entrega imediata, já estou estudando.', avatar: 'https://ui-avatars.com/api/?name=Roberto+J&background=random' },
+    { name: 'Maria S.', city: 'SC', text: 'Muito bem explicado, parabéns.', avatar: 'carrosel/maria.PNG' }
 ];
 
 let toastInterval = null;
@@ -1400,7 +1400,7 @@ function validateCheckoutInputs(method) {
         if (cpf.classList.contains('is-invalid')) invalidFields.push('cpf');
         if (cep && cep.classList.contains('is-invalid')) invalidFields.push('cep');
 
-        trackEvent('ui_error', null, null, `Erro ValidaÃ§Ã£o Frontend: ${invalidFields.join(', ')}`);
+        trackEvent('ui_error', null, null, `Erro Validação Frontend: ${invalidFields.join(', ')}`);
 
         fields.forEach(el => validateField(el, null, true));
         const firstError = document.querySelector('.is-invalid');
@@ -1414,12 +1414,12 @@ function validateCheckoutInputs(method) {
 let helpTimer = null;
 const HELP_MESSAGES = {
     'payer-email': 'Insira seu melhor e-mail para receber o acesso.',
-    'payer-phone': 'Precisamos do seu WhatsApp para suporte tÃ©cnico.',
+    'payer-phone': 'Precisamos do seu WhatsApp para suporte técnico.',
     'payer-name': 'Digite seu nome completo conforme documento.',
-    'payer-cpf': 'O CPF Ã© necessÃ¡rio para emissÃ£o da sua nota fiscal.',
-    'card-holder': 'Nome exatamente como estÃ¡ escrito no seu cartÃ£o.',
-    'card-number': 'Digite os 16 nÃºmeros da frente do seu cartÃ£o.',
-    'card-cep': 'CEP da sua residÃªncia para validaÃ§Ã£o de seguranÃ§a.'
+    'payer-cpf': 'O CPF é necessário para emissão da sua nota fiscal.',
+    'card-holder': 'Nome exatamente como está escrito no seu cartão.',
+    'card-number': 'Digite os 16 números da frente do seu cartão.',
+    'card-cep': 'CEP da sua residência para validação de segurança.'
 };
 
 function initHelpBubbles() {
@@ -1429,7 +1429,7 @@ function initHelpBubbles() {
         input.addEventListener('focus', () => {
             clearTimeout(helpTimer);
             if (!input.value) {
-                // DiminuÃ­do para 3 segundos conforme solicitado
+                // Diminuído para 3 segundos conforme solicitado
                 helpTimer = setTimeout(() => showHelpBubble(input), 3000);
             }
         });
@@ -1616,7 +1616,7 @@ function validateCheckoutInputs(method) {
                     <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
                 <div class="toast-content">
-                    <strong>Ops! Quase lÃ¡...</strong>
+                    <strong>Ops! Quase lá...</strong>
                     <p>Por favor, preencha corretamente todos os campos destacados em vermelho.</p>
                 </div>
             `;
