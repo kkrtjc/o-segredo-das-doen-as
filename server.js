@@ -1051,6 +1051,30 @@ app.get('/api/access/:token', (req, res) => {
     }
 });
 
+// --- 5. ADMIN CONFIG API (CRÍTICO) ---
+app.get('/api/config', (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    res.json(getDB());
+});
+
+app.post('/api/config/update', (req, res) => {
+    const { password, data } = req.body;
+    if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
+
+    if (!data || !data.products) return res.status(400).json({ error: 'Dados inválidos' });
+
+    console.log('💾 [ADMIN] Salvando novas configurações...');
+    saveDB(data);
+    res.json({ success: true });
+});
+
+app.post('/api/config/reset', (req, res) => {
+    const { password } = req.body;
+    if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
+    // Reset Logic Placeholder
+    res.json({ success: true });
+});
+
 const PORT = process.env.PORT || 10000;
 const HOST = '0.0.0.0';
 

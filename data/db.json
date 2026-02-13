@@ -31,20 +31,6 @@
             ],
             "cover": "capadospintinhos.png",
             "orderBumps": []
-        },
-        "combo-elite": {
-            "title": "Combo Protocolo Elite 360º",
-            "price": 129.9,
-            "originalPrice": 299.0,
-            "description": "Tudo Liberado",
-            "features": [
-                "Manejo de Pintinhos Elite",
-                "Doenças Avícolas Completo",
-                "Tabela de Ração Grátis (no PIX)",
-                "Suporte Especializado"
-            ],
-            "cover": "combo",
-            "orderBumps": []
         }
     },
     "orderBumps": {
