@@ -1,0 +1,32 @@
+// CORREÇÃO PARA O PROBLEMA DO UPSELL
+// Adicione estas linhas no script.js após a linha 444 (onde busca o bump)
+
+// ANTES (linha 444-446):
+// let bump = cart.mainProduct.fullBumps?.find(b => b.id === id);
+// 
+// console.log('🔍 DEBUG updateTotal - Bump ID:', id, 'Encontrado:', bump);
+
+// DEPOIS (substitua por):
+let bump = cart.mainProduct.fullBumps?.find(b => b.id === id);
+
+// FALLBACK: Se não encontrou em fullBumps, pode ser um produto (upsell)
+if (!bump && id.startsWith('ebook-')) {
+    bump = { id: id, price: 59.9, priceCard: 59.9 }; // ebook-manejo
+}
+
+console.log('🔍 DEBUG updateTotal - Bump ID:', id, 'Encontrado:', bump);
+
+// ========================================
+// MESMA CORREÇÃO NA FUNÇÃO handlePayment
+// Procure por volta da linha 834 e faça a mesma mudança:
+
+// ANTES:
+// const b = cart.mainProduct.fullBumps.find(x => x.id === id);
+
+// DEPOIS:
+let b = cart.mainProduct.fullBumps.find(x => x.id === id);
+
+// FALLBACK: Se não encontrou em fullBumps, pode ser um produto (upsell)
+if (!b && id.startsWith('ebook-')) {
+    b = { id: id, price: 59.9, priceCard: 59.9, title: 'Manual de Pintinhos' };
+}
