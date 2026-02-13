@@ -420,7 +420,10 @@ app.get('/api/products/:id', (req, res) => {
     const db = getDB();
     const product = db.products[req.params.id];
     if (!product) return res.status(404).json({ error: 'Produto não encontrado' });
-    const bumps = (product.orderBumps || []).map(id => db.orderBumps[id]).filter(k => k);
+
+    // CORREÇÃO: Busca em orderBumps E products (para permitir upsell de produtos como o ebook-manejo)
+    const bumps = (product.orderBumps || []).map(id => db.orderBumps[id] || db.products[id]).filter(k => k);
+
     res.json({ ...product, fullBumps: bumps });
 });
 
