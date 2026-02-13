@@ -432,13 +432,13 @@ function toggleBump(bumpId) {
 }
 
 function updateTotal() {
-    let basePrice = cart.mainProduct.price; // PreÃ§o PIX do produto principal
-    let cardPrice = cart.mainProduct.originalPrice || cart.mainProduct.price; // PreÃ§o CartÃ£o
+    let basePrice = cart.mainProduct.price; // Preço PIX do produto principal
+    let cardPrice = cart.mainProduct.originalPrice || cart.mainProduct.price; // Preço Cartão
 
     let total = basePrice;
     let cardTotal = cardPrice;
 
-    // Adiciona Bumps com preÃ§os dinÃ¢micos do banco de dados
+    // Adiciona Bumps com preços dinâmicos do banco de dados
     cart.bumps.forEach(id => {
         // Busca o bump no array fullBumps do produto
         let bump = cart.mainProduct.fullBumps?.find(b => b.id === id);
@@ -840,7 +840,7 @@ async function handlePayment(method) {
 
     const items = [{ id: cart.mainProduct.id, title: cart.mainProduct.title, price: mainPrice }];
 
-    // Adiciona bumps com preÃ§os corretos baseados no mÃ©todo de pagamento
+    // Adiciona bumps com preços corretos baseados no método de pagamento
     cart.bumps.forEach(id => {
         let b = cart.mainProduct.fullBumps?.find(x => x.id === id);
 
