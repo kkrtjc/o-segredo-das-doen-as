@@ -4417,7 +4417,7 @@ body {
     }
 }
 
-/* Premium Logo Animation */
+/* Premium Logo Animation - NOVA VERSÃO SINCRONIZADA */
 .checkout-logo-overlay {
     position: fixed;
     top: 0;
@@ -4428,16 +4428,23 @@ body {
     z-index: 9999;
     display: none;
     opacity: 1;
-    /* Inicia opaco */
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    transition: opacity 0.4s ease;
-    /* Transição de saída suave */
+    transition: all 0.6s ease;
+    pointer-events: none;
+    /* Não bloqueia cliques quando está no fundo */
 }
 
 .checkout-logo-overlay.active {
     display: flex;
+}
+
+/* Quando a logo está indo para o fundo, remove o background preto */
+.checkout-logo-overlay.run-left {
+    background: transparent;
+    opacity: 1;
+    /* Mantém visível */
 }
 
 .animate-logo-container {
@@ -4449,6 +4456,7 @@ body {
     transform: translateX(100vw);
     opacity: 0;
     will-change: transform, opacity;
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .animate-logo {
@@ -4456,17 +4464,30 @@ body {
     height: auto;
     position: relative;
     z-index: 1;
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* Animations Trigger */
 .checkout-logo-overlay.active .animate-logo-container {
     animation:
         logoSlideIn 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards,
-        logoPulse 1s ease-in-out 0.8s infinite alternate;
+        logoPulse 1s ease-in-out 0.8s 2 alternate;
+    /* Apenas 2 pulsos */
 }
 
+/* NOVA ANIMAÇÃO: Move para a posição da watermark ao invés de sair */
 .checkout-logo-overlay.run-left .animate-logo-container {
-    animation: logoRunLeft 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
+    /* Posiciona no mesmo lugar da watermark */
+    transform: translateX(0) translateY(0) scale(0.5);
+    opacity: 0.08;
+    /* Mesma opacidade da watermark */
+    animation: none;
+    /* Remove outras animações */
+}
+
+.checkout-logo-overlay.run-left .animate-logo {
+    width: 400px;
+    /* Tamanho similar à watermark */
 }
 
 @keyframes logoSlideIn {
@@ -4489,13 +4510,6 @@ body {
     to {
         transform: scale(1.05);
         filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.5));
-    }
-}
-
-@keyframes logoRunLeft {
-    to {
-        transform: translateX(-110vw);
-        opacity: 0;
     }
 }
 
@@ -5439,7 +5453,9 @@ img.checkout-logo-main {
     left: 100%;
     width: 100%;
     height: 100%;
-}/* Comparison Slider Navigation Arrows */
+}
+
+/* Comparison Slider Navigation Arrows */
 .comparison-nav-arrow {
     position: absolute;
     top: 50%;
@@ -5483,5 +5499,45 @@ img.checkout-logo-main {
 
     .comparison-nav-right {
         right: 10px;
+    }
+}
+
+/* MOBILE CHECKOUT FIX - Prevent background page from showing */
+body.modal-open {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Ensure modal overlay covers everything */
+[id*="modal"][style*="display: flex"],
+[id*="checkout"][style*="display: flex"] {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 99999 !important;
+    background: rgba(0, 0, 0, 0.95) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+/* Mobile specific fixes */
+@media (max-width: 768px) {
+
+    [id*="modal"][style*="display: flex"]>div,
+    [id*="checkout"][style*="display: flex"]>div {
+        max-height: none !important;
+        height: auto !important;
+        min-height: 100vh !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    /* Prevent viewport resize issues on keyboard open */
+    body.modal-open {
+        min-height: 100vh !important;
     }
 }

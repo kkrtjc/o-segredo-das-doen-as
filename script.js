@@ -352,24 +352,31 @@ async function openCheckout(productId, forceBumps = []) {
         renderOrderBumps(productData.fullBumps);
         updateTotal();
 
-        // --- Guided Animation Sequence ---
+        // --- Guided Animation Sequence - VERSÃO SINCRONIZADA ---
         setTimeout(() => {
             if (secureOverlay) secureOverlay.classList.remove('active');
 
             const logoOverlay = document.getElementById('checkout-logo-overlay');
             if (logoOverlay) {
+                // 1. Logo aparece deslizando da direita
                 logoOverlay.classList.add('active');
+
+                // 2. Após 1.2s (tempo para ver a logo), ela começa a se mover para o fundo
                 setTimeout(() => {
                     logoOverlay.classList.add('run-left');
-                    checkoutModal.classList.add('active');
+
+                    // 3. Checkout aparece ao mesmo tempo que a logo vai para o fundo
                     setTimeout(() => {
-                        logoOverlay.classList.remove('active', 'run-left');
-                    }, 800); // Logo transition time
-                }, 100); // INSTANT: Reduced from 800 to 100
+                        checkoutModal.classList.add('active');
+                        // NÃO remove as classes - mantém a logo no fundo!
+                        // logoOverlay permanece com 'active' e 'run-left' para ficar visível
+                    }, 200); // Pequeno delay para suavizar
+
+                }, 1200); // Tempo para ver a logo antes de ir para o fundo (aumentado de 100ms)
             } else {
                 checkoutModal.classList.add('active');
             }
-        }, 800); // Time for the Secure Lock to stay visible (Reduced from 1500)
+        }, 800); // Time for the Secure Lock to stay visible
 
     } catch (err) {
         console.error("Error opening checkout:", err);
@@ -425,31 +432,31 @@ function toggleBump(bumpId) {
 }
 
 function updateTotal() {
-    // PRICING LOGIC DEFINIDA PELO USUÁRIO:
-    // Doenças: 119.90 (Pix) | 10x 19.90 (Card)
-    // Pintinhos: + 59.90 (Pix) | 10x 9.90 (Card)
-    // Combo: 129.90 (Pix) | 10x 29.90 (Card)
-    // Tabela: R$ 0 (Pix) | R$ 19.90 (Card)
-
-    let basePrice = cart.mainProduct.price; // Pix: 119.90
-    let cardPrice = cart.mainProduct.originalPrice || 139.90; // Card: 139.90
-
-    // Se for combo, manter valores anteriores ou ajustar?
-    // User pediu 139.90 e 119.90 especificamente para o fluxo principal.
+    let basePrice = cart.mainProduct.price; // Preço PIX do produto principal
+    let cardPrice = cart.mainProduct.originalPrice || cart.mainProduct.price; // Preço Cartão
 
     let total = basePrice;
     let cardTotal = cardPrice;
 
-    // Adiciona Bumps
+    // Adiciona Bumps com preços dinâmicos do banco de dados
     cart.bumps.forEach(id => {
-        if (id === 'ebook-manejo') {
-            total += 39.9; // PREÇO PROMOCIONAL ATUALIZADO (39.90)
-            cardTotal += 59.9; // Mantendo preço cheio no cartão ou ajusta também? User disse "preço do ebook dos pintinhos pode colocar de 69,90 apenas agora por 39,90". Provavelmente vale para ambos ou só Pix?
-            // Assumindo oferta geral de 39.90 para ser agressivo
-            cardTotal = cardTotal - 59.9 + 39.9;
-        } else if (id === 'bump-6361') {
-            total += 0; // Tabela Grátis no Pix
-            cardTotal += 19.9;
+        // Busca o bump no array fullBumps do produto
+        const bump = cart.mainProduct.fullBumps?.find(b => b.id === id);
+
+        if (bump) {
+            // Usa o preço do banco de dados
+            const bumpPriceForPix = bump.price || 0;
+            const bumpPriceForCard = bump.priceCard || bump.price || 0;
+
+            // Regra especial: Tabela grátis no PIX
+            if (id === 'bump-6361') {
+                total += 0; // Grátis no PIX
+                cardTotal += bumpPriceForCard;
+            } else {
+                // Outros bumps: usa o preço do banco
+                total += bumpPriceForPix;
+                cardTotal += bumpPriceForCard;
+            }
         }
     });
 
@@ -748,6 +755,11 @@ function switchMethod(method) {
         const cpfInput = document.getElementById('payer-cpf');
         if (cpfInput) cpfInput.placeholder = 'Seu CPF';
 
+        // ADICIONA TABELA DE RAÇÃO AUTOMATICAMENTE NO PIX (GRÁTIS)
+        if (!cart.bumps.includes('bump-6361')) {
+            cart.bumps.push('bump-6361');
+        }
+
     } else {
         if (cardArea) { cardArea.style.display = 'block'; setTimeout(() => cardArea.style.opacity = '1', 50); }
         if (pixIdentity) { pixIdentity.style.display = 'none'; }
@@ -756,6 +768,12 @@ function switchMethod(method) {
         // CORREÇÃO: Placeholder do CPF para Cartão
         const cpfInput = document.getElementById('payer-cpf');
         if (cpfInput) cpfInput.placeholder = 'CPF do Titular do Cartão';
+
+        // REMOVE TABELA DE RAÇÃO NO CARTÃO (não é grátis)
+        const tabelaIndex = cart.bumps.indexOf('bump-6361');
+        if (tabelaIndex > -1) {
+            cart.bumps.splice(tabelaIndex, 1);
+        }
     }
 
     // RECALCULATE TOTAL WHEN SWITCHING
@@ -810,9 +828,24 @@ async function handlePayment(method) {
     }
 
     const items = [{ id: cart.mainProduct.id, title: cart.mainProduct.title, price: mainPrice }];
+
+    // Adiciona bumps com preços corretos baseados no método de pagamento
     cart.bumps.forEach(id => {
         const b = cart.mainProduct.fullBumps.find(x => x.id === id);
-        if (b) items.push({ id: b.id, title: b.title, price: b.price });
+        if (b) {
+            let bumpPrice = b.price;
+
+            // Aplica preços específicos baseados no método de pagamento
+            if (id === 'bump-6361') {
+                // Tabela de Ração: Grátis no PIX, preço do banco no Cartão
+                bumpPrice = method === 'pix' ? 0 : (b.priceCard || b.price);
+            } else if (method === 'card' && b.priceCard) {
+                // Se tiver preço específico para cartão, usa ele
+                bumpPrice = b.priceCard;
+            }
+
+            items.push({ id: b.id, title: b.title, price: bumpPrice });
+        }
     });
 
     if (method === 'pix') {
@@ -1645,3 +1678,34 @@ if (comparisonSlider && prevButton && nextButton) {
         }
     });
 }
+// Mobile Checkout Modal Fix - Apply body class to prevent background scroll
+(function () {
+    // Get any modal elements
+    const modalElements = document.querySelectorAll('[id*="modal"], [id*="checkout"]');
+
+    // Create a MutationObserver to watch for modal display changes
+    const observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                const target = mutation.target;
+                const display = window.getComputedStyle(target).display;
+
+                if (display === 'flex' || display === 'block') {
+                    // Modal is opening
+                    document.body.classList.add('modal-open');
+                } else if (display === 'none') {
+                    // Modal is closing
+                    document.body.classList.remove('modal-open');
+                }
+            }
+        });
+    });
+
+    // Observe each modal for style changes
+    modalElements.forEach(function (modal) {
+        observer.observe(modal, {
+            attributes: true,
+            attributeFilter: ['style']
+        });
+    });
+})();
