@@ -2751,7 +2751,12 @@
                         </div>
                         <div class="compact-info">
                             <strong>${p.title}</strong>
-                            <span>#${id}</span>
+                            <div style="display:flex; gap:5px; margin-top:5px">
+                                <span class="status-badge info">#${id}</span>
+                                ${id === 'ebook-doencas' ? '<span class="status-badge success">PRINCIPAL</span>' : ''}
+                                ${id === 'ebook-manejo' ? '<span class="status-badge warning">UPSELL</span>' : ''}
+                                ${id === 'combo-elite' ? '<span class="status-badge" style="background:purple; color:white">COMBO</span>' : ''}
+                            </div>
                         </div>
                         <div style="display:flex; align-items:center; gap:10px">
                             <div class="price-tag">R$ ${p.price.toFixed(2)}</div>

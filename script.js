@@ -443,9 +443,19 @@ function updateTotal() {
         // Busca o bump no array fullBumps do produto
         let bump = cart.mainProduct.fullBumps?.find(b => b.id === id);
 
-        // FALLBACK: Se não encontrou em fullBumps, pode ser um produto (upsell)
+        // FALLBACK: Se não encontrou em fullBumps, busca na config global (se carregada)
         if (!bump && id.startsWith('ebook-')) {
-            bump = { id: id, price: 59.9, priceCard: 59.9 }; // ebook-manejo
+            if (window.siteConfig && window.siteConfig.products && window.siteConfig.products[id]) {
+                const prod = window.siteConfig.products[id];
+                bump = {
+                    id: id,
+                    price: prod.price, // Preço PIX do banco
+                    priceCard: prod.originalPrice || prod.price // Preço Cartão do banco (ou fallback)
+                };
+            } else {
+                // Fallback de emergência (caso config não tenha carregado) - EVITAR SE POSSÍVEL
+                bump = { id: id, price: 59.9, priceCard: 99.0 };
+            }
         }
 
         console.log('ðŸ” DEBUG updateTotal - Bump ID:', id, 'Encontrado:', bump);
@@ -539,6 +549,7 @@ async function renderHomeProducts() {
         if (!res.ok) throw new Error("Fetch failed");
 
         const db = await res.json();
+        window.siteConfig = db; // EXPOSIÇÃO GLOBAL PARA O UPSELL
         const products = db.products;
         container.innerHTML = '';
 
