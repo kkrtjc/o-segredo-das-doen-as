@@ -1042,8 +1042,9 @@ app.get('/api/access/:token', (req, res) => {
             }
         }
 
-        // Redirect to actual downloads page
-        const redirectUrl = `https://osegredodasgalinhas.pages.dev/downloads.html?t=${encodeURIComponent(token)}`;
+        // Redirect to actual downloads page with items param
+        const itemsStr = parts[1] || '';
+        const redirectUrl = `https://osegredodasgalinhas.pages.dev/downloads.html?t=${encodeURIComponent(token)}&items=${encodeURIComponent(itemsStr)}`;
         res.redirect(redirectUrl);
     } catch (e) {
         console.error("Tracking error:", e);
