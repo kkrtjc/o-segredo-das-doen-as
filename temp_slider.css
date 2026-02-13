@@ -1,0 +1,47 @@
+/* Comparison Slider (Scroll Snap) */
+.comparison-slider {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scroll iOS */
+    scrollbar-width: none;
+    /* Hide scrollbar Firefox */
+}
+
+.comparison-slider::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar Chrome/Safari */
+}
+
+.comparison-slide {
+    flex: 0 0 90%;
+    /* Show part of next slide to encourage scrolling */
+    scroll-snap-align: center;
+    max-width: 600px;
+    /* Cap width on desktop */
+}
+
+/* Ensure images fit well within slider */
+.comparison-slide .comparison-item-v2 {
+    height: 100%;
+}
+
+@media (min-width: 768px) {
+    .comparison-slider {
+        justify-content: center;
+        /* Center on desktop if few items */
+        overflow-x: visible;
+        /* No scroll needed on large screens if fits */
+        scroll-snap-type: none;
+        flex-wrap: wrap;
+    }
+
+    .comparison-slide {
+        flex: 0 0 45%;
+        /* Side by side on desktop */
+        max-width: none;
+    }
+}

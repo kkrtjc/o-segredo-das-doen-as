@@ -211,6 +211,14 @@ const payment = new Payment(client);
 // 2. Helper: Log Sale to History
 function logSale(customer, items, paymentId, method) {
     const history = getHistory();
+
+    // Check if sale already exists to avoid duplicates
+    const exists = history.some(h => String(h.paymentId) === String(paymentId));
+    if (exists) {
+        console.log(`ℹ️ [HISTORY] Venda ${paymentId} já registrada. Pulando...`);
+        return;
+    }
+
     const sale = {
         id: paymentId,
         paymentId: paymentId,
@@ -226,6 +234,25 @@ function logSale(customer, items, paymentId, method) {
     history.push(sale);
     saveHistory(history);
     console.log(`📝 [HISTORY] Venda registrada: ${sale.id} - ${sale.items.length} itens`);
+}
+
+function debugWebhook(data) {
+    try {
+        const debugPath = path.join(DATA_DIR, 'webhook_debug.json');
+        let logs = [];
+        if (fs.existsSync(debugPath)) {
+            logs = JSON.parse(fs.readFileSync(debugPath, 'utf8'));
+        }
+        logs.unshift({
+            timestamp: new Date().toISOString(),
+            data: data
+        });
+        // Keep last 50 logs
+        if (logs.length > 50) logs = logs.slice(0, 50);
+        fs.writeFileSync(debugPath, JSON.stringify(logs, null, 2));
+    } catch (e) {
+        console.error("❌ [WEBHOOK DEBUG ERROR]", e.message);
+    }
 }
 
 // 3. API Config (Required for Frontend Products)
@@ -882,11 +909,27 @@ app.get('/api/payment/:id', async (req, res) => {
 });
 
 app.post('/api/webhooks/mercadopago', async (req, res) => {
-    const topic = req.query.topic || req.query.type || req.body.topic || req.body.type;
-    const paymentId = req.query.id || (req.body.data && req.body.data.id) || req.body.id;
-    console.log(`📡 [WEBHOOK] Chamada recebida! Topic: ${topic}, ID: ${paymentId}`);
+    // Debug entry
+    debugWebhook({
+        query: req.query,
+        body: req.body,
+        headers: req.headers
+    });
 
-    if (topic === 'payment' || topic === 'payment.updated') {
+    // Extraction pattern for modern V2 webhooks (data.id) and legacy (id/topic)
+    const topic = req.query.topic || req.query.type || req.body.topic || req.body.type || req.body.action;
+    const paymentId = req.query.id || (req.body.data && req.body.data.id) || req.body.id;
+
+    console.log(`📡 [WEBHOOK] Chamada recebida! Topic/Action: ${topic}, ID: ${paymentId}`);
+
+    // If it's a test notification or missing ID, just return 200
+    if (!paymentId) {
+        return res.sendStatus(200);
+    }
+
+    // Mercado Pago sends 'payment.updated' or simply calls it 'payment' topic
+    // Some integrations use 'action' like 'payment.created'
+    if (topic && (topic.includes('payment') || topic === 'opened_checkout')) {
         try {
             const paymentResult = await payment.get({ id: paymentId });
             console.log(`🔔 [WEBHOOK] Status pagamento ${paymentId}: ${paymentResult.status} (${paymentResult.status_detail || 'sem detalhe'})`);
@@ -904,7 +947,7 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
                         ? `${paymentResult.payer.first_name} ${paymentResult.payer.last_name || ''}`.trim()
                         : 'Cliente'),
                     email: metadata.customer_email || (paymentResult.payer && paymentResult.payer.email) || 'galosmurabrasill@gmail.com',
-                    phone: metadata.customer_phone || 'Sem Telefone'
+                    phone: metadata.customer_phone || (paymentResult.payer && paymentResult.payer.phone ? paymentResult.payer.phone.area_code + paymentResult.payer.phone.number : 'Sem Telefone')
                 };
 
                 // Reconstruct items from description
@@ -916,7 +959,6 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
 
                 logSale(customer, items, paymentId, paymentResult.payment_method_id === 'pix' ? 'pix' : 'cartão');
 
-
                 console.log(`📤 [WEBHOOK] Enviando e-mail automático...`);
                 sendEmail(customer, items, paymentId);
 
@@ -924,8 +966,10 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
             }
             res.sendStatus(200);
         } catch (error) {
-            console.error('Webhook error:', error);
-            res.sendStatus(500);
+            console.error('Webhook error processing payment:', paymentId, error.message);
+            // Return 200 even on error to stop MP retries if we can't find it
+            // but log it for debug.
+            res.sendStatus(200);
         }
     } else {
         res.sendStatus(200);

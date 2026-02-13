@@ -1,0 +1,70 @@
+/* Continuous Testimonial Carousel (Infinite Loop) */
+.testimonial-carousel {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    padding: 3rem 0;
+    /* Mask edges for smooth fade in/out */
+    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+
+.testimonial-track-original {
+    display: flex;
+    width: fit-content;
+    animation: scroll-loop 60s linear infinite;
+    /* Slower speed for readability */
+    /* Ensure hardware acceleration for smoothness */
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+}
+
+/* Pause on hover for readability */
+.testimonial-carousel:hover .testimonial-track-original {
+    animation-play-state: paused;
+}
+
+@keyframes scroll-loop {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(calc(var(--scroll-amount) - 20px));
+    }
+
+    /* -20px to account for margin */
+}
+
+.testimonial-card-original {
+    background: rgba(20, 20, 20, 0.6);
+    /* Glassy dark */
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Subtle border */
+    border-radius: 16px;
+    padding: 2rem;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    flex-shrink: 0;
+    /* Prevent shrinking */
+    transition: all 0.3s ease;
+    /* Width set by JS inline styles */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.testimonial-card-original:hover {
+    transform: translateY(-5px) scale(1.02);
+    background: rgba(30, 30, 30, 0.8);
+    border-color: var(--color-secondary);
+    box-shadow: 0 15px 40px rgba(212, 175, 55, 0.15);
+    /* Gold glow */
+}
+
+/* Ensure images in testimonials are perfect circles and performant */
+.testimonial-card-original img {
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}

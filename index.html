@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css?v=19">
+    <link rel="stylesheet" href="style.css?v=20">
     <link rel="stylesheet" href="order_bump_modal.css">
 
     <!-- Meta Pixel Code -->
@@ -94,13 +94,29 @@
         <div class="container">
             <div class="alumni-wrapper">
                 <div class="alumni-avatars">
-                    <img src="carrosel/ana.png" alt="Aluna" loading="lazy" width="40" height="40">
-                    <img src="carrosel/beatriz.jpeg" alt="Aluna" loading="lazy" width="40" height="40">
-                    <img src="carrosel/carlos.png" alt="Aluno" loading="lazy" width="40" height="40">
-                    <img src="carrosel/fernanda.png" alt="Aluna" loading="lazy" width="40" height="40">
-                    <img src="carrosel/joao_new.jpg" alt="Aluno" loading="lazy" width="40" height="40">
+                    <img src="carrosel/maria.PNG" alt="Maria Santos" loading="lazy" width="40" height="40">
+                    <img src="carrosel/joao_new.jpg" alt="João Oliveira" loading="lazy" width="40" height="40">
+                    <img src="carrosel/ricardo.jpeg" alt="Ricardo Lima" loading="lazy" width="40" height="40">
+                    <img src="carrosel/camila.jpeg" alt="Camila Rocha" loading="lazy" width="40" height="40">
+                    <img src="carrosel/lucas.jpeg" alt="Lucas Ferreira" loading="lazy" width="40" height="40">
                 </div>
-                <p class="alumni-text">Já são <span>Centenas de alunos</span> satisfeitos!</p>
+                <p class="alumni-text">Já são <span>Mais de 1.600 alunos</span> satisfeitos!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section testimonial-section-original">
+        <div class="container" style="overflow: hidden;">
+            <!-- Overflow hidden mainly for container if needed, but track handles it -->
+            <h2 class="text-center" style="color: white; margin-bottom: 2rem;">O Que <span
+                    class="text-highlight">Criadores de Todo o Brasil</span> Estão Falando</h2>
+
+            <div class="testimonial-carousel">
+                <!-- Track will be populated and duplicated by JS -->
+                <div class="testimonial-track-original" id="testimonials-track">
+                    <!-- Populated by JS -->
+                </div>
             </div>
         </div>
     </section>
@@ -145,105 +161,101 @@
     <section class="section comparison-showcase" id="results"
         style="background: #000; padding: 5rem 0; border-bottom: 1px solid rgba(212, 175, 55, 0.1);">
         <div class="container">
-            <div class="text-center" style="margin-bottom: 4rem;">
-
+            <div class="text-center" style="margin-bottom: 2rem;">
                 <h2>Resultados Que <span class="text-highlight">Falam Por Si</span></h2>
-                <p style="max-width: 600px; margin: 1rem auto 0; opacity: 0.8; font-size: 1.1rem;">Veja na prática a
-                    diferença brutal entre a criação amadora e o Protocolo Elite 360º.</p>
+                <p style="max-width: 600px; margin: 1rem auto 0; opacity: 0.8; font-size: 1.1rem;">
+                    Deslize para o lado e veja a transformação. <i class="fa-solid fa-arrow-right"
+                        style="font-size: 0.9rem; margin-left: 5px; color: var(--color-secondary);"></i>
+                </p>
             </div>
 
-            <div class="comparison-grid-v2">
-                <!-- Comparison 1: Chicks -->
-                <div class="comparison-item-v2">
-                    <div class="comp-text">
-                        <span class="comp-tag">DESENVOLVIMENTO ACELERADO</span>
-                        <h3>O Segredo do Crescimento</h3>
-                        <p>Observe a diferença de porte entre estas duas aves da mesma idade. Enquanto uma segue sob
-                            manejo comum, a outra <strong>SEGUE SUPERIOR</strong> seguindo nossos protocolos.</p>
-                        <ul class="comp-check-list">
-                            <li><i class="fa-solid fa-check"></i> 3x mais ganho de peso</li>
-                            <li><i class="fa-solid fa-check"></i> Penugem mais saudável</li>
-                            <li><i class="fa-solid fa-check"></i> Vitalidade impressionante</li>
-                        </ul>
-                    </div>
-                    <div class="comp-visual-v2">
-                        <div class="img-wrapper">
-                            <img src="comparacao_pintinhos.png" alt="Comparação de Crescimento" loading="lazy"
-                                width="600" height="800">
-                            <div class="img-labels">
-                                <span class="label-amador">MANEJO AMADOR</span>
-                                <span class="label-elite">PROTOCOLO ELITE</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <!-- New Scroll Snap Slider Container with Navigation -->
+            <div style="position: relative; max-width: 1200px; margin: 0 auto;">
+                <!-- Left Arrow -->
+                <button class="comparison-nav-arrow comparison-nav-left" id="comparison-prev" aria-label="Previous">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
 
-                <!-- Comparison 2: Rooster -->
-                <div class="comp-text">
-                    <span class="comp-tag color-red" style="background: var(--color-accent-red); color: #fff;">ESTAVA
-                        CONDENADO</span>
-                    <h3>O Milagre da Recuperação</h3>
-                    <p>Este galo estava com a <strong>sentença de morte assinada</strong> pela Coriza Infecciosa. Já não
-                        comia, não enxergava e o cheiro da podridão tomava conta.</p>
-                    <ul class="comp-check-list">
-                        <li><i class="fa-solid fa-skull-crossbones" style="color: var(--color-accent-red);"></i>
-                            Estancamos a morte em 24h</li>
-                        <li><i class="fa-solid fa-check"></i> Limpeza total das secreções</li>
-                        <li><i class="fa-solid fa-check"></i> Visão e apetite restaurados</li>
-                        <li><i class="fa-solid fa-check"></i> Voltou a ser o rei do terreiro</li>
-                    </ul>
-                </div>
-                <div class="comp-visual-v2">
-                    <div class="img-wrapper-split">
-                        <div
-                            style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
-                            <span
-                                style="font-size: 0.75rem; font-weight: 700; color: var(--color-secondary); text-transform: uppercase; letter-spacing: 1px;">Antes
-                                do Tratamento</span>
-                            <div class="split-side">
-                                <img src="galo_doente_novo.png" alt="Galo com Coriza" loading="lazy" width="400"
-                                    height="400">
-                            </div>
-                            <span class="split-label danger">DOENTE</span>
-                        </div>
-                        <div
-                            style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
-                            <span
-                                style="font-size: 0.75rem; font-weight: 700; color: var(--color-secondary); text-transform: uppercase; letter-spacing: 1px;">Depois
-                                do Tratamento</span>
-                            <div class="split-side border-elite">
-                                <img src="galo_curado_novo.png" alt="Galo Curado" loading="lazy" width="400"
-                                    height="400">
-                            </div>
-                            <span class="split-label success">RECUPERADO</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <!-- Right Arrow -->
+                <button class="comparison-nav-arrow comparison-nav-right" id="comparison-next" aria-label="Next">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
 
-            <!-- Comparison 3: Transformation -->
-            <div class="comparison-item-v2">
-                <div class="comp-text">
-                    <span class="comp-tag color-gold" style="background: var(--color-secondary); color: #000;">MÁXIMA
-                        PERFORMANCE</span>
-                    <h3>Transformação em Tempo Recorde</h3>
-                    <p>O Protocolo de Elite foca na <strong>reconstituição total</strong> da ave. Veja a diferença
-                        na vitalidade, postura e coloração da crista após apenas uma semana de manejo correto.</p>
-                    <ul class="comp-check-list">
-                        <li><i class="fa-solid fa-check"></i> Recuperação acelerada</li>
-                        <li><i class="fa-solid fa-check"></i> Imunidade blindada</li>
-                        <li><i class="fa-solid fa-check"></i> Zero desperdício de aves</li>
-                    </ul>
-                </div>
-                <div class="comp-visual-v2">
-                    <div class="img-wrapper transformacao-realista-v3">
-                        <img src="transformacao_realista_v3.png" alt="Transformação Realista" loading="lazy"
-                            width="1024" height="1024">
-                        <div class="img-labels">
-                            <span class="label-amador">SINTOMAS GRAVES</span>
-                            <span class="label-elite">TOTALMENTE RECUPERADA</span>
+                <div class="comparison-slider" id="comparison-slider-track">
+
+                    <!-- Slide 1: Rooster (Galo) -->
+                    <div class="comparison-slide">
+                        <div class="comparison-item-v2">
+                            <div class="comp-text">
+                                <span class="comp-tag color-red"
+                                    style="background: var(--color-accent-red); color: #fff;">ESTAVA CONDENADO</span>
+                                <h3>O Milagre da Recuperação</h3>
+                                <p>Este galo estava com a <strong>sentença de morte assinada</strong> pela Coriza
+                                    Infecciosa. Já não comia, não enxergava e o cheiro da podridão tomava conta.</p>
+                                <ul class="comp-check-list">
+                                    <li><i class="fa-solid fa-skull-crossbones"
+                                            style="color: var(--color-accent-red);"></i>
+                                        Estancamos a morte em 24h</li>
+                                    <li><i class="fa-solid fa-check"></i> Limpeza total das secreções</li>
+                                    <li><i class="fa-solid fa-check"></i> Visão e apetite restaurados</li>
+                                    <li><i class="fa-solid fa-check"></i> Voltou a ser o rei do terreiro</li>
+                                </ul>
+                            </div>
+                            <div class="comp-visual-v2">
+                                <div class="img-wrapper-split">
+                                    <div
+                                        style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <span
+                                            style="font-size: 0.75rem; font-weight: 700; color: var(--color-secondary); text-transform: uppercase; letter-spacing: 1px;">Antes</span>
+                                        <div class="split-side">
+                                            <img src="galo_doente_novo.png" alt="Galo com Coriza" loading="lazy"
+                                                width="400" height="400">
+                                        </div>
+                                        <span class="split-label danger">DOENTE</span>
+                                    </div>
+                                    <div
+                                        style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <span
+                                            style="font-size: 0.75rem; font-weight: 700; color: var(--color-secondary); text-transform: uppercase; letter-spacing: 1px;">Depois</span>
+                                        <div class="split-side border-elite">
+                                            <img src="galo_curado_novo.png" alt="Galo Curado" loading="lazy" width="400"
+                                                height="400">
+                                        </div>
+                                        <span class="split-label success">RECUPERADO</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Slide 2: Hen Transformation -->
+                    <div class="comparison-slide">
+                        <div class="comparison-item-v2">
+                            <div class="comp-text">
+                                <span class="comp-tag color-gold"
+                                    style="background: var(--color-secondary); color: #000;">MÁXIMA PERFORMANCE</span>
+                                <h3>Transformação em Tempo Recorde</h3>
+                                <p>O Protocolo de Elite foca na <strong>reconstituição total</strong> da ave. Veja a
+                                    diferença na vitalidade, postura e coloração da crista.</p>
+                                <ul class="comp-check-list">
+                                    <li><i class="fa-solid fa-check"></i> Recuperação acelerada</li>
+                                    <li><i class="fa-solid fa-check"></i> Imunidade blindada</li>
+                                    <li><i class="fa-solid fa-check"></i> Zero desperdício de aves</li>
+                                </ul>
+                            </div>
+                            <div class="comp-visual-v2">
+                                <div class="img-wrapper transformacao-realista-v3">
+                                    <img src="transformacao_realista_v3.png" alt="Transformação Realista" loading="lazy"
+                                        width="1024" height="1024">
+                                    <div class="img-labels">
+                                        <span class="label-amador">SINTOMAS GRAVES</span>
+                                        <span class="label-elite">TOTALMENTE RECUPERADA</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -354,44 +366,48 @@
         </div>
     </section>
 
-
-
-    <!-- Testimonials Section -->
-    <section class="section testimonial-section-original">
-        <div class="container" style="overflow: hidden;">
-            <!-- Overflow hidden mainly for container if needed, but track handles it -->
-            <h2 class="text-center" style="color: white; margin-bottom: 2rem;">JÁ AJUDAMOS CENTENAS DE CRIADORES</h2>
-
-            <div class="testimonial-carousel">
-                <!-- Track will be populated and duplicated by JS -->
-                <div class="testimonial-track" id="testimonials-track">
-                    <!-- Populated by JS -->
+    <!-- Bônus Pix Highlight (MOVED HERE) -->
+    <section class="section" style="background: #000; padding: 3rem 0;">
+        <div class="container">
+            <div class="pix-bonus-badge-horizontal"
+                style="margin: 0 auto; max-width: 700px; text-align: center; background: rgba(50, 188, 173, 0.1); border: 2px dashed #32bcad; padding: 2.5rem; border-radius: 20px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                    <div style="flex-shrink: 0;">
+                        <img src="tabela_racao_bump.png" alt="Tabela de Rações Elite" loading="lazy"
+                            style="width: 120px; height: auto; border-radius: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.3);">
+                    </div>
+                    <div style="flex: 1; min-width: 280px;">
+                        <div style="font-size: 3rem; color: #32bcad; margin-bottom: 10px;"><i
+                                class="fa-brands fa-pix"></i></div>
+                        <h4 style="color: #32bcad; margin-bottom: 8px; font-size: 1.5rem;">PRESENTE EXCLUSIVO NO PIX
+                        </h4>
+                        <p style="margin: 0; font-size: 1.1rem; opacity: 0.9;">Pagando via <strong>PIX</strong>, você
+                            ganha agora a <strong>Tabela de Rações Elite</strong> (Economia de 65% na ração) totalmente
+                            grátis.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Pricing / Offers -->
+
+
+    <!-- Pricing / Oferta Única -->
     <section class="section pricing" id="offers">
         <div class="container">
             <div class="text-center" style="margin-bottom: var(--spacing-lg);">
-                <h2>ESCOLHA SUA OFERTA</h2>
-                <p>O conhecimento que separa o prejuízo do lucro.</p>
-                <p class="mobile-scroll-hint"
-                    style="display: none; color: var(--color-secondary); font-size: 0.85rem; margin-top: 0.5rem;">
-                    <i class="fa-solid fa-hand-point-right"></i> Deslize para ver todas as ofertas <i
-                        class="fa-solid fa-hand-point-left"></i>
-                </p>
+                <h2 style="font-size: 2.5rem;">OFERTA DE ACESSO IMEDIATO</h2>
+                <p style="font-size: 1.2rem; opacity: 0.9;">O conhecimento que separa o prejuízo do lucro no seu
+                    galinheiro.</p>
             </div>
 
-            <div class="pricing-wrapper">
-                <div class="pricing-grid" id="home-products-container">
-                    <!-- Dinamicamente preenchido pelo script.js -->
+            <div class="pricing-wrapper" style="max-width: 500px; margin: 0 auto;">
+                <div class="pricing-grid single-offer" id="home-products-container">
+                    <!-- Dinamicamente preenchido pelo script.js (agora configurado para oferta única) -->
                 </div>
             </div>
 
-            <!-- Guarantee -->
-            <!-- The old simple block is removed and replaced by new section below -->
+
         </div>
     </section>
 
@@ -580,13 +596,19 @@
                     </button>
                 </div>
 
+                <!-- Status do Bônus Pix -->
+                <div id="pix-bonus-status"
+                    style="margin: 0 0 1rem 0; text-align: center; font-size: 0.85rem; display: none;">
+                </div>
+
                 <!-- Product Summary -->
                 <div class="checkout-product-summary">
                     <div class="p-icon-wrapper" id="product-icon-container">
                         <!-- Dynamic -->
                     </div>
                     <div class="p-main-info">
-                        <span class="p-label">RESUMO DO PEDIDO:</span>
+                        <span class="p-label" style="display: none;">RESUMO DO PEDIDO:</span>
+                        <!-- Hide label if this is what user meant by 'PRINCIPAL', or maybe the tag? -->
                         <h4 id="checkout-product-name" class="p-title">Carregando...</h4>
                     </div>
                     <div class="p-price-tag" id="checkout-product-price-display">
@@ -704,15 +726,13 @@
                                 </div>
                             </div>
 
-                            <div class="installments-toggle">
-                                <label class="installment-option">
-                                    <input type="radio" name="installments" value="1" checked>
-                                    <span class="installment-box">1x <strong id="price-1x">R$ --,--</strong></span>
-                                </label>
-                                <label class="installment-option">
-                                    <input type="radio" name="installments" value="2">
-                                    <span class="installment-box">2x <strong id="price-2x">R$ --,--</strong></span>
-                                </label>
+                            <div class="installments-wrapper" style="margin-bottom: 20px;">
+                                <label
+                                    style="display: block; font-size: 0.8rem; color: #888; margin-bottom: 8px; font-weight: 600;">Opções
+                                    de Parcelamento:</label>
+                                <select id="installments-select" class="custom-select" style="width: 100%;">
+                                    <!-- Dynamic Options from JS -->
+                                </select>
                             </div>
 
                             <div class="favorecido-info-card"
@@ -851,15 +871,15 @@
 
             <div class="order-bump-header">
                 <i class="fa-solid fa-gift" style="font-size: 2rem; color: var(--color-secondary);"></i>
-                <h3> APENAS AGORA, uma oferta pra você criador!</h3>
+                <h3>Olha só, uma oferta pra você criador!</h3>
             </div>
 
             <div class="order-bump-body">
                 <img src="tabela_racao_bump.png" alt="Tabela de Ração" class="order-bump-image">
                 <p class="order-bump-text">
                     <strong>Economize até 65% na sua ração</strong>, produzindo sua própria ração com nossa
-                    <span style="color: var(--color-secondary);">tabela de alimentação do nascimento a fase adulta
-                        </span>.
+                    <span style="color: var(--color-secondary);">tabela de alimentação do nascimento ao
+                        crescimento</span>.
                 </p>
                 <div class="order-bump-price-tag">
                     <span class="old-price">De R$ 47,00</span>
@@ -910,7 +930,7 @@
     <!-- Scripts -->
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <script src="order_bump_modal.js"></script>
-    <script src="script.js?v=5"></script>
+    <script src="script.js?v=6"></script>
 </body>
 
 </html>

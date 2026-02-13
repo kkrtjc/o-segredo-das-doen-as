@@ -1,74 +1,58 @@
 {
     "products": {
-        "combo-elite": {
-            "title": "Protocolo Elite 360º (Combo)",
-            "price": 2,
-            "originalPrice": 2,
-            "description": "Combo Completo",
+        "ebook-doencas": {
+            "title": "Doenças Avícolas (Principal)",
+            "price": 119.9,
+            "originalPrice": 139.9,
+            "description": "Protocolo Elite Doenças",
             "isFeatured": true,
-            "badge": "MAIS VENDIDO • 20% OFF",
+            "badge": "OFERTA PRINCIPAL",
             "features": [
-                "Manejo de Pintinhos Elite",
-                "Doenças Avícolas Completo",
-                "Suporte Exclusivo",
-                "Garantia de 7 Dias"
+                "11 Doenças Documentadas",
+                "Tabelas de Sintomas",
+                "Protocolos de Tratamento",
+                "Bônus: Tabela de Ração (no PIX)"
             ],
-            "cover": "combo",
+            "cover": "capadasdoencas.png",
             "orderBumps": [
                 "bump-6361"
             ]
         },
         "ebook-manejo": {
-            "title": "Manejo de Pintinhos",
+            "title": "Manejo de Pintinhos (Upsell)",
             "price": 59.9,
-            "originalPrice": 69.9,
-            "description": "Acesso Vitalício",
+            "originalPrice": 99.0,
+            "description": "Manual de Criação",
             "features": [
                 "Incubação Perfeita",
                 "Ambiente de Elite",
                 "Nutrição Essencial"
             ],
             "cover": "capadospintinhos.png",
-            "orderBumps": [
-                "bump-6361"
-            ]
+            "orderBumps": []
         },
-        "ebook-doencas": {
-            "title": "Doenças Avícolas",
-            "price": 89.9,
-            "originalPrice": 89.9,
-            "description": "Acesso Vitalício",
+        "combo-elite": {
+            "title": "Combo Protocolo Elite 360º",
+            "price": 129.9,
+            "originalPrice": 299.0,
+            "description": "Tudo Liberado",
             "features": [
-                "11 Doenças Documentadas",
-                "Tabelas de Sintomas",
-                "Protocolos de Tratamento"
+                "Manejo de Pintinhos Elite",
+                "Doenças Avícolas Completo",
+                "Tabela de Ração Grátis (no PIX)",
+                "Suporte Especializado"
             ],
-            "cover": "capadasdoencas.png",
-            "orderBumps": [
-                "bump-6361"
-            ]
+            "cover": "combo",
+            "orderBumps": []
         }
     },
     "orderBumps": {
-        "bump-doencas": {
-            "id": "ebook-doencas",
-            "title": "Guia Completo de Doenças Avícolas",
-            "price": 47,
-            "description": "Adicione o Guia de Doenças e blinde seu plantel agora!",
-            "tag": "Oferta Única"
-        },
-        "bump-manejo": {
-            "id": "ebook-manejo",
-            "title": "Manual de Manejo de Pintinhos",
-            "price": 27,
-            "description": "Adicione o Manual de Manejo e garanta 100% de sobrevivência.",
-            "tag": "Oferta Especial"
-        },
         "bump-6361": {
             "id": "bump-6361",
             "title": "Tabela de Raçao",
-            "price": 19.9,
-            "description": "Produza sua propria raçao E economize ate 65% com raçao.\nCom As tabelas de alimentaçao para todas as idades da sua ave.\n",
+            "price": 0,
+            "priceCard": 19.9,
+            "description": "Produza sua propria raçao E economize ate 65%. (GRÁTIS NO PIX)",
             "image": "tabela_racao_bump.png"
         }
     }
