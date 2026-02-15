@@ -2025,9 +2025,10 @@
                     </div>
                 </div>
             </div>
+            <input type="hidden" id="nb-id">
             <div class="actions" style="margin-top: 20px; position: static;">
                 <button class="btn btn-secondary" onclick="closeModal('bump-modal')">CANCELAR</button>
-                <button class="btn btn-primary" onclick="createNewBump()">CADASTRAR BUMP</button>
+                <button class="btn btn-primary" onclick="saveBump()">SALVAR BUMP</button>
             </div>
         </div>
     </div>
@@ -2821,6 +2822,7 @@
                         </div>
                         <div style="display:flex; align-items:center; gap:10px">
                             <div class="price-tag">+ R$ ${b.price.toFixed(2)}</div>
+                            <button class="btn-icon" style="color:var(--accent); border-color:var(--accent)" onclick="editBump('${id}')"><i class="fa-solid fa-pen-to-square"></i></button>
                             <button class="btn-icon danger" onclick="deleteBump('${id}')"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
                     </div>
@@ -2904,8 +2906,30 @@
             } catch (e) { alert('Erro ao subir imagem.'); }
         }
 
-        async function createNewBump() {
-            const id = 'bump-' + Date.now().toString().slice(-4);
+        function editBump(id) {
+            const b = db.orderBumps[id];
+            document.getElementById('nb-id').value = id;
+            document.getElementById('nb-title').value = b.title;
+            document.getElementById('nb-price').value = b.price;
+            document.getElementById('nb-desc').value = b.description;
+            document.getElementById('nb-img-url').value = b.image || '';
+
+            const prev = document.getElementById('nb-preview-img');
+            if (b.image) {
+                prev.src = b.image;
+                prev.parentElement.style.display = 'block';
+            } else {
+                prev.parentElement.style.display = 'none';
+            }
+
+            document.querySelector('#bump-modal h3').innerText = 'Editar Bump';
+            openModal('bump-modal');
+        }
+
+        async function saveBump() {
+            const idInput = document.getElementById('nb-id').value;
+            const id = idInput || 'bump-' + Date.now().toString().slice(-4);
+
             const title = document.getElementById('nb-title').value;
             const price = parseFloat(document.getElementById('nb-price').value);
             const description = document.getElementById('nb-desc').value;
@@ -2914,10 +2938,20 @@
             if (!title) return alert('Dê um título!');
 
             db.orderBumps[id] = { id, title, price, description, image };
+
+            // Clear form
+            document.getElementById('nb-id').value = '';
+            document.getElementById('nb-title').value = '';
+            document.getElementById('nb-price').value = '';
+            document.getElementById('nb-desc').value = '';
+            document.getElementById('nb-img-url').value = '';
+            document.getElementById('nb-preview-img').parentElement.style.display = 'none';
+            document.querySelector('#bump-modal h3').innerText = 'Novo Order Bump';
+
             closeModal('bump-modal');
             renderAdmin();
             checkChanges();
-            showToast('Bump Adicionado!');
+            showToast('Bump Salvo!');
         }
 
         async function createNewProduct() {

@@ -1,17 +1,17 @@
 {
     "totals": {
-        "clicks": 131,
-        "checkoutOpens": 116,
-        "checkoutStarts": 33,
+        "clicks": 207,
+        "checkoutOpens": 201,
+        "checkoutStarts": 57,
         "uiErrors": 11,
         "trustClicks": 3,
         "mobileSessions": 0,
         "desktopSessions": 48,
         "slowLoads": 0,
         "pageViews": 48,
-        "ctaClicks": 35,
-        "uniqueVisits": 12,
-        "checkoutAbandons": 14
+        "ctaClicks": 37,
+        "uniqueVisits": 15,
+        "checkoutAbandons": 16
     },
     "daily": {
         "2026-01-30": {
@@ -157,9 +157,27 @@
             }
         },
         "2026-02-13": {
-            "clicks": 0,
-            "checkoutOpens": 0,
+            "clicks": 10,
+            "checkoutOpens": 19,
             "checkoutStarts": 0,
+            "uiErrors": 0,
+            "trustClicks": 0,
+            "mobileSessions": 0,
+            "desktopSessions": 0,
+            "slowLoads": 0,
+            "pageViews": 0,
+            "emailClicks": 0,
+            "uniqueVisits": 1,
+            "ctaClicks": 2,
+            "checkoutAbandons": 2,
+            "ctaBreakdown": {
+                "hero-primary": 2
+            }
+        },
+        "2026-02-14": {
+            "clicks": 11,
+            "checkoutOpens": 11,
+            "checkoutStarts": 5,
             "uiErrors": 0,
             "trustClicks": 0,
             "mobileSessions": 0,
@@ -170,6 +188,22 @@
             "uniqueVisits": 1,
             "ctaClicks": 0,
             "checkoutAbandons": 1,
+            "ctaBreakdown": {}
+        },
+        "2026-02-15": {
+            "clicks": 55,
+            "checkoutOpens": 55,
+            "checkoutStarts": 19,
+            "uiErrors": 0,
+            "trustClicks": 0,
+            "mobileSessions": 0,
+            "desktopSessions": 0,
+            "slowLoads": 0,
+            "pageViews": 0,
+            "emailClicks": 0,
+            "uniqueVisits": 2,
+            "ctaClicks": 0,
+            "checkoutAbandons": 0,
             "ctaBreakdown": {}
         }
     }

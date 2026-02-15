@@ -1,5 +1,5 @@
-/* --- PROFESSIONAL TYPOGRAPHY SYSTEM --- */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+/* --- PORT OF "ORIGINAL" AMBER/RED DESIGN SYSTEM --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
     --amber-50: #fffbeb;
@@ -20,47 +20,9 @@
     --gray-800: #1f2937;
     --white: #ffffff;
 
-    --font-heading: 'Plus Jakarta Sans', sans-serif;
-    --font-sans: 'Outfit', sans-serif;
+    --font-sans: 'Inter', sans-serif;
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-}
-
-/* VSL Video Section */
-.vsl-square-section {
-    padding: 2.5rem 0;
-    background: #fcfcfc;
-}
-
-.square-video-container {
-    max-width: 320px;
-    /* Ajuste para equilibrar tamanho e visibilidade */
-    margin: 0 auto;
-}
-
-.square-video-wrapper {
-    position: relative;
-    width: 100%;
-    padding-bottom: 100%;
-    /* Ratio 1:1 */
-    overflow: hidden;
-    border-radius: 20px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    background: #000;
-}
-
-.square-video-wrapper video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 60%;
-    transform: scale(1.04);
-    /* Pequeno zoom para "matar" qualquer borda preta do arquivo de vídeo */
-    filter: brightness(1.02);
-    /* Leve realce para combinar melhor com o fundo claro */
 }
 
 * {
@@ -69,26 +31,11 @@
     box-sizing: border-box;
 }
 
-html,
-body {
-    overflow-x: hidden;
-    position: relative;
-    max-width: 100%;
-}
-
 body {
     background-color: var(--amber-50);
     color: var(--gray-800);
     font-family: var(--font-sans);
     line-height: 1.5;
-}
-
-/* Fix for mobile horizontal scroll when keyboard opens */
-body.modal-open {
-    overflow: hidden !important;
-    position: fixed;
-    width: 100%;
-    height: 100%;
 }
 
 body.no-scroll {
@@ -152,10 +99,6 @@ header.sticky {
     background: var(--red-700);
 }
 
-.hidden {
-    display: none !important;
-}
-
 .btn-large {
     font-size: 1.125rem;
     padding: 1.5rem 2rem;
@@ -181,41 +124,8 @@ header.sticky {
 
 /* --- Hero Section --- */
 .hero {
-    position: relative;
     text-align: center;
-    padding: 6rem 0 4rem;
-    background: linear-gradient(rgba(10, 10, 10, 0.75), rgba(0, 0, 0, 0.5)), url('hero-mura-bg.png');
-    background-size: cover;
-    background-position: center 20%;
-    background-attachment: fixed;
-    color: #fff !important;
-    margin-bottom: 0;
-    border-radius: 0;
-    overflow: hidden;
-}
-
-/* Fix for iOS and Mobile: Safari/iOS has bugs with background-attachment: fixed */
-@media (max-width: 1024px) {
-    .hero {
-        background-attachment: scroll !important;
-    }
-}
-
-/* Force readability for headings and text inside hero on photographic background */
-.hero h1,
-.hero h2,
-.hero h2 span,
-.hero p,
-.hero b,
-.hero strong,
-.hero span:not([class*="badge"]) {
-    color: #ffffff !important;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 1), 0 1px 4px rgba(0, 0, 0, 0.8);
-}
-
-.hero .container {
-    position: relative;
-    z-index: 2;
+    padding: 4rem 0 2rem;
 }
 
 .hero-mockup {
@@ -232,7 +142,6 @@ header.sticky {
 }
 
 .hero h2 {
-    font-family: var(--font-heading);
     font-size: 2.5rem;
     font-weight: 800;
     color: var(--amber-900);
@@ -241,7 +150,6 @@ header.sticky {
 }
 
 .hero h2 span {
-    font-family: var(--font-heading);
     color: var(--red-600);
     display: block;
     margin-top: 0.5rem;
@@ -573,24 +481,18 @@ header.sticky {
 /* --- Checkout Modal --- */
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background: rgba(0, 0, 0, 0.7);
-    z-index: 10000;
-    /* Increased to stay above everything */
+    z-index: 1000;
     display: flex;
     align-items: flex-start;
+    /* Better for scrolling */
     justify-content: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: 0.2s;
     overflow-y: auto;
-    overflow-x: hidden;
-    /* Lock horizontal */
-    padding: 1rem;
-    -webkit-overflow-scrolling: touch;
+    padding: 1.5rem;
 }
 
 .modal-overlay.active {
@@ -603,17 +505,17 @@ header.sticky {
     width: 100%;
     max-width: 28rem;
     padding: 1.5rem;
-    border-radius: 1rem;
-    transform: translateY(20px);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin: 2rem auto;
+    border-radius: 0.75rem;
+    transform: scale(0.95);
+    transition: 0.2s;
+    margin: auto;
+    /* Centers when content is short */
     position: relative;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    will-change: transform;
 }
 
 .modal-overlay.active .modal-content {
-    transform: translateY(0);
+    transform: scale(1);
 }
 
 .modal-header {
@@ -739,21 +641,6 @@ header.sticky {
     color: var(--gray-800);
 }
 
-/* Order Bump White Design */
-#order-bump-area {
-    margin: 1.5rem 0;
-    transition: 0.3s;
-}
-
-#order-bump-area:hover {
-    border-color: #d97706;
-    background: #fffbeb;
-}
-
-.order-bump-checkbox {
-    accent-color: #d97706;
-}
-
 .radio-desc {
     font-size: 0.6875rem;
     color: var(--gray-500);
@@ -831,94 +718,4 @@ header.sticky {
     .auth-badge {
         justify-content: flex-start;
     }
-}
-
-/* Social Proof Bar */
-.social-proof-bar {
-    background: #fff;
-    padding: 2.5rem 0;
-    border-top: 1px solid var(--amber-100);
-    border-bottom: 1px solid var(--amber-100);
-    margin: 2rem 0;
-}
-
-.stat-grid {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-    text-align: center;
-}
-
-.stat-item {
-    flex: 1;
-    min-width: 250px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.stat-item i {
-    font-size: 2rem;
-    color: var(--amber-600);
-    background: var(--amber-50);
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    margin-bottom: 0.5rem;
-}
-
-.stat-text {
-    color: var(--gray-600);
-    font-size: 0.95rem;
-    line-height: 1.4;
-}
-
-.stat-text strong {
-    display: block;
-    color: var(--gray-900);
-    font-size: 1.25rem;
-    font-weight: 800;
-}
-
-@media (max-width: 768px) {
-    .social-proof-bar {
-        padding: 1.5rem 0.5rem;
-    }
-
-    .stat-grid {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
-        justify-content: space-between !important;
-        gap: 0.5rem !important;
-    }
-
-    .stat-item {
-        min-width: 0 !important;
-        flex: 1;
-        padding-bottom: 0 !important;
-        border-bottom: none !important;
-        gap: 0.4rem !important;
-    }
-
-    .stat-item i {
-        font-size: 1.1rem !important;
-    }
-
-    .stat-text {
-        font-size: 0.65rem !important;
-        line-height: 1.1;
-    }
-
-    .stat-text strong {
-        font-size: 0.75rem !important;
-    }
-
-    /* Stacking rules removed to maintain horizontal layout */
 }

@@ -1,0 +1,101 @@
+Displaying first 100 lines:
+// --- 1. GLOBAL CONFIG & STATE ---
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:'
+    ? 'http://localhost:10000'
+    : 'https://teste-m1kq.onrender.com';
+
+let cart = {
+    mainProduct: null,
+    bumps: [] // IDs of selected bumps
+};
+
+// GLOBAL PAYMENT STATE
+let currentPaymentMethod = 'pix'; // Default
+
+// --- INIT: CHECK PENDING PIX (Recover Logic) ---
+document.addEventListener('DOMContentLoaded', async () => {
+    // 1. UNIQUE VISITOR TRACKING
+    const today = new Date().toISOString().split('T')[0];
+    const lastVisit = localStorage.getItem('mura_visita_hoje');
+    if (lastVisit !== today) {
+        trackEvent('unique_visit');
+        localStorage.setItem('mura_visita_hoje', today);
+    }
+
+    // 2. CTA CLICK TRACKING
+    document.querySelectorAll('a[href^="#offer"]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const ctaId = btn.getAttribute('data-cta') || 'generic_cta';
+            trackEvent('cta_click', null, ctaId);
+        });
+    });
+
+    const cached = localStorage.getItem('active_pix_session');
+    if (cached) {
+        try {
+            const session = JSON.parse(cached);
+            if ((Date.now() - session.timestamp) < 60 * 60 * 1000) {
+                try {
+                    const s = await fetch(`${API_URL}/api/payment/${session.data.id}`);
+                    const sd = await s.json();
+                    if (sd.status === 'approved') {
+                        localStorage.removeItem('active_pix_session');
+                        window.location.href = `downloads.html?items=${session.itemIds}&total=${session.total.toFixed(2)}`;
+                    } else {
+                        localStorage.removeItem('active_pix_session');
+                    }
+                } catch (e) { console.warn("Background check failed", e); }
+            } else {
+                localStorage.removeItem('active_pix_session');
+            }
+        } catch (e) {
+            localStorage.removeItem('active_pix_session');
+        }
+    }
+
+    // 3. LAZY VIDEO LOADING (Intersection Observer)
+    const lazyVideo = document.getElementById('vsl-video');
+    if (lazyVideo && 'IntersectionObserver' in window) {
+        const videoObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const source = lazyVideo.querySelector('source');
+                    if (source && source.dataset.src) {
+                        source.src = source.dataset.src;
+                        lazyVideo.load();
+                        console.log("🎥 [VIDEO] Lazy Source Loaded");
+                    }
+                    observer.unobserve(lazyVideo);
+                }
+            });
+        }, { rootMargin: '200px' });
+        videoObserver.observe(lazyVideo);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- 1. FAQ Accordion Logic ---
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+            const item = question.parentElement;
+            const isOpen = item.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(otherItem => otherItem.classList.remove('active'));
+            if (!isOpen) item.classList.add('active');
+        });
+    });
+
+    // --- 2. Smooth Scroll ---
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+
+            e.preventDefault();
+            const targetElement = document.querySelector(targetId);
+
+            if (targetElement) {
+                // Se o alvo for a seção de ofertas, tenta focar no Combo Elite
+                if (targetId === '#offer-focus' || targetId === '#offers') {
+                    const comboCard = document.querySelector('.price-card.featured');
+                    if (comboCard) {

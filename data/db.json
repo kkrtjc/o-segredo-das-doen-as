@@ -1,9 +1,9 @@
 {
     "products": {
         "ebook-doencas": {
-            "title": "Doenças Avícolas (Principal)",
-            "price": 119.9,
-            "originalPrice": 139.9,
+            "title": "PROTOCOLO ELITE: A Cura das Aves",
+            "price": 109.9,
+            "originalPrice": 149.9,
             "description": "Protocolo Elite Doenças",
             "isFeatured": true,
             "badge": "OFERTA PRINCIPAL",
@@ -13,34 +13,49 @@
                 "Protocolos de Tratamento",
                 "Bônus: Tabela de Ração (no PIX)"
             ],
-            "cover": "capadasdoencas.png",
+            "cover": "capadasdoencas.jpg",
             "orderBumps": [
-                "bump-6361",
-                "ebook-manejo"
+                "bump-6361"
             ]
         },
         "ebook-manejo": {
             "title": "Manejo de Pintinhos (Upsell)",
-            "price": 59.9,
-            "originalPrice": 99.0,
+            "price": 49.9,
+            "originalPrice": 99,
             "description": "Manual de Criação",
             "features": [
                 "Incubação Perfeita",
                 "Ambiente de Elite",
                 "Nutrição Essencial"
             ],
-            "cover": "capadospintinhos.png",
+            "cover": "capadospintinhos.jpg",
             "orderBumps": []
+        },
+        "combo-elite": {
+            "title": "COMBO ELITE: Doenças + Pintinhos",
+            "price": 0.01,
+            "originalPrice": 159.8,
+            "description": "O Guia Completo para sua Criação",
+            "badge": "MAIS VENDIDO",
+            "features": [
+                "Tudo do Protocolo de Doenças",
+                "Tudo do Manual de Pintinhos",
+                "Economia de 25%",
+                "Bônus: Tabela de Ração (no PIX)"
+            ],
+            "cover": "combo",
+            "orderBumps": [
+                "bump-6361"
+            ]
         }
     },
     "orderBumps": {
         "bump-6361": {
             "id": "bump-6361",
             "title": "Tabela de Raçao",
-            "price": 0,
-            "priceCard": 19.9,
-            "description": "Produza sua propria raçao E economize ate 65%. (GRÁTIS NO PIX)",
-            "image": "tabela_racao_bump.png"
+            "price": 19.9,
+            "description": "Alimentaçao correta em todas as fases da sua criaçao. Economize na raçao e acelere o crescimento das suas aves com o balanceamento ideal.",
+            "image": "tabela_racao_bump.jpg"
         }
     }
 }

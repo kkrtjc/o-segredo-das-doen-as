@@ -110,7 +110,8 @@ const upload = multer({ storage });
 let cacheDB = null;
 
 function getDB() {
-    if (cacheDB) return cacheDB;
+    // Forçar a leitura do arquivo para evitar dados em cache quando editamos o arquivo manualmente
+    // if (cacheDB) return cacheDB; 
     try {
         cacheDB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
         return cacheDB;
@@ -648,6 +649,7 @@ function formatErrorLog(context, customer, error) {
 }
 
 app.post('/api/checkout/pix', async (req, res) => {
+    const startTime = Date.now();
     const { items, customer, deliveryMethod } = req.body;
     console.log(`💠 [PIX] Nova solicitação Iniciada`);
     console.log(`👤 Cliente: ${customer.name} (${customer.email})`);
