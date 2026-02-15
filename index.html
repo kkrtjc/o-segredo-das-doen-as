@@ -671,174 +671,176 @@
     <!-- Checkout Modal (Restored White Design) -->
     <div id="checkout-modal" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-header"
-                style="margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 20px;">
-                <div style="flex: 1;">
-                    <h3 class="modal-title" style="margin-bottom: 4px;">Finalize Sua Compra</h3>
-                    <p style="font-size: 0.95rem; color: #15803d; font-weight: 700; margin-bottom: 4px;">...e tenha
-                        acesso imediato ao ebook após o pagamento!</p>
-                    <p style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 0;"><strong>Mais de 1600
-                            criadores</strong> já tiveram resultados reais.</p>
+            <div id="checkout-main-view" style="position: relative;">
+                <div class="modal-header"
+                    style="margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+                    <div style="flex: 1;">
+                        <h3 class="modal-title" style="margin-bottom: 4px;">Finalize Sua Compra</h3>
+                        <p style="font-size: 0.95rem; color: #15803d; font-weight: 700; margin-bottom: 4px;">...e
+                            tenha
+                            acesso imediato ao ebook após o pagamento!</p>
+                        <p style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 0;"><strong>Mais de
+                                1600
+                                criadores</strong> já tiveram resultados reais.</p>
+                    </div>
+                    <img src="logo.png" alt="Logo" style="height: 140px; flex-shrink: 0;">
                 </div>
-                <img src="logo.png" alt="Logo" style="height: 140px; flex-shrink: 0;">
-            </div>
-            <div class="modal-trust-info">
-                <span><i class="fa-solid fa-circle-check"></i> Garantia de 7 Dias</span>
-                <span><i class="fa-solid fa-circle-check"></i> +1.600 Alunos</span>
-                <span><i class="fa-solid fa-circle-check"></i> 100% Seguro</span>
-            </div>
+                <div class="modal-trust-info">
+                    <span><i class="fa-solid fa-circle-check"></i> Garantia de 7 Dias</span>
+                    <span><i class="fa-solid fa-circle-check"></i> +1.600 Alunos</span>
+                    <span><i class="fa-solid fa-circle-check"></i> 100% Seguro</span>
+                </div>
 
-            <!-- CSS Otimizado para Checkout Compacto e Tooltips -->
-            <style>
-                .checkout-summary {
-                    display: flex;
-                    gap: 12px;
-                    background: #fffbeb;
-                    border: 1px solid #fcd34d;
-                    border-radius: 8px;
-                    padding: 10px;
-                    margin-bottom: 15px;
-                    align-items: center;
-                }
-
-                .summary-img {
-                    width: 60px;
-                    height: 80px;
-                    object-fit: cover;
-                    border-radius: 6px;
-                    border: 1px solid #e5e7eb;
-                }
-
-                .summary-details h4 {
-                    font-size: 0.95rem;
-                    color: #78350f;
-                    margin: 0 0 4px 0;
-                    font-weight: 800;
-                }
-
-                .summary-features {
-                    list-style: none;
-                    padding: 0;
-                    margin: 0;
-                    font-size: 0.75rem;
-                    color: #92400e;
-                }
-
-                .summary-features li {
-                    display: flex;
-                    align-items: center;
-                    gap: 4px;
-                    margin-bottom: 2px;
-                }
-
-                .summary-features i {
-                    color: #059669;
-                }
-
-                /* Compactação do Form */
-                .form-group {
-                    margin-bottom: 4px !important;
-                    /* Menos espaço entre campos */
-                }
-
-                .form-label {
-                    text-transform: uppercase;
-                    font-size: 0.75rem !important;
-                    font-weight: 800 !important;
-                    color: #374151 !important;
-                    margin-bottom: 2px !important;
-                }
-
-                .form-input {
-                    padding: 8px 10px !important;
-                    /* Input mais compacto */
-                    font-size: 0.9rem !important;
-                    height: auto !important;
-                }
-
-                .form-section-title {
-                    font-size: 0.9rem !important;
-                    margin: 10px 0 8px !important;
-                }
-
-                /* Tooltip de Ociosidade */
-                .field-tooltip {
-                    position: absolute;
-                    background: #1f2937;
-                    color: #fff;
-                    padding: 6px 10px;
-                    border-radius: 6px;
-                    font-size: 0.75rem;
-                    bottom: 100%;
-                    right: 0;
-                    margin-bottom: 5px;
-                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-                    opacity: 0;
-                    transform: translateY(5px);
-                    transition: all 0.3s ease;
-                    pointer-events: none;
-                    z-index: 10;
-                    white-space: nowrap;
-                }
-
-                .field-tooltip.active {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-
-                .field-tooltip::after {
-                    content: '';
-                    position: absolute;
-                    top: 100%;
-                    right: 15px;
-                    border-width: 5px;
-                    border-style: solid;
-                    border-color: #1f2937 transparent transparent transparent;
-                }
-
-                .form-group {
-                    position: relative;
-                }
-
-                /* Para posicionar o tooltip */
-
-                /* Validation Styles */
-                .form-input.input-error {
-                    border-color: #ef4444 !important;
-                    /* Red */
-                    background-color: #fef2f2 !important;
-                }
-
-                .form-input.input-success {
-                    border-color: #22c55e !important;
-                    /* Green */
-                    background-color: #f0fdf4 !important;
-                }
-
-                .error-message {
-                    color: #ef4444;
-                    font-size: 0.7rem;
-                    font-weight: 700;
-                    margin-top: -4px;
-                    margin-bottom: 4px;
-                    display: block;
-                    animation: fadeIn 0.3s ease;
-                }
-
-                @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                        transform: translateY(-5px);
+                <!-- CSS Otimizado para Checkout Compacto e Tooltips -->
+                <style>
+                    .checkout-summary {
+                        display: flex;
+                        gap: 12px;
+                        background: #fffbeb;
+                        border: 1px solid #fcd34d;
+                        border-radius: 8px;
+                        padding: 10px;
+                        margin-bottom: 15px;
+                        align-items: center;
                     }
 
-                    to {
+                    .summary-img {
+                        width: 60px;
+                        height: 80px;
+                        object-fit: cover;
+                        border-radius: 6px;
+                        border: 1px solid #e5e7eb;
+                    }
+
+                    .summary-details h4 {
+                        font-size: 0.95rem;
+                        color: #78350f;
+                        margin: 0 0 4px 0;
+                        font-weight: 800;
+                    }
+
+                    .summary-features {
+                        list-style: none;
+                        padding: 0;
+                        margin: 0;
+                        font-size: 0.75rem;
+                        color: #92400e;
+                    }
+
+                    .summary-features li {
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        margin-bottom: 2px;
+                    }
+
+                    .summary-features i {
+                        color: #059669;
+                    }
+
+                    /* Compactação do Form */
+                    .form-group {
+                        margin-bottom: 4px !important;
+                        /* Menos espaço entre campos */
+                    }
+
+                    .form-label {
+                        text-transform: uppercase;
+                        font-size: 0.75rem !important;
+                        font-weight: 800 !important;
+                        color: #374151 !important;
+                        margin-bottom: 2px !important;
+                    }
+
+                    .form-input {
+                        padding: 8px 10px !important;
+                        /* Input mais compacto */
+                        font-size: 0.9rem !important;
+                        height: auto !important;
+                    }
+
+                    .form-section-title {
+                        font-size: 0.9rem !important;
+                        margin: 10px 0 8px !important;
+                    }
+
+                    /* Tooltip de Ociosidade */
+                    .field-tooltip {
+                        position: absolute;
+                        background: #1f2937;
+                        color: #fff;
+                        padding: 6px 10px;
+                        border-radius: 6px;
+                        font-size: 0.75rem;
+                        bottom: 100%;
+                        right: 0;
+                        margin-bottom: 5px;
+                        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                        opacity: 0;
+                        transform: translateY(5px);
+                        transition: all 0.3s ease;
+                        pointer-events: none;
+                        z-index: 10;
+                        white-space: nowrap;
+                    }
+
+                    .field-tooltip.active {
                         opacity: 1;
                         transform: translateY(0);
                     }
-                }
-            </style>
 
-            <div id="checkout-main-view" style="position: relative;">
+                    .field-tooltip::after {
+                        content: '';
+                        position: absolute;
+                        top: 100%;
+                        right: 15px;
+                        border-width: 5px;
+                        border-style: solid;
+                        border-color: #1f2937 transparent transparent transparent;
+                    }
+
+                    .form-group {
+                        position: relative;
+                    }
+
+                    /* Para posicionar o tooltip */
+
+                    /* Validation Styles */
+                    .form-input.input-error {
+                        border-color: #ef4444 !important;
+                        /* Red */
+                        background-color: #fef2f2 !important;
+                    }
+
+                    .form-input.input-success {
+                        border-color: #22c55e !important;
+                        /* Green */
+                        background-color: #f0fdf4 !important;
+                    }
+
+                    .error-message {
+                        color: #ef4444;
+                        font-size: 0.7rem;
+                        font-weight: 700;
+                        margin-top: -4px;
+                        margin-bottom: 4px;
+                        display: block;
+                        animation: fadeIn 0.3s ease;
+                    }
+
+                    @keyframes fadeIn {
+                        from {
+                            opacity: 0;
+                            transform: translateY(-5px);
+                        }
+
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+                </style>
+
                 <!-- 1. Resumo do Pedido (Compacto) -->
                 <div class="checkout-summary">
                     <div style="display: flex; gap: 1rem; align-items: start;">
@@ -992,7 +994,8 @@
 
             <div id="pix-result" class="hidden" style="text-align: center;">
                 <h3 class="modal-title">Quase lá!</h3>
-                <p style="font-size: 0.9rem; color: var(--gray-600); margin: 0.5rem 0;">Escaneie o QR Code ou copie o
+                <p style="font-size: 0.9rem; color: var(--gray-600); margin: 0.5rem 0;">Escaneie o QR Code ou copie
+                    o
                     código abaixo.</p>
 
                 <div
@@ -1066,11 +1069,14 @@
                 <div
                     style="background: #fffbeb; border: 1px solid #fef3c7; padding: 1rem; border-radius: 0.75rem; text-align: left; margin-bottom: 1.5rem;">
                     <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: #92400e;">
-                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-envelope"></i> O acesso será enviado para
+                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-envelope"></i> O acesso será enviado
+                            para
                             o seu e-mail assim que aprovado.</li>
-                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-clock"></i> Prazo de análise: de alguns
+                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-clock"></i> Prazo de análise: de
+                            alguns
                             minutos até 48h.</li>
-                        <li><i class="fa-solid fa-check-double"></i> Fique atento à sua caixa de entrada e Spam.</li>
+                        <li><i class="fa-solid fa-check-double"></i> Fique atento à sua caixa de entrada e Spam.
+                        </li>
                     </ul>
                 </div>
 

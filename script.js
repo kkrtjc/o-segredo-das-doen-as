@@ -791,7 +791,8 @@ function showSlideInUpsell(method) {
                     <ul style="color: #fff; font-size: 0.7rem; padding: 0; margin: 0; list-style: none; line-height: 1.3;">
                         <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Sobrevivência de até 98%</li>
                         <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Crescimento 3x mais rápido</li>
-                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Doenças e tratamentos</li>
+                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Ambiente 100% adequado</li>
+                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> As principais doenças em pintinhos</li>
                     </ul>
                 </div>
 
@@ -1616,7 +1617,7 @@ function showPixResult(data, items) {
                     </div>
                     <div class="toast-content">
                         <h4>Código PIX Copiado!</h4>
-                        <p>Cole no app do seu banco para pagar.</p>
+                        <p>Código copiado com sucesso.</p>
                     </div>
                 `;
                 container.appendChild(toast);
