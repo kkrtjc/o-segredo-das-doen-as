@@ -1074,8 +1074,24 @@ app.post('/api/config/update', (req, res) => {
 app.post('/api/config/reset', (req, res) => {
     const { password } = req.body;
     if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
-    // Reset Logic Placeholder
-    res.json({ success: true });
+
+    console.log('🚨 [ADMIN] Solicitando RESTAURAÇÃO DE FÁBRICA...');
+
+    const LOCAL_DB = path.join(__dirname, 'data', 'db.json');
+    if (fs.existsSync(LOCAL_DB)) {
+        try {
+            fs.copyFileSync(LOCAL_DB, DB_PATH);
+            cacheDB = null; // Limpa o cache em memória
+            console.log('✅ [ADMIN] Banco de dados restaurado do repositório com sucesso.');
+            res.json({ success: true });
+        } catch (err) {
+            console.error('❌ [ADMIN] Erro ao copiar arquivo:', err.message);
+            res.status(500).json({ error: 'Falha ao restaurar banco' });
+        }
+    } else {
+        console.warn('⚠️ [ADMIN] Arquivo original de db.json não encontrado no repositório.');
+        res.status(404).json({ error: 'Banco original não encontrado no repositório' });
+    }
 });
 
 const PORT = process.env.PORT || 10000;

@@ -415,12 +415,12 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     const fallbackData = {
         'ebook-doencas': {
             title: 'Protocolo Elite: A Cura das Aves',
-            price: 119.90,
-            originalPrice: 139.60,
+            price: 109.90,
+            originalPrice: 149.90,
             cover: 'capadasdoencas.jpg',
             fullBumps: [
                 { id: 'ebook-manejo', title: 'Manual de Pintinhos', price: 49.90, priceCard: 49.90, image: 'capadospintinhos.jpg', description: 'Crie pintinhos fortes e saudáveis.' },
-                { id: 'bump-6361', title: 'Tabela de Ração', price: 14.90, priceCard: 19.90, image: 'tabela_racao_bump.jpg', description: 'Alimentação correta em todas as fases da sua criação. Economize na ração e acelere o crescimento das suas aves.', tag: 'OFERTA ÚNICA' }
+                { id: 'bump-6361', title: 'Tabela de Ração', price: 19.90, priceCard: 19.90, image: 'tabela_racao_bump.jpg', description: 'Alimentaçao correta em todas as fases da sua criaçao. Economize na raçao e acelere o crescimento das suas aves com o balanceamento ideal.', tag: 'OFERTA ÚNICA' }
             ]
         },
         'combo-elite': {
@@ -568,14 +568,15 @@ function updateTotal() {
         // Busca o bump no array fullBumps do produto
         let bump = cart.mainProduct.fullBumps?.find(b => b.id === id);
 
-        // FALLBACK: Se não encontrou em fullBumps, busca na config global (se carregada)
+        // FALLBACK: Se não encontrou em fullBumps, busca na config global (se carregada) ou prefetched
         if (!bump && id.startsWith('ebook-')) {
-            if (window.siteConfig && window.siteConfig.products && window.siteConfig.products[id]) {
-                const prod = window.siteConfig.products[id];
+            const configData = (window.siteConfig && window.siteConfig.products) ? window.siteConfig.products[id] : prefetchedProducts[id];
+
+            if (configData) {
                 bump = {
                     id: id,
-                    price: prod.price, // Preço PIX do banco
-                    priceCard: prod.originalPrice || prod.price // Preço Cartão do banco (ou fallback)
+                    price: configData.price, // Preço PIX do banco
+                    priceCard: configData.originalPrice || configData.price // Preço Cartão do banco (ou fallback)
                 };
             } else {
                 // Fallback de emergência (caso config não tenha carregado) - EVITAR SE POSSÍVEL
@@ -797,9 +798,9 @@ function showSlideInUpsell(method) {
                 </div>
 
                 <div class="order-bump-price-tag" style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                    <div style="color: rgba(255,255,255,0.4); text-decoration: line-through; font-size: 0.75rem;">De R$ 99,90</div>
-                    <div style="color: #fbbf24; font-size: 1.8rem; font-weight: 900; line-height: 1;">R$ 49<span style="font-size: 1rem;">,90</span></div>
-                    <div style="color: #fff; font-size: 0.8rem; opacity: 0.9; margin-top: 2px; font-weight: 600;">(4x de R$ 12,48 sem juros)</div>
+                    <div style="color: rgba(255,255,255,0.4); text-decoration: line-through; font-size: 0.75rem;">De R$ ${(prefetchedProducts['ebook-manejo']?.originalPrice || 99.90).toFixed(2).replace('.', ',')}</div>
+                    <div style="color: #fbbf24; font-size: 1.8rem; font-weight: 900; line-height: 1;">R$ ${(prefetchedProducts['ebook-manejo']?.price || 49.90).toFixed(2).split('.')[0]}<span style="font-size: 1rem;">,${(prefetchedProducts['ebook-manejo']?.price || 49.90).toFixed(2).split('.')[1]}</span></div>
+                    <div style="color: #fff; font-size: 0.8rem; opacity: 0.9; margin-top: 2px; font-weight: 600;">(4x de R$ ${((prefetchedProducts['ebook-manejo']?.price || 49.90) / 4).toFixed(2).replace('.', ',')} sem juros)</div>
                 </div>
             </div>
 
