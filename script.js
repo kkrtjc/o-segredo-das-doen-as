@@ -462,6 +462,14 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         }
 
         cart.mainProduct = { ...productData, id: productId };
+
+        // Ensure fullBumps exist even if prefetched
+        if (!cart.mainProduct.fullBumps && cart.mainProduct.orderBumps) {
+            cart.mainProduct.fullBumps = cart.mainProduct.orderBumps
+                .map(id => prefetchedProducts[id])
+                .filter(b => b);
+        }
+
         cart.bumps = forceBumps || [];
 
         document.getElementById('checkout-product-name').innerText = productData.title;

@@ -660,7 +660,8 @@
                     Extreme</span></li>
             <li class="nav-item" onclick="downloadConfig()"
                 style="margin-top:20px; color:var(--accent); border:1px dashed var(--accent); border-radius:12px; opacity:0.8">
-                <i class="fa-solid fa-download"></i> <span>Baixar db.json</span></li>
+                <i class="fa-solid fa-download"></i> <span>Baixar db.json</span>
+            </li>
             <li class="nav-item" onclick="resetConfig()"
                 style="color:#ef4444; border:1px dashed #ef4444; border-radius:12px; margin-top:10px; opacity:0.8"><i
                     class="fa-solid fa-rotate-left"></i> <span>Restaurar de Fábrica</span></li>
@@ -1034,8 +1035,10 @@
 
             const res = await fetch(`${API_URL}/api/config/reset`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password: masterPass })
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-admin-password': masterPass
+                }
             });
 
             if (res.ok) {

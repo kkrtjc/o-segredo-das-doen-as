@@ -277,19 +277,20 @@ app.post('/api/config/update', (req, res) => {
 });
 
 app.post('/api/config/reset', (req, res) => {
-    const { password } = req.body;
+    const password = req.headers['x-admin-password'] || req.body.password;
     if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
 
-    // FACTORY RESET LOGIC
+    console.log('🚨 [ADMIN] Solicitando RESTAURAÇÃO DE FÁBRICA...');
     try {
         if (fs.existsSync(LOCAL_DB)) {
             // Overwrite persistence with source code DB
             fs.copyFileSync(LOCAL_DB, DB_PATH);
             cacheDB = null; // Clear RAM cache
 
-            console.log('🚨 [RESET] Sistema restaurado para padrão de fábrica pelo Admin.');
+            console.log('✅ [RESET] Sistema restaurado para padrão de fábrica com sucesso.');
             res.json({ success: true });
         } else {
+            console.error('❌ [RESET] Arquivo original não encontrado em:', LOCAL_DB);
             res.status(500).json({ error: 'Arquivo original de fábrica não encontrado.' });
         }
     } catch (e) {
