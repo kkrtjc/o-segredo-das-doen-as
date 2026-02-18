@@ -56,45 +56,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // --- 5. DYNAMIC PRE-FETCH (Instant Checkout) ---
-    const productsToPreload = ['ebook-doencas', 'combo-elite', 'ebook-manejo'];
-    productsToPreload.forEach(async (id) => {
-        try {
-            const response = await fetch(`${API_URL}/api/products/${id}`);
-            if (response.ok) {
-                prefetchedProducts[id] = await response.json();
-                console.log(`🚀 [PREFETCH] ${id} carregado`);
+    try {
+        const response = await fetch(`${API_URL}/api/config`);
+        if (response.ok) {
+            const config = await response.json();
+            // Merge both products and orderBumps into prefetchedProducts for easy access
+            Object.assign(prefetchedProducts, config.products, config.orderBumps);
+            console.log('🚀 [PREFETCH] Configuração completa carregada (Produtos + Bumps)');
 
-                // Update specific price elements if they exist
-                if (id === 'ebook-doencas') {
-                    const resp = prefetchedProducts[id];
-                    const priceElement = document.getElementById('display-price-value');
-                    if (priceElement && resp.price) {
-                        priceElement.innerText = resp.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-                    }
-                }
+            // Update specific price elements if they exist
+            const mainP = prefetchedProducts['ebook-doencas'];
+            const priceElement = document.getElementById('display-price-value');
+            if (priceElement && mainP && mainP.price) {
+                priceElement.innerText = mainP.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
             }
-        } catch (e) {
-            console.warn(`[PREFETCH] Falha ao carregar ${id}`, e);
         }
-    });
+    } catch (e) {
+        console.warn('[PREFETCH] Falha ao carregar configuração global', e);
+    }
 
     // 3. LAZY VIDEO LOADING (Intersection Observer)
-    const lazyVideo = document.getElementById('vsl-video');
-    if (lazyVideo && 'IntersectionObserver' in window) {
-        const videoObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const source = lazyVideo.querySelector('source');
-                    if (source && source.dataset.src) {
-                        source.src = source.dataset.src;
-                        lazyVideo.load();
-                        console.log("🎥 [VIDEO] Lazy Source Loaded");
+    const lazyVideo = document.getElementById('vsl-video') || document.querySelector('.square-video-wrapper video');
+    if (lazyVideo) {
+        let tracked = false;
+        lazyVideo.addEventListener('play', () => {
+            if (!tracked) {
+                trackEvent('video_play');
+                tracked = true;
+                console.log("🎥 [VIDEO] Play Tracked");
+            }
+        });
+
+        if ('IntersectionObserver' in window) {
+            const videoObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const source = lazyVideo.querySelector('source');
+                        if (source && source.dataset.src) {
+                            source.src = source.dataset.src;
+                            lazyVideo.load();
+                            console.log("🎥 [VIDEO] Lazy Source Loaded");
+                        }
+                        observer.unobserve(lazyVideo);
                     }
-                    observer.unobserve(lazyVideo);
-                }
-            });
-        }, { rootMargin: '200px' });
-        videoObserver.observe(lazyVideo);
+                });
+            }, { rootMargin: '200px' });
+            videoObserver.observe(lazyVideo);
+        }
     }
 });
 
@@ -780,7 +788,7 @@ function showSlideInUpsell(method) {
 
             <div class="order-bump-body" style="text-align: center; padding: 0 5px;">
                 <p style="color: #fff; font-size: 0.8rem; margin-bottom: 0.75rem; line-height: 1.3; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px;">
-                    <strong style="color: #e74c3c;">8 A CADA 10 PINTINHOS MORREM</strong> POR ERRO DE MANEJO. APRENDA COMO CRIAR PINTINHOS E SE LIVRE DE DOENÇA.<br>
+                    <strong style="color: #e74c3c;">8 A CADA 10 PINTINHOS MORREM</strong> POR ERRO DE MANEJO. APRENDA COMO CRIAR PINTINHOS E SE LIVRE DE DOENÇA DESDE O NASCIMENTO.<br>
                     <strong style="color: #fbbf24; display: block; margin-top: 4px;">SE TORNE O CRIADOR COMPLETO</strong>
                 </p>
                 
@@ -790,17 +798,16 @@ function showSlideInUpsell(method) {
                          <div style="position: absolute; top: -5px; right: -5px; background: #e74c3c; color: #fff; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 900; transform: rotate(15deg); border: 1.5px solid #fff;">-35%</div>
                     </div>
                     <ul style="color: #fff; font-size: 0.7rem; padding: 0; margin: 0; list-style: none; line-height: 1.3;">
-                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Sobrevivência de até 98%</li>
-                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Crescimento 3x mais rápido</li>
+                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Sobrevivência de até 90%</li>
+                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Crescimento mais rápido</li>
                         <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Ambiente 100% adequado</li>
-                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> As principais doenças em pintinhos</li>
+                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> As principais doenças em pintinhos e como tratar.</li>
                     </ul>
                 </div>
 
                 <div class="order-bump-price-tag" style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                    <div style="color: rgba(255,255,255,0.4); text-decoration: line-through; font-size: 0.75rem;">De R$ ${(prefetchedProducts['ebook-manejo']?.originalPrice || 99.90).toFixed(2).replace('.', ',')}</div>
-                    <div style="color: #fbbf24; font-size: 1.8rem; font-weight: 900; line-height: 1;">R$ ${(prefetchedProducts['ebook-manejo']?.price || 49.90).toFixed(2).split('.')[0]}<span style="font-size: 1rem;">,${(prefetchedProducts['ebook-manejo']?.price || 49.90).toFixed(2).split('.')[1]}</span></div>
-                    <div style="color: #fff; font-size: 0.8rem; opacity: 0.9; margin-top: 2px; font-weight: 600;">(4x de R$ ${((prefetchedProducts['ebook-manejo']?.price || 49.90) / 4).toFixed(2).replace('.', ',')} sem juros)</div>
+                    <div style="color: rgba(255,255,255,0.4); text-decoration: line-through; font-size: 0.75rem;">De R$ 69,90 no cartão</div>
+                    <div style="color: #fbbf24; font-size: 1.8rem; font-weight: 900; line-height: 1;">R$ 49<span style="font-size: 1rem;">,90 no pix</span></div>
                 </div>
             </div>
 
@@ -1914,6 +1921,9 @@ let pendingPaymentMethod = null;
 function showUpsellModal(method) {
     pendingPaymentMethod = method;
     const modal = document.getElementById('upsell-modal-container');
+    // Force refresh of inner content for debugging
+    console.log("🔥 [DEBUG] Carregando Modal às: " + new Date().toLocaleTimeString());
+
     modal.style.display = 'flex'; // Enable display to allow transition
 
     // Small timeout to trigger CSS transition

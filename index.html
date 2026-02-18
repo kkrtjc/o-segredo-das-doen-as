@@ -193,7 +193,8 @@
                     class="fa-solid fa-triangle-exclamation"></i> PARE DE PERDER PINTINHOS</h3>
 
             <p style="font-size: 0.8rem; color: var(--gray-600); margin-bottom: 8px; line-height: 1.3;">
-                <strong style="color: #111;">8 a cada 10 pintinhos morrem</strong> antes dos 20 dias por erro de manejo.
+                <strong style="color: #111;">8 A CADA 10 PINTINHOS MORREM</strong> POR ERRO DE MANEJO. APRENDA COMO
+                CRIAR PINTINHOS E SE LIVRE DE DOENÇA DESDE O NASCIMENTO.
             </p>
 
             <div
@@ -201,15 +202,28 @@
                 <img src="capadospintinhos.jpg" style="width: 70px; height: auto; border-radius: 5px;">
                 <div>
                     <h4 style="font-size: 0.95rem; margin: 0; color: #111;">Manejo de Pintinhos</h4>
-                    <p style="font-size: 0.8rem; color: var(--gray-500); margin: 2px 0;">De: <span
-                            style="text-decoration: line-through;">R$ 99,90</span></p>
-                    <div style="font-weight: 800; color: var(--success); font-size: 1rem;">Por: R$ 49,90</div>
+                    <p style="font-size: 0.75rem; color: var(--gray-500); margin: 2px 0;">De: <span
+                            style="text-decoration: line-through;">R$ 69,90 no cartão</span></p>
+                    <div style="font-weight: 800; color: var(--success); font-size: 0.95rem;">por apenas R$ 49,90 no pix
+                    </div>
                 </div>
             </div>
 
-            <p style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 10px; line-height: 1.3;">
-                Aprenda o passo a passo do nascimento à fase adulta e blinde sua criação.
-            </p>
+            <ul
+                style="list-style: none; padding: 0; margin: 0 0 12px 5px; font-size: 0.8rem; color: var(--gray-600); text-align: left;">
+                <li style="margin-bottom: 4px; display: flex; align-items: flex-start; gap: 8px;"><i
+                        class="fa-solid fa-circle-check" style="color: var(--green-600); margin-top: 3px;"></i>
+                    Sobrevivência de até 90%</li>
+                <li style="margin-bottom: 4px; display: flex; align-items: flex-start; gap: 8px;"><i
+                        class="fa-solid fa-circle-check" style="color: var(--green-600); margin-top: 3px;"></i>
+                    Crescimento mais rápido</li>
+                <li style="margin-bottom: 4px; display: flex; align-items: flex-start; gap: 8px;"><i
+                        class="fa-solid fa-circle-check" style="color: var(--green-600); margin-top: 3px;"></i> Ambiente
+                    100% adequado</li>
+                <li style="margin-bottom: 4px; display: flex; align-items: flex-start; gap: 8px;"><i
+                        class="fa-solid fa-circle-check" style="color: var(--green-600); margin-top: 3px;"></i> As
+                    principais doenças em pintinhos e como tratar.</li>
+            </ul>
 
             <button onclick="acceptUpsell()" class="btn-upsell-yes">
                 <i class="fa-solid fa-check"></i> SIM, ADICIONAR AGORA
@@ -239,48 +253,55 @@
         }
 
         .upsell-modal-container.active {
-            display: flex;
-            /* Flex to center */
+            display: flex !important;
             opacity: 1;
         }
 
         .upsell-content {
             background: #fff;
             width: 90%;
-            max-width: 400px;
-            /* Standard modal width */
-            padding: 15px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transform: translateX(-50px);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 420px;
+            padding: 20px 15px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transform: scale(0.9);
+            /* Start slightly smaller */
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             text-align: left;
             position: relative;
+        }
+
+        .upsell-modal-container.active .upsell-content {
+            transform: scale(1);
+            opacity: 1;
         }
 
         /* Desktop specific: Slide from left side */
         @media (min-width: 768px) {
             .upsell-modal-container {
                 justify-content: flex-start;
-                /* Align to left */
+                padding-left: 0;
             }
 
             .upsell-content {
                 width: 400px;
                 height: 100%;
-                border-radius: 0 20px 20px 0;
+                max-height: 100vh;
+                border-radius: 0 24px 24px 0;
                 transform: translateX(-100%);
-                /* Start fully off-screen */
+                opacity: 1;
                 margin: 0;
                 max-width: none;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
+                transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             }
-        }
 
-        .upsell-modal-container.active .upsell-content {
-            transform: translateX(0);
+            .upsell-modal-container.active .upsell-content {
+                transform: translateX(0);
+            }
         }
 
         .btn-upsell-yes {
@@ -675,13 +696,13 @@
                 <div class="modal-header"
                     style="margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 20px;">
                     <div style="flex: 1;">
-                        <h3 class="modal-title" style="margin-bottom: 4px;">Finalize Sua Compra</h3>
-                        <p style="font-size: 0.95rem; color: #15803d; font-weight: 700; margin-bottom: 4px;">...e
-                            tenha
-                            acesso imediato ao ebook após o pagamento!</p>
-                        <p style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 0;"><strong>Mais de
-                                1600
-                                criadores</strong> já tiveram resultados reais.</p>
+                        <h3 class="modal-title" style="margin-bottom: 4px; line-height: 1.2; font-weight: 800;">
+                            <span style="color: #78350f;">Finalize Sua Compra</span> e tenha acesso imediato ao ebook
+                            após o pagamento!
+                        </h3>
+                        <p style="font-size: 0.9rem; color: #4b5563; margin-top: 5px; font-weight: 600;">
+                            Nao espere amanha, pra sua galinha amanha pode ser tarde.
+                        </p>
                     </div>
                     <img src="logo.png" alt="Logo" style="height: 140px; flex-shrink: 0;">
                 </div>
@@ -1001,6 +1022,9 @@
                 <div
                     style="background: #fff; padding: 1rem; border-radius: 0.75rem; display: inline-block; margin: 1rem 0; border: 1px solid var(--gray-200);">
                     <img id="qr-code-img" src="" alt="QR Code PIX" style="width: 180px; height: 180px; display: block;">
+                    <div style="margin-top: 10px; font-weight: 800; font-size: 0.85rem; color: #1a1a1a;">
+                        RECEBEDOR: JOAO PAULO SANTOS CAMARGO
+                    </div>
                 </div>
 
                 <button id="btn-copy-pix" class="btn-primary" style="width: 100%; margin-bottom: 1rem;">
