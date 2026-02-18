@@ -463,12 +463,22 @@ async function startCheckoutProcess(productId, forceBumps = []) {
 
         cart.mainProduct = { ...productData, id: productId };
 
+        console.log('💠 [CHECKOUT] Abrindo para:', productId);
+        console.log('💠 [CHECKOUT] Bumps vinculados no DB:', cart.mainProduct.orderBumps);
+
         // Ensure fullBumps exist even if prefetched
-        if (!cart.mainProduct.fullBumps && cart.mainProduct.orderBumps) {
+        if ((!cart.mainProduct.fullBumps || cart.mainProduct.fullBumps.length === 0) && cart.mainProduct.orderBumps) {
+            console.log('💠 [CHECKOUT] Reconstruindo fullBumps do cache local...');
             cart.mainProduct.fullBumps = cart.mainProduct.orderBumps
-                .map(id => prefetchedProducts[id])
+                .map(id => {
+                    const found = prefetchedProducts[id];
+                    if (found) return { ...found, id: id }; // Garante que o ID esteja presente
+                    return null;
+                })
                 .filter(b => b);
         }
+
+        console.log('💠 [CHECKOUT] Full Bumps Finais:', cart.mainProduct.fullBumps);
 
         cart.bumps = forceBumps || [];
 
@@ -495,7 +505,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             switchMethod('pix');
         }
 
-        renderOrderBumps(productData.fullBumps);
+        renderOrderBumps(cart.mainProduct.fullBumps);
         updateTotal();
 
         const delay = (productData && productData.fullBumps) ? 10 : 250;

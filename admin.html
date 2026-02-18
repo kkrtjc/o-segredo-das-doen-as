@@ -605,6 +605,12 @@
             }
 
             .sidebar-logo h1,
+            .sidebar {
+                width: 80px;
+                padding: 20px 10px;
+            }
+
+            .sidebar-logo h1,
             .nav-item span {
                 display: none;
             }
@@ -616,6 +622,118 @@
 
             .metrics-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-shell {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: 65px;
+                flex-direction: row;
+                position: fixed;
+                bottom: 0;
+                top: auto;
+                left: 0;
+                padding: 0;
+                z-index: 1000;
+                border-right: none;
+                border-top: 1px solid var(--border);
+                background: rgba(10, 10, 10, 0.98);
+                backdrop-filter: blur(20px);
+            }
+
+            .sidebar-logo {
+                display: none;
+            }
+
+            .nav-list {
+                flex-direction: row;
+                width: 100%;
+                height: 100%;
+                justify-content: space-around;
+            }
+
+            .nav-item {
+                flex: 1;
+                margin: 0;
+                border-radius: 0;
+                padding: 10px;
+                justify-content: center;
+                height: 100%;
+                font-size: 0.6rem;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .nav-item i {
+                margin: 0;
+                font-size: 1.25rem;
+            }
+
+            .nav-item span {
+                display: block;
+                font-weight: 700;
+                opacity: 0.7;
+            }
+
+            .nav-item.active span {
+                opacity: 1;
+                color: var(--accent);
+            }
+
+            .main-shell {
+                margin-left: 0;
+                margin-bottom: 75px;
+                padding: 15px;
+            }
+
+            .sidebar-footer {
+                display: none;
+            }
+
+            #save-btn {
+                position: fixed;
+                top: 15px;
+                right: 15px;
+                width: auto !important;
+                z-index: 1100;
+                padding: 8px 18px;
+                font-size: 0.85rem;
+                background: var(--accent);
+                color: #000;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .product-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .product-card img {
+                width: 110px;
+                height: 150px;
+            }
+
+            .tab-content h2 {
+                font-size: 1.4rem;
+                margin-top: 50px;
+                text-align: center;
             }
         }
     </style>
@@ -653,24 +771,18 @@
             </li>
             <li class="nav-item" onclick="switchTab('bumps', this)"><i class="fa-solid fa-layer-group"></i> <span>Bumps
                     & Upsell</span></li>
-            <li class="nav-item" onclick="switchTab('sales', this)"><i class="fa-solid fa-receipt"></i>
-                <span>Vendas</span>
-            </li>
-            <li class="nav-item" onclick="switchTab('funnel', this)"><i class="fa-solid fa-filter"></i> <span>Funnel
-                    Extreme</span></li>
-            <li class="nav-item" onclick="downloadConfig()"
-                style="margin-top:20px; color:var(--accent); border:1px dashed var(--accent); border-radius:12px; opacity:0.8">
-                <i class="fa-solid fa-download"></i> <span>Baixar db.json</span>
-            </li>
-            <li class="nav-item" onclick="resetConfig()"
-                style="color:#ef4444; border:1px dashed #ef4444; border-radius:12px; margin-top:10px; opacity:0.8"><i
-                    class="fa-solid fa-rotate-left"></i> <span>Restaurar de Fábrica</span></li>
+            <li class="nav-item" onclick="switchTab('sales', this)"><i class="fa-solid fa-chart-line"></i>
+                <span>Vendas</span></li>
+            <li class="nav-item" onclick="switchTab('funnel', this)"><i class="fa-solid fa-filter"></i>
+                <span>Métricas</span></li>
+            <li class="nav-item" onclick="switchTab('settings', this)"><i class="fa-solid fa-gear"></i>
+                <span>Sistema</span></li>
         </ul>
         <div class="sidebar-footer">
             <button id="save-btn" onclick="saveData()" class="btn btn-primary"
-                style="width: 100%; display: none; margin-bottom: 15px;">SALVAR ALTERAÇÕES</button>
-            <p style="text-align: center; font-size: 0.6rem; color: var(--text-dim); opacity: 0.5;">v4.0 Premium Edition
-            </p>
+                style="width: 100%; display: none; box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);">
+                <i class="fa-solid fa-cloud-arrow-up"></i> <span>Salvar Alterações</span>
+            </button>
         </div>
     </nav>
 
@@ -759,10 +871,34 @@
             </div>
         </div>
 
-        <!-- FUNNEL -->
-        <div id="funnel" class="tab-content">
-            <h2 style="font-family: 'Outfit'; font-size: 1.8rem; margin-bottom: 30px;">Funnel Extreme Analytics</h2>
-            <div id="funnel-view"></div>
+        <!-- SETTINGS -->
+        <div id="settings" class="tab-content">
+            <h2 style="font-family: 'Outfit'; font-size: 1.8rem; margin-bottom: 30px;">Gerenciamento do Sistema</h2>
+            <div class="grid-container">
+                <div class="product-card" style="border-style: dashed; border-color: var(--accent); opacity: 0.9;">
+                    <div style="text-align: center; padding: 20px;">
+                        <i class="fa-solid fa-download"
+                            style="font-size: 2.5rem; color: var(--accent); margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 10px;">Sincronizar Manualmente</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 20px;">Baixe o arquivo de
+                            configuração atual para salvar no seu computador ou subir no Git.</p>
+                        <button onclick="downloadConfig()" class="btn btn-secondary"
+                            style="width: 100%; border-color: var(--accent); color: var(--accent);">BAIXAR
+                            DB.JSON</button>
+                    </div>
+                </div>
+                <div class="product-card" style="border-style: dashed; border-color: #ef4444; opacity: 0.9;">
+                    <div style="text-align: center; padding: 20px;">
+                        <i class="fa-solid fa-rotate-left"
+                            style="font-size: 2.5rem; color: #ef4444; margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 10px;">Restaurar de Fábrica</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 20px;">Força o servidor a
+                            resetar o painel para o estado que está no repositório (Git).</p>
+                        <button onclick="resetConfig()" class="btn btn-secondary"
+                            style="width: 100%; border-color: #ef4444; color: #ef4444;">RESTAURAR AGORA</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -1042,10 +1178,11 @@
             });
 
             if (res.ok) {
-                alert("♻️ Sistema restaurado! Recarregando...");
+                alert("♻️ Sistema restaurado com sucesso! Recarregando...");
                 window.location.reload();
             } else {
-                alert("❌ Erro ao restaurar sistema.");
+                const err = await res.json();
+                alert(`❌ Erro ao restaurar: ${err.error || 'Erro desconhecido'}`);
             }
         }
 
