@@ -1049,7 +1049,8 @@ app.get('/api/access/:token', (req, res) => {
 
 // --- 6. MURA IA DIALOGUE API ---
 app.post('/api/mura/chat', async (req, res) => {
-    const { password, message, history: chatHistory } = req.body;
+    const password = req.body.password || req.headers['x-admin-password'];
+    const { message, history: chatHistory } = req.body;
     if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
 
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;

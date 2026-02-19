@@ -772,11 +772,14 @@
             <li class="nav-item" onclick="switchTab('bumps', this)"><i class="fa-solid fa-layer-group"></i> <span>Bumps
                     & Upsell</span></li>
             <li class="nav-item" onclick="switchTab('sales', this)"><i class="fa-solid fa-chart-line"></i>
-                <span>Vendas</span></li>
+                <span>Vendas</span>
+            </li>
             <li class="nav-item" onclick="switchTab('funnel', this)"><i class="fa-solid fa-filter"></i>
-                <span>Métricas</span></li>
+                <span>Métricas</span>
+            </li>
             <li class="nav-item" onclick="switchTab('settings', this)"><i class="fa-solid fa-gear"></i>
-                <span>Sistema</span></li>
+                <span>Sistema</span>
+            </li>
         </ul>
         <div class="sidebar-footer">
             <button id="save-btn" onclick="saveData()" class="btn btn-primary"
@@ -961,8 +964,8 @@
         async function loadInitialData() {
             renderProducts();
             renderBumps();
-            loadHistory();
-            loadAnalytics();
+            await loadHistory();
+            await loadAnalytics();
             initMura();
         }
 
@@ -984,11 +987,61 @@
             const res = await fetch(`${API_URL}/api/analytics`);
             analyticsData = await res.json();
 
-            const totals = analyticsData.totals;
-            document.getElementById('dash-unique').innerText = totals.uniqueVisits || 0;
-            document.getElementById('dash-video').innerText = totals.videoPlay || 0;
-            document.getElementById('dash-checkout').innerText = totals.checkoutOpens || 0;
-            document.getElementById('dash-sales').innerText = analyticsData.approvedCount || 0;
+            // Filtragem por Período (calculada no frontend para máxima flexibilidade)
+            const now = new Date();
+            let startDate = new Date(0); // Padrão: Todo período
+
+            if (range === 'today') {
+                startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            } else if (range === 'yesterday') {
+                startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+                startDate.setHours(0, 0, 0, 0);
+            } else if (range === '7d') {
+                startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+                startDate.setHours(0, 0, 0, 0);
+            } else if (range === '30d') {
+                startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
+                startDate.setHours(0, 0, 0, 0);
+            }
+
+            const filteredDaily = Object.keys(analyticsData.daily).filter(dateStr => {
+                const [y, m, d] = dateStr.split('-').map(Number);
+                const dateObj = new Date(y, m - 1, d);
+
+                if (range === 'yesterday') {
+                    const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+                    return dateObj.getTime() === yesterday.setHours(0, 0, 0, 0);
+                }
+                if (range === 'all') return true;
+                return dateObj >= startDate;
+            });
+
+            const filteredTotals = filteredDaily.reduce((acc, date) => {
+                const day = analyticsData.daily[date];
+                acc.uniqueVisits += (day.uniqueVisits || 0);
+                acc.videoPlay += (day.videoPlay || 0);
+                acc.checkoutOpens += (day.checkoutOpens || 0);
+                return acc;
+            }, { uniqueVisits: 0, videoPlay: 0, checkoutOpens: 0 });
+
+            // Filtro de Vendas (cruzando com Histórico Real)
+            const filteredSales = (historyData || []).filter(s => {
+                const d = new Date(s.date);
+                if (range === 'yesterday') {
+                    const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+                    return d.getDate() === yesterday.getDate() && d.getMonth() === yesterday.getMonth() && d.getFullYear() === yesterday.getFullYear();
+                }
+                if (range === 'all') return true;
+                return d >= startDate;
+            });
+
+            document.getElementById('dash-unique').innerText = filteredTotals.uniqueVisits;
+            document.getElementById('dash-video').innerText = filteredTotals.videoPlay;
+            document.getElementById('dash-checkout').innerText = filteredTotals.checkoutOpens;
+            document.getElementById('dash-sales').innerText = filteredSales.length;
+
+            // Cache filtrado para o Funil
+            analyticsData.filtered = { ...filteredTotals, sales: filteredSales.length };
 
             renderChart();
             renderFunnel();
@@ -1187,11 +1240,11 @@
         }
 
         function renderFunnel() {
-            const t = analyticsData.totals;
-            const unique = t.uniqueVisits || 1;
-            const video = t.videoPlay || 0;
-            const check = t.checkoutOpens || 0;
-            const sales = analyticsData.approvedCount || 0;
+            const f = analyticsData.filtered || { uniqueVisits: 0, videoPlay: 0, checkoutOpens: 0, sales: 0 };
+            const unique = f.uniqueVisits || 1;
+            const video = f.videoPlay || 0;
+            const check = f.checkoutOpens || 0;
+            const sales = f.sales || 0;
 
             const funnelView = document.getElementById('funnel-view');
             funnelView.innerHTML = `
