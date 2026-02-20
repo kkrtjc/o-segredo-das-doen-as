@@ -711,16 +711,17 @@ app.post('/api/checkout/pix', async (req, res) => {
     let cleanCPF = (customer.cpf || '').replace(/\D/g, '');
 
     // Fallback if CPF is empty (requested for faster PIX checkout)
-    if (!cleanCPF && process.env.OWNER_CPF) {
-        console.log(`ℹ️ [PIX] CPF não fornecido, usando fallback: ${process.env.OWNER_CPF}`);
-        cleanCPF = process.env.OWNER_CPF;
+    if (!cleanCPF) {
+        cleanCPF = process.env.OWNER_CPF || '14477751630';
+        console.log(`ℹ️ [PIX] CPF não fornecido pelo cliente. Usando fallback: ${cleanCPF}`);
     }
 
-    if (cleanCPF.length !== 11) {
-        console.error(`❌ [PIX ERROR] CPF inválido: ${customer.cpf} (limpo: ${cleanCPF})`);
+    if (cleanCPF.replace(/\D/g, '').length !== 11) {
+        console.error(`❌ [PIX ERROR] CPF inválido após fallback: ${cleanCPF}`);
         return res.status(400).json({
             error: 'CPF inválido',
-            message: 'O CPF deve conter exatamente 11 dígitos.'
+            message: 'O CPF deve conter exatamente 11 dígitos.',
+            debug_info: { source: cleanCPF ? 'fallback' : 'missing', length: cleanCPF ? cleanCPF.length : 0 }
         });
     }
 
