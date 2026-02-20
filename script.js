@@ -1551,7 +1551,7 @@ function showPixResult(data, items) {
             const toast = document.createElement('div');
             toast.className = 'toast-card';
             toast.style.cssText = "position: fixed; bottom: 20px; right: 20px; background: #16a34a; color: white; padding: 15px 25px; border-radius: 10px; z-index: 10000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); font-weight: bold;";
-            toast.innerHTML = `<i class="fa-solid fa-check-double"></i> codigo pix copiado com seucesso`;
+            toast.innerHTML = `<i class="fa-solid fa-check-double"></i> codigo pix copiado com sucesso`;
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 4000);
         }).catch(err => {
