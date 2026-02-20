@@ -777,6 +777,9 @@
             <li class="nav-item" onclick="switchTab('funnel', this)"><i class="fa-solid fa-filter"></i>
                 <span>Métricas</span>
             </li>
+            <li class="nav-item" onclick="switchTab('lost-leads', this)"><i class="fa-solid fa-users-slash"></i>
+                <span>Leads Perdidos</span>
+            </li>
             <li class="nav-item" onclick="switchTab('settings', this)"><i class="fa-solid fa-gear"></i>
                 <span>Sistema</span>
             </li>
@@ -826,6 +829,16 @@
                     <div class="value" id="dash-sales">0</div>
                     <i class="fa-solid fa-circle-check"></i>
                 </div>
+                <div class="stat-card" style="border-color: rgba(59, 130, 246, 0.3);">
+                    <div class="label">Pix Gerados</div>
+                    <div class="value" id="dash-pix-gen" style="color: var(--blue)">0</div>
+                    <i class="fa-solid fa-qrcode" style="color: var(--blue)"></i>
+                </div>
+                <div class="stat-card" style="border-color: rgba(16, 185, 129, 0.3);">
+                    <div class="label">Pix Pagos</div>
+                    <div class="value" id="dash-pix-paid" style="color: var(--success)">0</div>
+                    <i class="fa-solid fa-money-bill-transfer" style="color: var(--success)"></i>
+                </div>
             </div>
 
             <div class="graph-card">
@@ -869,6 +882,31 @@
                             </tr>
                         </thead>
                         <tbody id="sales-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEADS PERDIDOS -->
+        <div id="lost-leads" class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h2 style="font-family: 'Outfit'; font-size: 1.8rem; margin: 0;">Leads Perdidos (Checkout Abandonado)
+                </h2>
+            </div>
+            <div class="content-card">
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Cliente</th>
+                                <th>Email</th>
+                                <th>WhatsApp</th>
+                                <th>Produto</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lost-leads-list"></tbody>
                     </table>
                 </div>
             </div>
@@ -933,6 +971,7 @@
     <script>
         let db = { products: {}, orderBumps: {} };
         let historyData = [];
+        let lostLeadsData = [];
         let analyticsData = null;
         let masterPass = '';
         let myChart = null;
@@ -969,11 +1008,49 @@
             initMura();
         }
 
-        function switchTab(tab, el) {
+        function switchTab(tabId, el) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            document.getElementById(tab).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+            if (el) el.classList.add('active');
+
+            if (tabId === 'lost-leads') loadLostLeads();
+        }
+
+        async function loadLostLeads() {
+            try {
+                const res = await fetch(`${API_URL}/api/leads/lost`, {
+                    headers: { 'x-admin-password': masterPass }
+                });
+                if (!res.ok) return;
+                lostLeadsData = await res.json();
+                renderLostLeads();
+            } catch (e) { console.error("Error loading lost leads", e); }
+        }
+
+        function renderLostLeads() {
+            const list = document.getElementById('lost-leads-list');
+            if (!list) return;
+            list.innerHTML = lostLeadsData.sort((a, b) => new Date(b.date) - new Date(a.date)).map(l => {
+                const date = new Date(l.date).toLocaleString('pt-BR');
+                const cleanPhone = l.phone.replace(/\D/g, '');
+                const waLink = `https://wa.me/55${cleanPhone}?text=${encodeURIComponent(`Olá ${l.name}, vi que você se interessou pelo guia O Segredo das Galinhas. Ficou alguma dúvida?`)}`;
+
+                return `
+                    <tr>
+                        <td>${date}</td>
+                        <td style="font-weight:600">${l.name}</td>
+                        <td style="font-size:0.8rem; opacity:0.8">${l.email || '---'}</td>
+                        <td style="font-weight:600">${l.phone}</td>
+                        <td style="font-size:0.8rem">${l.product || '---'}</td>
+                        <td>
+                            <a href="${waLink}" target="_blank" class="badge" style="background:var(--success); color:#fff; text-decoration:none">
+                                <i class="fa-brands fa-whatsapp"></i> RECUPERAR
+                            </a>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         async function loadHistory() {
@@ -1039,6 +1116,12 @@
             document.getElementById('dash-video').innerText = filteredTotals.videoPlay;
             document.getElementById('dash-checkout').innerText = filteredTotals.checkoutOpens;
             document.getElementById('dash-sales').innerText = filteredSales.length;
+
+            // PIX METRICS
+            const pixGen = filteredDaily.reduce((acc, d) => acc + (analyticsData.daily[d].pixGenerated || 0), 0);
+            const pixPaid = filteredDaily.reduce((acc, d) => acc + (analyticsData.daily[d].pixPaid || 0), 0);
+            document.getElementById('dash-pix-gen').innerText = pixGen;
+            document.getElementById('dash-pix-paid').innerText = pixPaid;
 
             // Cache filtrado para o Funil
             analyticsData.filtered = { ...filteredTotals, sales: filteredSales.length };

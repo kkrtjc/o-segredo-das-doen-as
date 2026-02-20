@@ -55,8 +55,9 @@ const DATA_DIR = fs.existsSync(MOUNTED_DISK_PATH) ? MOUNTED_DISK_PATH : path.joi
 const DB_PATH = path.join(DATA_DIR, 'db.json');
 const HISTORY_PATH = path.join(DATA_DIR, 'history.json');
 const LEADS_PATH = path.join(DATA_DIR, 'leads.json');
+const LOST_LEADS_PATH = path.join(DATA_DIR, 'lost_leads.json');
 const ANALYTICS_PATH = path.join(DATA_DIR, 'analytics.json');
-const UPLOADS_DIR = path.join(DATA_DIR, 'uploads'); // Move uploads to disk too!
+const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
 
 // Ensure directories exist
 if (!fs.existsSync(DATA_DIR)) {
@@ -83,12 +84,13 @@ if (DATA_DIR === MOUNTED_DISK_PATH) {
 
 if (!fs.existsSync(HISTORY_PATH)) fs.writeFileSync(HISTORY_PATH, '[]');
 if (!fs.existsSync(LEADS_PATH)) fs.writeFileSync(LEADS_PATH, '[]');
+if (!fs.existsSync(LOST_LEADS_PATH)) fs.writeFileSync(LOST_LEADS_PATH, '[]');
 if (!fs.existsSync(ANALYTICS_PATH)) fs.writeFileSync(ANALYTICS_PATH, JSON.stringify({
     totals: {
         clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
         uiErrors: 0, trustClicks: 0, mobileSessions: 0,
         desktopSessions: 0, slowLoads: 0, pageViews: 0,
-        emailClicks: 0
+        emailClicks: 0, pixGenerated: 0, pixPaid: 0
     },
     daily: {}
 }, null, 4));
@@ -141,6 +143,14 @@ function getLeads() {
 }
 function saveLeads(data) { fs.writeFileSync(LEADS_PATH, JSON.stringify(data, null, 4)); }
 
+function getLostLeads() {
+    try {
+        if (!fs.existsSync(LOST_LEADS_PATH)) return [];
+        return JSON.parse(fs.readFileSync(LOST_LEADS_PATH, 'utf8'));
+    } catch (e) { return []; }
+}
+function saveLostLeads(data) { fs.writeFileSync(LOST_LEADS_PATH, JSON.stringify(data, null, 4)); }
+
 function getAnalytics() {
     try {
         let analytics = {
@@ -149,7 +159,7 @@ function getAnalytics() {
                 uiErrors: 0, trustClicks: 0,
                 mobileSessions: 0, desktopSessions: 0, slowLoads: 0, pageViews: 0,
                 emailClicks: 0, uniqueVisits: 0, ctaClicks: 0, checkoutAbandons: 0,
-                videoPlay: 0 // New Metric
+                videoPlay: 0, pixGenerated: 0, pixPaid: 0
             },
             daily: {}
         };
@@ -183,7 +193,7 @@ function getAnalytics() {
                 uiErrors: 0, trustClicks: 0, mobileSessions: 0,
                 desktopSessions: 0, slowLoads: 0, pageViews: 0,
                 emailClicks: 0, uniqueVisits: 0, ctaClicks: 0, checkoutAbandons: 0,
-                videoPlay: 0
+                videoPlay: 0, pixGenerated: 0, pixPaid: 0
             },
             daily: {},
             totalRevenue: 0, approvedCount: 0, historyCount: 0
@@ -350,6 +360,31 @@ app.post('/api/leads', (req, res) => {
 
     console.log(`🎯 [LEAD] Novo lead capturado: ${name} (${phone})`);
     res.json({ success: true });
+});
+
+app.post('/api/leads/lost', (req, res) => {
+    const { name, email, phone, product } = req.body;
+    if (!phone) return res.status(400).json({ error: 'Telefone é obrigatório' });
+    const leads = getLostLeads();
+    const cleanPhone = phone.replace(/\D/g, '');
+    let lead = leads.find(l => l.phone.replace(/\D/g, '') === cleanPhone);
+    if (lead) {
+        lead.name = name || lead.name;
+        lead.email = email || lead.email;
+        lead.product = product || lead.product;
+        lead.lastUpdate = new Date().toISOString();
+    } else {
+        leads.push({ id: Date.now().toString(), date: new Date().toISOString(), lastUpdate: new Date().toISOString(), name: name || 'Sem Nome', email: email || '', phone: phone, product: product || 'unknown' });
+    }
+    if (leads.length > 500) leads.shift();
+    saveLostLeads(leads);
+    res.json({ success: true });
+});
+
+app.get('/api/leads/lost', (req, res) => {
+    const password = req.headers['x-admin-password'] || req.query.password;
+    if (password !== (process.env.ADMIN_PASSWORD || 'mura123')) return res.status(401).json({ error: 'Acesso Negado' });
+    res.json(getLostLeads());
 });
 
 app.get('/api/analytics', (req, res) => {
@@ -673,7 +708,13 @@ app.post('/api/checkout/pix', async (req, res) => {
     }
 
     // CRITICAL: Ensure CPF is clean (only numbers, no formatting)
-    const cleanCPF = (customer.cpf || '').replace(/\D/g, '');
+    let cleanCPF = (customer.cpf || '').replace(/\D/g, '');
+
+    // Fallback if CPF is empty (requested for faster PIX checkout)
+    if (!cleanCPF && process.env.OWNER_CPF) {
+        console.log(`ℹ️ [PIX] CPF não fornecido, usando fallback: ${process.env.OWNER_CPF}`);
+        cleanCPF = process.env.OWNER_CPF;
+    }
 
     if (cleanCPF.length !== 11) {
         console.error(`❌ [PIX ERROR] CPF inválido: ${customer.cpf} (limpo: ${cleanCPF})`);
@@ -715,6 +756,16 @@ app.post('/api/checkout/pix', async (req, res) => {
             id: response.id,
             status: response.status
         });
+
+        // TRACK PIX GENERATED
+        try {
+            const analytics = getAnalytics();
+            const today = new Date().toISOString().split('T')[0];
+            if (!analytics.daily[today]) analytics.daily[today] = { clicks: 0, checkoutOpens: 0, pixGenerated: 0, pixPaid: 0 };
+            analytics.totals.pixGenerated = (analytics.totals.pixGenerated || 0) + 1;
+            analytics.daily[today].pixGenerated = (analytics.daily[today].pixGenerated || 0) + 1;
+            saveAnalytics(analytics);
+        } catch (e) { console.error("Error tracking pix generation", e); }
     } catch (error) {
         // LOG DE ERRO MELHORADO
         console.error(formatErrorLog('PIX', customer, error));
@@ -959,6 +1010,15 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
                 sendEmail(customer, items, paymentId);
 
                 console.log(`📦 Venda registrada via Webhook: ${customer.name} - ${itemTitles.join(', ')}`);
+
+                // TRACK PIX PAID
+                try {
+                    const analytics = getAnalytics();
+                    const today = new Date().toISOString().split('T')[0];
+                    analytics.totals.pixPaid = (analytics.totals.pixPaid || 0) + 1;
+                    if (analytics.daily[today]) analytics.daily[today].pixPaid = (analytics.daily[today].pixPaid || 0) + 1;
+                    saveAnalytics(analytics);
+                } catch (e) { console.error("Error tracking pix paid", e); }
             }
             res.sendStatus(200);
         } catch (error) {
@@ -1054,7 +1114,10 @@ app.post('/api/mura/chat', async (req, res) => {
     if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
 
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-    if (!GEMINI_API_KEY) return res.status(500).json({ error: 'Gemini API Key não configurada no servidor.' });
+    if (!GEMINI_API_KEY) return res.status(500).json({
+        error: 'Gemini API Key não configurada.',
+        detail: 'Você precisa adicionar a variável GEMINI_API_KEY no painel da sua hospedagem (Render) para a IA funcionar.'
+    });
 
     try {
         console.log(`🤖 [MURA IA] Processando pergunta: "${message.substring(0, 50)}..."`);
@@ -1107,7 +1170,7 @@ RESPONDA SEMPRE EM PORTUGUÊS (PT-BR).`;
             payload,
             {
                 headers: { 'Content-Type': 'application/json' },
-                timeout: 15000
+                timeout: 30000
             }
         );
 

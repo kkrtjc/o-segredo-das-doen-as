@@ -29,7 +29,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         btn.addEventListener('click', () => {
             const ctaId = btn.getAttribute('data-cta') || 'generic_cta';
             trackEvent('cta_click', null, ctaId);
+            // Prepare for lead capture on hover or click if we have info
         });
+    });
+
+    // --- REAL-TIME LEAD CAPTURE ---
+    let captureTimeout = null;
+    const captureLostLead = () => {
+        clearTimeout(captureTimeout);
+        captureTimeout = setTimeout(async () => {
+            const name = document.getElementById('payer-name')?.value?.trim();
+            const email = document.getElementById('payer-email')?.value?.trim();
+            const phone = document.getElementById('payer-phone')?.value?.trim();
+            const product = cart.mainProduct ? (prefetchedProducts[cart.mainProduct]?.title || cart.mainProduct) : 'N/A';
+
+            if (!phone || phone.length < 8) return;
+
+            try {
+                await fetch(`${API_URL}/api/leads/lost`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, phone, product })
+                });
+                console.log("📥 [LEAD] Captura em tempo real enviada.");
+            } catch (e) {
+                console.warn("[LEAD] Erro na captura em tempo real", e);
+            }
+        }, 1500); // Wait 1.5s after last input
+    };
+
+    // Listen to checkout inputs
+    ['payer-name', 'payer-email', 'payer-phone'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', captureLostLead);
     });
 
     const cached = localStorage.getItem('active_pix_session');
@@ -105,6 +137,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 });
+
+function toggleVSL() {
+    const video = document.getElementById('vsl-video-player');
+    const overlay = document.getElementById('vsl-overlay');
+    if (!video) return;
+
+    if (video.paused) {
+        video.play().then(() => {
+            if (overlay) overlay.style.display = 'none';
+        }).catch(err => {
+            console.error("Video play failed:", err);
+            // Fallback: try to play muted if it's a browser restriction
+            video.muted = true;
+            video.play();
+            if (overlay) overlay.style.display = 'none';
+        });
+    } else {
+        video.pause();
+        if (overlay) overlay.style.display = 'flex';
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -523,10 +576,13 @@ async function startCheckoutProcess(productId, forceBumps = []) {
 }
 
 function renderOrderBumps(bumps) {
+    // ORDER BUMP DESATIVADO POR SOLICITAÇÃO DO USUÁRIO
     const area = document.getElementById('order-bump-area');
-    if (!area) return;
+    if (area) area.innerHTML = '';
+    return;
+}
 
-    // Filtra bumps que não devem aparecer
+function legacy_renderOrderBumps(bumps) {
     const filteredBumps = (bumps || []).filter(bump => {
         // Remove Manual de Pintinhos do checkout (deve ser upsell posterior)
         if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') return false;
@@ -983,11 +1039,19 @@ function switchMethod(method) {
         if (btnPix) btnPix.style.display = 'block';
         if (btnCard) btnCard.style.display = 'none';
 
+        // Esconder CPF para PIX (CPF fallback no backend)
+        const cpfContainer = document.getElementById('cpf-container');
+        if (cpfContainer) cpfContainer.style.display = 'none';
+
     } else if (method === 'card') {
         if (pixArea) { pixArea.style.display = 'none'; }
         if (cardArea) { cardArea.style.display = 'block'; }
         if (btnPix) btnPix.style.display = 'none';
         if (btnCard) btnCard.style.display = 'block';
+
+        // Mostrar CPF para Cartão
+        const cpfContainer = document.getElementById('cpf-container');
+        if (cpfContainer) cpfContainer.style.display = 'block';
     }
 
     // RECALCULATE TOTAL WHEN SWITCHING
@@ -1118,12 +1182,14 @@ async function handlePayment(method) {
 
                 showPixResult(data, items);
 
-                // UPSELL PÓS-PIX: Mostra o upsell dos pintinhos após gerar o PIX
+                // UPSELL PÓS-PIX: DESATIVADO
+                /*
                 setTimeout(() => {
                     if (midCheckoutUpsellPending && !cart.bumps.includes('ebook-manejo') && cart.mainProduct.id !== 'combo-elite' && cart.mainProduct.id !== 'ebook-manejo') {
                         showSlideInUpsell('pix');
                     }
-                }, 2000); // Aguarda 2 segundos após mostrar o QR Code
+                }, 2000);
+                */
             } else {
                 // Error from server
                 console.error("Pix Error Response:", data);
@@ -1298,28 +1364,15 @@ async function startPixPayment(event) {
     console.log('🔵 startPixPayment CALLED');
     if (event) event.preventDefault();
 
-    // NEW: VALIDAÇÃO ANTES DO UPSELL
+    // VALIDAÇÃO
     if (!validateCheckoutInputs('pix')) {
-        console.warn('⚠️ Validation failed before upsell/pix');
-        return; // Para aqui se estiver inválido
+        console.warn('⚠️ Validation failed before pix');
+        return;
     }
 
     try {
-        // Check if upsell (Manual de Pintinhos) is already in cart
-        const upsellId = 'ebook-manejo';
-        const isUpsellInCart = cart.bumps && cart.bumps.includes(upsellId);
-
-        console.log('📊 Upsell check:', { upsellId, isUpsellInCart, cartBumps: cart.bumps });
-
-        // If upsell NOT in cart, show modal and STOP (don't generate PIX yet)
-        if (!isUpsellInCart) {
-            console.log('🔔 Showing upsell modal (PIX will be generated after user decision)');
-            showSlideInUpsell('pix');
-            return; // STOP HERE - PIX will be generated when user accepts/rejects upsell
-        }
-
-        // If upsell already in cart, proceed directly to generate PIX
-        console.log('✅ Upsell already in cart, proceeding to PIX generation');
+        // UPSELL DESATIVADO: Proceed directly to generate PIX
+        console.log('✅ Proceeding directly to PIX generation (Upsells disabled)');
         await processPixPayment();
     } catch (error) {
         console.error('❌ Error in startPixPayment:', error);
@@ -1372,28 +1425,15 @@ async function startCardPayment(event) {
     console.log('🔵 startCardPayment CALLED');
     if (event) event.preventDefault();
 
-    // NEW: VALIDAÇÃO ANTES DO UPSELL
+    // VALIDAÇÃO
     if (!validateCheckoutInputs('card')) {
-        console.warn('⚠️ Validation failed before upsell/card');
-        return; // Para aqui se estiver inválido
+        console.warn('⚠️ Validation failed before card');
+        return;
     }
 
     try {
-        // Check if upsell (Manual de Pintinhos) is already in cart
-        const upsellId = 'ebook-manejo';
-        const isUpsellInCart = cart.bumps && cart.bumps.includes(upsellId);
-
-        console.log('📊 Upsell check (Card):', { upsellId, isUpsellInCart, cartBumps: cart.bumps });
-
-        // If upsell NOT in cart, show modal and STOP
-        if (!isUpsellInCart) {
-            console.log('🔔 Showing upsell modal (Card payment will be processed after user decision)');
-            showSlideInUpsell('card');
-            return; // STOP HERE - Card payment will be processed when user accepts/rejects upsell
-        }
-
-        // If upsell already in cart, proceed directly to process payment
-        console.log('✅ Upsell already in cart, proceeding to Card payment');
+        // UPSELL DESATIVADO: Proceed directly to process payment
+        console.log('✅ Proceeding directly to Card payment (Upsells disabled)');
         await processCardPayment();
     } catch (error) {
         console.error('❌ Error in startCardPayment:', error);
@@ -1450,55 +1490,7 @@ async function processCardPayment() {
 
 // --- VALIDATION AND INTERCEPTION FUNCTIONS ---
 
-// The original validateCheckoutInputs is now split and integrated into processPixPayment and processCardPayment
-// This function is no longer needed in its original form, but keeping it for context if other parts of the code still call it.
-function validateCheckoutInputs(method) {
-    const name = document.getElementById('payer-name')?.value?.trim();
-    const email = document.getElementById('payer-email')?.value?.trim();
-    const cpf = document.getElementById('payer-cpf')?.value?.trim();
-    const phone = document.getElementById('payer-phone')?.value?.trim();
-
-    if (!name || !email || !cpf || !phone) {
-        alert('Por favor, preencha todos os campos obrigatórios.');
-        return false;
-    }
-
-    // Validação básica de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        alert('Por favor, insira um email válido.');
-        return false;
-    }
-
-    // Validação de CPF (apenas formato)
-    const cpfClean = cpf.replace(/\D/g, '');
-    if (cpfClean.length !== 11) {
-        alert('Por favor, insira um CPF válido.');
-        return false;
-    }
-
-    // Validação de telefone
-    const phoneClean = phone.replace(/\D/g, '');
-    if (phoneClean.length < 10) {
-        alert('Por favor, insira um telefone válido.');
-        return false;
-    }
-
-    // Validações específicas para cartão
-    if (method === 'card') {
-        const cardNumber = document.getElementById('card-number')?.value?.trim();
-        const cardExpiration = document.getElementById('card-expiration')?.value?.trim();
-        const cardCvv = document.getElementById('card-cvv')?.value?.trim();
-        const cardHolder = document.getElementById('card-holder')?.value?.trim();
-
-        if (!cardNumber || !cardExpiration || !cardCvv || !cardHolder) {
-            alert('Por favor, preencha todos os dados do cartão.');
-            return false;
-        }
-    }
-
-    return true;
-}
+// function validateCheckoutInputs(method) removed as it was a duplicate and replaced by the one at the bottom of the file
 
 function interceptPaymentButton(callback) {
     // Esta função pode ser usada para interceptar o pagamento com upsells
@@ -1627,51 +1619,36 @@ function showPixResult(data, items) {
     document.getElementById('qr-code-img').src = `data:image/png;base64,${data.qr_code_base64}`;
     document.getElementById('pix-copy-paste').value = data.qr_code;
 
-    const copyBtn = document.getElementById('btn-copy-pix');
-    if (copyBtn) {
-        // Tenta copiar automaticamente
-        try {
-            navigator.clipboard.writeText(data.qr_code).then(() => {
-                // Feedback Discreto (Toast)
-                const container = document.getElementById('toast-container');
-                const toast = document.createElement('div');
-                toast.className = 'toast-card';
-                toast.style.borderColor = '#2ecc71'; // Green border for success
-                toast.innerHTML = `
-                    <div style="width: 40px; height: 40px; background: #2ecc71; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff;">
-                        <i class="fa-solid fa-check"></i>
-                    </div>
-                    <div class="toast-content">
-                        <h4>Código PIX Copiado!</h4>
-                        <p>Código copiado com sucesso.</p>
-                    </div>
-                `;
-                container.appendChild(toast);
-                setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 4000);
-            }).catch(() => {
-                // Silently ignore or log internally
-            });
-        } catch (err) { console.warn(err); }
-
-
-        copyBtn.onclick = () => {
-            navigator.clipboard.writeText(data.qr_code);
-            // Feedback Discreto (Toast)
-            const container = document.getElementById('toast-container');
+    // Auto-copy PIX code
+    if (data.qr_code && navigator.clipboard) {
+        navigator.clipboard.writeText(data.qr_code).then(() => {
+            console.log('✅ PIX code auto-copied');
+            // Show Success Notification
+            const container = document.getElementById('toast-container') || document.body;
             const toast = document.createElement('div');
             toast.className = 'toast-card';
-            toast.style.borderColor = '#2ecc71';
-            toast.innerHTML = `
-                <div style="width: 40px; height: 40px; background: #2ecc71; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff;">
-                    <i class="fa-solid fa-check"></i>
-                </div>
-                <div class="toast-content">
-                    <h4>Código PIX Copiado!</h4>
-                    <p>Cole no app do seu banco para pagar.</p>
-                </div>
-            `;
+            toast.style.cssText = "position: fixed; bottom: 20px; right: 20px; background: #16a34a; color: white; padding: 15px 25px; border-radius: 10px; z-index: 10000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); font-weight: bold;";
+            toast.innerHTML = `<i class="fa-solid fa-check-double"></i> codigo pix copiado com seucesso`;
             container.appendChild(toast);
-            setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 4000);
+            setTimeout(() => toast.remove(), 4000);
+        }).catch(err => {
+            console.warn('❌ Auto-copy failed:', err);
+        });
+    }
+
+    const copyBtn = document.getElementById('btn-copy-pix');
+    if (copyBtn) {
+        copyBtn.onclick = () => {
+            navigator.clipboard.writeText(data.qr_code).then(() => {
+                // Show Success Notification
+                const container = document.getElementById('toast-container') || document.body;
+                const toast = document.createElement('div');
+                toast.className = 'toast-card';
+                toast.style.cssText = "position: fixed; bottom: 20px; right: 20px; background: #16a34a; color: white; padding: 15px 25px; border-radius: 10px; z-index: 10000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); font-weight: bold;";
+                toast.innerHTML = `<i class="fa-solid fa-check-double"></i> codigo pix copiado com seucesso`;
+                container.appendChild(toast);
+                setTimeout(() => toast.remove(), 4000);
+            });
         };
     }
 
@@ -2205,16 +2182,16 @@ function validateCheckoutInputs(method) {
     const inputsToValidate = [
         'payer-name',
         'payer-email',
-        'payer-cpf',
         'payer-phone'
     ];
 
+    // CPF é obrigatório apenas para cartão ou se o usuário preencher (para PIX é opcional no frontend devido ao fallback)
+    if (method !== 'pix') {
+        inputsToValidate.push('payer-cpf');
+    }
+
     if (method === 'card') {
         inputsToValidate.push('card-number', 'card-expiration', 'card-cvv', 'card-holder', 'card-cpf');
-        // Remove payer-cpf validation if it's card mode (we use card-cpf instead, or keeping both if backend needs it)
-        // User said: "quando for cartao esse CPF tem quee ser CPF DO TITULAR". 
-        // We still need payer-cpf for the account creation/invoice maybe? 
-        // Let's validate BOTH as they are both in the form and required.
     }
 
     inputsToValidate.forEach(id => {
