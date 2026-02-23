@@ -213,89 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    // --- 4. Testimonials (Single-Slide Carousel - COMPACT) ---
-    const testimonials = [
-        { text: 'Meu galo tava com o olho fechado e a cara inchada. Vi o vídeo no insta e resolvi comprar, no mesmo dia já melhorou bastante.', author: 'Carlos Silva', location: 'Minas Gerais', stars: 5, avatar: 'carrosel/carlos.jpg' },
-        { text: 'Tava perdendo pintinho toda semana, não sabia o que fazer. Apliquei o protocolo e hoje não morre mais nenhum.', author: 'Maria Santos', location: 'São Paulo', stars: 5, avatar: 'carrosel/maria.jpg' },
-        { text: 'Tinha uma galinha que não comia, só ficava no canto. Segui o passo a passo e em 2 dias ela voltou ao normal.', author: 'João Oliveira', location: 'Bahia', stars: 5, avatar: 'carrosel/joao_new.jpg' },
-        { text: 'Meu galo tava morrendo de coriza, olho espumando e cheirando mal. Fiz o tratamento e salvei ele.', author: 'Ana Costa', location: 'Goiás', stars: 5, avatar: 'carrosel/ana.jpg' },
-        { text: 'Gastava uma fortuna em remédio e as galinhas continuavam morrendo. Descobri que tava errando no básico.', author: 'Ricardo Lima', location: 'Paraná', stars: 5, avatar: 'carrosel/ricardo.jpg' },
-        { text: 'Galinha parou de botar e tava com a crista caída. Segui o protocolo e voltou a produzir normal.', author: 'Lucas Ferreira', location: 'Mato Grosso', stars: 5, avatar: 'carrosel/lucas.jpg' },
-        { text: 'Tinha galo com a perna torta, achei que ia morrer. O tratamento salvou e hoje ele tá perfeito.', author: 'Isabella Lima', location: 'Santa Catarina', stars: 5, avatar: 'carrosel/isabella.jpg' },
-        { text: 'Perdi 15 aves em um mês antes de comprar. Depois que aprendi o manejo certo, zerou a mortalidade.', author: 'Juliana Freitas', location: 'Goiás', stars: 5, avatar: 'carrosel/juliana.jpg' }
-    ];
 
-    const testimonialsTrack = document.getElementById('testimonials-track');
-    if (testimonialsTrack) {
-        // Clear existing content
-        testimonialsTrack.innerHTML = '';
-
-        // Render all testimonials but hide them initially (except first)
-        testimonials.forEach((t, index) => {
-            const starsHTML = '<i class="fa-solid fa-star" style="color: #FFD700;"></i>'.repeat(t.stars);
-            const card = document.createElement('div');
-            card.className = 'testimonial-card-single'; // New class for single display
-            // Style for single focused card
-            card.style.opacity = index === 0 ? '1' : '0';
-            card.style.position = 'absolute';
-            card.style.top = '0';
-            card.style.left = index === 0 ? '0' : '100%'; // Start off-screen right
-            card.style.width = '100%';
-            card.style.height = '100%';
-            card.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-            card.style.transform = index === 0 ? 'translateX(0)' : 'translateX(50px)'; // Helper for fade in
-
-            card.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                    <div style="width: 50px; height: 50px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0;">
-                        <img src="${t.avatar}" alt="${t.author}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://ui-avatars.com/api/?name=${t.author}&background=random&color=fff'">
-                    </div>
-                    <div>
-                        <strong style="display: block; color: #fff; font-size: 0.95rem; line-height: 1.2;">${t.author}</strong>
-                        <small style="color: rgba(255,255,255,0.5); font-size: 0.75rem;"><i class="fa-solid fa-location-dot" style="margin-right: 4px;"></i> ${t.location}</small>
-                        <div style="font-size: 0.7rem; color: #FFD700; margin-top: 2px;">${starsHTML}</div>
-                    </div>
-                </div>
-                <p style="font-style: normal; margin: 0; color: rgba(255,255,255,0.8); font-size: 0.85rem; line-height: 1.5;">"${t.text}"</p>
-            `;
-            testimonialsTrack.appendChild(card);
-        });
-
-        let currentIdx = 0;
-
-        function nextSlide() {
-            const cards = document.querySelectorAll('.testimonial-card-single');
-            const total = cards.length;
-            if (total === 0) return;
-
-            // Current card moves OUT to LEFT
-            const current = cards[currentIdx];
-            current.style.opacity = '0';
-            current.style.left = '-100%';
-            current.style.transform = 'translateX(-50px)';
-
-            // Wait briefly then reset it to RIGHT side for next cycle
-            setTimeout(() => {
-                current.style.transition = 'none'; // Disable transition for instant move
-                current.style.left = '100%';
-                setTimeout(() => {
-                    current.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)'; // Re-enable
-                }, 50);
-            }, 800); // Wait for exit animation
-
-            // Next card moves IN from RIGHT
-            currentIdx = (currentIdx + 1) % total;
-            const next = cards[currentIdx];
-
-            // Ensure next is ready at start position
-            next.style.left = '0';
-            next.style.opacity = '1';
-            next.style.transform = 'translateX(0)';
-        }
-
-        // Change slide every 5 seconds
-        setInterval(nextSlide, 5000);
-    }
 
     // --- 5. Comparison Slider (Results) ---
     const sliderTrack = document.getElementById('comparison-slider-track');
@@ -566,6 +484,9 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             if (secureOverlay) secureOverlay.classList.remove('active');
             checkoutModal.classList.add('active');
             document.body.classList.add('modal-open');
+
+            // Reforçar disparo do Pixel ao abrir definitivamente
+            if (typeof fbq === 'function') fbq('track', 'InitiateCheckout');
         }, delay);
 
     } catch (err) {
@@ -573,6 +494,15 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         if (secureOverlay) secureOverlay.classList.remove('active');
         document.body.classList.remove('modal-open');
     }
+}
+
+function closeCheckout() {
+    const modal = document.getElementById('checkout-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+    }
+    sessionStorage.removeItem('mura_modal_open');
 }
 
 function renderOrderBumps(bumps) {
@@ -1551,7 +1481,7 @@ function showPixResult(data, items) {
             const toast = document.createElement('div');
             toast.className = 'toast-card';
             toast.style.cssText = "position: fixed; bottom: 20px; right: 20px; background: #16a34a; color: white; padding: 15px 25px; border-radius: 10px; z-index: 10000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); font-weight: bold;";
-            toast.innerHTML = `<i class="fa-solid fa-check-double"></i> codigo pix copiado com sucesso`;
+            toast.innerHTML = `<i class="fa-solid fa-check-double"></i> codigo pix copiado com seucesso`;
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 4000);
         }).catch(err => {
@@ -1920,5 +1850,54 @@ document.addEventListener('DOMContentLoaded', () => {
             e.target.value = v;
         });
     }
+
+    // --- 10. VSL Live Counter Dynamism ---
+    const vslCounter = document.getElementById('vsl-counter');
+    if (vslCounter) {
+        let count = parseInt(vslCounter.innerText) || 247;
+
+        function fluctuateCounter() {
+            // Randomly add or subtract between 1 and 3 people
+            const variation = Math.floor(Math.random() * 7) - 3; // -3 to +3
+            count += variation;
+
+            // Keep it in a realistic range for this stage
+            if (count < 180) count += 5;
+            if (count > 350) count -= 5;
+
+            vslCounter.innerText = count;
+
+            // Next fluctuation in 3 to 10 seconds
+            const nextTime = Math.floor(Math.random() * 7000) + 3000;
+            setTimeout(fluctuateCounter, nextTime);
+        }
+
+        // Start after a short delay
+        setTimeout(fluctuateCounter, 3000);
+    }
 });
 
+
+// --- 6. LIGHTBOX SYSTEM ---
+function openLightbox(src) {
+    const overlay = document.getElementById('lightbox-overlay');
+    const img = document.getElementById('lightbox-img');
+    if (overlay && img) {
+        img.src = src;
+        overlay.classList.add('active');
+        // Não prendemos o scroll aqui para não bugar com o modal aberto embaixo
+    }
+}
+
+function closeLightbox() {
+    const overlay = document.getElementById('lightbox-overlay');
+    if (overlay) overlay.classList.remove('active');
+}
+
+// Fechar com ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeLightbox();
+        // Não fechamos o checkout no ESC por segurança na conversão, apenas o lightbox
+    }
+});

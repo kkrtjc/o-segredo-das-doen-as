@@ -29,7 +29,7 @@
 /* VSL Video Section */
 .vsl-square-section {
     padding: 2.5rem 0;
-    background: #fcfcfc;
+    background: transparent;
 }
 
 .square-video-container {
@@ -151,23 +151,158 @@ body {
     max-width: 100%;
 }
 
-body {
-    background-color: var(--amber-50);
-    color: var(--gray-800);
-    font-family: var(--font-sans);
-    line-height: 1.5;
-}
-
-/* Fix for mobile horizontal scroll when keyboard opens */
 body.modal-open {
     overflow: hidden !important;
-    position: fixed;
-    width: 100%;
-    height: 100%;
 }
 
-body.no-scroll {
-    overflow: hidden;
+body {
+    background: #000;
+    /* Fallback */
+    color: #ffffff;
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Stable Fixed Background Technique for Mobile and Desktop */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Layer 1: The Image */
+    background-image: url('hero-mura-bg.png');
+    background-size: cover;
+    background-position: center bottom;
+    /* Focal point for Desktop */
+    background-repeat: no-repeat;
+    z-index: -2;
+}
+
+/* Dark gradient overlay as a separate layer for control */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.75));
+    z-index: -1;
+}
+
+/* Mobile Specific Focal Point Optimization */
+@media (max-width: 768px) {
+    body::before {
+        background-position: 50% 0%;
+        /* Levanta a imagem ao máximo (topo) */
+        background-size: cover;
+        /* Ajusta para preencher melhor sem zoom excessivo */
+    }
+}
+
+/* --- Authority Section Badges --- */
+.auth-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    color: #ffffff !important;
+}
+
+section,
+.bg-white,
+.bg-amber-50,
+.social-proof-bar {
+    background: transparent !important;
+}
+
+/* Social Proof Bar Layout & Stat Items */
+.social-proof-bar {
+    padding: 3rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.stat-item i {
+    width: 60px;
+    height: 60px;
+    background: transparent !important;
+    border: 2px solid #fbbf24;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fbbf24;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    box-shadow: none !important;
+}
+
+.stat-text {
+    flex: 1;
+}
+
+/* Force high-visibility text legibility across all sections (EXCEPT MODALS) */
+body>section h1,
+body>section h2,
+body>section h3,
+body>section h4,
+body>section p,
+body>section li,
+body>section span,
+body>section strong,
+body>section b,
+.social-proof-bar *,
+.hero * {
+    color: #ffffff !important;
+}
+
+/* Ensure Modal Content stays legible (Dark on Light) */
+.modal-content,
+.modal-content * {
+    text-shadow: none !important;
+}
+
+/* Specific exceptions for accent colors to keep their "glow" */
+[style*="color: #fbbf24"],
+.accent-yellow {
+    color: #fbbf24 !important;
+}
+
+[style*="color: #ff4d4d"],
+.accent-red {
+    color: #ff4d4d !important;
+}
+
+[style*="color: #16a34a"],
+.accent-green {
+    color: #22c55e !important;
+}
+
+/* Add a very subtle "dark haze" to containers to ease reading */
+section .container {
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    padding: 2rem 1.5rem;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .container {
@@ -175,6 +310,8 @@ body.no-scroll {
     /* max-w-4xl */
     margin: 0 auto;
     padding: 0 1rem;
+    position: relative;
+    z-index: 2;
 }
 
 /* --- Navigation --- */
@@ -259,10 +396,7 @@ header.sticky {
     position: relative;
     text-align: center;
     padding: 6rem 0 4rem;
-    background: linear-gradient(rgba(10, 10, 10, 0.75), rgba(0, 0, 0, 0.5)), url('hero-mura-bg.png');
-    background-size: cover;
-    background-position: center 20%;
-    background-attachment: fixed;
+    background: transparent !important;
     color: #fff !important;
     margin-bottom: 0;
     border-radius: 0;
@@ -406,16 +540,18 @@ header.sticky {
 }
 
 .card {
-    background: var(--white);
+    background: rgba(255, 255, 255, 0.05);
+    /* Glass effect for cinematic theme */
+    backdrop-filter: blur(5px);
     padding: 1.25rem;
-    border: 2px solid var(--amber-100);
-    border-radius: 0.5rem;
-    transition: border-color 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    transition: all 0.3s ease;
     text-align: center;
 }
 
 .card:hover {
-    border-color: var(--red-200);
+    border-color: #fbbf24;
 }
 
 .icon-circle {
@@ -586,7 +722,46 @@ header.sticky {
 }
 
 .auth-badge i {
-    color: var(--red-600);
+    color: #fbbf24;
+}
+
+/* Mobile Authority Overrides (Wrap Style) */
+@media (max-width: 768px) {
+    .authority-profile-section {
+        padding: 2.5rem 0 !important;
+    }
+
+    .authority-video-container {
+        width: 130px !important;
+        /* Smaller float on mobile */
+        margin: 0 15px 10px 0 !important;
+        border-width: 2px !important;
+    }
+
+    .authority-content-wrap h3 {
+        font-size: 1.5rem !important;
+        margin-bottom: 0.75rem !important;
+        text-align: left !important;
+    }
+
+    .authority-content-wrap .auth-p {
+        font-size: 0.95rem !important;
+        margin-bottom: 0.75rem !important;
+        line-height: 1.5 !important;
+        text-align: left !important;
+    }
+
+    .authority-badges {
+        margin-top: 1rem !important;
+        margin-bottom: 1rem !important;
+        justify-content: flex-start !important;
+        gap: 6px !important;
+    }
+
+    .auth-badge {
+        padding: 5px 10px !important;
+        font-size: 0.7rem !important;
+    }
 }
 
 /* --- Guarantee --- */
@@ -811,7 +986,8 @@ header.sticky {
     display: block;
     font-weight: 700;
     font-size: 0.875rem;
-    color: var(--gray-800);
+    color: #1f2937 !important;
+    /* Force dark gray */
 }
 
 /* Order Bump White Design */
@@ -831,7 +1007,8 @@ header.sticky {
 
 .radio-desc {
     font-size: 0.6875rem;
-    color: var(--gray-500);
+    color: #4b5563 !important;
+    /* Force medium gray */
 }
 
 .payment-flags {
@@ -868,9 +1045,16 @@ header.sticky {
     }
 
     .stat-grid {
+        display: grid;
+        grid-template-columns: 1fr;
         gap: 1.5rem;
-        flex-direction: column;
-        align-items: flex-start;
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        width: 100%;
     }
 
     .authority-grid {
@@ -996,4 +1180,62 @@ header.sticky {
     }
 
     /* Stacking rules removed to maintain horizontal layout */
+}
+
+/* --- LIGHTBOX SYSTEM --- */
+.lightbox-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 30000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    cursor: zoom-out;
+    backdrop-filter: blur(5px);
+}
+
+.lightbox-overlay.active {
+    display: flex;
+}
+
+.lightbox-content {
+    max-width: 95%;
+    max-height: 95%;
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    cursor: default;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    object-fit: contain;
+}
+
+.lightbox-overlay.active .lightbox-content {
+    transform: scale(1);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    z-index: 30001;
+}
+
+.lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.4);
 }
