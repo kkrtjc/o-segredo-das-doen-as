@@ -399,7 +399,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             cover: 'capadasdoencas.jpg',
             fullBumps: [
                 { id: 'ebook-manejo', title: 'Manual de Pintinhos', price: 49.90, priceCard: 49.90, image: 'capadospintinhos.jpg', description: 'Crie pintinhos fortes e saudáveis.' },
-                { id: 'bump-6361', title: 'Tabela de Ração', price: 19.90, priceCard: 19.90, image: 'tabela_racao_bump.jpg', description: 'Alimentaçao correta em todas as fases da sua criaçao. Economize na raçao e acelere o crescimento das suas aves com o balanceamento ideal.', tag: 'OFERTA ÚNICA' }
+                { id: 'bump-6361', title: 'Tabela de Ração', price: 19.90, priceCard: 19.90, image: 'tabela_racao_bump.jpg', description: 'Alimentaçao correta em todas as fases da sua criaçao. Economize ate 65% na raçao e acelere o crescimento das suas aves com o balanceamento ideal.', tag: 'OFERTA ÚNICA' }
             ]
         },
         'combo-elite': {
@@ -506,10 +506,57 @@ function closeCheckout() {
 }
 
 function renderOrderBumps(bumps) {
-    // ORDER BUMP DESATIVADO POR SOLICITAÇÃO DO USUÁRIO
     const area = document.getElementById('order-bump-area');
-    if (area) area.innerHTML = '';
-    return;
+    if (!area) return;
+
+    const filteredBumps = (bumps || []).filter(bump => {
+        // Remove Manual de Pintinhos do checkout (deve permanecer desativado como solicitado)
+        if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') return false;
+        // Mantém a Tabela de Ração no checkout
+        return true;
+    });
+
+    if (filteredBumps.length === 0) {
+        area.innerHTML = '';
+        return;
+    }
+
+    area.innerHTML = filteredBumps.map(bump => {
+        let imgSrc = bump.image;
+        if (!imgSrc) {
+            if (bump.id === 'ebook-doencas' || bump.id === 'bump-doencas') imgSrc = 'capadasdoencas.jpg';
+            else if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') imgSrc = 'capadospintinhos.jpg';
+            else if (bump.id === 'bump-6361') imgSrc = 'tabela_racao_bump.jpg';
+        }
+
+        return `
+            <div class="order-bump-container" onclick="toggleBump('${bump.id}')" 
+                style="margin-top: 1rem; position: relative; overflow: hidden; border: 2px solid #d97706; border-radius: 12px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; min-height: 120px; display: flex;">
+                
+                <!-- Imagem de Fundo Preenchendo Tudo -->
+                ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">` : ''}
+                
+                <!-- Overlay Gradiente para Legibilidade -->
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.3) 100%); z-index: 1;"></div>
+
+                <!-- Conteúdo por cima do fundo -->
+                <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 15px; padding: 15px; width: 100%;">
+                    <input type="checkbox" class="order-bump-checkbox" id="bump-chk-${bump.id}" ${cart.bumps.includes(bump.id) ? 'checked' : ''} 
+                        style="width: 24px; height: 24px; cursor: pointer; accent-color: #fbbf24; flex-shrink: 0; filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));">
+                    
+                    <div class="order-bump-content" style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
+                            <span class="order-bump-tag" style="background: #ef4444; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">${bump.tag || 'OFERTA ÚNICA'}</span>
+                        </div>
+                        <strong class="order-bump-title" style="display: block; color: #fff; font-size: 1.05rem; margin-top: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">${bump.title}</strong>
+                        <span class="order-bump-description" style="display: block; color: rgba(255,255,255,0.9); font-size: 0.85rem; margin-top: 4px; line-height: 1.3; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">${bump.description}</span>
+                        <div style="display: flex; align-items: baseline; gap: 10px; margin-top: 8px;">
+                            <span class="order-bump-price" style="color: #fbbf24; font-weight: 900; font-size: 1.2rem; text-shadow: 0 2px 5px rgba(0,0,0,0.5);">+ ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+    }).join('');
 }
 
 function legacy_renderOrderBumps(bumps) {
@@ -749,84 +796,11 @@ function startFunnel(productId) {
 }
 
 function showSlideInUpsell(method) {
-    const obModal = document.getElementById('order-bump-modal');
-    if (!obModal) return;
-
-    // Inicia o timer de 5 minutos
-    let duration = 300; // 5 minutos em segundos
-    const timerInterval = setInterval(() => {
-        const timerEl = document.getElementById('upsell-timer');
-        if (!timerEl) {
-            clearInterval(timerInterval);
-            return;
-        }
-
-        const minutes = Math.floor(duration / 60);
-        const seconds = duration % 60;
-        timerEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-        if (--duration < 0) {
-            clearInterval(timerInterval);
-            timerEl.textContent = "0:00";
-        }
-    }, 1000);
-
-    obModal.innerHTML = `
-        <div class="order-bump-slide-content" style="border-top: 3px solid #fbbf24; background: #1a1a1a; box-shadow: 0 -10px 40px rgba(0,0,0,0.8);">
-            <button class="order-bump-close" onclick="declineSlideUpsell('${method}')" style="background: rgba(255,255,255,0.1); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; top: 5px; right: 5px;">
-                <i class="fa-solid fa-xmark" style="font-size: 0.8rem;"></i>
-            </button>
-
-            <div class="order-bump-header" style="text-align: center; padding: 5px 0;">
-                <div style="display: inline-block; background: #e74c3c; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: 900; font-size: 0.65rem; margin-bottom: 4px; letter-spacing: 1px;">PROMOÇÃO RELÂMPAGO</div>
-                <h3 style="margin-top: 2px; font-size: 1.05rem; color: #fbbf24; text-transform: uppercase; line-height: 1.1;">
-                    APENAS AGORA<br>
-                    <span style="font-size: 0.8rem; color: #fff; font-weight: 400; opacity: 0.8;">MANUAL DE PINTINHOS DE ELITE</span>
-                </h3>
-            </div>
-
-            <div style="background: rgba(251,191,36,0.1); border: 1px dashed #fbbf24; border-radius: 8px; padding: 6px; margin: 6px 0; text-align: center;">
-                <span style="color: #fff; font-size: 0.75rem;">Expira em: </span>
-                <span id="upsell-timer" style="color: #fbbf24; font-weight: 900; font-size: 1.1rem; font-family: monospace;">05:00</span>
-            </div>
-
-            <div class="order-bump-body" style="text-align: center; padding: 0 5px;">
-                <p style="color: #fff; font-size: 0.8rem; margin-bottom: 0.75rem; line-height: 1.3; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px;">
-                    <strong style="color: #e74c3c;">8 A CADA 10 PINTINHOS MORREM</strong> POR ERRO DE MANEJO. APRENDA COMO CRIAR PINTINHOS E SE LIVRE DE DOENÇA DESDE O NASCIMENTO.<br>
-                    <strong style="color: #fbbf24; display: block; margin-top: 4px;">SE TORNE O CRIADOR COMPLETO</strong>
-                </p>
-                
-                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 0.75rem; text-align: left;">
-                    <div style="position: relative;">
-                         <img src="capadospintinhos.jpg" style="width: 75px; border-radius: 12px; border: 1.5px solid #fbbf24; box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);">
-                         <div style="position: absolute; top: -5px; right: -5px; background: #e74c3c; color: #fff; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 900; transform: rotate(15deg); border: 1.5px solid #fff;">-35%</div>
-                    </div>
-                    <ul style="color: #fff; font-size: 0.7rem; padding: 0; margin: 0; list-style: none; line-height: 1.3;">
-                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Sobrevivência de até 90%</li>
-                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Crescimento mais rápido</li>
-                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Ambiente 100% adequado</li>
-                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> As principais doenças em pintinhos e como tratar.</li>
-                    </ul>
-                </div>
-
-                <div class="order-bump-price-tag" style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                    <div style="color: rgba(255,255,255,0.4); text-decoration: line-through; font-size: 0.75rem;">De R$ 69,90 no cartão</div>
-                    <div style="color: #fbbf24; font-size: 1.8rem; font-weight: 900; line-height: 1;">R$ 49<span style="font-size: 1rem;">,90 no pix</span></div>
-                </div>
-            </div>
-
-            <div class="order-bump-actions" style="padding: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
-                <button class="btn-accept-bump" onclick="confirmSlideUpsell('${method}')" style="background: #fbbf24; color: #000; width: 100%; border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 0.9rem; text-transform: uppercase;">
-                    QUERO SALVAR MEUS PINTINHOS
-                </button>
-                <button class="btn-decline-bump" onclick="declineSlideUpsell('${method}')" style="background: none; border: none; color: rgba(255,255,255,0.4); text-decoration: underline; margin-top: 8px; cursor: pointer; display: block; width: 100%; font-size: 0.75rem;">
-                    Não, obrigado.
-                </button>
-            </div>
-        </div>
-    `;
-
-    obModal.classList.add('show');
+    // MODAL DE UPSELL DESATIVADO POR SOLICITAÇÃO DO USUÁRIO
+    console.log('🚫 [UPSELL] Upsell dos pintinhos desativado.');
+    if (method === 'pix') processPixPayment();
+    else processCardPayment();
+    return;
 }
 
 function confirmSlideUpsell(method) {

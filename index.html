@@ -365,6 +365,64 @@
         header h1 span {
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
         }
+
+        /* Novas Abas Sub-Header */
+        .sub-header-tabs {
+            position: sticky;
+            top: 80px;
+            /* Logo abaixo do header fixo (ajustar se o header mudar de altura) */
+            z-index: 39;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            gap: 20px;
+        }
+
+        .sub-header-tabs a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 2px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .sub-header-tabs a:hover {
+            color: #fbbf24;
+            border-bottom-color: #fbbf24;
+        }
+
+        @media (max-width: 768px) {
+            .sub-header-tabs {
+                top: 80px;
+                gap: 15px;
+            }
+
+            .sub-header-tabs a {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* FAQ Active State */
+        .faq-answer {
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block !important;
+        }
+
+        .faq-item.active .fa-chevron-down {
+            transform: rotate(180deg);
+            transition: transform 0.3s ease;
+        }
     </style>
 </head>
 
@@ -377,10 +435,18 @@
                 <img src="logo.png" alt="Logo" style="height: 60px; border-radius: 8px;">
                 <h1>PROTOCOLO <span style="color: var(--amber-600)">ELITE</span></h1>
             </div>
-            <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary">SALVAR MINHAS GALINHAS
+            <button onclick="document.querySelector('#learning').scrollIntoView({behavior: 'smooth'})"
+                class="btn-primary">SALVAR MINHAS GALINHAS
                 AGORA</button>
         </div>
     </header>
+
+    <!-- Sub-Header Tabs -->
+    <div class="sub-header-tabs">
+        <a href="#authority-video">Autoridade</a>
+        <a href="#learning">Benefícios</a>
+        <a href="#faq">Perguntas frequentes</a>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -412,7 +478,8 @@
                         </div>
                     </div>
                     <span
-                        style="font-size: 0.75rem; font-weight: 800; color: #16a34a; background: rgba(22, 163, 74, 0.15); padding: 2px 10px; border-radius: 10px; backdrop-filter: blur(5px);">+de
+                        style="font-size: 0.75rem; font-weight: 800; color: #16a34a; background: rgba(22, 163, 74, 0.15); padding: 2px 10px; border-radius: 10px; backdrop-filter: blur(5px);">+
+                        de
                         1600 alunos</span>
                 </div>
                 <div style="max-width: 400px; text-align: left;">
@@ -437,7 +504,7 @@
                 Tratamentos com resultados comprovados.
             </p>
             <div
-                style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem; margin: 0 auto 2rem; max-width: 800px; backdrop-filter: blur(8px); box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+                style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem; margin: 0 auto 1rem; max-width: 800px; backdrop-filter: blur(8px); box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
                 <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 1rem;">
                     <span
                         style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
@@ -464,86 +531,22 @@
                 </p>
             </div>
 
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
-                <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary btn-large">SALVAR MINHAS
-                    GALINHAS
-                    AGORA</button>
-                <a href="#learning" class="btn-outline"
-                    style="text-decoration: none; display: flex; align-items: center; justify-content: center;">VER O
-                    QUE
-                    VOU APRENDER</a>
-            </div>
         </div>
     </section>
 
-
-    <!-- Authority Section ("Quem Sou Eu") -->
-    <section class="authority-profile-section"
-        style="padding: 4rem 0; border-top: 2px solid rgba(255,255,255,0.1); background: transparent;">
-        <div class="container">
-            <div class="authority-content-wrap">
-                <!-- Video nested inside content for float wrapping -->
-                <div class="authority-video-container"
-                    style="float: left; width: 45%; max-width: 260px; border-radius: 20px; overflow: hidden; border: 3px solid #fbbf24; box-shadow: 0 20px 50px rgba(0,0,0,0.5); background: #000; margin: 0 25px 15px 0;">
+    <section id="learning" class="learning-section" style="padding: 0.5rem 0 1.5rem 0; background: transparent;">
+        <div class="container" style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+            <div class="mockup-side" style="width: 100%; max-width: 160px; margin: 0 auto;">
+                <div class="ebook-video-container"
+                    style="width: 100%; border-radius: 20px; overflow: hidden; border: 3px solid #fbbf24; box-shadow: 0 20px 50px rgba(0,0,0,0.5); background: #000;">
                     <video controls playsinline preload="metadata" style="width: 100%; display: block;">
-                        <source src="vsl autoridade.mp4#t=0.001" type="video/mp4">
+                        <source src="vsl-ebook.mp4#t=0.001" type="video/mp4">
                         Seu navegador não suporta vídeos.
                     </video>
                 </div>
-
-                <h3 style="color: #ffffff; font-size: 2rem; font-weight: 800; margin-bottom: 1.5rem;">Quem Sou eu ?</h3>
-
-                <p style="color: #ffffff; font-size: 1.1rem; line-height: 1.6; margin-bottom: 1rem;" class="auth-p">
-                    <strong>João Paulo Camargo, 29 anos.</strong> Com <strong>mais de 10 anos de experiência</strong> na
-                    criação de aves, <strong>estudante de Zootecnia e Genômica</strong>, dediquei minha vida a
-                    entender os segredos por trás de um plantel saudável e produtivo.
-                </p>
-                <p style="color: #ffffff; font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;" class="auth-p">
-                    Hoje, compartilho meu conhecimento com milhares de seguidores e já ajudei diversos alunos a
-                    transformarem suas criações, eliminando prejuízos e trazendo de volta o prazer de criar.
-                </p>
-
-                <div class="authority-badges"
-                    style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 2rem; clear: none;">
-                    <div class="auth-badge"
-                        style="background: rgba(255,255,255,0.1); color: #fff; padding: 8px 15px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.2);">
-                        <i class="fa-solid fa-award" style="color: #fbbf24;"></i> 10+ Anos de Experiência
-                    </div>
-                    <div class="auth-badge"
-                        style="background: rgba(255,255,255,0.1); color: #fff; padding: 8px 15px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.2);">
-                        <i class="fa-solid fa-users" style="color: #fbbf24;"></i> Milhares de Seguidores
-                    </div>
-                    <div class="auth-badge"
-                        style="background: rgba(255,255,255,0.1); color: #fff; padding: 8px 15px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.2);">
-                        <i class="fa-solid fa-graduation-cap" style="color: #fbbf24;"></i> Mentor de Diversos Alunos
-                    </div>
-                </div>
-
-                <!-- CTA -->
-                <div style="text-align: center; margin-top: 2rem; clear: both;">
-                    <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary"
-                        style="width: 100%; max-width: 320px; padding: 1.25rem; font-size: 1.2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(217,119,6,0.3);">
-                        QUERO SALVAR MINHAS GALINHAS AGORA
-                    </button>
-                    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-top: 10px; font-weight: 600;">
-                        <i class="fa-solid fa-lock" style="font-size: 0.75rem;"></i> Compra 100% Segura
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-
-    <!-- Horizontal Learning Section -->
-    <section id="learning" class="learning-section" style="padding: 3rem 0; background: transparent;">
-        <div class="container authority-grid" style="gap: 2rem;">
-            <div class="mockup-side" style="flex: 0 0 180px;">
-                <img src="capadasdoencas.jpg" alt="Guia O Segredo das Galinhas"
-                    style="width: 100%; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));">
             </div>
             <div class="learning-side"
-                style="flex: 1.5; min-width: 300px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.1);">
+                style="width: 100%; max-width: 600px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.1);">
                 <h4 style="color: #ffffff; margin-bottom: 1.25rem; font-size: 1.25rem; font-weight: 800;">O Que
                     Você Vai Aprender Hoje:</h4>
                 <ul
@@ -560,6 +563,12 @@
                     <li style="display: flex; gap: 12px; font-size: 0.95rem; color: #ffffff;"><i
                             class="fa-solid fa-circle-check" style="color: #22c55e; margin-top: 3px;"></i>
                         Protocolos Passo a Passo</li>
+                    <li style="display: flex; gap: 12px; font-size: 0.95rem; color: #ffffff;"><i
+                            class="fa-solid fa-circle-check" style="color: #22c55e; margin-top: 3px;"></i>
+                        Tabela com sintomas e doenças</li>
+                    <li style="display: flex; gap: 12px; font-size: 0.95rem; color: #ffffff;"><i
+                            class="fa-solid fa-circle-check" style="color: #22c55e; margin-top: 3px;"></i>
+                        Protocolo de vacinação</li>
                 </ul>
 
                 <div
@@ -580,14 +589,75 @@
                         <strong>4x de R$ 34,90 sem juros</strong> no cartão</span>
                     <span
                         style="font-size: 1rem; color: #ffffff; font-weight: 900; display: block; margin-top: 1rem; text-transform: uppercase; letter-spacing: 1px;">QUANTO
-                        VALE UMA GALINHA PRA VOCE?</span>
+                        VALE UMA GALINHA PRA VOCÊ?</span>
                     <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary"
                         style="width: 100%; margin-top: 15px; padding: 12px; font-size: 1rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(217,119,6,0.2);">
                         SALVAR MINHAS GALINHAS AGORA
                     </button>
                 </div>
             </div>
+        </div>
     </section>
+
+
+    <!-- Authority Section ("Quem Sou Eu") -->
+    <section id="authority-video" class="authority-profile-section"
+        style="padding: 2rem 0; border-top: 2px solid rgba(255,255,255,0.1); background: transparent;">
+        <div class="container" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <div class="authority-content-wrap" style="width: 100%; max-width: 700px;">
+                <!-- Video top centered -->
+                <div class="authority-video-container"
+                    style="width: 100%; max-width: 320px; border-radius: 20px; overflow: hidden; border: 3px solid #fbbf24; box-shadow: 0 20px 50px rgba(0,0,0,0.5); background: #000; margin: 0 auto 1.5rem auto;">
+                    <video controls playsinline preload="metadata" style="width: 100%; display: block;">
+                        <source src="vsl autoridade.mp4#t=0.001" type="video/mp4">
+                        Seu navegador não suporta vídeos.
+                    </video>
+                </div>
+
+                <h3 style="color: #ffffff; font-size: 2rem; font-weight: 800; margin-bottom: 1.5rem;">Quem sou eu?</h3>
+
+                <p style="color: #ffffff; font-size: 1.1rem; line-height: 1.6; margin-bottom: 1rem;" class="auth-p">
+                    <strong>João Paulo Camargo, 29 anos.</strong> Com <strong>mais de 10 anos de experiência</strong> na
+                    criação de aves, <strong>estudante de Zootecnia e Genômica</strong>, dediquei minha vida a
+                    entender os segredos por trás de um plantel saudável e produtivo.
+                </p>
+                <p style="color: #ffffff; font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;" class="auth-p">
+                    Hoje, compartilho meu conhecimento com milhares de seguidores e já ajudei diversos alunos a
+                    transformarem suas criações, eliminando prejuízos e trazendo de volta o prazer de criar.
+                </p>
+
+                <div class="authority-badges"
+                    style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 2rem; justify-content: center;">
+                    <div class="auth-badge"
+                        style="background: rgba(255,255,255,0.1); color: #fff; padding: 8px 15px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.2);">
+                        <i class="fa-solid fa-award" style="color: #fbbf24;"></i> 10+ Anos de Experiência
+                    </div>
+                    <div class="auth-badge"
+                        style="background: rgba(255,255,255,0.1); color: #fff; padding: 8px 15px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.2);">
+                        <i class="fa-solid fa-users" style="color: #fbbf24;"></i> Milhares de Seguidores
+                    </div>
+                    <div class="auth-badge"
+                        style="background: rgba(255,255,255,0.1); color: #fff; padding: 8px 15px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.2);">
+                        <i class="fa-solid fa-graduation-cap" style="color: #fbbf24;"></i> Mentor de Diversos Alunos
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary"
+                        style="width: 100%; max-width: 320px; padding: 1.25rem; font-size: 1.2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(217,119,6,0.3);">
+                        QUERO SALVAR MINHAS GALINHAS AGORA
+                    </button>
+                    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-top: 10px; font-weight: 600;">
+                        <i class="fa-solid fa-lock" style="font-size: 0.75rem;"></i> Compra 100% Segura
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
 
     <!-- Social Proof Bar -->
     <div class="social-proof-bar">
@@ -690,7 +760,57 @@
 
             <h4
                 style="font-size: 1.8rem; font-weight: 900; text-transform: uppercase; color: #fff; line-height: 1.2; letter-spacing: -0.02em;">
-                QUANTO VALE UMA GALINHA PRA VOCE?</h4>
+                QUANTO VALE UMA GALINHA PRA VOCÊ?</h4>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="section"
+        style="padding: 4rem 0; background: transparent; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+        <div class="container">
+            <h3 style="text-align: center; font-size: 2rem; font-weight: 800; color: #ffffff; margin-bottom: 3rem;">
+                Perguntas Frequentes
+            </h3>
+            <div class="faq-container"
+                style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
+                <div class="faq-item"
+                    style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; overflow: hidden;">
+                    <button class="faq-question"
+                        style="width: 100%; padding: 1.25rem; background: none; border: none; color: #ffffff; font-weight: 700; text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+                        O acesso é vitalício? <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer"
+                        style="padding: 0 1.25rem 1.25rem; color: rgba(255, 255, 255, 0.8); font-size: 0.95rem;">
+                        <p>Sim! Você terá acesso ilimitado ao conteúdo e a todas as futuras atualizações sem pagar nada
+                            a mais por isso.</p>
+                    </div>
+                </div>
+                <div class="faq-item"
+                    style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; overflow: hidden;">
+                    <button class="faq-question"
+                        style="width: 100%; padding: 1.25rem; background: none; border: none; color: #ffffff; font-weight: 700; text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+                        Como recebo o material? <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer"
+                        style="padding: 0 1.25rem 1.25rem; color: rgba(255, 255, 255, 0.8); font-size: 0.95rem;">
+                        <p>Seu download é liberado instantaneamente após o pagamento, você também recebe um e-mail com
+                            o ebook, e após o pagamento será liberado um link de acesso ao nosso WhatsApp caso queira
+                            receber seu ebook por lá ou tiver alguma dificuldade, vamos te atender.</p>
+                    </div>
+                </div>
+                <div class="faq-item"
+                    style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; overflow: hidden;">
+                    <button class="faq-question"
+                        style="width: 100%; padding: 1.25rem; background: none; border: none; color: #ffffff; font-weight: 700; text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+                        Serve para quem está começando? <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer"
+                        style="padding: 0 1.25rem 1.25rem; color: rgba(255, 255, 255, 0.8); font-size: 0.95rem;">
+                        <p>Com certeza. O método foi desenhado para ser didático, passo a passo, ideal tanto para
+                            iniciantes quanto para criadores experientes que querem profissionalizar o negócio.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -702,7 +822,7 @@
                 Pronto Para Começar?</h3>
             <p
                 style="font-size: 1.25rem; color: #ffffff; margin-bottom: 2.5rem; max-width: 700px; margin-left: auto; margin-right: auto; line-height: 1.6; text-shadow: 0 2px 8px rgba(0,0,0,0.8);">
-                Acesse o ebook agora e comece a economizar com seus galinhas ainda hoje.</p>
+                Acesse o ebook agora e comece a economizar com suas galinhas ainda hoje.</p>
             <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary btn-large"
                 style="padding: 1.2rem 3rem; font-size: 1.3rem; font-weight: 800; border-radius: 50px; background: #fbbf24; color: #7c2d12; border: none; box-shadow: 0 6px 0 #d97706; transform: scale(1.1); transition: all 0.3s ease;">
                 SALVAR MINHAS GALINHAS AGORA
@@ -723,11 +843,11 @@
                     <div style="flex: 1; text-align: left;">
                         <h3 class="modal-title"
                             style="color: #7c2d12; font-size: 1.4rem; font-weight: 800; line-height: 1.2; margin: 0;">
-                            Finalize Sua Compra Agora, e Garanta a saude da suas galinhas.
+                            Finalize Sua Compra Agora, e Garanta a saúde das suas galinhas.
                         </h3>
                         <p
                             style="font-size: 0.85rem; color: #6b7280; margin-top: 8px; font-weight: 600; line-height: 1.3;">
-                            Nao espere amanha, pra sua galinha <br> amanha pode ser tarde.
+                            Não espere amanhã, para sua galinha <br> amanhã pode ser tarde.
                         </p>
                     </div>
                     <img src="logo.png" alt="Logo" style="height: 110px; flex-shrink: 0; filter: contrast(1.1);">
@@ -933,8 +1053,8 @@
                         <div class="summary-details">
                             <p
                                 style="font-size: 0.75rem; color: #fbbf24; font-weight: 800; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.3;">
-                                Meu conhecimento na palma da sua mao,<br>
-                                Mais de 10 anos na criaçao de galinhas.
+                                Meu conhecimento na palma da sua mão,<br>
+                                Mais de 10 anos na criação de galinhas.
                             </p>
                             <h4>Protocolo Elite: A Cura das Aves</h4>
                             <ul class="summary-features">
@@ -1058,7 +1178,7 @@
                         </div>
                         <p
                             style="font-size: 1.1rem; color: #b45309; font-weight: 900; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: -0.2px;">
-                            <i class="fa-solid fa-circle-check"></i> uma galinha salva, ja paga seu investimento.
+                            <i class="fa-solid fa-circle-check"></i> uma galinha salva, já paga seu investimento.
                         </p>
 
                         <p
@@ -1158,7 +1278,7 @@
 
                         <p
                             style="font-size: 1.1rem; color: #dc2626; font-weight: 900; margin-top: 20px; margin-bottom: 8px; text-transform: uppercase; animation: pulse 2s infinite;">
-                            <i class="fa-solid fa-triangle-exclamation"></i> nao deixe pra depois, sua galinha nao pode
+                            <i class="fa-solid fa-triangle-exclamation"></i> não deixe para depois, sua galinha não pode
                             esperar.
                         </p>
 
