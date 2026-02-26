@@ -820,6 +820,11 @@
                     <i class="fa-solid fa-play"></i>
                 </div>
                 <div class="stat-card">
+                    <div class="label">VSL Venda (Views)</div>
+                    <div class="value" id="dash-vsl-venda">0</div>
+                    <i class="fa-solid fa-cart-arrow-down"></i>
+                </div>
+                <div class="stat-card">
                     <div class="label">Checkout Abertos</div>
                     <div class="value" id="dash-checkout">0</div>
                     <i class="fa-solid fa-cart-shopping"></i>
@@ -1097,9 +1102,12 @@
                 const day = analyticsData.daily[date];
                 acc.uniqueVisits += (day.uniqueVisits || 0);
                 acc.videoPlay += (day.videoPlay || 0);
+                acc.vslAuthorityView += (day.vslAuthorityView || 0);
+                acc.vslEbookView += (day.vslEbookView || 0);
+                acc.vslVendaView += (day.vslVendaView || 0);
                 acc.checkoutOpens += (day.checkoutOpens || 0);
                 return acc;
-            }, { uniqueVisits: 0, videoPlay: 0, checkoutOpens: 0 });
+            }, { uniqueVisits: 0, videoPlay: 0, vslAuthorityView: 0, vslEbookView: 0, checkoutOpens: 0 });
 
             // Filtro de Vendas (cruzando com Histórico Real)
             const filteredSales = (historyData || []).filter(s => {
@@ -1113,7 +1121,10 @@
             });
 
             document.getElementById('dash-unique').innerText = filteredTotals.uniqueVisits;
-            document.getElementById('dash-video').innerText = filteredTotals.videoPlay;
+            if (document.getElementById('dash-video')) document.getElementById('dash-video').innerText = filteredTotals.videoPlay;
+            if (document.getElementById('dash-vsl-auth')) document.getElementById('dash-vsl-auth').innerText = filteredTotals.vslAuthorityView;
+            if (document.getElementById('dash-vsl-ebook')) document.getElementById('dash-vsl-ebook').innerText = filteredTotals.vslEbookView;
+            if (document.getElementById('dash-vsl-venda')) document.getElementById('dash-vsl-venda').innerText = filteredTotals.vslVendaView;
             document.getElementById('dash-checkout').innerText = filteredTotals.checkoutOpens;
             document.getElementById('dash-sales').innerText = filteredSales.length;
 

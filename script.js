@@ -8,11 +8,30 @@ let cart = {
     bumps: [] // IDs of selected bumps
 };
 
+// --- PRICE SYNC: ENSURE ALL PRICES REFLECT ADMIN CONFIG ---
+function syncAllPrices() {
+    document.querySelectorAll('[data-price-of]').forEach(el => {
+        const productId = el.getAttribute('data-price-of');
+        const product = prefetchedProducts[productId];
+        if (product && product.price) {
+            el.innerText = product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+        }
+    });
+}
+
 // GLOBAL PAYMENT STATE
 let currentPaymentMethod = 'pix'; // Default
 
-// --- PERFORMANCE: PRE-FETCHING ---
 const prefetchedProducts = {};
+
+// --- LEAD DEDUPLICATION: ONCE PER DAY ---
+function canTrackLeadToday() {
+    const today = new Date().toISOString().split('T')[0];
+    const lastLead = localStorage.getItem('mura_lead_sent');
+    if (lastLead === today) return false;
+    localStorage.setItem('mura_lead_sent', today);
+    return true;
+}
 
 // --- INIT: CHECK PENDING PIX (Recover Logic) ---
 document.addEventListener('DOMContentLoaded', async () => {
@@ -28,8 +47,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('a[href^="#offer"]').forEach(btn => {
         btn.addEventListener('click', () => {
             const ctaId = btn.getAttribute('data-cta') || 'generic_cta';
-            trackEvent('cta_click', null, ctaId);
-            // Prepare for lead capture on hover or click if we have info
+            if (canTrackLeadToday()) {
+                trackEvent('cta_click', null, ctaId);
+            }
         });
     });
 
@@ -45,17 +65,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (!phone || phone.length < 8) return;
 
+            // Only send if data changed to avoid redundant server calls
+            const lastData = sessionStorage.getItem('last_lead_capture');
+            const currentData = JSON.stringify({ name, email, phone, product });
+            if (lastData === currentData) return;
+            sessionStorage.setItem('last_lead_capture', currentData);
+
             try {
                 await fetch(`${API_URL}/api/leads/lost`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, phone, product })
+                    body: currentData
                 });
                 console.log("📥 [LEAD] Captura em tempo real enviada.");
             } catch (e) {
                 console.warn("[LEAD] Erro na captura em tempo real", e);
             }
-        }, 1500); // Wait 1.5s after last input
+        }, 1000); // 1s debounce
     };
 
     // Listen to checkout inputs
@@ -94,6 +120,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const config = await response.json();
             // Merge both products and orderBumps into prefetchedProducts for easy access
             Object.assign(prefetchedProducts, config.products, config.orderBumps);
+            syncAllPrices();
             console.log('🚀 [PREFETCH] Configuração completa carregada (Produtos + Bumps)');
 
             // Update specific price elements if they exist
@@ -113,9 +140,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         let tracked = false;
         lazyVideo.addEventListener('play', () => {
             if (!tracked) {
-                trackEvent('video_play');
+                const videoType = lazyVideo.id === 'vsl-video-player' ? 'authority' :
+                    (lazyVideo.id === 'ebook-vsl' || lazyVideo.classList.contains('ebook-video')) ? 'ebook' :
+                        (lazyVideo.id === 'venda-vsl') ? 'venda' : 'generic';
+                trackEvent('video_play', null, null, videoType);
                 tracked = true;
-                console.log("🎥 [VIDEO] Play Tracked");
+                console.log(`🎥 [VIDEO] ${videoType.toUpperCase()} Play Tracked`);
             }
         });
 

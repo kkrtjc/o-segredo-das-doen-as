@@ -9,6 +9,10 @@
     <!-- Performance Optimizations -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://sdk.mercadopago.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://sdk.mercadopago.com">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
     <!-- Icons -->
@@ -23,6 +27,8 @@
     <!-- Preload critical assets -->
     <link rel="preload" href="logo.png" as="image">
     <link rel="preload" href="capadasdoencas.jpg" as="image">
+    <link rel="preload" href="vsl-ebook.mp4" as="video">
+    <link rel="preload" href="vsl autoridade.mp4" as="video">
 
     <style>
         /* Promoção de Elite Interstitial Re-style */
@@ -499,6 +505,38 @@
                     Gastar Fortunas com Veterinário.</span>
             </h2>
 
+            <!-- VSL VENDA SECTION (SQUARED & REFINED) -->
+            <div class="venda-vsl-container"
+                style="width: 100%; max-width: 280px; margin: 1rem auto; border-radius: 20px; overflow: hidden; border: 3px solid #fbbf24; box-shadow: 0 15px 40px rgba(0,0,0,0.5); background: #000; animation: pulseGlow 3s infinite alternate; text-align: center;">
+                <h4
+                    style="color: #fbbf24; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; margin: 10px 0; letter-spacing: 1px;">
+                    Assista ao vídeo</h4>
+                <video id="venda-vsl" poster="video_cover_vsl.png" controls playsinline preload="none"
+                    style="width: 100%; aspect-ratio: 1/1; object-fit: cover; object-position: center 58%; display: block;">
+                    <source src="venda_vsl.mp4" type="video/mp4">
+                    Seu navegador não suporta vídeos.
+                </video>
+                <div style="padding: 0.75rem; background: rgba(251, 191, 36, 0.1); text-align: center;">
+                    <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary"
+                        style="width: 100%; padding: 12px; font-size: 0.9rem; font-weight: 900; border-radius: 10px; box-shadow: 0 4px 15px rgba(217,119,6,0.2);">
+                        QUERO SALVAR AGORA
+                    </button>
+                    <!-- Small Price Display -->
+                    <div style="margin-top: 10px; color: #fff; font-size: 0.8rem; font-weight: 700;">
+                        <span
+                            style="background: #dc2626; color: #fff; padding: 4px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 900; display: inline-block; margin-bottom: 8px; box-shadow: 0 0 15px rgba(220, 38, 38, 0.4); animation: pulseGlow 2s infinite alternate;">
+                            <i class="fa-solid fa-fire-flame-curved"></i> OFERTA POR TEMPO LIMITADO
+                        </span>
+                        <div style="color: #fbbf24; font-size: 0.95rem; margin-bottom: 4px;">
+                            De <span style="text-decoration: line-through; opacity: 0.6; color: #fff;">149,90</span> por
+                            <span style="font-size: 1.1rem; font-weight: 900;">109,90 no pix</span>
+                        </div>
+                        <span style="opacity: 0.8; font-size: 0.75rem; display: block; font-weight: 600;">receba na hora
+                            apos o pagamento sem burocracia.</span>
+                    </div>
+                </div>
+            </div>
+
             <p
                 style="font-size: 1.25rem; color: #ffffff; margin-bottom: 1.2rem; font-weight: 700; text-shadow: 0 2px 8px rgba(0,0,0,0.8);">
                 Tratamentos com resultados comprovados.
@@ -518,6 +556,15 @@
                     <span
                         style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
                             class="fa-solid fa-arrow-trend-down"></i> Queda de Postura</span>
+                    <span
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
+                            class="fa-solid fa-droplet"></i> Coriza</span>
+                    <span
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
+                            class="fa-solid fa-circle-nodes"></i> Caroço (Bouba)</span>
+                    <span
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
+                            class="fa-solid fa-biohazard"></i> Diarreia</span>
                 </div>
 
                 <p
@@ -581,7 +628,7 @@
                         APENAS</span>
                     <span
                         style="display: block; font-size: 2rem; color: #fbbf24; font-weight: 900; margin-bottom: 10px;">R$
-                        <span id="display-price-value">109,90</span> no pix</span>
+                        <span data-price-of="ebook-doencas">119,90</span> no pix</span>
                     <span
                         style="font-size: 0.9rem; color: #ffffff; font-weight: 800; display: inline-block; margin-bottom: 15px; background: #dc2626; padding: 6px 15px; border-radius: 6px; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);">🔥
                         27% DE DESCONTO NO PIX</span>
@@ -748,7 +795,7 @@
             <div style="font-size: 1.4rem; font-weight: 600;">POR APENAS</div>
             <p
                 style="font-size: 3rem; font-weight: 900; color: #fbbf24; margin: 10px 0; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">
-                R$ 109,90 no pix</p>
+                R$ <span data-price-of="ebook-doencas">119,90</span> no pix</p>
 
             <div
                 style="background: #dc2626; color: #fff; display: inline-block; padding: 6px 16px; border-radius: 6px; font-weight: 800; font-size: 1rem; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);">
@@ -1174,7 +1221,8 @@
                             style="margin-bottom: 0.5rem; background: #fffbeb; border: 1px dashed #fde68a; padding: 12px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
                             <span style="font-size: 1.1rem; font-weight: 800; color: #7c2d12;">Total:</span>
                             <span class="checkout-total-display"
-                                style="font-size: 1.25rem; font-weight: 900; color: #7c2d12;">R$ 109,90</span>
+                                style="font-size: 1.25rem; font-weight: 900; color: #7c2d12;">R$ <span
+                                    data-price-of="ebook-doencas">119,90</span></span>
                         </div>
                         <p
                             style="font-size: 1.1rem; color: #b45309; font-weight: 900; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: -0.2px;">
@@ -1196,10 +1244,14 @@
                             Finalizar Pagamento
                         </button>
 
-                        <p
-                            style="font-size: 0.85rem; color: #6b7280; font-weight: 700; margin-top: 15px; margin-bottom: 0;">
-                            <i class="fa-solid fa-shield-halved"></i> Garantia de 7 Dias ou seu dinheiro de volta.
-                        </p>
+                        <!-- Simplified Guarantee -->
+                        <div
+                            style="margin-top: 1.5rem; background: rgba(22, 163, 74, 0.05); padding: 12px; border-radius: 10px; text-align: center;">
+                            <p
+                                style="color: #166534; font-weight: 800; font-size: 0.85rem; margin: 0; text-transform: uppercase;">
+                                <i class="fa-solid fa-lock"></i> SE VOCÊ NÃO GOSTAR TE DEVOLVO SEU DINHEIRO, SEM RISCO
+                            </p>
+                        </div>
 
                         <!-- Scrollable Social Proof Carousel -->
                         <div
@@ -1351,14 +1403,12 @@
                         <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-icone-1024.png"
                             style="height: 22px;" alt="Mercado Pago">
                     </div>
+                    <!-- Simplified Guarantee (Pix View) -->
                     <div
-                        style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                        style="background: rgba(22, 163, 74, 0.05); padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center;">
                         <p
-                            style="color: #166534; font-weight: 800; font-size: 0.9rem; margin-bottom: 4px; text-transform: uppercase;">
-                            <i class="fa-solid fa-shield-check"></i> 7 Dias de Garantia
-                        </p>
-                        <p style="color: #15803d; font-size: 0.8rem; line-height: 1.3;">
-                            Se o protocolo não funcionar, nós devolvemos 100% do seu dinheiro sem burocracia.
+                            style="color: #166534; font-weight: 800; font-size: 0.8rem; margin: 0; text-transform: uppercase;">
+                            <i class="fa-solid fa-lock"></i> SE VOCÊ NÃO GOSTAR TE DEVOLVO SEU DINHEIRO, SEM RISCO
                         </p>
                     </div>
 
@@ -1412,8 +1462,8 @@
 
 
             <button onclick="closeCheckout()"
-                style="position: absolute; top: -10px; right: -10px; width: 32px; height: 32px; background: #fff; border: 1px solid #e5e7eb; border-radius: 50%; color: #6b7280; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; display: flex; align-items: center; justify-content: center;">
-                &times;
+                style="position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; background: #fff; border: 1px solid #e5e7eb; border-radius: 50%; color: #6b7280; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
     </div>

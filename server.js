@@ -90,7 +90,8 @@ if (!fs.existsSync(ANALYTICS_PATH)) fs.writeFileSync(ANALYTICS_PATH, JSON.string
         clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
         uiErrors: 0, trustClicks: 0, mobileSessions: 0,
         desktopSessions: 0, slowLoads: 0, pageViews: 0,
-        emailClicks: 0, pixGenerated: 0, pixPaid: 0
+        emailClicks: 0, pixGenerated: 0, pixPaid: 0,
+        vslAuthorityView: 0, vslEbookView: 0, vslVendaView: 0
     },
     daily: {}
 }, null, 4));
@@ -455,6 +456,9 @@ app.post('/api/track', (req, res) => {
     }
     else if (type === 'video_play') {
         increment('videoPlay');
+        if (details === 'authority') increment('vslAuthorityView');
+        if (details === 'ebook') increment('vslEbookView');
+        if (details === 'venda') increment('vslVendaView');
     }
 
     saveAnalytics(analytics);
