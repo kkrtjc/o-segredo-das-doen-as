@@ -997,24 +997,30 @@ body.dark-theme .form-input {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.625rem 0.75rem;
-    border: 1px solid var(--gray-300);
-    border-radius: 0.5rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
     cursor: pointer;
-    transition: 0.2s;
-    background: var(--white);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    position: relative;
+    overflow: hidden;
 }
 
 .radio-item:hover {
-    border-color: var(--amber-300);
-    background: var(--amber-50);
+    border-color: rgba(34, 197, 94, 0.3);
+    background: rgba(34, 197, 94, 0.05);
 }
 
 .radio-item.selected {
-    border-color: var(--amber-600);
-    background: var(--amber-50);
-    box-shadow: 0 0 0 1px var(--amber-600);
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+    box-shadow: 0 10px 20px -5px rgba(34, 197, 94, 0.25), 0 0 0 1px #22c55e;
+    transform: translateY(-2px);
 }
+
 
 .radio-item input {
     display: none;
@@ -1282,4 +1288,47 @@ body.dark-theme .form-input {
 
 .lightbox-close:hover {
     background: rgba(255, 255, 255, 0.4);
+}
+
+/* --- Checkout UI Contrast Refinements --- */
+#checkout-modal *,
+#checkout-modal *:before,
+#checkout-modal *:after {
+    text-shadow: none !important;
+}
+
+#checkout-modal .modal-title,
+#checkout-modal .form-label,
+#checkout-modal .form-section-title,
+#checkout-modal p,
+#checkout-modal span:not(.card-price-value):not(.checkout-total-display),
+#checkout-modal .radio-title,
+#checkout-modal .radio-desc,
+#checkout-modal div:not(.field-tooltip) {
+    color: #ffffff !important;
+}
+
+#checkout-modal .form-input::placeholder {
+    color: rgba(255, 255, 255, 0.8) !important;
+    opacity: 1;
+}
+
+#checkout-modal .form-input {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Glass Container for Home Page Sections */
+.container-glass {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Lightbox specialized for dark theme */
+.lightbox-content.blurred-sensitive {
+    filter: blur(15px);
 }

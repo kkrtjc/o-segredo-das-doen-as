@@ -376,10 +376,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     }
 
     const secureOverlay = document.getElementById('secure-loading');
-    if (secureOverlay) {
-        secureOverlay.classList.add('active');
-        document.body.classList.add('modal-open');
-    }
+    // Overlay will be shown AFTER data is fetched to avoid adding fetch wait time to the animation
 
     // FALLBACK DATA (Offline Support)
     const fallbackData = {
@@ -470,19 +467,36 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         renderOrderBumps(cart.mainProduct.fullBumps);
         updateTotal();
 
-        const delay = (productData && productData.fullBumps) ? 10 : 250;
+        // MOSTRAR LOADING DE TRANSIÇÃO (CADEADO DOURADO) - só após dados prontos
+        if (secureOverlay) {
+            secureOverlay.style.display = 'flex';
+            secureOverlay.classList.add('active');
+        }
+
+        // DELAY DE 2 SEGUNDOS ANTES DE ABRIR O CHECKOUT
         setTimeout(() => {
-            if (secureOverlay) secureOverlay.classList.remove('active');
+            // Remove o loading
+            if (secureOverlay) {
+                secureOverlay.classList.remove('active');
+                setTimeout(() => {
+                    secureOverlay.style.display = 'none';
+                }, 400); // Tempo da animação CSS de fade-out
+            }
+
+            // Mostra o checkout de forma suave
             checkoutModal.classList.add('active');
             document.body.classList.add('modal-open');
 
             // Reforçar disparo do Pixel ao abrir definitivamente
             if (typeof fbq === 'function') fbq('track', 'InitiateCheckout');
-        }, delay);
+        }, 1200); // Reduzido de 2000ms para 1200ms para parecer mais ágil
 
     } catch (err) {
         console.error("Critical error opening checkout:", err);
-        if (secureOverlay) secureOverlay.classList.remove('active');
+        if (secureOverlay) {
+            secureOverlay.classList.remove('active');
+            setTimeout(() => secureOverlay.style.display = 'none', 400);
+        }
         document.body.classList.remove('modal-open');
     }
 }
@@ -539,7 +553,7 @@ function renderOrderBumps(bumps) {
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
                             <span class="order-bump-tag" style="background: #ef4444; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">${bump.tag || 'OFERTA ÚNICA'}</span>
                         </div>
-                        <strong class="order-bump-title" style="display: block; color: #fff; font-size: 1.05rem; margin-top: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">${bump.title}</strong>
+                        <strong class="order-bump-title" style="display: block; color: ${bump.id === 'bump-6361' ? '#3b82f6' : '#fff'}; font-size: 1.05rem; margin-top: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">${bump.title}</strong>
                         <span class="order-bump-description" style="display: block; color: rgba(255,255,255,0.9); font-size: 0.85rem; margin-top: 4px; line-height: 1.3; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">${bump.description}</span>
                         <div style="display: flex; align-items: baseline; gap: 10px; margin-top: 8px;">
                             <span class="order-bump-price" style="color: #fbbf24; font-weight: 900; font-size: 1.2rem; text-shadow: 0 2px 5px rgba(0,0,0,0.5);">+ ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}</span>
@@ -809,6 +823,10 @@ function switchMethod(method) {
         const cpfContainer = document.getElementById('cpf-container');
         if (cpfContainer) cpfContainer.style.display = 'none';
 
+        // Mostrar mensagem de urgência PIX
+        const pixUrgency = document.getElementById('pix-urgency-msg');
+        if (pixUrgency) pixUrgency.style.display = 'block';
+
     } else if (method === 'card') {
         if (pixArea) { pixArea.style.display = 'none'; }
         if (cardArea) { cardArea.style.display = 'block'; }
@@ -818,6 +836,10 @@ function switchMethod(method) {
         // Mostrar CPF para Cartão
         const cpfContainer = document.getElementById('cpf-container');
         if (cpfContainer) cpfContainer.style.display = 'block';
+
+        // Esconder mensagem de urgência PIX
+        const pixUrgency = document.getElementById('pix-urgency-msg');
+        if (pixUrgency) pixUrgency.style.display = 'none';
     }
 
     // RECALCULATE TOTAL WHEN SWITCHING
@@ -1733,4 +1755,30 @@ document.addEventListener('keydown', (e) => {
         closeLightbox();
         // Não fechamos o checkout no ESC por segurança na conversão, apenas o lightbox
     }
+});
+// Carrossel Automático de Depoimentos
+function initAutoCarousel() {
+    const carousel = document.getElementById('auto-carousel');
+    if (!carousel) return;
+
+    let scrollAmount = 0;
+    const scrollStep = 265; // Largura da imagem (250px) + gap (15px)
+    const intervalTime = 5000; // 5 segundos
+
+    setInterval(() => {
+        const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+
+        if (scrollAmount >= maxScroll) {
+            scrollAmount = 0;
+            carousel.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+            scrollAmount += scrollStep;
+            carousel.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+        }
+    }, intervalTime);
+}
+
+// Inicializar quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', () => {
+    initAutoCarousel();
 });
