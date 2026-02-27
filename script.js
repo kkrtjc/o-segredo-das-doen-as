@@ -424,7 +424,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     const fallbackData = {
         'ebook-doencas': {
             title: 'Protocolo Elite: A Cura das Aves',
-            price: 109.90,
+            price: 87,90,
             originalPrice: 149.90,
             cover: 'capadasdoencas.jpg',
             fullBumps: [
@@ -785,7 +785,7 @@ async function renderHomeProducts() {
                 <div style="text-decoration: line-through; color: #999; font-size: 0.9rem;">De R$ ${p.originalPrice.toFixed(2).replace('.', ',')} por apenas:</div>
                 <div style="display: flex; flex-direction: column; align-items: center; line-height: 1.1;">
                     <span class="price-amount" style="color: var(--color-secondary); font-size: 3.5rem;">
-                        R$ 109<small>,90</small>
+                        R$ 87<small>,90</small>
                     </span>
                     <span style="font-size: 0.75rem; color: #10b981; font-weight: 800; margin-top: 3px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 15px;">🔥 27% DE DESCONTO NO PIX</span>
                     <span style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 5px;">ou até 4x de <strong>R$ 37,47</strong> s/ juros</span>
