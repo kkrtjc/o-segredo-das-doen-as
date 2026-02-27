@@ -424,7 +424,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     const fallbackData = {
         'ebook-doencas': {
             title: 'Protocolo Elite: A Cura das Aves',
-            price: 87,90,
+            price: 87.90,
             originalPrice: 149.90,
             cover: 'capadasdoencas.jpg',
             fullBumps: [
