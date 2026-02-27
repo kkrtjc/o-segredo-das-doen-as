@@ -993,10 +993,16 @@
             if (!pass) return alert("Digite a senha!");
 
             try {
-                const res = await fetch(`${API_URL}/api/config`, { headers: { 'x-admin-password': pass } });
+                const res = await fetch(`${API_URL}/api/auth`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: pass })
+                });
+
                 if (res.ok) {
                     masterPass = pass;
-                    db = await res.json();
+                    const configRes = await fetch(`${API_URL}/api/config`);
+                    db = await configRes.json();
                     document.getElementById('auth-screen').style.display = 'none';
                     loadInitialData();
                 } else {
@@ -1066,7 +1072,9 @@
 
         async function loadAnalytics() {
             const range = document.getElementById('date-range').value;
-            const res = await fetch(`${API_URL}/api/analytics`);
+            const res = await fetch(`${API_URL}/api/analytics`, {
+                headers: { 'x-admin-password': masterPass }
+            });
             analyticsData = await res.json();
 
             // Filtragem por Período (calculada no frontend para máxima flexibilidade)

@@ -15,6 +15,19 @@ function syncAllPrices() {
         const product = prefetchedProducts[productId];
         if (product && product.price) {
             el.innerText = product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+
+            // Update additional elements if we are syncing the main product
+            if (productId === 'ebook-doencas') {
+                const discPerc = document.getElementById('pix-discount-percent');
+                if (discPerc && product.originalPrice) {
+                    const perc = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+                    discPerc.innerText = perc;
+                }
+                const instVal = document.getElementById('card-installment-value');
+                if (instVal) {
+                    instVal.innerText = (product.price / 4).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                }
+            }
         }
     });
 }
@@ -424,7 +437,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     const fallbackData = {
         'ebook-doencas': {
             title: 'Protocolo Elite: A Cura das Aves',
-            price: 87.90,
+            price: 109.90,
             originalPrice: 149.90,
             cover: 'capadasdoencas.jpg',
             fullBumps: [
@@ -673,7 +686,7 @@ function updateTotal() {
             }
         }
 
-        console.log('ðŸ” DEBUG updateTotal - Bump ID:', id, 'Encontrado:', bump);
+        console.log('🔎 DEBUG updateTotal - Bump ID:', id, 'Encontrado:', bump);
 
         if (bump) {
             // Usa o preço do banco de dados
@@ -687,7 +700,7 @@ function updateTotal() {
             total += bumpPriceForPix;
             cardTotal += bumpPriceForCard;
         } else {
-            console.error('âŒ Bump não encontrado em fullBumps:', id);
+            console.error('❌ Bump não encontrado em fullBumps:', id);
         }
     });
 
@@ -772,8 +785,9 @@ async function renderHomeProducts() {
 
         const featuresHTML = (p.features || []).map(f => `<li><span class="check-icon">✓</span> ${f}</li>`).join('');
 
-        const coverHTML = `<img src="${p.cover}" alt="${p.title}" style="max-width: 140px; margin: 10px auto; display: block; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));">`;
+        const coverHTML = `<img src="${p.cover || 'capadasdoencas.jpg'}" alt="${p.title}" style="max-width: 140px; margin: 10px auto; display: block; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));">`;
         const isDiscounted = p.originalPrice && (p.originalPrice > p.price);
+        const discountPercent = isDiscounted ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100) : 0;
 
         card.innerHTML = `
             <span class="badge-featured">${p.badge || 'OFERTA ÚNICA'}</span>
@@ -782,19 +796,18 @@ async function renderHomeProducts() {
             ${coverHTML}
             
             <div class="price-container" style="margin: 20px 0;">
-                <div style="text-decoration: line-through; color: #999; font-size: 0.9rem;">De R$ ${p.originalPrice.toFixed(2).replace('.', ',')} por apenas:</div>
+                ${isDiscounted ? `<div style="text-decoration: line-through; color: #999; font-size: 0.9rem;">De R$ ${p.originalPrice.toFixed(2).replace('.', ',')} por apenas:</div>` : ''}
                 <div style="display: flex; flex-direction: column; align-items: center; line-height: 1.1;">
                     <span class="price-amount" style="color: var(--color-secondary); font-size: 3.5rem;">
-                        R$ 87<small>,90</small>
+                        R$ ${Math.floor(p.price)}<small>,${String(Math.round((p.price % 1) * 100)).padStart(2, '0')}</small>
                     </span>
-                    <span style="font-size: 0.75rem; color: #10b981; font-weight: 800; margin-top: 3px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 15px;">🔥 27% DE DESCONTO NO PIX</span>
-                    <span style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 5px;">ou até 4x de <strong>R$ 37,47</strong> s/ juros</span>
+                    ${isDiscounted ? `<span style="font-size: 0.75rem; color: #10b981; font-weight: 800; margin-top: 3px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 15px;">🔥 ${discountPercent}% DE DESCONTO NO PIX</span>` : ''}
+                    <span style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 5px;">ou até 4x de <strong>R$ ${(p.price / 4).toFixed(2).replace('.', ',')}</strong> s/ juros</span>
                 </div>
             </div>
 
             <ul class="price-features" style="margin-top: 1rem;">
                 ${featuresHTML}
-                <li style="color: #32bcad; font-weight: 800;"><span class="check-icon">✓</span> + TABELA DE RAÇÃO (OFERTA ÚNICA)</li>
             </ul>
             
             <button onclick="openCheckout('${mainId}')" class="btn btn-primary btn-pulse" style="width:100%; font-size: 1.3rem; padding: 1.5rem;">
