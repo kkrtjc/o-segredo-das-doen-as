@@ -24,11 +24,31 @@ function syncAllPrices() {
                     const perc = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
                     discPercs.forEach(el => el.innerText = perc);
                 }
+
                 const instVals = document.querySelectorAll('.card-installment-value');
                 if (instVals.length > 0 && product.originalPrice) {
                     // CARD PRICE is originalPrice
                     const val = (product.originalPrice / 4).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
                     instVals.forEach(el => el.innerText = val);
+                }
+
+                // SYNC CARD PRICES (Original Price) on page
+                const cardPrices = document.querySelectorAll('.card-price-value');
+                if (cardPrices.length > 0 && product.originalPrice) {
+                    cardPrices.forEach(el => el.innerText = product.originalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
+                }
+
+                // PIX DISCOUNT REINFORCEMENT
+                const reinforcement = document.querySelectorAll('.pix-discount-reinforcement');
+                if (reinforcement.length > 0 && product.originalPrice && product.price < product.originalPrice) {
+                    const economy = product.originalPrice - product.price;
+                    const message = `💸 <span style="color:#10b981; font-weight:900;">Economize R$ ${economy.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span> pagando via PIX!`;
+                    reinforcement.forEach(el => {
+                        el.innerHTML = message;
+                        el.style.fontSize = '0.85rem';
+                        el.style.fontWeight = '700';
+                        el.style.color = '#ffffff';
+                    });
                 }
             }
         }
@@ -727,6 +747,20 @@ function updateTotal() {
     document.querySelectorAll('.checkout-total-display').forEach(el => {
         el.innerText = formatBRL(finalDisplayPrice);
     });
+
+    // In checkout modal, sync the specific reinforcement slot
+    const checkoutReinforcement = document.querySelector('#checkout-modal .pix-discount-reinforcement');
+    if (checkoutReinforcement) {
+        if (currentPaymentMethod === 'pix' && cardTotal > total) {
+            const economy = cardTotal - total;
+            checkoutReinforcement.innerHTML = `💸 <span style="color:#059669; font-weight:900;">Economize R$ ${economy.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span> pagando via PIX!`;
+            checkoutReinforcement.style.display = 'block';
+            checkoutReinforcement.style.fontSize = '0.9rem';
+            checkoutReinforcement.style.marginTop = '8px';
+        } else {
+            checkoutReinforcement.style.display = 'none';
+        }
+    }
 
     const topPriceDisplay = document.getElementById('checkout-product-price-display');
     if (topPriceDisplay) {
