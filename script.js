@@ -19,15 +19,16 @@ function syncAllPrices() {
 
             // Update additional elements if we are syncing the main product
             if (productId === 'ebook-doencas') {
-                const discPerc = document.getElementById('pix-discount-percent');
-                if (discPerc && product.originalPrice) {
+                const discPercs = document.querySelectorAll('.pix-discount-percent');
+                if (discPercs.length > 0 && product.originalPrice) {
                     const perc = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
-                    discPerc.innerText = perc;
+                    discPercs.forEach(el => el.innerText = perc);
                 }
-                const instVal = document.getElementById('card-installment-value');
-                if (instVal && product.originalPrice) {
+                const instVals = document.querySelectorAll('.card-installment-value');
+                if (instVals.length > 0 && product.originalPrice) {
                     // CARD PRICE is originalPrice
-                    instVal.innerText = (product.originalPrice / 4).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                    const val = (product.originalPrice / 4).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                    instVals.forEach(el => el.innerText = val);
                 }
             }
         }
