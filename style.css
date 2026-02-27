@@ -2,28 +2,58 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 
 :root {
-    --amber-50: #fffbeb;
-    --amber-100: #fef3c7;
-    --amber-600: #d97706;
-    --amber-900: #78350f;
-    --red-50: #fef2f2;
-    --red-100: #fee2e2;
-    --red-200: #fecaca;
+    /* Default Theme - Fixed Dark Mode */
+    --bg-main: #0a0a0a;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --text-inverse: #000000;
+
+    /* Amber/Gold Accents */
+    --amber-50: rgba(251, 191, 36, 0.05);
+    --amber-100: rgba(251, 191, 36, 0.1);
+    --amber-600: #fbbf24;
+    --amber-900: #fbbf24;
+
+    /* Status Colors */
+    --red-50: rgba(220, 38, 38, 0.05);
+    --red-100: rgba(220, 38, 38, 0.1);
+    --red-200: #dc2626;
     --red-600: #dc2626;
     --red-700: #b91c1c;
-    --green-600: #16a34a;
-    --gray-50: #f9fafb;
-    --gray-200: #e5e7eb;
-    --gray-300: #d1d5db;
-    --gray-600: #4b5563;
-    --gray-700: #374151;
-    --gray-800: #1f2937;
+    --green-600: #10b981;
+    --green-50: rgba(16, 185, 129, 0.05);
+
+    /* Neutrals */
+    --gray-50: #111827;
+    --gray-100: #1f2937;
+    --gray-200: #374151;
+    --gray-300: #4b5563;
+    --gray-600: #9ca3af;
+    --gray-700: #d1d5db;
+    --gray-800: #f3f4f6;
     --white: #ffffff;
 
+    /* Enhanced Glassmorphism Tokens */
+    --glass-bg: rgba(10, 10, 10, 0.02);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-blur: blur(4px);
+
+    /* Shadow & Radius */
     --font-heading: 'Plus Jakarta Sans', sans-serif;
     --font-sans: 'Outfit', sans-serif;
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+}
+
+/* Cleanup: body.dark-theme overrides removed as it is now default */
+
+/* Glassmorphism Utility */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    transition: all 0.3s ease;
 }
 
 /* VSL Video Section */
@@ -156,13 +186,13 @@ body.modal-open {
 }
 
 body {
-    background: #000;
-    /* Fallback */
-    color: #ffffff;
+    background: transparent;
+    color: var(--text-primary);
     font-family: var(--font-sans);
     line-height: 1.5;
     position: relative;
     min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* Stable Fixed Background Technique for Mobile and Desktop */
@@ -190,7 +220,7 @@ body::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.75));
+    background: rgba(0, 0, 0, 0.3);
     z-index: -1;
 }
 
@@ -270,7 +300,7 @@ body>section strong,
 body>section b,
 .social-proof-bar *,
 .hero * {
-    color: #ffffff !important;
+    color: var(--text-primary) !important;
 }
 
 /* Ensure Modal Content stays legible (Dark on Light) */
@@ -297,12 +327,13 @@ body>section b,
 
 /* Add a very subtle "dark haze" to containers to ease reading */
 section .container {
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
-    padding: 2rem 1.5rem;
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    padding: 2.5rem 2rem;
+    border-radius: 30px;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-lg);
 }
 
 .container {
@@ -319,8 +350,10 @@ header.sticky {
     position: sticky;
     top: 0;
     z-index: 40;
-    background: var(--white);
-    border-bottom: 1px solid var(--amber-100);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-bottom: 1px solid var(--glass-border);
     box-shadow: var(--shadow-sm);
 }
 
@@ -540,11 +573,11 @@ header.sticky {
 }
 
 .card {
-    background: rgba(255, 255, 255, 0.05);
-    /* Glass effect for cinematic theme */
-    backdrop-filter: blur(5px);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     padding: 1.25rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
     border-radius: 1rem;
     transition: all 0.3s ease;
     text-align: center;
@@ -766,8 +799,8 @@ header.sticky {
 
 /* --- Guarantee --- */
 .guarantee-section {
-    background: linear-gradient(to right, var(--red-50), var(--amber-50));
-    border-top: 2px solid var(--red-200);
+    background: transparent;
+    border-top: 1px solid var(--glass-border);
     text-align: center;
     padding: 4rem 0;
 }
@@ -849,16 +882,19 @@ header.sticky {
 }
 
 .modal-content {
-    background: var(--white);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     width: 100%;
     max-width: 28rem;
     padding: 1.5rem;
-    border-radius: 1rem;
+    border-radius: 1.5rem;
+    border: 1px solid var(--glass-border);
     transform: translateY(20px);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin: 2rem auto;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+    margin: 20px auto;
     position: relative;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     will-change: transform;
 }
 
@@ -926,11 +962,17 @@ header.sticky {
 
 .form-input {
     width: 100%;
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--gray-50);
+    color: var(--text-primary);
     border: 1px solid var(--gray-300);
-    border-radius: 0.375rem;
+    border-radius: 0.75rem;
     font-size: 0.9375rem;
-    transition: 0.2s;
+    transition: all 0.2s;
+}
+
+body.dark-theme .form-input {
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .form-input:focus {
@@ -998,7 +1040,7 @@ header.sticky {
 
 #order-bump-area:hover {
     border-color: #d97706;
-    background: #fffbeb;
+    background: var(--glass-bg);
 }
 
 .order-bump-checkbox {
@@ -1094,10 +1136,12 @@ header.sticky {
 
 /* Social Proof Bar */
 .social-proof-bar {
-    background: #fff;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     padding: 2.5rem 0;
-    border-top: 1px solid var(--amber-100);
-    border-bottom: 1px solid var(--amber-100);
+    border-top: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
     margin: 2rem 0;
 }
 

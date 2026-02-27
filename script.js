@@ -69,7 +69,7 @@ function canTrackLeadToday() {
     return true;
 }
 
-// --- INIT: CHECK PENDING PIX (Recover Logic) ---
+// --- INIT: GLOBAL INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. UNIQUE VISITOR TRACKING
     const today = new Date().toISOString().split('T')[0];
@@ -83,9 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('a[href^="#offer"]').forEach(btn => {
         btn.addEventListener('click', () => {
             const ctaId = btn.getAttribute('data-cta') || 'generic_cta';
-            if (canTrackLeadToday()) {
-                trackEvent('cta_click', null, ctaId);
-            }
+            if (canTrackLeadToday()) trackEvent('cta_click', null, ctaId);
         });
     });
 
@@ -98,34 +96,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             const email = document.getElementById('payer-email')?.value?.trim();
             const phone = document.getElementById('payer-phone')?.value?.trim();
             const product = cart.mainProduct ? (prefetchedProducts[cart.mainProduct]?.title || cart.mainProduct) : 'N/A';
-
             if (!phone || phone.length < 8) return;
-
-            // Only send if data changed to avoid redundant server calls
             const lastData = sessionStorage.getItem('last_lead_capture');
             const currentData = JSON.stringify({ name, email, phone, product });
             if (lastData === currentData) return;
             sessionStorage.setItem('last_lead_capture', currentData);
-
             try {
                 await fetch(`${API_URL}/api/leads/lost`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: currentData
                 });
-                console.log("📥 [LEAD] Captura em tempo real enviada.");
-            } catch (e) {
-                console.warn("[LEAD] Erro na captura em tempo real", e);
-            }
-        }, 1000); // 1s debounce
+            } catch (e) { }
+        }, 1000);
     };
 
-    // Listen to checkout inputs
     ['payer-name', 'payer-email', 'payer-phone'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', captureLostLead);
     });
 
+    // --- RECOVER PIX SESSION ---
     const cached = localStorage.getItem('active_pix_session');
     if (cached) {
         try {
@@ -140,37 +131,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                     } else {
                         localStorage.removeItem('active_pix_session');
                     }
-                } catch (e) { console.warn("Background check failed", e); }
+                } catch (e) { }
             } else {
                 localStorage.removeItem('active_pix_session');
             }
-        } catch (e) {
-            localStorage.removeItem('active_pix_session');
-        }
+        } catch (e) { localStorage.removeItem('active_pix_session'); }
     }
 
-    // --- 5. DYNAMIC PRE-FETCH (Instant Checkout) ---
+    // --- PRE-FETCH CONFIG ---
     try {
         const response = await fetch(`${API_URL}/api/config`);
         if (response.ok) {
             const config = await response.json();
-            // Merge both products and orderBumps into prefetchedProducts for easy access
             Object.assign(prefetchedProducts, config.products, config.orderBumps);
             syncAllPrices();
-            console.log('🚀 [PREFETCH] Configuração completa carregada (Produtos + Bumps)');
-
-            // Update specific price elements if they exist
             const mainP = prefetchedProducts['ebook-doencas'];
             const priceElement = document.getElementById('display-price-value');
             if (priceElement && mainP && mainP.price) {
                 priceElement.innerText = mainP.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
             }
         }
-    } catch (e) {
-        console.warn('[PREFETCH] Falha ao carregar configuração global', e);
-    }
+    } catch (e) { }
 
-    // 3. LAZY VIDEO LOADING (Intersection Observer)
+    // --- LAZY VIDEO ---
     const lazyVideo = document.getElementById('vsl-video') || document.querySelector('.square-video-wrapper video');
     if (lazyVideo) {
         let tracked = false;
@@ -181,10 +164,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         (lazyVideo.id === 'venda-vsl') ? 'venda' : 'generic';
                 trackEvent('video_play', null, null, videoType);
                 tracked = true;
-                console.log(`🎥 [VIDEO] ${videoType.toUpperCase()} Play Tracked`);
             }
         });
-
         if ('IntersectionObserver' in window) {
             const videoObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
@@ -193,7 +174,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         if (source && source.dataset.src) {
                             source.src = source.dataset.src;
                             lazyVideo.load();
-                            console.log("🎥 [VIDEO] Lazy Source Loaded");
                         }
                         observer.unobserve(lazyVideo);
                     }
@@ -202,6 +182,84 @@ document.addEventListener('DOMContentLoaded', async () => {
             videoObserver.observe(lazyVideo);
         }
     }
+
+    // --- OTHER UI LOGIC ---
+    document.querySelectorAll('.faq-question').forEach(q => {
+        q.addEventListener('click', () => {
+            const item = q.parentElement;
+            const isOpen = item.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+            if (!isOpen) item.classList.add('active');
+        });
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            e.preventDefault();
+            const target = document.querySelector(targetId);
+            if (target) {
+                if (targetId === '#offer-focus' || targetId === '#offers') {
+                    const combo = document.querySelector('.price-card.featured');
+                    if (combo) { combo.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+                }
+                window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+            }
+        });
+    });
+
+    const sliderTrack = document.getElementById('comparison-slider-track');
+    if (sliderTrack) {
+        const next = document.getElementById('comparison-next');
+        const prev = document.getElementById('comparison-prev');
+        if (next && prev) {
+            next.addEventListener('click', () => sliderTrack.scrollBy({ left: 300, behavior: 'smooth' }));
+            prev.addEventListener('click', () => sliderTrack.scrollBy({ left: -300, behavior: 'smooth' }));
+        }
+    }
+
+    renderHomeProducts();
+    setupFields();
+
+    const stickyCta = document.querySelector('.sticky-cta-bar');
+    const hero = document.querySelector('.hero');
+    if (stickyCta && hero) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > (hero.offsetHeight - 200)) stickyCta.classList.add('visible');
+            else stickyCta.classList.remove('visible');
+        });
+    }
+
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        img.classList.add('loaded');
+                        imageObserver.unobserve(img);
+                    }
+                }
+            });
+        }, { rootMargin: '50px' });
+        document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+            if (img.src) img.classList.add('loaded');
+            else imageObserver.observe(img);
+        });
+    }
+
+    const setVh = () => document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+    setVh();
+    window.addEventListener('resize', setVh);
+
+    setTimeout(() => {
+        if (typeof fbq === 'function') {
+            fbq('trackCustom', 'TimeSpent_15s');
+            fbq('track', 'ViewContent');
+        }
+    }, 15000);
 });
 
 function toggleVSL() {
@@ -225,140 +283,7 @@ function toggleVSL() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. FAQ Accordion Logic ---
-    document.querySelectorAll('.faq-question').forEach(question => {
-        question.addEventListener('click', () => {
-            const item = question.parentElement;
-            const isOpen = item.classList.contains('active');
-            document.querySelectorAll('.faq-item').forEach(otherItem => otherItem.classList.remove('active'));
-            if (!isOpen) item.classList.add('active');
-        });
-    });
-
-    // --- 2. Smooth Scroll ---
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-
-            e.preventDefault();
-            const targetElement = document.querySelector(targetId);
-
-            if (targetElement) {
-                // Se o alvo for a seção de ofertas, tenta focar no Combo Elite
-                if (targetId === '#offer-focus' || targetId === '#offers') {
-                    const comboCard = document.querySelector('.price-card.featured');
-                    if (comboCard) {
-                        comboCard.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center',
-                            inline: 'center'
-                        });
-                        return;
-                    }
-                }
-
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80,
-                    behavior: 'smooth'
-                });
-            } else if (targetId === '#offer-focus') {
-                // Fallback for when current card isn't loaded yet
-                const pricingSection = document.getElementById('offers');
-                if (pricingSection) {
-                    window.scrollTo({
-                        top: pricingSection.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            }
-        });
-    });
-
-
-
-
-
-    // --- 5. Comparison Slider (Results) ---
-    const sliderTrack = document.getElementById('comparison-slider-track');
-    if (sliderTrack) {
-        const nextBtn = document.getElementById('comparison-next');
-        const prevBtn = document.getElementById('comparison-prev');
-        if (nextBtn && prevBtn) {
-            nextBtn.addEventListener('click', () => {
-                sliderTrack.scrollBy({ left: 300, behavior: 'smooth' });
-            });
-            prevBtn.addEventListener('click', () => {
-                sliderTrack.scrollBy({ left: -300, behavior: 'smooth' });
-            });
-        }
-    }
-
-    // --- 5. Initializations ---
-    renderHomeProducts();
-    setupFields();
-
-    // --- 6. Sticky CTA Logic ---
-    const stickyCta = document.querySelector('.sticky-cta-bar');
-    const heroSection = document.querySelector('.hero');
-    if (stickyCta && heroSection) {
-        window.addEventListener('scroll', () => {
-            const triggerPoint = heroSection.offsetHeight - 200;
-            if (window.scrollY > triggerPoint) stickyCta.classList.add('visible');
-            else stickyCta.classList.remove('visible');
-        });
-    }
-
-    // --- 7. Lazy Loading & Layout Stability ---
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    if (img.dataset.src) {
-                        img.src = img.dataset.src;
-                        img.classList.add('loaded');
-                        imageObserver.unobserve(img);
-                    }
-                }
-            });
-        }, { rootMargin: '50px' });
-
-        document.querySelectorAll('img[loading="lazy"]').forEach(img => {
-            if (img.src) {
-                // If it already has src, just mark as loaded
-                img.classList.add('loaded');
-            } else {
-                imageObserver.observe(img);
-            }
-        });
-    }
-
-    // --- 8. Smooth Image Transitions ---
-    document.querySelectorAll('img').forEach(img => {
-        img.style.transition = 'opacity 0.4s ease-in-out';
-        img.onload = () => img.style.opacity = '1';
-        if (!img.complete) img.style.opacity = '0';
-    });
-
-    // --- 9. Mobile Vh Fix ---
-    const vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-    window.addEventListener('resize', () => {
-        const vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-    });
-
-    // Pixels tracking
-    setTimeout(() => {
-        if (typeof fbq === 'function') {
-            fbq('trackCustom', 'TimeSpent_15s');
-            fbq('track', 'ViewContent');
-        }
-    }, 15000);
-});
 
 // --- 2. CHECKOUT & API LOGIC ---
 
@@ -625,51 +550,7 @@ function renderOrderBumps(bumps) {
     }).join('');
 }
 
-function legacy_renderOrderBumps(bumps) {
-    const filteredBumps = (bumps || []).filter(bump => {
-        // Remove Manual de Pintinhos do checkout (deve ser upsell posterior)
-        if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') return false;
-        // Mantém a Tabela de Ração no checkout
-        return true;
-    });
 
-    area.innerHTML = filteredBumps.map(bump => {
-        let imgSrc = bump.image;
-        if (!imgSrc) {
-            if (bump.id === 'ebook-doencas' || bump.id === 'bump-doencas') imgSrc = 'capadasdoencas.jpg';
-            else if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') imgSrc = 'capadospintinhos.jpg';
-            else if (bump.id === 'bump-6361') imgSrc = 'tabela_racao_bump.jpg';
-        }
-
-        return `
-            <div class="order-bump-container" onclick="toggleBump('${bump.id}')" 
-                style="margin-top: 1rem; position: relative; overflow: hidden; border: 2px solid #d97706; border-radius: 12px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; min-height: 120px; display: flex;">
-                
-                <!-- Imagem de Fundo Preenchendo Tudo -->
-                ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">` : ''}
-                
-                <!-- Overlay Gradiente para Legibilidade -->
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.3) 100%); z-index: 1;"></div>
-
-                <!-- Conteúdo por cima do fundo -->
-                <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 15px; padding: 15px; width: 100%;">
-                    <input type="checkbox" class="order-bump-checkbox" id="bump-chk-${bump.id}" ${cart.bumps.includes(bump.id) ? 'checked' : ''} 
-                        style="width: 24px; height: 24px; cursor: pointer; accent-color: #fbbf24; flex-shrink: 0; filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));">
-                    
-                    <div class="order-bump-content" style="flex: 1;">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
-                            <span class="order-bump-tag" style="background: #ef4444; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">${bump.tag || 'OFERTA ÚNICA'}</span>
-                        </div>
-                        <strong class="order-bump-title" style="display: block; color: #fff; font-size: 1.05rem; margin-top: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">${bump.title}</strong>
-                        <span class="order-bump-description" style="display: block; color: rgba(255,255,255,0.9); font-size: 0.85rem; margin-top: 4px; line-height: 1.3; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">${bump.description}</span>
-                        <div style="display: flex; align-items: baseline; gap: 10px; margin-top: 8px;">
-                            <span class="order-bump-price" style="color: #fbbf24; font-weight: 900; font-size: 1.2rem; text-shadow: 0 2px 5px rgba(0,0,0,0.5);">+ ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-    }).join('');
-}
 
 function toggleBump(bumpId) {
     const idx = cart.bumps.indexOf(bumpId);
@@ -707,23 +588,9 @@ function updateTotal() {
                 // Fallback de emergência (caso config não tenha carregado) - EVITAR SE POSSÍVEL
                 bump = { id: id, price: id === 'ebook-manejo' ? 49.9 : 59.9, priceCard: id === 'ebook-manejo' ? 49.9 : 99.0 };
             }
-        }
-
-        console.log('🔎 DEBUG updateTotal - Bump ID:', id, 'Encontrado:', bump);
-
-        if (bump) {
-            // Usa o preço do banco de dados
-            const bumpPriceForPix = bump.price || 0;
-            const bumpPriceForCard = bump.priceCard || bump.price || 0;
-
-            console.log('💰 Preços do bump:', { pix: bumpPriceForPix, card: bumpPriceForCard });
-
-
-            // Usa preços do banco de dados (sem regras especiais)
-            total += bumpPriceForPix;
-            cardTotal += bumpPriceForCard;
-        } else {
-            console.error('❌ Bump não encontrado em fullBumps:', id);
+        } if (bump) {
+            total += bump.price || 0;
+            cardTotal += (bump.priceCard || bump.price || 0);
         }
     });
 
@@ -749,17 +616,10 @@ function updateTotal() {
     });
 
     // In checkout modal, sync the specific reinforcement slot
+    // REMOVED per user request to simplify checkout
     const checkoutReinforcement = document.querySelector('#checkout-modal .pix-discount-reinforcement');
     if (checkoutReinforcement) {
-        if (currentPaymentMethod === 'pix' && cardTotal > total) {
-            const economy = cardTotal - total;
-            checkoutReinforcement.innerHTML = `💸 <span style="color:#059669; font-weight:900;">Economize R$ ${economy.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span> pagando via PIX!`;
-            checkoutReinforcement.style.display = 'block';
-            checkoutReinforcement.style.fontSize = '0.9rem';
-            checkoutReinforcement.style.marginTop = '8px';
-        } else {
-            checkoutReinforcement.style.display = 'none';
-        }
+        checkoutReinforcement.style.display = 'none';
     }
 
     const topPriceDisplay = document.getElementById('checkout-product-price-display');
@@ -864,90 +724,7 @@ async function renderHomeProducts() {
     }
 }
 
-// --- FUNNEL LOGIC (UPSELL/DOWNSELL) ---
 
-let funnelState = {
-    mainId: null,
-    upsellAccepted: false,
-    downsellActive: false
-};
-
-function startFunnel(productId) {
-    funnelState.mainId = productId;
-    funnelState.upsellAccepted = false;
-    funnelState.downsellActive = false;
-
-    showUpsellModal();
-}
-
-function showSlideInUpsell(method) {
-    // MODAL DE UPSELL DESATIVADO POR SOLICITAÇÃO DO USUÁRIO
-    console.log('🚫 [UPSELL] Upsell dos pintinhos desativado.');
-    if (method === 'pix') processPixPayment();
-    else processCardPayment();
-    return;
-}
-
-function confirmSlideUpsell(method) {
-    console.log('✅ User ACCEPTED upsell');
-    midCheckoutUpsellPending = false;
-
-    // Add upsell to cart
-    if (!cart.bumps.includes('ebook-manejo')) {
-        cart.bumps.push('ebook-manejo');
-        updateTotal();
-    }
-
-    // Hide modal
-    const obModal = document.getElementById('order-bump-modal');
-    if (obModal) obModal.classList.remove('show');
-
-    // NOW generate the PIX/Card payment
-    if (method === 'pix') {
-        console.log('🔵 Proceeding to PIX generation after upsell acceptance');
-        processPixPayment();
-    } else {
-        console.log('🔵 Proceeding to Card payment after upsell acceptance');
-        processCardPayment();
-    }
-}
-
-function declineSlideUpsell(method) {
-    console.log('❌ User DECLINED upsell');
-    midCheckoutUpsellPending = false;
-
-    // Hide modal
-    const obModal = document.getElementById('order-bump-modal');
-    if (obModal) obModal.classList.remove('show');
-
-    // Generate PIX/Card payment WITHOUT upsell
-    if (method === 'pix') {
-        console.log('🔵 Proceeding to PIX generation after upsell decline');
-        processPixPayment();
-    } else {
-        console.log('🔵 Proceeding to Card payment after upsell decline');
-        processCardPayment();
-    }
-}
-
-function acceptUpsell() {
-    closeFunnelModal();
-    // Adiciona Pintinhos como Bump e abre checkout de Doenças
-    funnelState.upsellAccepted = true;
-    openCheckout(funnelState.mainId, ['ebook-manejo']);
-}
-
-function acceptDownsell() {
-    closeFunnelModal();
-    // Abre checkout direto do Combo
-    openCheckout('combo-elite');
-}
-
-function rejectFunnel() {
-    closeFunnelModal();
-    // Abre checkout apenas do produto principal
-    openCheckout(funnelState.mainId);
-}
 
 // --- Skeleton Loader Helper ---
 function showSkeletons(container, count = 3) {

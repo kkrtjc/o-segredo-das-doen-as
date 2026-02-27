@@ -1,24 +1,22 @@
 .order-bump-slide-modal {
     position: fixed;
     left: -360px;
-    /* Fully off-screen */
     top: 50%;
     transform: translateY(-50%);
     width: 330px;
     max-width: 90vw;
-    /* Added limit */
     max-height: 90vh;
     overflow-y: auto;
-    background: linear-gradient(135deg, #1a1a1a 0%, #292929 100%);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     border-radius: 0 16px 16px 0;
-    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.6);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.4);
     z-index: 10002;
-    transition: left 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    /* Smoother */
-    border: 2px solid #fbbf24;
+    transition: left 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
+    border: 2px solid var(--amber-600);
     border-left: none;
     visibility: hidden;
-    /* Hidden until needed */
 }
 
 .order-bump-slide-modal.show {
@@ -61,9 +59,8 @@
 }
 
 .order-bump-header h3 {
-    color: #fff;
+    color: var(--text-primary);
     font-size: 1.1rem;
-    /* Reduced from 1.3rem */
     margin-top: 0.2rem;
     line-height: 1.2;
 }
@@ -82,9 +79,8 @@
 }
 
 .order-bump-text {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-secondary);
     font-size: 0.85rem;
-    /* Reduced */
     line-height: 1.4;
     margin-bottom: 0.75rem;
 }
