@@ -28,21 +28,21 @@ function syncAllPrices() {
                 const instVals = document.querySelectorAll('.card-installment-value');
                 if (instVals.length > 0 && product.originalPrice) {
                     // CARD PRICE is originalPrice
-                    const val = (product.originalPrice / 4).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                    const val = (product.originalPrice / 4).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     instVals.forEach(el => el.innerText = val);
                 }
 
                 // SYNC CARD PRICES (Original Price) on page
                 const cardPrices = document.querySelectorAll('.card-price-value');
                 if (cardPrices.length > 0 && product.originalPrice) {
-                    cardPrices.forEach(el => el.innerText = product.originalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
+                    cardPrices.forEach(el => el.innerText = product.originalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
                 }
 
                 // PIX DISCOUNT REINFORCEMENT
                 const reinforcement = document.querySelectorAll('.pix-discount-reinforcement');
                 if (reinforcement.length > 0 && product.originalPrice && product.price < product.originalPrice) {
                     const economy = product.originalPrice - product.price;
-                    const message = `💸 <span style="color:#10b981; font-weight:900;">Economize R$ ${economy.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span> pagando via PIX!`;
+                    const message = `💸 <span style="color:#10b981; font-weight:900;">Economize R$ ${economy.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span> pagando via PIX!`;
                     reinforcement.forEach(el => {
                         el.innerHTML = message;
                         el.style.fontSize = '0.85rem';
@@ -753,7 +753,7 @@ function updateTotal() {
     if (checkoutReinforcement) {
         if (currentPaymentMethod === 'pix' && cardTotal > total) {
             const economy = cardTotal - total;
-            checkoutReinforcement.innerHTML = `💸 <span style="color:#059669; font-weight:900;">Economize R$ ${economy.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span> pagando via PIX!`;
+            checkoutReinforcement.innerHTML = `💸 <span style="color:#059669; font-weight:900;">Economize R$ ${economy.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span> pagando via PIX!`;
             checkoutReinforcement.style.display = 'block';
             checkoutReinforcement.style.fontSize = '0.9rem';
             checkoutReinforcement.style.marginTop = '8px';
@@ -789,7 +789,12 @@ function updateInstallments(total) {
 }
 
 function formatBRL(val) {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(val);
 }
 
 async function renderHomeProducts() {
