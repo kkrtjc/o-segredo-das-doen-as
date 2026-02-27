@@ -277,8 +277,8 @@ app.get('/api/config', (req, res) => {
 
 app.post('/api/auth', (req, res) => {
     const { password } = req.body;
-    const master = process.env.ADMIN_PASSWORD || 'MURA2026';
-    if (password === master) {
+    const master = (process.env.ADMIN_PASSWORD || 'MURA2026').trim();
+    if (password && password.trim() === master) {
         res.json({ success: true });
     } else {
         res.status(401).json({ error: 'Senha incorreta' });
@@ -287,8 +287,12 @@ app.post('/api/auth', (req, res) => {
 
 app.post('/api/config/update', (req, res) => {
     const password = req.headers['x-admin-password'];
-    const master = process.env.ADMIN_PASSWORD || 'MURA2026';
-    if (password !== master) return res.status(401).json({ error: 'Acesso Negado' });
+    const master = (process.env.ADMIN_PASSWORD || 'MURA2026').trim();
+    if (password && password.trim() === master) {
+        // Continue
+    } else {
+        return res.status(401).json({ error: 'Acesso Negado' });
+    }
 
     const data = req.body;
     if (!data || !data.products) return res.status(400).json({ error: 'Dados inválidos' });
@@ -337,9 +341,9 @@ app.post('/api/history/clear', (req, res) => {
 
 // 4.1 Leads API
 app.get('/api/leads', (req, res) => {
-    const password = req.params.password || req.query.password || req.headers['x-admin-password'];
-    // Allow basic access for now or strictly enforce password
-    if (password !== (process.env.ADMIN_PASSWORD || 'MURA2026')) return res.status(401).json({ error: 'Acesso Negado' });
+    const password = (req.params.password || req.query.password || req.headers['x-admin-password'] || '').trim();
+    const master = (process.env.ADMIN_PASSWORD || 'MURA2026').trim();
+    if (password !== master) return res.status(401).json({ error: 'Acesso Negado' });
     res.json(getLeads());
 });
 

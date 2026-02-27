@@ -14,6 +14,7 @@ function syncAllPrices() {
         const productId = el.getAttribute('data-price-of');
         const product = prefetchedProducts[productId];
         if (product && product.price) {
+            // PIX PRICE (Main display)
             el.innerText = product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
             // Update additional elements if we are syncing the main product
@@ -24,8 +25,9 @@ function syncAllPrices() {
                     discPerc.innerText = perc;
                 }
                 const instVal = document.getElementById('card-installment-value');
-                if (instVal) {
-                    instVal.innerText = (product.price / 4).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                if (instVal && product.originalPrice) {
+                    // CARD PRICE is originalPrice
+                    instVal.innerText = (product.originalPrice / 4).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
                 }
             }
         }
@@ -802,7 +804,7 @@ async function renderHomeProducts() {
                         R$ ${Math.floor(p.price)}<small>,${String(Math.round((p.price % 1) * 100)).padStart(2, '0')}</small>
                     </span>
                     ${isDiscounted ? `<span style="font-size: 0.75rem; color: #10b981; font-weight: 800; margin-top: 3px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 15px;">🔥 ${discountPercent}% DE DESCONTO NO PIX</span>` : ''}
-                    <span style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 5px;">ou até 4x de <strong>R$ ${(p.price / 4).toFixed(2).replace('.', ',')}</strong> s/ juros</span>
+                    <span style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 5px;">ou até 4x de <strong>R$ ${((p.originalPrice || p.price) / 4).toFixed(2).replace('.', ',')}</strong> s/ juros no cartão</span>
                 </div>
             </div>
 
@@ -1002,10 +1004,7 @@ function switchMethod(method) {
     }
 
     // RECALCULATE TOTAL WHEN SWITCHING
-    if (cart.mainProduct) {
-        renderOrderBumps(cart.mainProduct.fullBumps);
-        updateTotal();
-    }
+    updateTotal();
 }
 
 
