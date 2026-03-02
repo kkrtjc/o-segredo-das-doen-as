@@ -1,0 +1,1763 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROTOCOLO ELITE: A Cura das Aves | O Segredo das Galinhas</title>
+
+    <!-- Performance Optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://sdk.mercadopago.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://sdk.mercadopago.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        media="print" onload="this.media='all'">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="order_bump_modal.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="modern_enhancements.css" media="print" onload="this.media='all'">
+
+    <!-- Preload critical assets -->
+    <link rel="preload" href="logo.jpg" as="image">
+    <link rel="preload" href="capadasdoencas.jpg" as="image">
+    <link rel="preload" href="vsl-ebook.mp4" as="video">
+    <link rel="preload" href="vsl autoridade.mp4" as="video">
+
+
+
+    <style>
+        /* Promoção de Elite Interstitial Re-style */
+        .elite-promo-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 21000;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .elite-promo-modal.show {
+            display: flex;
+        }
+
+        .elite-promo-content {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            width: 100%;
+            max-width: 480px;
+            max-height: 95vh;
+            border-radius: 20px;
+            border: 2px solid #fbbf24;
+            overflow-y: auto;
+            position: relative;
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 50px rgba(251, 191, 36, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .elite-promo-header {
+            background: #fbbf24;
+            color: #000;
+            padding: 15px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .elite-promo-header h2 {
+            margin: 0;
+            font-size: 1.35rem;
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .elite-promo-body {
+            padding: 20px 15px;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .benefit-box {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            text-align: left;
+            border: 1px solid rgba(251, 191, 36, 0.1);
+        }
+
+        .benefit-box h4 {
+            color: #fbbf24;
+            margin: 0 0 8px 0;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .benefit-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .benefit-box li {
+            color: #ccc;
+            font-size: 0.825rem;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .benefit-box li i {
+            color: #fbbf24;
+            font-size: 0.75rem;
+            margin-top: 3px;
+        }
+
+        .elite-promo-price {
+            margin: 15px 0;
+            background: rgba(251, 191, 36, 0.05);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px dashed #fbbf24;
+        }
+
+        .promo-timer-bar {
+            background: #e74c3c;
+            color: #fff;
+            font-weight: 900;
+            font-size: 0.8rem;
+            padding: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .elite-promo-btn-accept {
+            background: #22c55e;
+            color: #fff;
+            width: 100%;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 6px 15px rgba(34, 197, 94, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .elite-promo-btn-decline {
+            background: none;
+            border: none;
+            color: #555;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 0.8rem;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .elite-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #e74c3c;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-weight: 900;
+            font-size: 0.65rem;
+            z-index: 10;
+        }
+    </style>
+
+    <!-- Meta Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s) }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1346740157465853'); fbq('track', 'PageView');
+    </script>
+
+    <!-- UPSELL MODAL SIDE-PANEL -->
+    <div id="upsell-modal-container" class="upsell-modal-container">
+        <div class="upsell-content">
+            <h3 style="color: #ef4444; font-size: 1.05rem; text-transform: uppercase; margin-bottom: 2px;"><i
+                    class="fa-solid fa-triangle-exclamation"></i> PARE DE PERDER PINTINHOS</h3>
+
+            <p style="font-size: 0.8rem; color: var(--gray-600); margin-bottom: 8px; line-height: 1.3;">
+                <strong style="color: #111;">8 A CADA 10 PINTINHOS MORREM</strong> POR ERRO DE MANEJO. APRENDA COMO
+                CRIAR PINTINHOS E SE LIVRE DE DOENÇA DESDE O NASCIMENTO.
+            </p>
+
+            <div
+                style="display: flex; gap: 12px; background: #f9fafb; padding: 8px; border-radius: 10px; border: 1px solid #eee; margin-bottom: 8px;">
+                <img src="capadospintinhos.jpg" style="width: 70px; height: auto; border-radius: 5px;">
+                <div>
+                    <h4 style="font-size: 0.95rem; margin: 0; color: #111;">Manejo de Pintinhos</h4>
+                    <p style="font-size: 0.75rem; color: var(--gray-500); margin: 2px 0;">De: <span
+                            style="text-decoration: line-through;">R$ 69,90 no cartão</span></p>
+                    <div style="font-weight: 800; color: var(--success); font-size: 0.95rem;">por apenas R$ 49,90 no pix
+                    </div>
+                </div>
+            </div>
+
+            <ul
+                style="list-style: none; padding: 0; margin: 0 0 12px 5px; font-size: 0.8rem; color: var(--gray-600); text-align: left;">
+                <li style="margin-bottom: 4px; display: flex; align-items: flex-start; gap: 8px;"><i
+                        class="fa-solid fa-circle-check" style="color: var(--green-600); margin-top: 3px;"></i>
+                    Sobrevivência de até 90%</li>
+                <li style="margin-bottom: 4px; display: flex; align-items: flex-start; gap: 8px;"><i
+                        class="fa-solid fa-circle-check" style="color: var(--green-600); margin-top: 3px;"></i>
+                    Crescimento mais rápido</li>
+                <li style="margin-bottom: 4px; display: flex; align-items: flex-start; gap: 8px;"><i
+                        class="fa-solid fa-circle-check" style="color: var(--green-600); margin-top: 3px;"></i> Ambiente
+                    100% adequado</li>
+                <li style="margin-bottom: 4px; display: flex; align-items: flex-start; gap: 8px;"><i
+                        class="fa-solid fa-circle-check" style="color: var(--green-600); margin-top: 3px;"></i> As
+                    principais doenças em pintinhos e como tratar.</li>
+            </ul>
+
+            <button onclick="acceptUpsell()" class="btn-upsell-yes">
+                <i class="fa-solid fa-check"></i> SIM, ADICIONAR AGORA
+            </button>
+            <button onclick="declineUpsell()" class="btn-upsell-no">
+                Não, prefiro correr o risco
+            </button>
+        </div>
+    </div>
+
+    <style>
+        .upsell-modal-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            align-items: center;
+            /* Center vertically on mobile */
+            justify-content: center;
+            /* Center horizontally on mobile */
+        }
+
+        .upsell-modal-container.active {
+            display: flex !important;
+            opacity: 1;
+        }
+
+        .upsell-content {
+            background: #fff;
+            width: 90%;
+            max-width: 420px;
+            padding: 20px 15px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transform: scale(0.9);
+            /* Start slightly smaller */
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-align: left;
+            position: relative;
+        }
+
+        .upsell-modal-container.active .upsell-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* Desktop specific: Slide from left side */
+        @media (min-width: 768px) {
+            .upsell-modal-container {
+                justify-content: flex-start;
+                padding-left: 0;
+            }
+
+            .upsell-content {
+                width: 400px;
+                height: 100%;
+                max-height: 100vh;
+                border-radius: 0 24px 24px 0;
+                transform: translateX(-100%);
+                opacity: 1;
+                margin: 0;
+                max-width: none;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .upsell-modal-container.active .upsell-content {
+                transform: translateX(0);
+            }
+        }
+
+        .btn-upsell-yes {
+            width: 100%;
+            padding: 10px;
+            background: var(--success);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-upsell-yes:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-upsell-no {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: var(--gray-400);
+            border: none;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .btn-upsell-no:hover {
+            color: var(--gray-600);
+        }
+    </style>
+
+    <!-- FORÇAR BARRA TRANSLÚCIDA -->
+    <style>
+        header,
+        .header,
+        .sticky,
+        header.sticky {
+            background: rgba(0, 0, 0, 0.6) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+        }
+
+        /* Garantir legibilidade do texto flutuante */
+        header h1,
+        .header h1,
+        header h1 span {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Novas Abas Sub-Header */
+        .sub-header-tabs {
+            position: sticky;
+            top: 80px;
+            /* Logo abaixo do header fixo (ajustar se o header mudar de altura) */
+            z-index: 39;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            gap: 20px;
+        }
+
+        .sub-header-tabs a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-bottom: 2px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .sub-header-tabs a:hover {
+            color: #fbbf24;
+            border-bottom-color: #fbbf24;
+        }
+
+        @media (max-width: 768px) {
+            .sub-header-tabs {
+                top: 80px;
+                gap: 15px;
+            }
+
+            .sub-header-tabs a {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* FAQ Active State */
+        .faq-answer {
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block !important;
+        }
+
+        .faq-item.active .fa-chevron-down {
+            transform: rotate(180deg);
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+
+<body class="dark-theme">
+
+    <!-- Header -->
+    <header class="sticky">
+        <div class="container nav-content">
+            <div class="logo-area">
+                <img src="logo.jpg" alt="Logo" style="height: 60px; border-radius: 8px;">
+                <h1>PROTOCOLO <span style="color: var(--amber-600)">ELITE</span></h1>
+            </div>
+            <button onclick="document.querySelector('#learning').scrollIntoView({behavior: 'smooth'})"
+                class="btn-primary">SALVAR MINHAS GALINHAS
+                AGORA</button>
+        </div>
+    </header>
+
+    <!-- Sub-Header Tabs -->
+    <div class="sub-header-tabs">
+        <a href="#authority-video">Autoridade</a>
+        <a href="#learning">Benefícios</a>
+        <a href="#faq">Perguntas frequentes</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <!-- Social Proof Header -->
+            <div
+                style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 2.5rem; flex-wrap: wrap;">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                    <div class="avatar-stack" style="display: flex; margin-right: 15px;">
+                        <div
+                            style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #ddd; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <img src="carrosel/carlos.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div
+                            style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #ccc; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <img src="carrosel/maria.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div
+                            style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #bbb; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <img src="carrosel/joao_new.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div
+                            style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #aaa; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <img src="carrosel/ana.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div
+                            style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #999; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <img src="carrosel/lucas.jpeg" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    </div>
+                    <span
+                        style="font-size: 0.75rem; font-weight: 800; color: #16a34a; background: rgba(22, 163, 74, 0.15); padding: 2px 10px; border-radius: 10px; backdrop-filter: blur(5px);">+
+                        de
+                        1600 alunos</span>
+                </div>
+                <div style="max-width: 400px; text-align: left;">
+                    <span
+                        style="font-size: 1.1rem; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.2; font-family: var(--font-heading); text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
+                        MÉTODO COMPROVADO POR<br>MAIS DE 1600 ALUNOS
+                    </span>
+                </div>
+            </div>
+
+            <h2>
+                <span
+                    style="color: #ff4d4d; display: block; margin-bottom: 0.5rem; font-size: 2.2rem; line-height: 1.1; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">SALVE
+                    SUAS GALINHAS AGORA</span>
+                <span
+                    style="font-size: 1.5rem; display: block; margin-top: 0.5rem; font-weight: 600; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.8);">Sem
+                    Gastar Fortunas com Veterinário.</span>
+            </h2>
+
+            <!-- VSL VENDA SECTION (SQUARED & REFINED) -->
+            <div class="venda-vsl-container"
+                style="width: 100%; max-width: 280px; margin: 1rem auto; border-radius: 20px; overflow: hidden; border: 3px solid #fbbf24; box-shadow: 0 15px 40px rgba(0,0,0,0.5); background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); animation: pulseGlow 3s infinite alternate; text-align: center;">
+                <h4
+                    style="color: #fbbf24; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; margin: 10px 0; letter-spacing: 1px;">
+                    Assista ao vídeo</h4>
+                <video id="venda-vsl" poster="video_cover_vsl.jpg" controls playsinline preload="none"
+                    style="width: 100%; aspect-ratio: 1/1; object-fit: cover; object-position: center 58%; display: block;">
+                    <source src="venda_vsl.mp4" type="video/mp4">
+                    Seu navegador não suporta vídeos.
+                </video>
+                <div style="padding: 0.75rem; background: rgba(251, 191, 36, 0.1); text-align: center;">
+                    <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary"
+                        style="width: 100%; padding: 12px; font-size: 0.9rem; font-weight: 900; border-radius: 10px; box-shadow: 0 4px 15px rgba(217,119,6,0.2);">
+                        QUERO SALVAR AGORA
+                    </button>
+                    <!-- Small Price Display -->
+                    <div style="margin-top: 10px; color: #fff; font-size: 0.8rem; font-weight: 700;">
+                        <span
+                            style="background: #dc2626; color: #fff; padding: 4px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 900; display: inline-block; margin-bottom: 8px; box-shadow: 0 0 15px rgba(220, 38, 38, 0.4); animation: pulseGlow 2s infinite alternate;">
+                            <i class="fa-solid fa-fire-flame-curved"></i> OFERTA POR TEMPO LIMITADO
+                        </span>
+                        <div style="color: #fbbf24; font-size: 0.95rem; margin-bottom: 4px;">
+                            De <span style="text-decoration: line-through; opacity: 0.6; color: #fff;"><span
+                                    class="card-price-value">149,90</span></span> por
+                            <span style="font-size: 1.1rem; font-weight: 900;"><span
+                                    data-price-of="ebook-doencas">87,90</span> no pix</span>
+                        </div>
+                        <span style="opacity: 0.8; font-size: 0.75rem; display: block; font-weight: 600;">receba na hora
+                            apos o pagamento sem burocracia.</span>
+                    </div>
+                </div>
+            </div>
+
+            <p
+                style="font-size: 1.25rem; color: #ffffff; margin-bottom: 1.2rem; font-weight: 700; text-shadow: 0 2px 8px rgba(0,0,0,0.8);">
+                Tratamentos com resultados comprovados.
+            </p>
+            <div
+                style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem; margin: 0 auto 1rem; max-width: 800px; backdrop-filter: blur(8px); box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 1rem;">
+                    <span
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
+                            class="fa-solid fa-triangle-exclamation"></i> Ronqueira</span>
+                    <span
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
+                            class="fa-solid fa-skull-crossbones"></i> Peito Seco</span>
+                    <span
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
+                            class="fa-solid fa-notes-medical"></i> Espirro</span>
+                    <span
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
+                            class="fa-solid fa-arrow-trend-down"></i> Queda de Postura</span>
+                    <span
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
+                            class="fa-solid fa-droplet"></i> Coriza</span>
+                    <span
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
+                            class="fa-solid fa-circle-nodes"></i> Caroço (Bouba)</span>
+                    <span
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
+                            class="fa-solid fa-biohazard"></i> Diarreia</span>
+                </div>
+
+                <p
+                    style="font-size: 1.25rem; color: #ffffff; margin-bottom: 0.5rem; line-height: 1.4; font-weight: 800;">
+                    Vai perder mais quantas galinhas para esses problemas ?
+                </p>
+
+                <p
+                    style="font-size: 1.1rem; color: #fbbf24; font-weight: 900; letter-spacing: 0.5px; text-transform: none; margin-top: 10px;">
+                    <i class="fa-solid fa-hand"></i> Resolva hoje mesmo o problema da sua galinha antes que seja tarde.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Infinite Text Testimonial Carousel -->
+    <section style="padding: 1.5rem 0; overflow: hidden; background: transparent;">
+        <p
+            style="font-size: 1rem; color: #ffffff; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <i class="fa-solid fa-star" style="color: #fbbf24;"></i> Comentários de alguns de nossos alunos. <i
+                class="fa-solid fa-star" style="color: #fbbf24;"></i>
+        </p>
+        <style>
+            .inf-track {
+                display: flex;
+                gap: 16px;
+                width: max-content;
+                animation: inf-scroll 45s linear infinite;
+            }
+
+            @keyframes inf-scroll {
+                from {
+                    transform: translateX(0);
+                }
+
+                to {
+                    transform: translateX(-50%);
+                }
+            }
+
+            .inf-card {
+                background: rgba(255, 255, 255, 0.06);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 14px;
+                padding: 14px 18px;
+                min-width: 230px;
+                max-width: 250px;
+                flex-shrink: 0;
+            }
+
+            .inf-card .inf-stars {
+                color: #fbbf24;
+                font-size: 0.85rem;
+                margin-bottom: 6px;
+            }
+
+            .inf-card .inf-text {
+                font-size: 0.8rem;
+                line-height: 1.5;
+                color: rgba(255, 255, 255, 0.88);
+            }
+
+            .inf-card .inf-author {
+                font-size: 0.72rem;
+                color: #fbbf24;
+                font-weight: 700;
+                margin-top: 8px;
+            }
+        </style>
+        <div
+            style="overflow: hidden; mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);">
+            <div class="inf-track">
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Minha galinha estava com diarreia há dias. Segui o protocolo e em 2 dias ela se
+                        recuperou!"</p>
+                    <p class="inf-author">— Carlos, Minas Gerais</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Perdi muitas aves antes de conhecer esse método. Agora sei identificar a doença
+                        antes de perder o animal."</p>
+                    <p class="inf-author">— Maria, Goiás</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Valeu muito cada centavo. Já salvei 3 galinhas com a tabela de sintomas.
+                        Material de primeira!"</p>
+                    <p class="inf-author">— João, Paraná</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"O protocolo de vacinação mudou minha criação. Menos doentes, menos gasto com
+                        veterinário!"</p>
+                    <p class="inf-author">— Ana, Bahia</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Criei uma galinha do zero com o guia de pintinhos. Cresceu forte e saudável.
+                        Recomendo muito!"</p>
+                    <p class="inf-author">— Lucas, São Paulo</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"A dosagem certa do medicamento fez toda a diferença. Sem acertar a dose eu
+                        nunca teria curado minha ave."</p>
+                    <p class="inf-author">— Fernanda, Rio de Janeiro</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Minha galinha estava com coriza pesada. Achei o diagnóstico na hora, já sabia o
+                        tratamento certeiro."</p>
+                    <p class="inf-author">— Roberto, Mato Grosso</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Baixei na hora depois de pagar, achei que ia demorar mas foi instantâneo. Já
+                        tava lendo em 2 minutos!"</p>
+                    <p class="inf-author">— Patricia, Minas Gerais</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Tem o nome dos remédios, vei! Não precisei ficar adivinhando o que comprar na
+                        farmácia. Isso vale ouro."</p>
+                    <p class="inf-author">— Marcos, Pará</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Tava usando os remédios errados, por isso não melhorava. Com o ebook descobri o
+                        tratamento certo e minha ave sarou!"</p>
+                    <p class="inf-author">— Sebastião, Tocantins</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Comecei a criar pintinhos do zero com esse material. Nunca perdi nenhum. A
+                        parte de aquecimento salvou o lote!"</p>
+                    <p class="inf-author">— Cleidiane, Ceará</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Meu galo tava caindo de fraqueza. Em 3 dias de protocolo ele já tava de pé de
+                        novo. Impressionante!"</p>
+                    <p class="inf-author">— Diego, Rio Grande do Sul</p>
+                </div>
+                <!-- Duplicado para loop infinito -->
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Minha galinha estava com diarreia há dias. Segui o protocolo e em 2 dias ela se
+                        recuperou!"</p>
+                    <p class="inf-author">— Carlos, Minas Gerais</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Perdi muitas aves antes de conhecer esse método. Agora sei identificar a doença
+                        antes de perder o animal."</p>
+                    <p class="inf-author">— Maria, Goiás</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Valeu muito cada centavo. Já salvei 3 galinhas com a tabela de sintomas.
+                        Material de primeira!"</p>
+                    <p class="inf-author">— João, Paraná</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"O protocolo de vacinação mudou minha criação. Menos doentes, menos gasto com
+                        veterinário!"</p>
+                    <p class="inf-author">— Ana, Bahia</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Criei uma galinha do zero com o guia de pintinhos. Cresceu forte e saudável.
+                        Recomendo muito!"</p>
+                    <p class="inf-author">— Lucas, São Paulo</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"A dosagem certa do medicamento fez toda a diferença. Sem acertar a dose eu
+                        nunca teria curado minha ave."</p>
+                    <p class="inf-author">— Fernanda, Rio de Janeiro</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Minha galinha estava com coriza pesada. Achei o diagnóstico na hora, já sabia o
+                        tratamento certeiro."</p>
+                    <p class="inf-author">— Roberto, Mato Grosso</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Baixei na hora depois de pagar, achei que ia demorar mas foi instantâneo. Já
+                        tava lendo em 2 minutos!"</p>
+                    <p class="inf-author">— Patricia, Minas Gerais</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Tem o nome dos remédios, vei! Não precisei ficar adivinhando o que comprar na
+                        farmácia. Isso vale ouro."</p>
+                    <p class="inf-author">— Marcos, Pará</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Tava usando os remédios errados, por isso não melhorava. Com o ebook descobri o
+                        tratamento certo e minha ave sarou!"</p>
+                    <p class="inf-author">— Sebastião, Tocantins</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Comecei a criar pintinhos do zero com esse material. Nunca perdi nenhum. A
+                        parte de aquecimento salvou o lote!"</p>
+                    <p class="inf-author">— Cleidiane, Ceará</p>
+                </div>
+                <div class="inf-card">
+                    <div class="inf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="inf-text">"Meu galo tava caindo de fraqueza. Em 3 dias de protocolo ele já tava de pé de
+                        novo. Impressionante!"</p>
+                    <p class="inf-author">— Diego, Rio Grande do Sul</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="learning" class="learning-section" style="padding: 0.5rem 0 1.5rem 0; background: transparent;">
+        <div class="container" style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+            <div class="mockup-side" style="width: 100%; max-width: 160px; margin: 0 auto;">
+                <div class="ebook-video-container"
+                    style="width: 100%; border-radius: 20px; overflow: hidden; border: 3px solid #fbbf24; box-shadow: 0 20px 50px rgba(0,0,0,0.5); background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);">
+                    <video controls playsinline preload="metadata" style="width: 100%; display: block;" loading="lazy">
+                        <source src="vsl-ebook.mp4#t=0.001" type="video/mp4">
+                        Seu navegador não suporta vídeos.
+                    </video>
+                </div>
+            </div>
+            <div class="learning-side"
+                style="width: 100%; max-width: 600px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.1);">
+                <h4 style="color: #ffffff; margin-bottom: 1.25rem; font-size: 1.25rem; font-weight: 800;">O Que
+                    Você Vai Aprender Hoje:</h4>
+                <ul
+                    style="list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <li style="display: flex; gap: 12px; font-size: 0.95rem; color: #ffffff;"><i
+                            class="fa-solid fa-circle-check" style="color: #22c55e; margin-top: 3px;"></i>
+                        Identificar doenças em segundos</li>
+                    <li style="display: flex; gap: 12px; font-size: 0.95rem; color: #ffffff;"><i
+                            class="fa-solid fa-circle-check" style="color: #22c55e; margin-top: 3px;"></i>
+                        Medicamento correto para cada doença</li>
+                    <li style="display: flex; gap: 12px; font-size: 0.95rem; color: #ffffff;"><i
+                            class="fa-solid fa-circle-check" style="color: #22c55e; margin-top: 3px;"></i>
+                        Dosagem que realmente funciona</li>
+                    <li style="display: flex; gap: 12px; font-size: 0.95rem; color: #ffffff;"><i
+                            class="fa-solid fa-circle-check" style="color: #22c55e; margin-top: 3px;"></i>
+                        Protocolos Passo a Passo</li>
+                    <li style="display: flex; gap: 12px; font-size: 0.95rem; color: #ffffff;"><i
+                            class="fa-solid fa-circle-check" style="color: #22c55e; margin-top: 3px;"></i>
+                        Tabela com sintomas e doenças</li>
+                    <li style="display: flex; gap: 12px; font-size: 0.95rem; color: #ffffff;"><i
+                            class="fa-solid fa-circle-check" style="color: #22c55e; margin-top: 3px;"></i>
+                        Protocolo de vacinação</li>
+                </ul>
+
+                <div
+                    style="margin-top: 1.25rem; padding: 1.5rem; background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 1rem; text-align: center;">
+                    <span
+                        style="display: block; font-size: 0.85rem; color: #ffffff; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; opacity: 0.6; text-decoration: line-through;">De
+                        <span class="card-price-value">149,90</span></span>
+                    <span
+                        style="display: block; font-size: 0.85rem; color: #ffffff; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; opacity: 0.8;">POR
+                        APENAS</span>
+                    <span
+                        style="display: block; font-size: 2rem; color: #fbbf24; font-weight: 900; margin-bottom: 1px;">R$
+                        <span data-price-of="ebook-doencas">87,90</span> no pix</span>
+                    <div class="pix-discount-reinforcement" style="margin-bottom: 12px;"></div>
+                    <span
+                        style="font-size: 0.9rem; color: #ffffff; font-weight: 800; display: inline-block; margin-bottom: 15px; background: #dc2626; padding: 6px 15px; border-radius: 6px; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);">🔥
+                        <span class="pix-discount-percent">41</span>% DE DESCONTO NO PIX</span>
+                    <span style="font-size: 1rem; color: #ffffff; display: block; margin-bottom: 10px;">ou em até
+                        <strong>4x de R$ <span class="card-installment-value">37,47</span> sem juros</strong> no
+                        cartão</span>
+                    <span
+                        style="font-size: 1rem; color: #ffffff; font-weight: 900; display: block; margin-top: 1rem; text-transform: uppercase; letter-spacing: 1px;">QUANTO
+                        VALE UMA GALINHA PRA VOCÊ?</span>
+                    <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary"
+                        style="width: 100%; margin-top: 15px; padding: 12px; font-size: 1rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(217,119,6,0.2);">
+                        SALVAR MINHAS GALINHAS AGORA
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Authority Section ("Quem Sou Eu") -->
+    <section id="authority-video" class="authority-profile-section"
+        style="padding: 2rem 0; border-top: 2px solid rgba(255,255,255,0.1); background: transparent;">
+        <div class="container" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+            <div class="authority-content-wrap" style="width: 100%; max-width: 700px;">
+                <!-- Video top centered -->
+                <div class="authority-video-container"
+                    style="width: 100%; max-width: 320px; border-radius: 20px; overflow: hidden; border: 3px solid #fbbf24; box-shadow: 0 20px 50px rgba(0,0,0,0.5); background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); margin: 0 auto 1.5rem auto;">
+                    <video controls playsinline preload="metadata" style="width: 100%; display: block;">
+                        <source src="vsl autoridade.mp4#t=0.001" type="video/mp4">
+                        Seu navegador não suporta vídeos.
+                    </video>
+                </div>
+
+                <h3 style="color: #ffffff; font-size: 2rem; font-weight: 800; margin-bottom: 1.5rem;">Quem sou eu?</h3>
+
+                <p style="color: #ffffff; font-size: 1.1rem; line-height: 1.6; margin-bottom: 1rem;" class="auth-p">
+                    <strong>João Paulo Camargo, 29 anos.</strong> Com <strong>mais de 10 anos de experiência</strong> na
+                    criação de aves, <strong>estudante de Zootecnia e Genômica</strong>, dediquei minha vida a
+                    entender os segredos por trás de um plantel saudável e produtivo.
+                </p>
+                <p style="color: #ffffff; font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;" class="auth-p">
+                    Hoje, compartilho meu conhecimento com milhares de seguidores e já ajudei diversos alunos a
+                    transformarem suas criações, eliminando prejuízos e trazendo de volta o prazer de criar.
+                </p>
+
+                <div class="authority-badges"
+                    style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 2rem; justify-content: center;">
+                    <div class="auth-badge"
+                        style="background: rgba(255,255,255,0.1); color: #fff; padding: 8px 15px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.2);">
+                        <i class="fa-solid fa-award" style="color: #fbbf24;"></i> 10+ Anos de Experiência
+                    </div>
+                    <div class="auth-badge"
+                        style="background: rgba(255,255,255,0.1); color: #fff; padding: 8px 15px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.2);">
+                        <i class="fa-solid fa-users" style="color: #fbbf24;"></i> Milhares de Seguidores
+                    </div>
+                    <div class="auth-badge"
+                        style="background: rgba(255,255,255,0.1); color: #fff; padding: 8px 15px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(255,255,255,0.2);">
+                        <i class="fa-solid fa-graduation-cap" style="color: #fbbf24;"></i> Mentor de Diversos Alunos
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary"
+                        style="width: 100%; max-width: 320px; padding: 1.25rem; font-size: 1.2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(217,119,6,0.3);">
+                        QUERO SALVAR MINHAS GALINHAS AGORA
+                    </button>
+                    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-top: 10px; font-weight: 600;">
+                        <i class="fa-solid fa-lock" style="font-size: 0.75rem;"></i> Compra 100% Segura
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <!-- Social Proof Bar -->
+    <div class="social-proof-bar">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <i class="fa-solid fa-users"></i>
+                    <div class="stat-text" style="color: #ffffff;">
+                        <strong style="color: #ffffff; display: block;">+12.000 Pessoas</strong>
+                        acompanham meu trabalho
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <div class="stat-text" style="color: #ffffff;">
+                        <strong style="color: #ffffff; display: block;">+1.600 Alunos</strong>
+                        que já salvaram suas galinhas
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <div class="stat-text" style="color: #ffffff;">
+                        <strong style="color: #ffffff; display: block;">Método Comprovado</strong>
+                        resultados reais e garantidos
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="social-proof-carousel-section" style="padding: 2rem 0; background: transparent;">
+        <div class="container container-glass" style="padding: 2rem; border-radius: 20px;">
+            <p
+                style="font-size: 1rem; color: #ffffff; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fa-solid fa-star" style="color: #fbbf24;"></i> algumas pessoas que eu ja ajudei, <i
+                    class="fa-solid fa-star" style="color: #fbbf24;"></i>
+            </p>
+            <div id="auto-carousel" class="social-proof-carousel"
+                style="display: flex; gap: 15px; overflow-x: hidden; padding-bottom: 20px; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none;">
+                <style>
+                    .social-proof-carousel::-webkit-scrollbar {
+                        display: none;
+                    }
+
+                    .social-proof-carousel img {
+                        height: 250px;
+                        border-radius: 12px;
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                        scroll-snap-align: start;
+                        flex-shrink: 0;
+                        pointer-events: none;
+                    }
+
+                    .tiktok-privacy-wrap {
+                        position: relative;
+                        display: flex;
+                        scroll-snap-align: start;
+                        flex-shrink: 0;
+                    }
+
+                    .privacy-blur {
+                        position: absolute;
+                        top: 10px;
+                        left: 10px;
+                        width: 140px;
+                        height: 40px;
+                        backdrop-filter: blur(25px);
+                        -webkit-backdrop-filter: blur(25px);
+                        background: rgba(255, 255, 255, 0.2);
+                        border-radius: 6px;
+                        z-index: 2;
+                        pointer-events: none;
+                        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                    }
+                </style>
+                <img src="depoimento_wpp_1.jpg" alt="Depoimento WhatsApp 1" loading="lazy" decoding="async">
+                <img src="depoimento_wpp_2.jpg" alt="Depoimento WhatsApp 2" loading="lazy" decoding="async">
+                <img src="depoimento_wpp_3.jpg" alt="Depoimento WhatsApp 3" loading="lazy" decoding="async">
+                <div class="tiktok-privacy-wrap">
+                    <img src="deptiktok1.jpg" alt="Depoimento TikTok 1" loading="lazy" decoding="async">
+                </div>
+                <div class="tiktok-privacy-wrap">
+                    <img src="deptiktok2.jpg" alt="Depoimento TikTok 2" loading="lazy" decoding="async">
+                </div>
+            </div>
+            <p
+                style="font-size: 0.8rem; color: rgba(255,255,255,0.6); text-align: center; font-weight: 600; margin-top: 10px;">
+                <i class="fa-solid fa-arrows-left-right"></i> Deslize para ver mais depoimentos
+            </p>
+        </div>
+    </section>
+
+    <!-- Auto-scroll carousel script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const carousel = document.getElementById('auto-carousel');
+            if (carousel) {
+                // Desativa o smooth scroll para permitir a manipulação frame a frame
+                carousel.style.scrollBehavior = 'auto';
+
+                // Clona as imagens (ignorando a tag STYLE)
+                const children = Array.from(carousel.children);
+                children.forEach(child => {
+                    if (child.tagName !== 'STYLE') {
+                        carousel.appendChild(child.cloneNode(true));
+                    }
+                });
+
+                let pos = 0;
+                function step() {
+                    pos += 0.35; // Velocidade lenta e constante
+                    // Quando chegar na metade (fim dos itens originais), reseta a posição
+                    if (pos >= carousel.scrollWidth / 2) {
+                        pos = 0;
+                    }
+                    carousel.scrollLeft = pos;
+                    requestAnimationFrame(step);
+                }
+
+                requestAnimationFrame(step);
+            }
+        });
+    </script>
+
+
+    </section>
+
+
+    <!-- Benefits Section (Moved Down) -->
+    <section id="benefits" class="border-t-amber" style="padding: 4rem 0; background: transparent;">
+        <div class="container">
+            <h3 style="text-align: center; font-size: 1.875rem; font-weight: 700; color: #ffffff; margin-bottom: 3rem;">
+                Por Que Você Precisa Deste Ebook?
+            </h3>
+            <div class="grid-2-2">
+                <div class="card">
+                    <div class="icon-circle"><i class="fa-solid fa-chart-line"></i></div>
+                    <h4>Economize com Veterinários</h4>
+                    <p>Trate seu plantel por uma fração do preço de uma consulta.</p>
+                </div>
+                <div class="card">
+                    <div class="icon-circle"><i class="fa-solid fa-heart"></i></div>
+                    <h4>Saúde do Seu Plantel</h4>
+                    <p>Identifique doenças no início e aplique tratamentos corretos.</p>
+                </div>
+                <div class="card">
+                    <div class="icon-circle"><i class="fa-solid fa-book-open"></i></div>
+                    <h4>Consulta Rápida</h4>
+                    <p>Guia prático e organizado para encontrar a solução em minutos.</p>
+                </div>
+                <div class="card">
+                    <div class="icon-circle"><i class="fa-solid fa-flask"></i></div>
+                    <h4>Dosagens Exatas</h4>
+                    <p>Saiba a quantidade exata para cada estágio da doença e tipo de ave.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Guarantee -->
+    <section class="guarantee-section">
+        <div class="container text-center">
+            <i class="fa-solid fa-shield-halved shield-icon"></i>
+            <h3>Garantia de 7 Dias</h3>
+            <p>Se por qualquer motivo você não ficar satisfeito com o ebook nos primeiros 7 dias, devolvemos 100% do seu
+                dinheiro. Sem perguntas. Sem complicações.</p>
+            <p style="font-size: 0.875rem; color: #ffffff; margin-top: 1rem;">Isso significa que você pode
+                testar o ebook completamente sem risco. Se não gostar, recupera seu dinheiro.</p>
+        </div>
+    </section>
+
+
+
+    <!-- FAQ Section -->
+    <section id="faq" class="section"
+        style="padding: 4rem 0; background: transparent; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+        <div class="container">
+            <h3 style="text-align: center; font-size: 2rem; font-weight: 800; color: #ffffff; margin-bottom: 3rem;">
+                Perguntas Frequentes
+            </h3>
+            <div class="faq-container glass-panel"
+                style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
+                <div class="faq-item"
+                    style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; overflow: hidden;">
+                    <button class="faq-question"
+                        style="width: 100%; padding: 1.25rem; background: none; border: none; color: #ffffff; font-weight: 700; text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+                        O acesso é vitalício? <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer"
+                        style="padding: 0 1.25rem 1.25rem; color: rgba(255, 255, 255, 0.8); font-size: 0.95rem;">
+                        <p>Sim! Você terá acesso ilimitado ao conteúdo e a todas as futuras atualizações sem pagar nada
+                            a mais por isso.</p>
+                    </div>
+                </div>
+                <div class="faq-item"
+                    style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; overflow: hidden;">
+                    <button class="faq-question"
+                        style="width: 100%; padding: 1.25rem; background: none; border: none; color: #ffffff; font-weight: 700; text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+                        Como recebo o material? <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer"
+                        style="padding: 0 1.25rem 1.25rem; color: rgba(255, 255, 255, 0.8); font-size: 0.95rem;">
+                        <p>Seu download é liberado instantaneamente após o pagamento, você também recebe um e-mail com
+                            o ebook, e após o pagamento será liberado um link de acesso ao nosso WhatsApp caso queira
+                            receber seu ebook por lá ou tiver alguma dificuldade, vamos te atender.</p>
+                    </div>
+                </div>
+                <div class="faq-item"
+                    style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; overflow: hidden;">
+                    <button class="faq-question"
+                        style="width: 100%; padding: 1.25rem; background: none; border: none; color: #ffffff; font-weight: 700; text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+                        Serve para quem está começando? <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer"
+                        style="padding: 0 1.25rem 1.25rem; color: rgba(255, 255, 255, 0.8); font-size: 0.95rem;">
+                        <p>Com certeza. O método foi desenhado para ser didático, passo a passo, ideal tanto para
+                            iniciantes quanto para criadores experientes que querem profissionalizar o negócio.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Checkout Modal (Restored White Design) -->
+    <div id="checkout-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div id="checkout-main-view" style="position: relative;">
+                <div class="modal-header"
+                    style="margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+                    <div style="flex: 1; text-align: left;">
+                        <h3 class="modal-title"
+                            style="color: #00C851 !important; font-size: 1.4rem; font-weight: 800; line-height: 1.2; margin: 0; text-shadow: none;">
+                            Finalize Sua Compra Agora, e Garanta a saúde das suas galinhas.
+                        </h3>
+                        <p
+                            style="color: #3b82f6 !important; font-size: 0.9rem; font-weight: 700; margin-top: 8px; line-height: 1.3;">
+                            <i class="fa-solid fa-cloud-arrow-down"></i> Produto 100% digital, baixe imediatamente
+                            depois do pagamento.
+                        </p>
+                        <p
+                            style="font-size: 0.85rem; color: #ef4444; margin-top: 8px; font-weight: 600; line-height: 1.3; text-shadow: none; opacity: 1;">
+                            Não espere amanhã, para sua galinha <br> amanhã pode ser tarde.
+                        </p>
+                    </div>
+                    <img src="logo.jpg" alt="Logo" style="height: 110px; flex-shrink: 0; filter: contrast(1.1);"
+                        fetchpriority="high">
+                </div>
+                <!-- Checkout simplification: Trust badges removed per request -->
+
+
+                <!-- CSS Otimizado para Checkout Compacto e Tooltips -->
+                <style>
+                    .checkout-summary {
+                        position: relative;
+                        background: #000;
+                        border-radius: 12px;
+                        margin-bottom: 20px;
+                        overflow: hidden;
+                        min-height: 180px;
+                        display: flex;
+                        align-items: stretch;
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                    }
+
+                    .summary-bg-image {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        opacity: 0.5;
+                        filter: blur(2px) scale(1.1);
+                    }
+
+                    .summary-content {
+                        position: relative;
+                        z-index: 2;
+                        display: flex;
+                        width: 100%;
+                        background: linear-gradient(to right, rgba(0, 0, 0, 0.9) 30%, rgba(0, 0, 0, 0.4) 100%);
+                        padding: 15px;
+                        gap: 15px;
+                        align-items: center;
+                    }
+
+                    .summary-img-full {
+                        width: 90px;
+                        height: 130px;
+                        object-fit: cover;
+                        border-radius: 8px;
+                        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                        flex-shrink: 0;
+                    }
+
+                    .summary-details h4 {
+                        font-size: 1.1rem;
+                        color: #ffffff;
+                        margin: 0 0 6px 0;
+                        font-weight: 900;
+                        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+                    }
+
+                    .summary-features {
+                        list-style: none;
+                        padding: 0;
+                        margin: 0;
+                        font-size: 0.85rem;
+                        color: rgba(255, 255, 255, 0.9);
+                        font-weight: 600;
+                    }
+
+                    .summary-features li {
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        margin-bottom: 2px;
+                    }
+
+                    .summary-features i {
+                        color: #059669;
+                    }
+
+                    /* Compactação do Form */
+                    .form-group {
+                        margin-bottom: 4px !important;
+                        /* Menos espaço entre campos */
+                    }
+
+                    .form-label {
+                        text-transform: uppercase;
+                        font-size: 0.75rem !important;
+                        font-weight: 800 !important;
+                        color: #374151 !important;
+                        margin-bottom: 2px !important;
+                    }
+
+                    .form-input {
+                        padding: 12px 14px !important;
+                        /* Input confortável mobile */
+                        font-size: 16px !important;
+                        height: auto !important;
+                    }
+
+                    .form-section-title {
+                        font-size: 0.9rem !important;
+                        margin: 10px 0 8px !important;
+                    }
+
+                    /* Tooltip de Ociosidade */
+                    .field-tooltip {
+                        position: absolute;
+                        background: #1f2937;
+                        color: #fff;
+                        padding: 6px 10px;
+                        border-radius: 6px;
+                        font-size: 0.75rem;
+                        bottom: 100%;
+                        right: 0;
+                        margin-bottom: 5px;
+                        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                        opacity: 0;
+                        transform: translateY(5px);
+                        transition: all 0.3s ease;
+                        pointer-events: none;
+                        z-index: 10;
+                        white-space: nowrap;
+                    }
+
+                    .field-tooltip.active {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+
+                    .field-tooltip::after {
+                        content: '';
+                        position: absolute;
+                        top: 100%;
+                        right: 15px;
+                        border-width: 5px;
+                        border-style: solid;
+                        border-color: #1f2937 transparent transparent transparent;
+                    }
+
+                    .form-group {
+                        position: relative;
+                    }
+
+                    /* Para posicionar o tooltip */
+
+                    /* Validation Styles */
+                    .form-input.input-error {
+                        border-color: #ef4444 !important;
+                        /* Red */
+                        background-color: #fef2f2 !important;
+                    }
+
+                    .form-input.input-success {
+                        border-color: #22c55e !important;
+                        /* Green */
+                        background-color: #f0fdf4 !important;
+                    }
+
+                    .error-message {
+                        color: #ef4444;
+                        font-size: 0.7rem;
+                        font-weight: 700;
+                        margin-top: -4px;
+                        margin-bottom: 4px;
+                        display: block;
+                        animation: fadeIn 0.3s ease;
+                    }
+
+                    @keyframes fadeIn {
+                        from {
+                            opacity: 0;
+                            transform: translateY(-5px);
+                        }
+
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+                </style>
+
+                <!-- 1. Resumo do Pedido -->
+                <div class="checkout-summary glass-panel"
+                    style="display: flex; align-items: center; gap: 14px; padding: 12px 14px; margin-bottom: 14px; border-radius: 12px;">
+                    <!-- Text on the left -->
+                    <div style="flex: 1; min-width: 0;">
+                        <h4
+                            style="color: #d97706 !important; font-size: 0.95rem; font-weight: 900; margin: 0 0 6px 0; line-height: 1.2;">
+                            Protocolo Elite: A Cura das Aves</h4>
+                        <p style="color: var(--text-primary); font-size: 0.8rem; line-height: 1.4; margin-bottom: 6px;">
+                            Tenha o <strong style="color: #ff0000;">diagnóstico exato</strong> e o <strong
+                                style="color: #ff0000;">tratamento imediato</strong>
+                            na palma da sua mão e <span style="color: #00C851; font-weight: 800;">salve o seu plantel
+                                hoje.</span>
+                        </p>
+                        <p style="color: var(--text-secondary); font-size: 0.75rem; line-height: 1.4; margin: 0;">
+                            Deixar para depois significa <span style="color: #ff0000; font-weight: 700;">perder suas
+                                aves amanhã</span> por doenças que você poderia ter evitado agora.
+                        </p>
+                    </div>
+                    <!-- Ebook cover on the right -->
+                    <img src="capadasdoencas.jpg" alt="Protocolo Elite"
+                        style="width: 80px; height: 112px; object-fit: cover; border-radius: 6px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.18); border: 1px solid rgba(0,0,0,0.08);"
+                        fetchpriority="high">
+                </div>
+
+                <form id="payment-form">
+                    <div class="radio-group-top" style="margin-bottom: 10px;">
+                        <label class="form-label" style="display: block; margin-bottom: 5px;">ESCOLHA A FORMA DE
+                            PAGAMENTO</label>
+                        <div class="payment-methods-grid">
+                            <div class="radio-item selected" onclick="selectPaymentMethod('pix')">
+                                <input type="radio" name="paymentMethod" id="method-pix" value="pix" checked>
+                                <div class="radio-label">
+                                    <span class="radio-title">PIX</span>
+                                    <span class="radio-desc">Acesso imediato</span>
+                                </div>
+                                <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png"
+                                    style="height: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));" alt="Pix">
+                            </div>
+
+                            <div class="radio-item" onclick="selectPaymentMethod('card')">
+                                <input type="radio" name="paymentMethod" id="method-card" value="card">
+                                <div class="radio-label">
+                                    <span class="radio-title">CARTÃO</span>
+                                    <span class="radio-desc">Até 4x</span>
+                                </div>
+                                <div class="payment-flags" style="display: flex; gap: 5px; align-items: center;">
+                                    <img src="https://logospng.org/download/visa/logo-visa-256.png"
+                                        style="height: 18px;" alt="Visa">
+                                    <img src="https://logospng.org/download/mastercard/logo-mastercard-256.png"
+                                        style="height: 18px;" alt="Mastercard">
+                                    <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png"
+                                        style="height: 18px;" alt="Pix">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">SEUS DADOS DE ACESSO</div>
+                    <div class="form-group">
+                        <input type="text" id="payer-name" class="form-input" placeholder="NOME COMPLETO" required
+                            data-tip="Digite seu nome e sobrenome completo para o certificado.">
+                        <div class="field-tooltip">Digite seu nome completo</div>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="payer-email" class="form-input" placeholder="EMAIL" required
+                            data-tip="Seu melhor email onde receberá o acesso ao guia.">
+                        <div class="field-tooltip">Onde você receberá o acesso</div>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <div class="form-group" style="flex: 1.2;" id="cpf-container">
+                            <input type="text" id="payer-cpf" class="form-input" placeholder="CPF" required
+                                data-tip="Necessário para emitir a nota fiscal (apenas números).">
+                            <div class="field-tooltip">Apenas números do CPF</div>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <input type="tel" id="payer-phone" class="form-input" placeholder="WHATSAPP" required
+                                data-tip="Para suporte e avisos importantes (DDD + Número).">
+                            <div class="field-tooltip">DDD + Número</div>
+                        </div>
+                    </div>
+
+                    <!-- Card Details Area -->
+                    <div id="card-area"
+                        style="display: none; margin-top: 0.5rem; border: 1px solid var(--amber-100); padding: 1rem; border-radius: 0.5rem; background: var(--amber-50);">
+                        <div class="form-group">
+                            <input type="text" id="card-number" class="form-input" placeholder="NÚMERO DO CARTÃO"
+                                data-tip="Os 16 números na frente do cartão.">
+                            <div class="field-tooltip">Digite os números do cartão</div>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <div class="form-group" style="flex: 1.5;">
+                                <input type="text" id="card-expiration" class="form-input" placeholder="VALIDADE"
+                                    data-tip="Mês e Ano de vencimento (Ex: 12/28).">
+                                <div class="field-tooltip">MM/AA</div>
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <input type="text" id="card-cvv" class="form-input" placeholder="CVV"
+                                    data-tip="3 dígitos no verso do cartão.">
+                                <div class="field-tooltip">3 dígitos no verso</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="card-holder" class="form-input" placeholder="NOME NO CARTÃO"
+                                data-tip="Nome exatamente como impresso no cartão.">
+                            <div class="field-tooltip">Igual impresso no cartão</div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="card-cpf" class="form-input" placeholder="CPF DO TITULAR"
+                                data-tip="CPF do dono do cartão (apenas números).">
+                            <div class="field-tooltip">CPF do Dono do Cartão</div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="card-cep" class="form-input" placeholder="CEP"
+                                data-tip="CEP do endereço de cobrança.">
+                            <div class="field-tooltip">CEP de cobrança</div>
+                        </div>
+                        <div class="form-group">
+                            <select id="installments-select" class="form-input"></select>
+                        </div>
+                    </div>
+
+                    <!-- Order Bump Area -->
+                    <div id="order-bump-area"></div>
+
+                    <div style="text-align: center; margin-top: 1rem;">
+                        <div class="price-summary-box glass-panel"
+                            style="margin-bottom: 0.5rem; padding: 12px 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 1.1rem; font-weight: 800; color: var(--amber-600);">Total:</span>
+                            <span class="checkout-total-display"
+                                style="font-size: 1.25rem; font-weight: 900; color: var(--amber-600);">R$ <span
+                                    data-price-of="ebook-doencas" class="card-price-value">87,90</span></span>
+                        </div>
+                        <!-- PIX urgency message - shown only when PIX is selected -->
+                        <div id="pix-urgency-msg"
+                            style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(220,38,38,0.08); border: 1.5px solid #dc2626; border-radius: 8px; padding: 8px 12px; margin: 8px 0 0 0; animation: pulseBorder 1.5s ease-in-out infinite;">
+                            <i class="fa-solid fa-triangle-exclamation"
+                                style="color: #dc2626; font-size: 1rem; animation: pulse 1.5s ease-in-out infinite;"></i>
+                            <span
+                                style="color: #dc2626; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px;">
+                                Faça o pagamento agora e aproveite o desconto no pix por tempo limitado
+                            </span>
+                        </div>
+                        <style>
+                            @keyframes pulseBorder {
+
+                                0%,
+                                100% {
+                                    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.3);
+                                }
+
+                                50% {
+                                    box-shadow: 0 0 0 6px rgba(220, 38, 38, 0);
+                                }
+                            }
+                        </style>
+                        <!-- Checkout simplification: Economy reinforcement removed -->
+
+                        <p
+                            style="font-size: 1.1rem; color: #22c55e; font-weight: 900; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: -0.2px;">
+                            <i class="fa-solid fa-circle-check"></i> uma galinha salva, já paga seu investimento.
+                        </p>
+
+                        <!-- Checkout simplification: Acesso imediato removed -->
+
+
+                        <button type="button" id="btn-pay-pix" class="btn-primary"
+                            style="width: 100%; padding: 18px; font-size: 1.25rem; font-weight: 900; background: #dc2626; border: none; border-radius: 10px; box-shadow: 0 4px 0 #991b1b; transition: all 0.2s; cursor: pointer; text-transform: uppercase;">
+                            GERAR PIX.
+                        </button>
+
+                        <button type="button" id="btn-pay-card" class="btn-primary"
+                            style="display: none; width: 100%; padding: 18px; font-size: 1.25rem; font-weight: 900; background: #dc2626; border: none; border-radius: 10px; box-shadow: 0 4px 0 #991b1b; transition: all 0.2s; cursor: pointer; text-transform: uppercase;">
+                            Finalizar Pagamento
+                        </button>
+
+                        <!-- Simplified Guarantee -->
+                        <div
+                            style="margin-top: 1.5rem; background: rgba(22, 163, 74, 0.05); padding: 12px; border-radius: 10px; text-align: center;">
+                            <p
+                                style="color: #00C851 !important; font-weight: 800; font-size: 0.85rem; margin: 0; text-transform: uppercase;">
+                                <i class="fa-solid fa-lock"></i> SE VOCÊ NÃO GOSTAR TE DEVOLVO SEU DINHEIRO, SEM RISCO
+                            </p>
+                        </div>
+
+
+
+
+
+
+
+                        <div
+                            style="margin-top: 1rem; display: flex; justify-content: center; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
+                            <img src="https://logospng.org/download/visa/logo-visa-256.png" style="height: 24px;"
+                                alt="Visa">
+                            <img src="https://logospng.org/download/mastercard/logo-mastercard-256.png"
+                                style="height: 24px;" alt="Mastercard">
+                            <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png" style="height: 20px;"
+                                alt="Pix">
+                            <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-icone-1024.png"
+                                style="height: 24px;" alt="Mercado Pago">
+                        </div>
+                        <p style="font-size: 0.7rem; color: #22c55e; margin-top: 0.75rem; font-weight: 600;"><i
+                                class="fa-solid fa-lock"></i> Pagamento 100% Seguro</p>
+                    </div>
+                </form>
+            </div>
+
+            <div id="pix-result" class="hidden" style="text-align: center;">
+                <h3 class="modal-title">Quase lá!</h3>
+                <p style="font-size: 0.9rem; color: var(--gray-600); margin: 0.5rem 0;">Escaneie o QR Code ou copie
+                    o
+                    código abaixo.</p>
+
+                <div
+                    style="background: #fff; padding: 1.5rem; border-radius: 1.2rem; display: block; margin: 1.5rem auto; border: 1px solid #e2e8f0; box-shadow: 0 15px 35px rgba(0,0,0,0.08); max-width: fit-content; position: relative;">
+                    <img id="qr-code-img" src="" alt="QR Code PIX"
+                        style="width: 180px; height: 180px; display: block; margin: 0 auto;">
+                    <div
+                        style="margin-top: 15px; padding-top: 12px; border-top: 1px solid #f1f5f9; text-align: center;">
+                        <span
+                            style="display: block; font-size: 0.6rem; color: #94a3b8; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 3px;">Recebedor
+                            Verificado</span>
+                        <span
+                            style="display: block; font-size: 0.85rem; color: #1e293b; font-weight: 900; letter-spacing: -0.3px;">JOAO
+                            PAULO SANTOS CAMARGO</span>
+                    </div>
+                </div>
+
+                <button id="btn-copy-pix" class="btn-primary" style="width: 100%; margin-bottom: 1rem;">
+                    <i class="fa-regular fa-copy"></i> COPIAR CÓDIGO PIX
+                </button>
+                <textarea id="pix-copy-paste" readonly style="opacity: 0; position: absolute; z-index: -1;"></textarea>
+
+                <div class="glass-panel"
+                    style="text-align: left; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; padding: 1rem; border-radius: 0.5rem;">
+                    <p>1. Abra o app do seu banco e escolha <strong>Pix</strong>.</p>
+                    <p>2. Selecione <strong>Pix Copia e Cola</strong> ou <strong>Ler QR Code</strong>.</p>
+                    <p>3. Cole o código ou escaneie a imagem acima.</p>
+                </div>
+
+                <div style="margin-top: 1.5rem; font-size: 0.85rem;">
+                    Dúvidas? <a href="https://wa.me/5538999832950" target="_blank"
+                        style="color: #25d366; font-weight: 700;"><i class="fa-brands fa-whatsapp"></i> Chame no
+                        WhatsApp</a>
+                </div>
+
+                <!-- Security Reinforcement (Ultra-Confiança) -->
+                <div class="pix-security-reinforcement"
+                    style="margin-top: 1.5rem; border-top: 1px dashed #cbd5e1; padding-top: 1.5rem;">
+                    <div
+                        style="display: flex; justify-content: center; gap: 15px; align-items: center; margin-bottom: 15px;">
+                        <i class="fa-solid fa-lock" style="color: #16a34a; font-size: 1.2rem;"></i>
+                        <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png" style="height: 24px;"
+                            alt="Pix">
+                        <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-icone-1024.png"
+                            style="height: 22px;" alt="Mercado Pago">
+                    </div>
+                    <!-- Simplified Guarantee (Pix View) -->
+                    <div
+                        style="background: rgba(22, 163, 74, 0.05); padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center;">
+                        <p
+                            style="color: #00C851 !important; font-weight: 800; font-size: 0.8rem; margin: 0; text-transform: uppercase;">
+                            <i class="fa-solid fa-lock"></i> SE VOCÊ NÃO GOSTAR TE DEVOLVO SEU DINHEIRO, SEM RISCO
+                        </p>
+                    </div>
+
+                    <div style="color: #64748b; font-size: 0.75rem; font-weight: 500;">
+                        <p>GALOS MURA BRASIL OFICIAL</p>
+                        <p>CNPJ: 63.665.824/0001-09</p>
+                    </div>
+                </div>
+
+                <button
+                    onclick="document.getElementById('pix-result').classList.add('hidden'); document.getElementById('checkout-main-view').classList.remove('hidden');"
+                    style="margin-top: 1rem; background: none; border: none; color: var(--gray-400); text-decoration: underline; cursor: pointer;">Voltar</button>
+            </div>
+
+            <!-- Payment Pending View (New) -->
+            <div id="payment-pending-view" class="hidden" style="text-align: center; padding: 1rem 0;">
+                <div style="font-size: 4rem; color: #f59e0b; margin-bottom: 1rem;">
+                    <i class="fa-solid fa-shield-halved fa-beat-normal"></i>
+                </div>
+                <h3 class="modal-title" style="color: #92400e;">Pagamento em Análise</h3>
+                <p style="font-size: 0.95rem; color: var(--gray-600); margin: 1rem 0; line-height: 1.5;">
+                    Sua transação está sendo processada com segurança pelo Mercado Pago. <br>
+                    <strong>Não se preocupe, isso é um procedimento normal.</strong>
+                </p>
+
+                <div
+                    style="background: #fffbeb; border: 1px solid #fef3c7; padding: 1rem; border-radius: 0.75rem; text-align: left; margin-bottom: 1.5rem;">
+                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: #92400e;">
+                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-envelope"></i> O acesso será enviado
+                            para
+                            o seu e-mail assim que aprovado.</li>
+                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-clock"></i> Prazo de análise: de
+                            alguns
+                            minutos até 48h.</li>
+                        <li><i class="fa-solid fa-check-double"></i> Fique atento à sua caixa de entrada e Spam.
+                        </li>
+                    </ul>
+                </div>
+
+                <a href="https://wa.me/5538999832950?text=Olá,%20meu%20pagamento%20ficou%20em%20análise.%20Pode%20me%20ajudar?"
+                    target="_blank" class="btn-primary"
+                    style="width: 100%; background: #25d366; border-color: #25d366; text-decoration: none; display: inline-block;">
+                    <i class="fa-brands fa-whatsapp"></i> FALAR COM SUPORTE
+                </a>
+
+                <button onclick="closeCheckout()"
+                    style="margin-top: 1.5rem; background: none; border: none; color: var(--gray-400); text-decoration: underline; cursor: pointer; font-size: 0.85rem;">
+                    Entendi, fechar checkout
+                </button>
+            </div>
+
+
+            <button onclick="closeCheckout()"
+                style="position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; background: #fff; border: 1px solid #e5e7eb; border-radius: 50%; color: #6b7280; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Official Footer -->
+    <footer
+        style="background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); padding: 3rem 0; border-top: 1px solid var(--glass-border); text-align: center;">
+        <div class="container">
+            <div style="margin-bottom: 1.5rem;">
+                <img src="logo.jpg" alt="Logo" style="height: 90px; border-radius: 12px;" loading="lazy"
+                    decoding="async">
+                <h4 style="color: #78350f; font-weight: 800; margin-top: 0.5rem;">PROTOCOLO ELITE</h4>
+            </div>
+            <div style="font-size: 0.8rem; color: #ffffff; line-height: 1.6;">
+                <p>GALOS MURA BRASIL OFICIAL</p>
+                <p>CNPJ: 63.665.824/0001-09</p>
+
+            </div>
+        </div>
+    </footer>
+
+    <!-- Elite Promo Modal (Removed) -->
+    <div id="order-bump-modal" class="order-bump-slide-modal"></div>
+
+
+    <!-- Hidden Helpers for script.js -->
+    <div id="secure-loading" class="secure-loading-overlay">
+        <div class="secure-loading-content">
+            <i class="fa-solid fa-lock fa-bounce" style="color: #fbbf24; font-size: 4rem; margin-bottom: 1rem;"></i>
+            <h3 style="color: #fbbf24; font-size: 1.5rem; font-weight: 800; text-transform: uppercase;">Carregando
+                pagamento seguro</h3>
+            <p
+                style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 2rem; font-weight: 600;">
+                Ambiente
+                100% criptografado</p>
+            <img src="logo.jpg" alt="Logo"
+                style="height: 102px; filter: contrast(1.1); margin: 0 auto; display: block; opacity: 0.8;">
+        </div>
+    </div>
+    <style>
+        .secure-loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 99999;
+            /* Garante que fique acima de TUDO */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .secure-loading-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .secure-loading-content {
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .secure-loading-overlay.active .secure-loading-content {
+            transform: scale(1);
+        }
+    </style>
+    <div id="checkout-logo-overlay" style="display:none;"></div>
+    <div id="checkout-product-name" style="display:none;"></div>
+    <div id="checkout-product-price-display" style="display:none;"></div>
+    <div id="product-icon-container" style="display:none;"></div>
+
+    <script src="https://sdk.mercadopago.com/js/v2" defer></script>
+    <script>const mp = new MercadoPago('APP_USR-73238612-450f-4fbe-9a9f-3d5f9919f2d1');</script>
+    <script src="smart_fields.js" defer></script>
+    <script src="script.js?v=26" defer></script>
+    <script src="order_bump_modal.js" defer></script>
+
+
+
+</body>
+
+</html>

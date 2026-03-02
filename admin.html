@@ -736,6 +736,94 @@
                 text-align: center;
             }
         }
+
+        /* --- TOGGLE SWITCH --- */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-radius: 14px;
+            margin-top: 16px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .toggle-row .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .toggle-row .toggle-label i {
+            font-size: 1rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .toggle-track {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            transition: 0.3s;
+            border: 1px solid var(--border);
+        }
+
+        .toggle-track::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 3px;
+            top: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toggle-switch input:checked+.toggle-track {
+            background: var(--success);
+            border-color: var(--success);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+        }
+
+        .toggle-switch input:checked+.toggle-track::before {
+            transform: translateX(24px);
+        }
+
+        .toggle-switch input:not(:checked)+.toggle-track {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        .bump-status-badge {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
     </style>
 </head>
 
@@ -1256,8 +1344,16 @@
 
         function renderBumps() {
             const list = document.getElementById('bumps-list');
-            list.innerHTML = Object.entries(db.orderBumps).map(([id, b]) => `
-                <div class="product-card">
+            list.innerHTML = Object.entries(db.orderBumps).map(([id, b]) => {
+                const isEnabled = b.enabled !== false; // default true se campo não existir
+                const statusColor = isEnabled ? 'var(--success)' : 'var(--danger)';
+                const statusText = isEnabled ? 'ATIVO' : 'DESATIVADO';
+                const statusBg = isEnabled ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+                const typeLabel = id.includes('manejo') ? 'Upsell (Pós-Compra)' : 'Order Bump (Checkout)';
+                const typeIcon = id.includes('manejo') ? 'fa-arrow-up-right-dots' : 'fa-cart-plus';
+
+                return `
+                <div class="product-card" id="card-bump-${id}" style="border-color: ${isEnabled ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.2)'}; transition: border-color 0.4s;">
                     <div class="product-header">
                         <div class="product-img-wrapper">
                             <img src="${b.image || b.cover || 'capadospintinhos.jpg'}" id="img-bump-${id}">
@@ -1279,12 +1375,47 @@
                             </div>
                         </div>
                     </div>
-                    <div class="input-group" style="margin-bottom:0">
+                    <div class="input-group" style="margin-bottom:12px">
                         <label><i class="fa-solid fa-circle-info"></i> Descrição Curta</label>
                         <textarea class="input-premium" style="min-height:60px; resize:vertical" onchange="updateBump('${id}', 'description', this.value)">${b.description || ''}</textarea>
                     </div>
-                </div>
-            `).join('');
+
+                    <!-- TOGGLE DE ATIVAÇÃO -->
+                    <div class="toggle-row">
+                        <div class="toggle-label">
+                            <i class="fa-solid fa-${typeIcon}" style="color: var(--accent);"></i>
+                            <div>
+                                <div style="font-size:0.8rem; color: var(--text-dim); margin-bottom:2px">${typeLabel}</div>
+                                <div style="display:flex; align-items:center; gap:6px">
+                                    <span class="bump-status-badge" id="badge-${id}" style="background:${statusBg}; color:${statusColor};">${statusText}</span>
+                                    <span style="font-size:0.75rem; color: var(--text-dim);">no checkout</span>
+                                </div>
+                            </div>
+                        </div>
+                        <label class="toggle-switch" title="Ativar/Desativar">
+                            <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleBumpEnabled('${id}', this.checked)">
+                            <span class="toggle-track"></span>
+                        </label>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function toggleBumpEnabled(id, enabled) {
+            db.orderBumps[id].enabled = enabled;
+
+            // Atualiza visual do badge e borda do card
+            const badge = document.getElementById(`badge-${id}`);
+            const card = document.getElementById(`card-bump-${id}`);
+            if (badge) {
+                badge.innerText = enabled ? 'ATIVO' : 'DESATIVADO';
+                badge.style.background = enabled ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+                badge.style.color = enabled ? 'var(--success)' : 'var(--danger)';
+            }
+            if (card) {
+                card.style.borderColor = enabled ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.2)';
+            }
+            document.getElementById('save-btn').style.display = 'block';
         }
 
         function updateProd(id, field, val) {
@@ -1293,7 +1424,13 @@
         }
 
         function updateBump(id, field, val) {
-            db.orderBumps[id][field] = (field === 'price' || field === 'originalPrice') ? parseFloat(val) : val;
+            if (field === 'enabled') {
+                db.orderBumps[id][field] = val === true || val === 'true';
+            } else if (field === 'price' || field === 'originalPrice') {
+                db.orderBumps[id][field] = parseFloat(val);
+            } else {
+                db.orderBumps[id][field] = val;
+            }
             document.getElementById('save-btn').style.display = 'block';
         }
 

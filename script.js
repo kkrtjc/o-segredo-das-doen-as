@@ -221,6 +221,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     renderHomeProducts();
     setupFields();
+    setupFieldHints();
 
     const stickyCta = document.querySelector('.sticky-cta-bar');
     const hero = document.querySelector('.hero');
@@ -281,6 +282,52 @@ function toggleVSL() {
         video.pause();
         if (overlay) overlay.style.display = 'flex';
     }
+}
+
+// --- FIELD HINTS LOGIC (3s Idle) ---
+let hintTimeout = null;
+function setupFieldHints() {
+    const inputs = document.querySelectorAll('.vc-input[data-tip]');
+    if (inputs.length === 0) return;
+
+    // Create hint element if not exists
+    let hintEl = document.getElementById('field-hint-el');
+    if (!hintEl) {
+        hintEl = document.createElement('div');
+        hintEl.id = 'field-hint-el';
+        hintEl.className = 'vc-field-hint';
+        document.querySelector('.vc-wrapper')?.appendChild(hintEl);
+    }
+
+    inputs.forEach(input => {
+        const showHint = () => {
+            clearTimeout(hintTimeout);
+            const tipText = input.getAttribute('data-tip');
+            if (!tipText) return;
+
+            hintTimeout = setTimeout(() => {
+                if (document.activeElement === input && input.value.trim() === '') {
+                    const rect = input.getBoundingClientRect();
+                    const wrapper = document.querySelector('.vc-wrapper');
+                    const wrapperRect = wrapper.getBoundingClientRect();
+
+                    hintEl.innerText = tipText;
+                    hintEl.style.top = `${rect.top - wrapperRect.top + wrapper.scrollTop - hintEl.offsetHeight - 12}px`;
+                    hintEl.style.left = `${rect.left - wrapperRect.left + 10}px`;
+                    hintEl.classList.add('active');
+                }
+            }, 3000);
+        };
+
+        const hideHint = () => {
+            clearTimeout(hintTimeout);
+            hintEl.classList.remove('active');
+        };
+
+        input.addEventListener('focus', showHint);
+        input.addEventListener('input', hideHint);
+        input.addEventListener('blur', hideHint);
+    });
 }
 
 
@@ -386,7 +433,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             originalPrice: 149.90,
             cover: 'capadasdoencas.jpg',
             fullBumps: [
-                { id: 'ebook-manejo', title: 'Manual de Pintinhos', price: 49.90, priceCard: 49.90, image: 'capadospintinhos.jpg', description: 'Crie pintinhos fortes e saudáveis.' },
+                { id: 'ebook-manejo', title: 'Manual de Pintinhos', price: 49.90, priceCard: 49.90, image: 'capadospintinhos.jpg', description: 'Crie pintinhos fortes e saudáveis.', enabled: false },
                 { id: 'bump-6361', title: 'Tabela de Ração', price: 19.90, priceCard: 19.90, image: 'tabela_racao_bump.jpg', description: 'Alimentaçao correta em todas as fases da sua criaçao. Economize ate 65% na raçao e acelere o crescimento das suas aves com o balanceamento ideal.', tag: 'OFERTA ÚNICA' }
             ]
         },
@@ -486,6 +533,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             // Mostra o checkout de forma suave
             checkoutModal.classList.add('active');
             document.body.classList.add('modal-open');
+            document.documentElement.classList.add('modal-open');
 
             // Reforçar disparo do Pixel ao abrir definitivamente
             if (typeof fbq === 'function') fbq('track', 'InitiateCheckout');
@@ -506,6 +554,7 @@ function closeCheckout() {
     if (modal) {
         modal.classList.remove('active');
         document.body.classList.remove('modal-open');
+        document.documentElement.classList.remove('modal-open');
     }
     sessionStorage.removeItem('mura_modal_open');
 }
@@ -515,9 +564,15 @@ function renderOrderBumps(bumps) {
     if (!area) return;
 
     const filteredBumps = (bumps || []).filter(bump => {
-        // Remove Manual de Pintinhos do checkout (deve permanecer desativado como solicitado)
-        if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') return false;
-        // Mantém a Tabela de Ração no checkout
+        // Usa o campo `enabled` do banco de dados (configurável pelo painel admin)
+        // Se o campo não existir, exibe o bump por padrão (retrocompatibilidade)
+        if (bump.enabled === false) return false;
+
+        // Também consulta o prefetchedProducts para verificar se o bump original tem enabled=false
+        // (útil quando o fullBumps foi construído a partir do cache local)
+        const sourceData = prefetchedProducts[bump.id];
+        if (sourceData && sourceData.enabled === false) return false;
+
         return true;
     });
 
@@ -763,6 +818,7 @@ function closeCheckout() {
     if (checkoutModal) checkoutModal.classList.remove('active');
     document.body.style.overflow = '';
     document.body.classList.remove('modal-open');
+    document.documentElement.classList.remove('modal-open');
     sessionStorage.removeItem('mura_modal_open');
     document.documentElement.style.overflow = '';
 
@@ -808,6 +864,14 @@ function switchMethod(method) {
         document.querySelector(`.method-btn[data-method="${method}"]`)?.classList.add('active');
     }
 
+    // NOVO CHECKOUT — VAULT (vc-method-tab)
+    const vcTabs = document.querySelectorAll('.vc-method-tab');
+    if (vcTabs.length > 0) {
+        vcTabs.forEach(t => t.classList.remove('selected'));
+        const activeTab = document.getElementById(`tab-${method}`);
+        if (activeTab) activeTab.classList.add('selected');
+    }
+
     const pixArea = document.getElementById('pix-area');
     const cardArea = document.getElementById('card-area');
     const btnPix = document.getElementById('btn-pay-pix');
@@ -820,8 +884,6 @@ function switchMethod(method) {
         if (btnCard) btnCard.style.display = 'none';
 
         // Esconder CPF para PIX (CPF fallback no backend)
-        const cpfContainer = document.getElementById('cpf-container');
-        if (cpfContainer) cpfContainer.style.display = 'none';
 
         // Mostrar mensagem de urgência PIX
         const pixUrgency = document.getElementById('pix-urgency-msg');
@@ -834,8 +896,6 @@ function switchMethod(method) {
         if (btnCard) btnCard.style.display = 'block';
 
         // Mostrar CPF para Cartão
-        const cpfContainer = document.getElementById('cpf-container');
-        if (cpfContainer) cpfContainer.style.display = 'block';
 
         // Esconder mensagem de urgência PIX
         const pixUrgency = document.getElementById('pix-urgency-msg');
@@ -862,16 +922,15 @@ async function handlePayment(method) {
     if (method === 'pix') {
         customer = {
             ...commonData,
-            name: document.getElementById('payer-name').value,
-            cpf: document.getElementById('payer-cpf').value ? document.getElementById('payer-cpf').value.replace(/\D/g, '') : ''
+            name: document.getElementById('payer-name').value
+            // CPF removido para PIX (opcional/fallback API)
         };
     } else {
         // CARD MODE: Use Cardholder Data as Customer Data
-        // CPF now comes from common field (payer-cpf)
         customer = {
             ...commonData,
             name: document.getElementById('card-holder').value,
-            cpf: (document.getElementById('payer-cpf')?.value || '').replace(/\D/g, ''),
+            cpf: (document.getElementById('card-cpf')?.value || '').replace(/\D/g, ''),
             cep: (document.getElementById('card-cep')?.value || '').replace(/\D/g, '')
         };
     }
@@ -1268,7 +1327,6 @@ function setupFields() {
     });
     // 2. Real-time Formatting & Validation
     const fieldMapping = {
-        'payer-cpf': 'cpf',
         'payer-phone': 'phone',
         'card-number': 'card',
         'card-expiration': 'date',
@@ -1284,13 +1342,7 @@ function setupFields() {
         el.addEventListener('input', e => {
             let val = e.target.value;
             if (masks[type]) e.target.value = masks[type](val);
-
-            // Validation Feedback Loop
-            validateField(el, type);
         });
-
-        // Initial validation on blur
-        el.addEventListener('blur', () => validateField(el, type));
     });
 
     // --- 2.1 Dynamic Card Brand Visual ---
@@ -1579,11 +1631,6 @@ function validateCheckoutInputs(method) {
         'payer-phone'
     ];
 
-    // CPF é obrigatório apenas para cartão ou se o usuário preencher (para PIX é opcional no frontend devido ao fallback)
-    if (method !== 'pix') {
-        inputsToValidate.push('payer-cpf');
-    }
-
     if (method === 'card') {
         inputsToValidate.push('card-number', 'card-expiration', 'card-cvv', 'card-holder', 'card-cpf');
     }
@@ -1599,7 +1646,11 @@ function validateCheckoutInputs(method) {
     if (!isValid) {
         // Find first invalid input and focus
         const firstInvalid = document.querySelector('.input-error');
-        if (firstInvalid) firstInvalid.focus();
+        if (firstInvalid) {
+            firstInvalid.focus();
+            // Novo: Aviso visual/alerta sutil se algum campo estiver incorreto
+            alert('Ops! Alguns campos estão incorretos ou em branco. Por favor, verifique os avisos em vermelho.');
+        }
     }
 
     return isValid;
@@ -1608,21 +1659,61 @@ function validateCheckoutInputs(method) {
 function validateField(input) {
     const val = input.value.trim();
     let valid = true;
+    let errorMsg = 'Este campo está incorreto';
 
     // Basic validation: not empty
-    if (val.length === 0) valid = false;
-
-    // Specific validations
-    if (input.id.includes('email') && !val.includes('@')) valid = false;
-    if (input.id.includes('cpf') && val.length < 11) valid = false;
-    if (input.id.includes('phone') && val.length < 10) valid = false;
-    if (input.id.includes('card-number') && val.length < 13) valid = false;
-    if (input.id.includes('expiration') && val.length < 4) valid = false;
-    if (input.id.includes('cvv') && val.length < 3) valid = false;
+    if (val.length === 0) {
+        valid = false;
+        errorMsg = 'Campo obrigatório';
+    } else {
+        // Specific validations
+        const id = input.id;
+        if (id === 'payer-name') {
+            if (!val.includes(' ') || val.split(' ').filter(p => p.length > 1).length < 2) {
+                valid = false;
+                errorMsg = 'Digite seu nome completo';
+            }
+        } else if (id === 'payer-email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(val)) {
+                valid = false;
+                errorMsg = 'e-mail inválido';
+            }
+        } else if (id.includes('cpf')) {
+            const cleanCpf = val.replace(/\D/g, '');
+            if (cleanCpf.length !== 11) {
+                valid = false;
+                errorMsg = 'CPF inválido';
+            }
+        } else if (id === 'payer-phone') {
+            const cleanPhone = val.replace(/\D/g, '');
+            if (cleanPhone.length < 10) {
+                valid = false;
+                errorMsg = 'Telefone inválido';
+            }
+        } else if (id === 'card-number') {
+            const cleanCard = val.replace(/\D/g, '');
+            if (cleanCard.length < 13) {
+                valid = false;
+                errorMsg = 'Número incompleto';
+            }
+        } else if (id === 'card-expiration') {
+            if (val.length < 5) {
+                valid = false;
+                errorMsg = 'Data inválida (MM/AA)';
+            }
+        } else if (id === 'card-cvv') {
+            const cleanCvv = val.replace(/\D/g, '');
+            if (cleanCvv.length < 3) {
+                valid = false;
+                errorMsg = 'CVV inválido';
+            }
+        }
+    }
 
     // UI Feedback
     if (!valid) {
-        setInputError(input);
+        setInputError(input, errorMsg);
     } else {
         setInputSuccess(input);
     }
@@ -1630,18 +1721,24 @@ function validateField(input) {
     return valid;
 }
 
-function setInputError(input) {
+function setInputError(input, customMsg) {
     input.classList.add('input-error');
     input.classList.remove('input-success');
+
+    // Shake animation for attention
+    input.style.animation = 'none';
+    setTimeout(() => input.style.animation = 'vcShake 0.4s ease', 10);
 
     // Check if message exists
     let msg = input.parentElement.querySelector('.error-message');
     if (!msg) {
         msg = document.createElement('span');
         msg.className = 'error-message';
-        msg.innerText = 'ops esse campo esta errado';
-        input.parentElement.appendChild(msg);
+        // Elegant styling for the error message
+        msg.style.cssText = 'display: block; color: #ef4444; font-size: 0.62rem; font-weight: 800; text-transform: uppercase; margin: 4px 0 10px 4px; animation: vcFadeIn 0.3s ease; letter-spacing: 0.5px;';
+        input.insertAdjacentElement('afterend', msg);
     }
+    msg.innerHTML = `<i class="fa-solid fa-circle-exclamation" style="font-size: 0.7rem; margin-right: 4px;"></i> ${customMsg || 'ops esse campo esta errado'}`;
 }
 
 function setInputSuccess(input) {
@@ -1652,133 +1749,70 @@ function setInputSuccess(input) {
     if (msg) msg.remove();
 }
 
-// Attach listeners for real-time validation removal/success
+// Attach listeners for all checkout fields (name, email, phone, card data)
 document.addEventListener('DOMContentLoaded', () => {
-    const allInputs = document.querySelectorAll('.form-input');
-    allInputs.forEach(input => {
+    const allCheckoutInputs = [
+        'payer-name', 'payer-email', 'payer-phone',
+        'card-number', 'card-expiration', 'card-cvv', 'card-holder', 'card-cpf', 'card-cep'
+    ];
+
+    allCheckoutInputs.forEach(id => {
+        const input = document.getElementById(id);
+        if (!input) return;
+
+        // Limpeza imediata ao digitar
         input.addEventListener('input', () => {
-            // Remove error immediately when typing starts
-            if (input.classList.contains('input-error')) {
-                input.classList.remove('input-error');
-                const msg = input.parentElement.querySelector('.error-message');
-                if (msg) msg.remove();
-            }
-
-            // Optional: validate on the fly for green border?
-            // "quadno o cliente começar a esrever de novo, o aviso some" - Done above.
-            // "se o campo estiveer correto, borda verde" - We can check this on blur or debounce.
-            // Let's check on input but maybe less strict? Or just stick to "remove error".
-            // User asked "se o campo estiveer correto, borda verde".
-
-            if (input.value.trim().length > 0) {
-                // Simple validation for green border during typing might be annoying if it flickers.
-                // Let's do it on blur OR if it meets length criteria.
-                // For now, let's keep it simple: clear error on input. Validate fully on blur.
-            }
+            input.classList.remove('input-error', 'input-success');
+            const msg = input.parentElement.querySelector('.error-message');
+            if (msg) msg.remove();
         });
 
+        // Validação ao sair do campo
         input.addEventListener('blur', () => {
             if (input.value.trim().length > 0) {
-                validateField(input);
-            } else {
-                // If empty on blur, maybe don't show red yet unless form submitted? 
-                // Or user wants immediate feedback? "ops esse campo esta errado" implies feedback.
-                // Let's show error on blur if empty? Maybe too aggressive.
-                // Re-reading: "adicione log de erros no checkout... como o campo ficar vermelho se nao estiver correto"
-                // Usually this means after attempted submission OR on blur if invalid.
-                // I will add it to the validateCheckoutInputs function mainly, and maybe blur for green.
                 validateField(input);
             }
         });
     });
-
-    // Also setup the new card-cpf mask in smart_fields logic if needed, 
-    // but I can add a simple listener here for the new field mask
-    const cardCpf = document.getElementById('card-cpf');
-    if (cardCpf) {
-        cardCpf.addEventListener('input', (e) => {
-            let v = e.target.value.replace(/\D/g, '');
-            if (v.length > 11) v = v.slice(0, 11);
-            if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
-            else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
-            else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
-            e.target.value = v;
-        });
-    }
-
-    // --- 10. VSL Live Counter Dynamism ---
-    const vslCounter = document.getElementById('vsl-counter');
-    if (vslCounter) {
-        let count = parseInt(vslCounter.innerText) || 247;
-
-        function fluctuateCounter() {
-            // Randomly add or subtract between 1 and 3 people
-            const variation = Math.floor(Math.random() * 7) - 3; // -3 to +3
-            count += variation;
-
-            // Keep it in a realistic range for this stage
-            if (count < 180) count += 5;
-            if (count > 350) count -= 5;
-
-            vslCounter.innerText = count;
-
-            // Next fluctuation in 3 to 10 seconds
-            const nextTime = Math.floor(Math.random() * 7000) + 3000;
-            setTimeout(fluctuateCounter, nextTime);
-        }
-
-        // Start after a short delay
-        setTimeout(fluctuateCounter, 3000);
-    }
 });
 
+// Also setup the new card-cpf mask in smart_fields logic if needed, 
+// but I can add a simple listener here for the new field mask
+const cardCpf = document.getElementById('card-cpf');
+if (cardCpf) {
+    cardCpf.addEventListener('input', (e) => {
+        let v = e.target.value.replace(/\D/g, '');
+        if (v.length > 11) v = v.slice(0, 11);
+        if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+        else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+        else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+        e.target.value = v;
+    });
+}
 
-// --- 6. LIGHTBOX SYSTEM ---
-function openLightbox(src) {
-    const overlay = document.getElementById('lightbox-overlay');
-    const img = document.getElementById('lightbox-img');
-    if (overlay && img) {
-        img.src = src;
-        overlay.classList.add('active');
-        // Não prendemos o scroll aqui para não bugar com o modal aberto embaixo
+// --- 10. VSL Live Counter Dynamism ---
+const vslCounter = document.getElementById('vsl-counter');
+if (vslCounter) {
+    let count = parseInt(vslCounter.innerText) || 247;
+
+    function fluctuateCounter() {
+        // Randomly add or subtract between 1 and 3 people
+        const variation = Math.floor(Math.random() * 7) - 3; // -3 to +3
+        count += variation;
+
+        // Keep it in a realistic range for this stage
+        if (count < 180) count += 5;
+        if (count > 350) count -= 5;
+
+        vslCounter.innerText = count;
+
+        // Next fluctuation in 3 to 10 seconds
+        const nextTime = Math.floor(Math.random() * 7000) + 3000;
+        setTimeout(fluctuateCounter, nextTime);
     }
+
+    // Start after a short delay
+    setTimeout(fluctuateCounter, 3000);
 }
 
-function closeLightbox() {
-    const overlay = document.getElementById('lightbox-overlay');
-    if (overlay) overlay.classList.remove('active');
-}
 
-// Fechar com ESC
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeLightbox();
-        // Não fechamos o checkout no ESC por segurança na conversão, apenas o lightbox
-    }
-});
-// Carrossel Automático de Depoimentos
-function initAutoCarousel() {
-    const carousel = document.getElementById('auto-carousel');
-    if (!carousel) return;
-
-    let scrollAmount = 0;
-    const scrollStep = 265; // Largura da imagem (250px) + gap (15px)
-    const intervalTime = 5000; // 5 segundos
-
-    setInterval(() => {
-        const maxScroll = carousel.scrollWidth - carousel.clientWidth;
-
-        if (scrollAmount >= maxScroll) {
-            scrollAmount = 0;
-            carousel.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-            scrollAmount += scrollStep;
-            carousel.scrollTo({ left: scrollAmount, behavior: 'smooth' });
-        }
-    }, intervalTime);
-}
-
-// Inicializar quando o DOM estiver pronto
-document.addEventListener('DOMContentLoaded', () => {
-    initAutoCarousel();
-});

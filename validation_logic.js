@@ -69,8 +69,10 @@ function setInputError(input) {
     if (!msg) {
         msg = document.createElement('span');
         msg.className = 'error-message';
-        msg.innerText = 'ops esse campo esta errado';
-        input.parentElement.appendChild(msg);
+        // Elegant styling for the error message
+        msg.style.cssText = 'display: block; color: #ef4444; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; margin: -5px 0 10px 5px; animation: vcFadeIn 0.3s ease;';
+        msg.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ops esse campo esta errado';
+        input.insertAdjacentElement('afterend', msg);
     }
 }
 
