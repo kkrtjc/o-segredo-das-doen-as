@@ -60,6 +60,26 @@ let currentPaymentMethod = 'pix'; // Default
 
 const prefetchedProducts = {};
 
+// --- ANALYTICS & TRACKING ---
+function trackEvent(event, value = null, productId = null, extra = null) {
+    console.log(`📊 [TRACK] ${event}${productId ? ' | ' + productId : ''}${extra ? ' | ' + extra : ''}`);
+
+    const payload = {
+        event,
+        value,
+        productId,
+        extra,
+        url: window.location.href,
+        timestamp: new Date().toISOString()
+    };
+
+    fetch(`${API_URL}/api/track`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    }).catch(err => console.warn('Track Error:', err));
+}
+
 // --- LEAD DEDUPLICATION: ONCE PER DAY ---
 function canTrackLeadToday() {
     const today = new Date().toISOString().split('T')[0];
@@ -153,35 +173,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     } catch (e) { }
 
-    // --- LAZY VIDEO ---
-    const lazyVideo = document.getElementById('vsl-video') || document.querySelector('.square-video-wrapper video');
-    if (lazyVideo) {
+    // --- MULTI-VIDEO TRACKING ---
+    const allVideos = document.querySelectorAll('video');
+    allVideos.forEach(video => {
         let tracked = false;
-        lazyVideo.addEventListener('play', () => {
+        video.addEventListener('play', () => {
             if (!tracked) {
-                const videoType = lazyVideo.id === 'vsl-video-player' ? 'authority' :
-                    (lazyVideo.id === 'ebook-vsl' || lazyVideo.classList.contains('ebook-video')) ? 'ebook' :
-                        (lazyVideo.id === 'venda-vsl') ? 'venda' : 'generic';
+                let videoType = 'generic';
+                if (video.id === 'venda-vsl') videoType = 'venda';
+                else if (video.id === 'ebook-vsl' || video.classList.contains('ebook-video')) videoType = 'ebook';
+                else if (video.id === 'authority-vsl' || video.id === 'vsl-video-player') videoType = 'authority';
+
                 trackEvent('video_play', null, null, videoType);
                 tracked = true;
             }
         });
+
+        // Lazy loading for videos that might have data-src
         if ('IntersectionObserver' in window) {
             const videoObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        const source = lazyVideo.querySelector('source');
+                        const source = video.querySelector('source');
                         if (source && source.dataset.src) {
                             source.src = source.dataset.src;
-                            lazyVideo.load();
+                            video.load();
                         }
-                        observer.unobserve(lazyVideo);
+                        observer.unobserve(video);
                     }
                 });
             }, { rootMargin: '200px' });
-            videoObserver.observe(lazyVideo);
+            videoObserver.observe(video);
         }
-    }
+    });
 
     // --- OTHER UI LOGIC ---
     document.querySelectorAll('.faq-question').forEach(q => {
@@ -411,7 +435,11 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     sessionStorage.setItem('mura_modal_open', 'true');
     if (typeof fbq === 'function') fbq('track', 'InitiateCheckout');
 
-    if (!checkoutModal) return;
+    const checkoutModal = document.getElementById('checkout-modal');
+    if (!checkoutModal) {
+        console.error("ERRO: Elemento #checkout-modal não encontrado!");
+        return;
+    }
 
     // --- RESET CHECKOUT STATE ---
     document.getElementById('checkout-main-view').classList.remove('hidden');
@@ -423,7 +451,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     }
 
     const secureOverlay = document.getElementById('secure-loading');
-    // Overlay will be shown AFTER data is fetched to avoid adding fetch wait time to the animation
+    // Overlay will be shown AFTER data is fetched
 
     // FALLBACK DATA (Offline Support)
     const fallbackData = {
@@ -433,7 +461,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             originalPrice: 149.90,
             cover: 'capadasdoencas.jpg',
             fullBumps: [
-                { id: 'ebook-manejo', title: 'Manual de Pintinhos', price: 49.90, priceCard: 49.90, image: 'capadospintinhos.jpg', description: 'Crie pintinhos fortes e saudáveis.', enabled: false },
+                { id: 'ebook-manejo', title: 'Manual de Pintinhos', price: 49.90, priceCard: 49.90, image: 'capadospintinhos.jpg', description: 'Crie pintinhos fortes e saudáveis.' },
                 { id: 'bump-6361', title: 'Tabela de Ração', price: 19.90, priceCard: 19.90, image: 'tabela_racao_bump.jpg', description: 'Alimentaçao correta em todas as fases da sua criaçao. Economize ate 65% na raçao e acelere o crescimento das suas aves com o balanceamento ideal.', tag: 'OFERTA ÚNICA' }
             ]
         },
@@ -488,8 +516,11 @@ async function startCheckoutProcess(productId, forceBumps = []) {
 
         cart.bumps = forceBumps || [];
 
-        document.getElementById('checkout-product-name').innerText = productData.title;
-        document.getElementById('checkout-product-price-display').innerText = formatBRL(productData.price);
+        const nameEl = document.getElementById('checkout-product-name');
+        if (nameEl) nameEl.innerText = productData.title;
+
+        const priceEl = document.getElementById('checkout-product-price-display');
+        if (priceEl) priceEl.innerText = formatBRL(productData.price);
 
         const iconContainer = document.getElementById('product-icon-container');
         if (iconContainer) {
@@ -549,21 +580,16 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     }
 }
 
-function closeCheckout() {
-    const modal = document.getElementById('checkout-modal');
-    if (modal) {
-        modal.classList.remove('active');
-        document.body.classList.remove('modal-open');
-        document.documentElement.classList.remove('modal-open');
-    }
-    sessionStorage.removeItem('mura_modal_open');
-}
+// function closeCheckout() removed (duplicate of line 818)
 
 function renderOrderBumps(bumps) {
     const area = document.getElementById('order-bump-area');
     if (!area) return;
 
     const filteredBumps = (bumps || []).filter(bump => {
+        // Ignora o Manual de Manejo aqui, pois ele aparece no intersticial (clique em Pagar)
+        if (bump.id === 'ebook-manejo') return false;
+
         // Usa o campo `enabled` do banco de dados (configurável pelo painel admin)
         // Se o campo não existir, exibe o bump por padrão (retrocompatibilidade)
         if (bump.enabled === false) return false;
@@ -640,13 +666,11 @@ function updateTotal() {
 
     // Adiciona Bumps com preços Dinâmicos do banco de dados
     cart.bumps.forEach(id => {
-        // Busca o bump no array fullBumps do produto
         let bump = cart.mainProduct.fullBumps?.find(b => b.id === id);
 
-        // FALLBACK: Se não encontrou em fullBumps, busca na config global (se carregada) ou prefetched
+        // FALLBACK: Se não encontrou em fullBumps, pode ser um produto (upsell) ou busca na config global
         if (!bump && id.startsWith('ebook-')) {
             const configData = (window.siteConfig && window.siteConfig.products) ? window.siteConfig.products[id] : prefetchedProducts[id];
-
             if (configData) {
                 bump = {
                     id: id,
@@ -654,10 +678,14 @@ function updateTotal() {
                     priceCard: configData.originalPrice || configData.price // Preço Cartão do banco (ou fallback)
                 };
             } else {
-                // Fallback de emergência (caso config não tenha carregado) - EVITAR SE POSSÍVEL
-                bump = { id: id, price: id === 'ebook-manejo' ? 49.9 : 59.9, priceCard: id === 'ebook-manejo' ? 49.9 : 99.0 };
+                // Fallback de emergência (caso config não tenha carregado)
+                bump = { id: id, price: 59.9, priceCard: 59.9 };
             }
-        } if (bump) {
+        }
+
+        console.log('🔍 DEBUG updateTotal - Bump ID:', id, 'Encontrado:', bump);
+
+        if (bump) {
             total += bump.price || 0;
             cardTotal += (bump.priceCard || bump.price || 0);
         }
@@ -935,7 +963,7 @@ async function handlePayment(method) {
         };
     }
 
-    const isValid = validateCheckoutInputs(method);
+    const isValid = validateAllFields(method);
     if (!isValid) return;
 
     // PRICING LOGIC FOR API PAYLOAD
@@ -952,12 +980,18 @@ async function handlePayment(method) {
 
         // FALLBACK: Se não encontrou em fullBumps, pode ser um produto (upsell)
         if (!b && id.startsWith('ebook-')) {
-            b = {
-                id: id,
-                title: id === 'ebook-manejo' ? 'Manual de Manejo de Pintinhos' : 'Ebook',
-                price: id === 'ebook-manejo' ? 49.90 : 59.90, // UPSSELL EXCLUSIVO PIX
-                priceCard: id === 'ebook-manejo' ? 49.90 : 59.90
-            };
+            const configData = (window.siteConfig && window.siteConfig.products) ? window.siteConfig.products[id] : prefetchedProducts[id];
+            if (configData) {
+                b = {
+                    id: id,
+                    title: configData.title || (id === 'ebook-manejo' ? 'Manual de Manejo de Pintinhos' : 'Ebook'),
+                    price: configData.price,
+                    priceCard: configData.originalPrice || configData.price
+                };
+            } else {
+                // Hard Fallback requested in CORRECAO_UPSELL.txt
+                b = { id: id, price: 59.9, priceCard: 59.9, title: 'Manual de Pintinhos' };
+            }
         }
 
         if (b) {
@@ -992,14 +1026,16 @@ async function handlePayment(method) {
         }, 0);
         const itemIds = items.map(i => i.id).sort().join(',');
 
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> GERANDO SEU PIX...';
+        showLoadingOverlay('GERANDO QR CODE, POR FAVOR AGUARDE...');
         btn.disabled = true;
         btn.style.opacity = '0.7';
 
         try {
             // SET A HEARTBEAT / TIMEOUT for UI safety
             const timeout = setTimeout(() => {
-                if (btn.innerText === 'Gerando Pix...') {
+                const loader = document.getElementById('secure-loading');
+                if (loader && loader.classList.contains('active')) {
+                    hideLoadingOverlay();
                     btn.disabled = false;
                     btn.innerText = 'Tentar Novamente';
                     alert('O servidor está demorando para responder. Tente clicar novamente ou verifique se sua internet está estável.');
@@ -1013,7 +1049,12 @@ async function handlePayment(method) {
             });
 
             clearTimeout(timeout);
+            if (!res.ok) {
+                hideLoadingOverlay();
+                throw new Error('Falha ao gerar PIX');
+            }
             const data = await res.json();
+            hideLoadingOverlay();
 
             if (data.qr_code) {
                 // Save to Persistence
@@ -1038,11 +1079,13 @@ async function handlePayment(method) {
                 // Error from server
                 console.error("Pix Error Response:", data);
                 const errorMsg = data.message || data.error || 'Erro desconhecido ao gerar PIX';
+                hideLoadingOverlay();
                 alert(`Erro ao gerar PIX: ${errorMsg}\n\nDetalhes: ${JSON.stringify(data.details || {})}`);
                 btn.disabled = false;
                 btn.innerText = originalText;
             }
         } catch (e) {
+            hideLoadingOverlay();
             console.error("Pix Error:", e);
             alert('Erro ao gerar Pix: ' + e.message);
             btn.disabled = false;
@@ -1205,22 +1248,18 @@ async function handlePayment(method) {
 
 // --- 1. PIX PAYMENT (MODIFIED FOR UPSELL INTERCEPTION) ---
 async function startPixPayment(event) {
-    console.log('🔵 startPixPayment CALLED');
     if (event) event.preventDefault();
 
     // VALIDAÇÃO
-    if (!validateCheckoutInputs('pix')) {
-        console.warn('⚠️ Validation failed before pix');
+    if (!validateAllFields('pix')) {
         return;
     }
 
-    try {
-        // UPSELL DESATIVADO: Proceed directly to generate PIX
-        console.log('✅ Proceeding directly to PIX generation (Upsells disabled)');
+    // INTERCEPTAÇÃO DE UPSELL (INTERSTICIAL)
+    if (shouldShowUpsell()) {
+        showUpsellInterstitial('pix');
+    } else {
         await processPixPayment();
-    } catch (error) {
-        console.error('❌ Error in startPixPayment:', error);
-        alert('Erro ao processar pagamento PIX: ' + error.message);
     }
 }
 
@@ -1231,22 +1270,18 @@ async function processPixPayment() {
 
 // --- 2. CARD PAYMENT (MODIFIED FOR UPSELL INTERCEPTION) ---
 async function startCardPayment(event) {
-    console.log('🔵 startCardPayment CALLED');
     if (event) event.preventDefault();
 
     // VALIDAÇÃO
-    if (!validateCheckoutInputs('card')) {
-        console.warn('⚠️ Validation failed before card');
+    if (!validateAllFields('card')) {
         return;
     }
 
-    try {
-        // UPSELL DESATIVADO: Proceed directly to process payment
-        console.log('✅ Proceeding directly to Card payment (Upsells disabled)');
+    // INTERCEPTAÇÃO DE UPSELL (INTERSTICIAL)
+    if (shouldShowUpsell()) {
+        showUpsellInterstitial('card');
+    } else {
         await processCardPayment();
-    } catch (error) {
-        console.error('❌ Error in startCardPayment:', error);
-        alert('Erro ao processar pagamento com cartão: ' + error.message);
     }
 }
 
@@ -1255,15 +1290,87 @@ async function processCardPayment() {
     await handlePayment('card');
 }
 
-// --- VALIDATION AND INTERCEPTION FUNCTIONS ---
+// --- UPSELL INTERSTITIAL LOGIC ---
+let pendingPaymentMethod = null;
 
-// function validateCheckoutInputs(method) removed as it was a duplicate and replaced by the one at the bottom of the file
+function shouldShowUpsell() {
+    // Configurações do Upsell
+    const upsellId = 'ebook-manejo';
 
-function interceptPaymentButton(callback) {
-    // Esta função pode ser usada para interceptar o pagamento com upsells
-    // Por enquanto, apenas retorna false para permitir o fluxo normal
-    return false;
+    // Verifica se o upsell está habilitado no banco de dados
+    const config = window.siteConfig?.products?.[upsellId] || prefetchedProducts[upsellId];
+    const isEnabled = config && config.enabled !== false;
+
+    // Se não estiver habilitado, ou o usuário já comprou (está no carrinho), ou o produto principal já é o combo/manejo
+    if (!isEnabled) return false;
+    if (cart.bumps.includes(upsellId)) return false;
+    if (cart.mainProduct && (cart.mainProduct.id === upsellId || cart.mainProduct.id === 'combo-elite')) return false;
+
+    return true;
 }
+
+function showUpsellInterstitial(method) {
+    pendingPaymentMethod = method;
+    const upsellId = 'ebook-manejo';
+    const config = window.siteConfig?.products?.[upsellId] || prefetchedProducts[upsellId];
+
+    // Atualiza os preços no modal
+    if (config) {
+        const oldPriceEl = document.getElementById('upsell-old-price');
+        const newPriceEl = document.getElementById('upsell-new-price');
+
+        if (oldPriceEl && config.originalPrice) {
+            oldPriceEl.innerText = `R$ ${config.originalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+        }
+        if (newPriceEl && config.price) {
+            newPriceEl.innerText = `R$ ${config.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+        }
+    }
+
+    const modal = document.getElementById('upsell-interstitial');
+    if (modal) {
+        modal.style.display = 'flex';
+        // Track visualização de upsell
+        trackEvent('upsell_interstitial_view');
+    } else {
+        // Fallback caso o modal não exista
+        if (method === 'pix') processPixPayment();
+        else processCardPayment();
+    }
+}
+
+function closeUpsellInterstitial() {
+    const modal = document.getElementById('upsell-interstitial');
+    if (modal) modal.style.display = 'none';
+}
+
+// Event Listeners para botões de Upsell
+document.getElementById('btn-upsell-accept')?.addEventListener('click', async () => {
+    trackEvent('upsell_interstitial_accept');
+
+    const upsellId = 'ebook-manejo';
+    if (!cart.bumps.includes(upsellId)) {
+        cart.bumps.push(upsellId);
+        updateTotal(); // Atualiza UI e totais
+    }
+
+    closeUpsellInterstitial();
+    showLoadingOverlay('GERANDO QR CODE, POR FAVOR AGUARDE...');
+
+    // Prossegue com o pagamento
+    if (pendingPaymentMethod === 'pix') await processPixPayment();
+    else await processCardPayment();
+});
+
+document.getElementById('btn-upsell-decline')?.addEventListener('click', async () => {
+    trackEvent('upsell_interstitial_decline');
+    closeUpsellInterstitial();
+    showLoadingOverlay('GERANDO QR CODE, POR FAVOR AGUARDE...');
+
+    // Prossegue sem o item extra
+    if (pendingPaymentMethod === 'pix') await processPixPayment();
+    else await processCardPayment();
+});
 
 // Event Listeners with Order Bump Interception
 document.getElementById('btn-pay-pix')?.addEventListener('click', startPixPayment);
@@ -1623,7 +1730,7 @@ if (comparisonSlider && prevButton && nextButton) {
 
 // --- VALIDATION LOGIC ---
 
-function validateCheckoutInputs(method) {
+function validateAllFields(method) {
     let isValid = true;
     const inputsToValidate = [
         'payer-name',
@@ -1813,6 +1920,20 @@ if (vslCounter) {
 
     // Start after a short delay
     setTimeout(fluctuateCounter, 3000);
+}
+
+// --- PIX/LOADING UTILITIES ---
+function showLoadingOverlay(message) {
+    const loader = document.getElementById('secure-loading');
+    if (!loader) return;
+    const title = loader.querySelector('h3');
+    if (title && message) title.innerText = message;
+    loader.classList.add('active');
+}
+
+function hideLoadingOverlay() {
+    const loader = document.getElementById('secure-loading');
+    if (loader) loader.classList.remove('active');
 }
 
 
