@@ -1,27 +1,27 @@
+/* Order Bump Slide-in Modal */
 .order-bump-slide-modal {
     position: fixed;
-    left: -360px;
+    right: -400px;
+    /* Aligned to right now? Or left? Previous was left. Let's keep consistency but compact */
+    left: -350px;
     top: 50%;
     transform: translateY(-50%);
     width: 330px;
-    max-width: 90vw;
-    max-height: 90vh;
+    /* Reduced from 380px */
+    max-width: 85vw;
+    max-height: 95vh;
     overflow-y: auto;
-    background: var(--glass-bg);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border-radius: 0 16px 16px 0;
-    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 0 15px 15px 0;
+    box-shadow: 5px 0 30px rgba(0, 0, 0, 0.5);
     z-index: 10002;
-    transition: left 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
-    border: 2px solid var(--amber-600);
+    transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border: 2px solid #fbbf24;
     border-left: none;
-    visibility: hidden;
 }
 
 .order-bump-slide-modal.show {
     left: 0;
-    visibility: visible;
 }
 
 .order-bump-slide-content {
@@ -59,8 +59,9 @@
 }
 
 .order-bump-header h3 {
-    color: var(--text-primary);
+    color: #fff;
     font-size: 1.1rem;
+    /* Reduced from 1.3rem */
     margin-top: 0.2rem;
     line-height: 1.2;
 }
@@ -79,8 +80,9 @@
 }
 
 .order-bump-text {
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.9);
     font-size: 0.85rem;
+    /* Reduced */
     line-height: 1.4;
     margin-bottom: 0.75rem;
 }
@@ -163,13 +165,12 @@
 /* Mobile adjustments */
 @media (max-width: 768px) {
     .order-bump-slide-modal {
-        width: 290px;
-        max-width: 85vw;
-        border-radius: 0 12px 12px 0;
+        width: 310px;
+        left: -330px;
     }
 
     .order-bump-slide-content {
-        padding: 0.8rem 0.6rem;
+        padding: 0.75rem 0.5rem;
     }
 
     .order-bump-header h3 {

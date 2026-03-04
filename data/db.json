@@ -2,7 +2,7 @@
     "products": {
         "ebook-doencas": {
             "title": "PROTOCOLO ELITE: A Cura das Aves",
-            "price": 87.9,
+            "price": 109.9,
             "originalPrice": 149.9,
             "description": "Protocolo Elite Doenças",
             "isFeatured": true,
@@ -17,6 +17,36 @@
             "orderBumps": [
                 "bump-6361"
             ]
+        },
+        "ebook-manejo": {
+            "title": "Manejo de Pintinhos (Upsell)",
+            "price": 49.9,
+            "originalPrice": 99,
+            "description": "Manual de Criação",
+            "features": [
+                "Incubação Perfeita",
+                "Ambiente de Elite",
+                "Nutrição Essencial"
+            ],
+            "cover": "capadospintinhos.jpg",
+            "orderBumps": []
+        },
+        "combo-elite": {
+            "title": "COMBO ELITE: Doenças + Pintinhos",
+            "price": 0.01,
+            "originalPrice": 159.8,
+            "description": "O Guia Completo para sua Criação",
+            "badge": "MAIS VENDIDO",
+            "features": [
+                "Tudo do Protocolo de Doenças",
+                "Tudo do Manual de Pintinhos",
+                "Economia de 25%",
+                "Bônus: Tabela de Ração (no PIX)"
+            ],
+            "cover": "combo",
+            "orderBumps": [
+                "bump-6361"
+            ]
         }
     },
     "orderBumps": {
@@ -25,21 +55,7 @@
             "title": "Tabela de Raçao",
             "price": 19.9,
             "description": "Alimentaçao correta em todas as fases da sua criaçao. Economize na raçao e acelere o crescimento das suas aves com o balanceamento ideal.",
-            "image": "tabela_racao_bump.jpg",
-            "originalPrice": 39.9
-        },
-        "ebook-manejo": {
-            "id": "ebook-manejo",
-            "title": "Manejo de Pintinhos (Upsell)",
-            "price": 49.9,
-            "originalPrice": 99,
-            "description": "Manual de Criação de Elite",
-            "features": [
-                "Incubação Perfeita",
-                "Ambiente de Elite",
-                "Nutrição Essencial"
-            ],
-            "image": "capadospintinhos.jpg"
+            "image": "tabela_racao_bump.jpg"
         }
     }
 }

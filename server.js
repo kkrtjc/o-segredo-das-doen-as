@@ -7,7 +7,6 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
-const axios = require('axios');
 
 
 dotenv.config();
@@ -37,14 +36,16 @@ transporter.verify((error, success) => {
 
 
 // Configuração de Segurança CORS (Simplificada para Testes e Produção)
-app.use(cors()); // Allow all for local development/testing
+app.use(cors({
+    origin: '*', // Permite qualquer origem durante a fase de testes para evitar CORB
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-admin-password']
+}));
 
 // Rota de Diagnóstico (Health Check)
+// Rota de Diagnóstico (Health Check) - Mudado para /health para não bloquear o index.html
 app.get('/health', (req, res) => {
-    res.send('<h1>Mura Engine Online! 🚀</h1>');
-});
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', time: new Date().toISOString() });
+    res.send('<h1>Mura Engine V3 Online! 🚀</h1><p>Se você está vendo isso, o servidor no Render está funcionando.</p>');
 });
 app.use(bodyParser.json());
 
@@ -55,9 +56,8 @@ const DATA_DIR = fs.existsSync(MOUNTED_DISK_PATH) ? MOUNTED_DISK_PATH : path.joi
 const DB_PATH = path.join(DATA_DIR, 'db.json');
 const HISTORY_PATH = path.join(DATA_DIR, 'history.json');
 const LEADS_PATH = path.join(DATA_DIR, 'leads.json');
-const LOST_LEADS_PATH = path.join(DATA_DIR, 'lost_leads.json');
 const ANALYTICS_PATH = path.join(DATA_DIR, 'analytics.json');
-const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
+const UPLOADS_DIR = path.join(DATA_DIR, 'uploads'); // Move uploads to disk too!
 
 // Ensure directories exist
 if (!fs.existsSync(DATA_DIR)) {
@@ -84,14 +84,12 @@ if (DATA_DIR === MOUNTED_DISK_PATH) {
 
 if (!fs.existsSync(HISTORY_PATH)) fs.writeFileSync(HISTORY_PATH, '[]');
 if (!fs.existsSync(LEADS_PATH)) fs.writeFileSync(LEADS_PATH, '[]');
-if (!fs.existsSync(LOST_LEADS_PATH)) fs.writeFileSync(LOST_LEADS_PATH, '[]');
 if (!fs.existsSync(ANALYTICS_PATH)) fs.writeFileSync(ANALYTICS_PATH, JSON.stringify({
     totals: {
         clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
         uiErrors: 0, trustClicks: 0, mobileSessions: 0,
         desktopSessions: 0, slowLoads: 0, pageViews: 0,
-        emailClicks: 0, pixGenerated: 0, pixPaid: 0,
-        vslAuthorityView: 0, vslEbookView: 0, vslVendaView: 0
+        emailClicks: 0
     },
     daily: {}
 }, null, 4));
@@ -144,14 +142,6 @@ function getLeads() {
 }
 function saveLeads(data) { fs.writeFileSync(LEADS_PATH, JSON.stringify(data, null, 4)); }
 
-function getLostLeads() {
-    try {
-        if (!fs.existsSync(LOST_LEADS_PATH)) return [];
-        return JSON.parse(fs.readFileSync(LOST_LEADS_PATH, 'utf8'));
-    } catch (e) { return []; }
-}
-function saveLostLeads(data) { fs.writeFileSync(LOST_LEADS_PATH, JSON.stringify(data, null, 4)); }
-
 function getAnalytics() {
     try {
         let analytics = {
@@ -159,8 +149,7 @@ function getAnalytics() {
                 clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
                 uiErrors: 0, trustClicks: 0,
                 mobileSessions: 0, desktopSessions: 0, slowLoads: 0, pageViews: 0,
-                emailClicks: 0, uniqueVisits: 0, ctaClicks: 0, checkoutAbandons: 0,
-                videoPlay: 0, pixGenerated: 0, pixPaid: 0
+                emailClicks: 0, uniqueVisits: 0, ctaClicks: 0, checkoutAbandons: 0 // New Metrics
             },
             daily: {}
         };
@@ -177,7 +166,7 @@ function getAnalytics() {
         }
 
         const history = getHistory();
-        const approvedSales = history.filter(h => h && (h.status === 'approved' || h.total > 0));
+        const approvedSales = history.filter(h => h && h.total > 0);
         const totalRevenue = approvedSales.reduce((acc, s) => acc + (Number(s.total) || 0), 0);
 
         return {
@@ -193,8 +182,7 @@ function getAnalytics() {
                 clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
                 uiErrors: 0, trustClicks: 0, mobileSessions: 0,
                 desktopSessions: 0, slowLoads: 0, pageViews: 0,
-                emailClicks: 0, uniqueVisits: 0, ctaClicks: 0, checkoutAbandons: 0,
-                videoPlay: 0, pixGenerated: 0, pixPaid: 0
+                emailClicks: 0, uniqueVisits: 0, ctaClicks: 0, checkoutAbandons: 0
             },
             daily: {},
             totalRevenue: 0, approvedCount: 0, historyCount: 0
@@ -275,48 +263,27 @@ app.get('/api/config', (req, res) => {
     res.json(getDB());
 });
 
-app.post('/api/auth', (req, res) => {
-    const { password } = req.body;
-    const master = (process.env.ADMIN_PASSWORD || 'MURA2026').trim();
-    if (password && password.trim() === master) {
-        res.json({ success: true });
-    } else {
-        res.status(401).json({ error: 'Senha incorreta' });
-    }
-});
-
 app.post('/api/config/update', (req, res) => {
-    const password = req.headers['x-admin-password'];
-    const master = (process.env.ADMIN_PASSWORD || 'MURA2026').trim();
-    if (password && password.trim() === master) {
-        // Continue
-    } else {
-        return res.status(401).json({ error: 'Acesso Negado' });
-    }
-
-    const data = req.body;
-    if (!data || !data.products) return res.status(400).json({ error: 'Dados inválidos' });
-
-    console.log('💾 [ADMIN] Salvando novas configurações...');
+    const { password, data } = req.body;
+    if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
     saveDB(data);
     res.json({ success: true });
 });
 
 app.post('/api/config/reset', (req, res) => {
-    const password = req.headers['x-admin-password'] || req.body.password;
-    if (password !== (process.env.ADMIN_PASSWORD || 'MURA2026')) return res.status(401).json({ error: 'Acesso Negado' });
+    const { password } = req.body;
+    if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
 
-    console.log('🚨 [ADMIN] Solicitando RESTAURAÇÃO DE FÁBRICA...');
+    // FACTORY RESET LOGIC
     try {
         if (fs.existsSync(LOCAL_DB)) {
             // Overwrite persistence with source code DB
             fs.copyFileSync(LOCAL_DB, DB_PATH);
             cacheDB = null; // Clear RAM cache
 
-            console.log('✅ [RESET] Sistema restaurado para padrão de fábrica com sucesso.');
+            console.log('🚨 [RESET] Sistema restaurado para padrão de fábrica pelo Admin.');
             res.json({ success: true });
         } else {
-            console.error('❌ [RESET] Arquivo original não encontrado em:', LOCAL_DB);
             res.status(500).json({ error: 'Arquivo original de fábrica não encontrado.' });
         }
     } catch (e) {
@@ -328,22 +295,22 @@ app.post('/api/config/reset', (req, res) => {
 // 4. Admin History & Analytics API
 app.get('/api/history', (req, res) => {
     const password = req.params.password || req.query.password || req.headers['x-admin-password'];
-    if (password !== (process.env.ADMIN_PASSWORD || 'MURA2026')) return res.status(401).json({ error: 'Acesso Negado' });
+    if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
     res.json(getHistory());
 });
 
 app.post('/api/history/clear', (req, res) => {
     const { password } = req.body;
-    if (password !== (process.env.ADMIN_PASSWORD || 'MURA2026')) return res.status(401).json({ error: 'Acesso Negado' });
+    if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
     saveHistory([]);
     res.json({ success: true });
 });
 
 // 4.1 Leads API
 app.get('/api/leads', (req, res) => {
-    const password = (req.params.password || req.query.password || req.headers['x-admin-password'] || '').trim();
-    const master = (process.env.ADMIN_PASSWORD || 'MURA2026').trim();
-    if (password !== master) return res.status(401).json({ error: 'Acesso Negado' });
+    const password = req.params.password || req.query.password || req.headers['x-admin-password'];
+    // Allow basic access for now or strictly enforce password
+    if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
     res.json(getLeads());
 });
 
@@ -378,34 +345,11 @@ app.post('/api/leads', (req, res) => {
     res.json({ success: true });
 });
 
-app.post('/api/leads/lost', (req, res) => {
-    const { name, email, phone, product } = req.body;
-    if (!phone) return res.status(400).json({ error: 'Telefone é obrigatório' });
-    const leads = getLostLeads();
-    const cleanPhone = phone.replace(/\D/g, '');
-    let lead = leads.find(l => l.phone.replace(/\D/g, '') === cleanPhone);
-    if (lead) {
-        lead.name = name || lead.name;
-        lead.email = email || lead.email;
-        lead.product = product || lead.product;
-        lead.lastUpdate = new Date().toISOString();
-    } else {
-        leads.push({ id: Date.now().toString(), date: new Date().toISOString(), lastUpdate: new Date().toISOString(), name: name || 'Sem Nome', email: email || '', phone: phone, product: product || 'unknown' });
-    }
-    if (leads.length > 500) leads.shift();
-    saveLostLeads(leads);
-    res.json({ success: true });
-});
-
-app.get('/api/leads/lost', (req, res) => {
-    const password = req.headers['x-admin-password'] || req.query.password;
-    if (password !== (process.env.ADMIN_PASSWORD || 'MURA2026')) return res.status(401).json({ error: 'Acesso Negado' });
-    res.json(getLostLeads());
-});
-
 app.get('/api/analytics', (req, res) => {
+    // Allow basic analytics without auth or require it? keeping consistent
     const password = req.params.password || req.query.password || req.headers['x-admin-password'];
-    if (password !== (process.env.ADMIN_PASSWORD || 'MURA2026')) return res.status(401).json({ error: 'Acesso Negado' });
+    // if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
+    // Allow analytics to be fetched by admin panel freely if CORS allows
     res.json(getAnalytics());
 });
 
@@ -467,12 +411,6 @@ app.post('/api/track', (req, res) => {
         if (isMobile) increment('mobileSessions');
         else increment('desktopSessions');
     }
-    else if (type === 'video_play') {
-        increment('videoPlay');
-        if (details === 'authority') increment('vslAuthorityView');
-        if (details === 'ebook') increment('vslEbookView');
-        if (details === 'venda') increment('vslVendaView');
-    }
 
     saveAnalytics(analytics);
     res.json({ success: true });
@@ -509,15 +447,7 @@ function generateDownloadToken(email, items, paymentId = null) {
 }
 
 // Email Sender Function con Design Premium y Seguridad
-const sentEmails = new Set(); // Deduplicação: evita emails duplicados para o mesmo pagamento
 async function sendEmail(customer, items, paymentId = null) {
-    // Verifica se já enviou email para este pagamento
-    if (paymentId && sentEmails.has(String(paymentId))) {
-        console.log(`ℹ️ [EMAIL] Email já enviado para pagamento ${paymentId}. Pulando duplicata.`);
-        return true;
-    }
-    if (paymentId) sentEmails.add(String(paymentId));
-
     console.log(`📧 [EMAIL] Preparando envio PREMIUM para: ${customer.email}`);
 
     // Simplified Link Logic with Tracking Token (User Request)
@@ -724,14 +654,8 @@ app.post('/api/checkout/pix', async (req, res) => {
     console.log(`💠 [PIX] Nova solicitação Iniciada`);
     console.log(`👤 Cliente: ${customer.name} (${customer.email})`);
 
-    const db = getDB();
-    const totalAmount = Number(items.reduce((acc, item) => {
-        // SEGURANÇA: Busca o preço REAL no banco de dados, ignorando o que veio do navegador
-        const product = db.products[item.id] || db.orderBumps[item.id];
-        const realPrice = product ? (product.price || 0) : 0;
-        return acc + Number(realPrice);
-    }, 0).toFixed(2));
-    console.log(`💰 Total Real (Banco de Dados): ${totalAmount}`);
+    const totalAmount = Number(items.reduce((acc, item) => acc + Number(item.price), 0).toFixed(2));
+    console.log(`💰 Total Calculado: ${totalAmount}`);
 
     if (totalAmount <= 0) {
         console.error(`❌ [PIX ERROR] Valor inválido calculado: ${totalAmount}`);
@@ -739,35 +663,38 @@ app.post('/api/checkout/pix', async (req, res) => {
     }
 
     // CRITICAL: Ensure CPF is clean (only numbers, no formatting)
-    let cleanCPF = (customer.cpf || '').replace(/\D/g, '');
+    const cleanCPF = (customer.cpf || '').replace(/\D/g, '');
 
-    // Fallback if CPF is empty (requested for faster PIX checkout)
-    if (!cleanCPF) {
-        cleanCPF = process.env.OWNER_CPF || '14477751630';
-        console.log(`ℹ️ [PIX] CPF não fornecido pelo cliente. Usando fallback: ${cleanCPF}`);
-    }
-
-    if (cleanCPF.replace(/\D/g, '').length !== 11) {
-        console.error(`❌ [PIX ERROR] CPF inválido após fallback: ${cleanCPF}`);
+    if (cleanCPF.length !== 11) {
+        console.error(`❌ [PIX ERROR] CPF inválido: ${customer.cpf} (limpo: ${cleanCPF})`);
         return res.status(400).json({
             error: 'CPF inválido',
-            message: 'O CPF deve conter exatamente 11 dígitos.',
-            debug_info: { source: cleanCPF ? 'fallback' : 'missing', length: cleanCPF ? cleanCPF.length : 0 }
+            message: 'O CPF deve conter exatamente 11 dígitos.'
         });
     }
 
     const body = {
         transaction_amount: totalAmount,
-        description: items.map(i => i.title).join(', ').slice(0, 256),
+        description: items.map(i => i.title).join(', '),
         payment_method_id: 'pix',
         external_reference: `ORDER-${Date.now()}`,
         notification_url: `${process.env.BASE_URL || 'https://teste-m1kq.onrender.com'}/api/webhooks/mercadopago`,
-        statement_descriptor: 'GALOSMURA',
+        statement_descriptor: 'GALOS MURA BRASIL',
         payer: {
-            email: customer.email.trim(),
+            email: customer.email,
             first_name: customer.name.split(' ')[0],
-            last_name: customer.name.split(' ').slice(1).join(' ') || 'Cliente',
+            last_name: customer.name.split(' ').slice(1).join(' ') || 'User',
             identification: { type: 'CPF', number: cleanCPF }
+        },
+        additional_info: {
+            items: items.map((item, idx) => ({
+                id: item.id || `item-${idx}`,
+                title: item.title,
+                description: item.description || item.title,
+                category_id: 'digital_goods',
+                quantity: 1,
+                unit_price: Number(item.price)
+            }))
         },
         metadata: {
             delivery_method: deliveryMethod,
@@ -778,9 +705,16 @@ app.post('/api/checkout/pix', async (req, res) => {
     };
 
     try {
+        console.time(`⏱️ [MP_PIX] ${customer.email}`);
         const response = await payment.create({ body });
+        console.timeEnd(`⏱️ [MP_PIX] ${customer.email}`);
 
-        console.log(`✅ [PIX SUCCESS] payment_id=${response.id} customer=${customer.email}`);
+        // DEEP DEBUG LOGGING
+        console.log(`✅ [PIX SUCCESS] Response for ${customer.email}:`, JSON.stringify({
+            id: response.id,
+            status: response.status,
+            has_qr: !!(response.point_of_interaction && response.point_of_interaction.transaction_data && response.point_of_interaction.transaction_data.qr_code)
+        }));
 
         res.json({
             qr_code: response.point_of_interaction.transaction_data.qr_code,
@@ -788,17 +722,9 @@ app.post('/api/checkout/pix', async (req, res) => {
             id: response.id,
             status: response.status
         });
-
-        // TRACK PIX GENERATED
-        try {
-            const analytics = getAnalytics();
-            const today = new Date().toISOString().split('T')[0];
-            if (!analytics.daily[today]) analytics.daily[today] = { clicks: 0, checkoutOpens: 0, pixGenerated: 0, pixPaid: 0 };
-            analytics.totals.pixGenerated = (analytics.totals.pixGenerated || 0) + 1;
-            analytics.daily[today].pixGenerated = (analytics.daily[today].pixGenerated || 0) + 1;
-            saveAnalytics(analytics);
-        } catch (e) { console.error("Error tracking pix generation", e); }
     } catch (error) {
+        console.timeEnd(`⏱️ [MP_PIX] ${customer.email}`);
+
         // LOG DE ERRO MELHORADO
         console.error(formatErrorLog('PIX', customer, error));
 
@@ -818,15 +744,8 @@ app.post('/api/checkout/card', async (req, res) => {
         console.log(`📦 Itens: ${items.length}`);
         console.log(`🔢 Parcelas: ${installments}, Method: ${payment_method_id}`);
 
-        const db = getDB();
-        const totalAmount = Number(items.reduce((acc, item) => {
-            // SEGURANÇA: Busca o preço REAL no banco de dados para CARTÃO
-            const product = db.products[item.id] || db.orderBumps[item.id];
-            // Para cartão, usamos o originalPrice (se existir) ou o price normal
-            const realPrice = product ? (product.originalPrice || product.price || 0) : 0;
-            return acc + Number(realPrice);
-        }, 0).toFixed(2));
-        console.log(`💰 Total Real (Banco de Dados - Cartão): ${totalAmount}`);
+        const totalAmount = Number(items.reduce((acc, item) => acc + Number(item.price), 0).toFixed(2));
+        console.log(`💰 Total Calculado: ${totalAmount}`);
 
         if (totalAmount <= 0) {
             console.error(`❌ [CARTÃO ERROR] Valor inválido calculado: ${totalAmount}`);
@@ -977,10 +896,6 @@ app.get('/api/payment/:id', async (req, res) => {
 
             logSale(customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão');
 
-            // ENVIAR EMAIL (Fallback se webhook demorar)
-            console.log(`📤 [PAYMENT-CHECK] Enviando e-mail automático (fallback)...`);
-            sendEmail(customer, items, result.id);
-
             // Generate Secure Token for Redirect
             const token = generateDownloadToken(customer.email, items, result.id);
             return res.json({
@@ -1053,15 +968,6 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
                 sendEmail(customer, items, paymentId);
 
                 console.log(`📦 Venda registrada via Webhook: ${customer.name} - ${itemTitles.join(', ')}`);
-
-                // TRACK PIX PAID
-                try {
-                    const analytics = getAnalytics();
-                    const today = new Date().toISOString().split('T')[0];
-                    analytics.totals.pixPaid = (analytics.totals.pixPaid || 0) + 1;
-                    if (analytics.daily[today]) analytics.daily[today].pixPaid = (analytics.daily[today].pixPaid || 0) + 1;
-                    saveAnalytics(analytics);
-                } catch (e) { console.error("Error tracking pix paid", e); }
             }
             res.sendStatus(200);
         } catch (error) {
@@ -1148,90 +1054,43 @@ app.get('/api/access/:token', (req, res) => {
     }
 });
 
-// --- 5. ADMIN LOGS (OPCIONAL) ---
+// --- 5. ADMIN CONFIG API (CRÍTICO) ---
+app.get('/api/config', (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    res.json(getDB());
+});
 
-// --- 6. MURA IA DIALOGUE API ---
-app.post('/api/mura/chat', async (req, res) => {
-    const password = req.body.password || req.headers['x-admin-password'];
-    const { message, history: chatHistory } = req.body;
+app.post('/api/config/update', (req, res) => {
+    const { password, data } = req.body;
     if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
 
-    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-    if (!GEMINI_API_KEY) return res.status(500).json({
-        error: 'Gemini API Key não configurada.',
-        detail: 'Você precisa adicionar a variável GEMINI_API_KEY no painel da sua hospedagem (Render) para a IA funcionar.'
-    });
+    if (!data || !data.products) return res.status(400).json({ error: 'Dados inválidos' });
 
-    try {
-        console.log(`🤖 [MURA IA] Processando pergunta: "${message.substring(0, 50)}..."`);
-        const analytics = getAnalytics();
-        const dbData = getDB();
-        const productsCount = Object.keys(dbData.products).length;
-        const bumpsCount = Object.keys(dbData.orderBumps).length;
+    console.log('💾 [ADMIN] Salvando novas configurações...');
+    saveDB(data);
+    res.json({ success: true });
+});
 
-        const systemInstruction = `Você é a MURA IA, uma assistente virtual de inteligência avançada e especialista em CRO (Otimização de Conversão) para o negócio "Galos Mura Brasil" (GMB).
-Seu objetivo é ajudar o administrador do painel a entender o desempenho da página e sugerir melhorias práticas e estratégicas.
+app.post('/api/config/reset', (req, res) => {
+    const { password } = req.body;
+    if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
 
-CONTEXTO ATUAL DO NEGÓCIO:
-- Produtos Ativos: ${productsCount}
-- Order Bumps configurados: ${bumpsCount}
-- Total de Vendas Aprovadas: ${analytics.approvedCount}
-- Faturamento Total: R$ ${analytics.totalRevenue.toFixed(2)}
-- Visitas Únicas: ${analytics.totals.uniqueVisits}
-- Visualizações de Vídeo (VSL): ${analytics.totals.videoPlay}
-- Aberturas de Checkout: ${analytics.totals.checkoutOpens}
-- Taxa de Retenção de Vídeo (Play/Visitas): ${((analytics.totals.videoPlay / (analytics.totals.uniqueVisits || 1)) * 100).toFixed(1)}%
-- Taxa de Conversão de Checkout (Checkout/Play): ${((analytics.totals.checkoutOpens / (analytics.totals.videoPlay || 1)) * 100).toFixed(1)}%
-- Taxa de Venda Final (Vendas/Checkout): ${((analytics.approvedCount / (analytics.totals.checkoutOpens || 1)) * 100).toFixed(1)}%
+    console.log('🚨 [ADMIN] Solicitando RESTAURAÇÃO DE FÁBRICA...');
 
-REGRAS DE RESPOSTA:
-1. Seja direta, profissional, mas com um tom tecnológico e futurista.
-2. Sempre que houver queda em alguma métrica (ex: pouca gente dando play no vídeo), sugira uma melhoria específica (ex: mudar a thumb, a headline ou o carregamento).
-3. Use Markdown para formatar as respostas (negrito, listas, etc).
-4. Se o usuário perguntar algo que não tem a ver com o negócio, traga o assunto de volta para a performance do GMB.
-5. Suas sugestões devem ser baseadas em dados reais que eu te passei acima.
-
-RESPONDA SEMPRE EM PORTUGUÊS (PT-BR).`;
-
-        const payload = {
-            system_instruction: {
-                parts: [{ text: systemInstruction }]
-            },
-            contents: chatHistory && Array.isArray(chatHistory) && chatHistory.length > 0
-                ? [
-                    ...chatHistory.map(msg => ({
-                        role: msg.role === 'user' ? 'user' : 'model',
-                        parts: [{ text: msg.content }]
-                    })),
-                    { role: "user", parts: [{ text: message }] }
-                ]
-                : [{ role: "user", parts: [{ text: message }] }]
-        };
-
-        const response = await axios.post(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
-            payload,
-            {
-                headers: { 'Content-Type': 'application/json' },
-                timeout: 30000
-            }
-        );
-
-        if (!response.data || !response.data.candidates || response.data.candidates.length === 0) {
-            console.error("❌ [GEMINI ERROR] Resposta inválida da API:", JSON.stringify(response.data));
-            return res.status(500).json({ error: 'A IA não retornou uma resposta válida.' });
+    const LOCAL_DB = path.join(__dirname, 'data', 'db.json');
+    if (fs.existsSync(LOCAL_DB)) {
+        try {
+            fs.copyFileSync(LOCAL_DB, DB_PATH);
+            cacheDB = null; // Limpa o cache em memória
+            console.log('✅ [ADMIN] Banco de dados restaurado do repositório com sucesso.');
+            res.json({ success: true });
+        } catch (err) {
+            console.error('❌ [ADMIN] Erro ao copiar arquivo:', err.message);
+            res.status(500).json({ error: 'Falha ao restaurar banco' });
         }
-
-        const aiText = response.data.candidates[0].content.parts[0].text;
-        res.json({ response: aiText });
-
-    } catch (error) {
-        const errorDetail = error.response?.data?.error?.message || error.response?.data || error.message;
-        console.error("❌ [MURA IA ERROR]", errorDetail);
-        res.status(500).json({
-            error: 'Erro na comunicação com a IA.',
-            detail: errorDetail
-        });
+    } else {
+        console.warn('⚠️ [ADMIN] Arquivo original de db.json não encontrado no repositório.');
+        res.status(404).json({ error: 'Banco original não encontrado no repositório' });
     }
 });
 

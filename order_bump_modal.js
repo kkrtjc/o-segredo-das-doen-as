@@ -6,7 +6,13 @@ let pendingPaymentAction = null;
 // Intercept payment button clicks
 // Intercept payment button clicks
 function interceptPaymentButton(callback) {
-    // DESATIVADO POR SOLICITAÇÃO DO USUÁRIO
+    // DESATIVADO: A lógica de upsell agora é controlada diretamente pelo script.js
+    if (false && !orderBumpShown && !orderBumpAccepted) {
+        // Store the payment action to execute after bump decision
+        pendingPaymentAction = callback;
+        showOrderBumpModal();
+        return true; // Intercepted
+    }
     return false; // Not intercepted, proceed normally
 }
 

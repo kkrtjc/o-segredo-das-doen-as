@@ -8,88 +8,13 @@ let cart = {
     bumps: [] // IDs of selected bumps
 };
 
-// --- PRICE SYNC: ENSURE ALL PRICES REFLECT ADMIN CONFIG ---
-function syncAllPrices() {
-    document.querySelectorAll('[data-price-of]').forEach(el => {
-        const productId = el.getAttribute('data-price-of');
-        const product = prefetchedProducts[productId];
-        if (product && product.price) {
-            // PIX PRICE (Main display)
-            el.innerText = product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-
-            // Update additional elements if we are syncing the main product
-            if (productId === 'ebook-doencas') {
-                const discPercs = document.querySelectorAll('.pix-discount-percent');
-                if (discPercs.length > 0 && product.originalPrice) {
-                    const perc = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
-                    discPercs.forEach(el => el.innerText = perc);
-                }
-
-                const instVals = document.querySelectorAll('.card-installment-value');
-                if (instVals.length > 0 && product.originalPrice) {
-                    // CARD PRICE is originalPrice
-                    const val = (product.originalPrice / 4).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                    instVals.forEach(el => el.innerText = val);
-                }
-
-                // SYNC CARD PRICES (Original Price) on page
-                const cardPrices = document.querySelectorAll('.card-price-value');
-                if (cardPrices.length > 0 && product.originalPrice) {
-                    cardPrices.forEach(el => el.innerText = product.originalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
-                }
-
-                // PIX DISCOUNT REINFORCEMENT
-                const reinforcement = document.querySelectorAll('.pix-discount-reinforcement');
-                if (reinforcement.length > 0 && product.originalPrice && product.price < product.originalPrice) {
-                    const economy = product.originalPrice - product.price;
-                    const message = `💸 <span style="color:#10b981; font-weight:900;">Economize R$ ${economy.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span> pagando via PIX!`;
-                    reinforcement.forEach(el => {
-                        el.innerHTML = message;
-                        el.style.fontSize = '0.85rem';
-                        el.style.fontWeight = '700';
-                        el.style.color = '#ffffff';
-                    });
-                }
-            }
-        }
-    });
-}
-
 // GLOBAL PAYMENT STATE
 let currentPaymentMethod = 'pix'; // Default
 
+// --- PERFORMANCE: PRE-FETCHING ---
 const prefetchedProducts = {};
 
-// --- ANALYTICS & TRACKING ---
-function trackEvent(event, value = null, productId = null, extra = null) {
-    console.log(`📊 [TRACK] ${event}${productId ? ' | ' + productId : ''}${extra ? ' | ' + extra : ''}`);
-
-    const payload = {
-        event,
-        value,
-        productId,
-        extra,
-        url: window.location.href,
-        timestamp: new Date().toISOString()
-    };
-
-    fetch(`${API_URL}/api/track`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    }).catch(err => console.warn('Track Error:', err));
-}
-
-// --- LEAD DEDUPLICATION: ONCE PER DAY ---
-function canTrackLeadToday() {
-    const today = new Date().toISOString().split('T')[0];
-    const lastLead = localStorage.getItem('mura_lead_sent');
-    if (lastLead === today) return false;
-    localStorage.setItem('mura_lead_sent', today);
-    return true;
-}
-
-// --- INIT: GLOBAL INITIALIZATION ---
+// --- INIT: CHECK PENDING PIX (Recover Logic) ---
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. UNIQUE VISITOR TRACKING
     const today = new Date().toISOString().split('T')[0];
@@ -103,40 +28,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('a[href^="#offer"]').forEach(btn => {
         btn.addEventListener('click', () => {
             const ctaId = btn.getAttribute('data-cta') || 'generic_cta';
-            if (canTrackLeadToday()) trackEvent('cta_click', null, ctaId);
+            trackEvent('cta_click', null, ctaId);
         });
     });
 
-    // --- REAL-TIME LEAD CAPTURE ---
-    let captureTimeout = null;
-    const captureLostLead = () => {
-        clearTimeout(captureTimeout);
-        captureTimeout = setTimeout(async () => {
-            const name = document.getElementById('payer-name')?.value?.trim();
-            const email = document.getElementById('payer-email')?.value?.trim();
-            const phone = document.getElementById('payer-phone')?.value?.trim();
-            const product = cart.mainProduct ? (prefetchedProducts[cart.mainProduct]?.title || cart.mainProduct) : 'N/A';
-            if (!phone || phone.length < 8) return;
-            const lastData = sessionStorage.getItem('last_lead_capture');
-            const currentData = JSON.stringify({ name, email, phone, product });
-            if (lastData === currentData) return;
-            sessionStorage.setItem('last_lead_capture', currentData);
-            try {
-                await fetch(`${API_URL}/api/leads/lost`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: currentData
-                });
-            } catch (e) { }
-        }, 1000);
-    };
-
-    ['payer-name', 'payer-email', 'payer-phone'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('input', captureLostLead);
-    });
-
-    // --- RECOVER PIX SESSION ---
     const cached = localStorage.getItem('active_pix_session');
     if (cached) {
         try {
@@ -151,111 +46,227 @@ document.addEventListener('DOMContentLoaded', async () => {
                     } else {
                         localStorage.removeItem('active_pix_session');
                     }
-                } catch (e) { }
+                } catch (e) { console.warn("Background check failed", e); }
             } else {
                 localStorage.removeItem('active_pix_session');
             }
-        } catch (e) { localStorage.removeItem('active_pix_session'); }
+        } catch (e) {
+            localStorage.removeItem('active_pix_session');
+        }
     }
 
-    // --- PRE-FETCH CONFIG ---
-    try {
-        const response = await fetch(`${API_URL}/api/config`);
-        if (response.ok) {
-            const config = await response.json();
-            Object.assign(prefetchedProducts, config.products, config.orderBumps);
-            syncAllPrices();
-            const mainP = prefetchedProducts['ebook-doencas'];
-            const priceElement = document.getElementById('display-price-value');
-            if (priceElement && mainP && mainP.price) {
-                priceElement.innerText = mainP.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-            }
-        }
-    } catch (e) { }
+    // --- 5. DYNAMIC PRE-FETCH (Instant Checkout) ---
+    const productsToPreload = ['ebook-doencas', 'combo-elite', 'ebook-manejo'];
+    productsToPreload.forEach(async (id) => {
+        try {
+            const response = await fetch(`${API_URL}/api/products/${id}`);
+            if (response.ok) {
+                prefetchedProducts[id] = await response.json();
+                console.log(`🚀 [PREFETCH] ${id} carregado`);
 
-    // --- MULTI-VIDEO TRACKING ---
-    const allVideos = document.querySelectorAll('video');
-    allVideos.forEach(video => {
-        let tracked = false;
-        video.addEventListener('play', () => {
-            if (!tracked) {
-                let videoType = 'generic';
-                if (video.id === 'venda-vsl') videoType = 'venda';
-                else if (video.id === 'ebook-vsl' || video.classList.contains('ebook-video')) videoType = 'ebook';
-                else if (video.id === 'authority-vsl' || video.id === 'vsl-video-player') videoType = 'authority';
-
-                trackEvent('video_play', null, null, videoType);
-                tracked = true;
-            }
-        });
-
-        // Lazy loading for videos that might have data-src
-        if ('IntersectionObserver' in window) {
-            const videoObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const source = video.querySelector('source');
-                        if (source && source.dataset.src) {
-                            source.src = source.dataset.src;
-                            video.load();
-                        }
-                        observer.unobserve(video);
+                // Update specific price elements if they exist
+                if (id === 'ebook-doencas') {
+                    const resp = prefetchedProducts[id];
+                    const priceElement = document.getElementById('display-price-value');
+                    if (priceElement && resp.price) {
+                        priceElement.innerText = resp.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
                     }
-                });
-            }, { rootMargin: '200px' });
-            videoObserver.observe(video);
+                }
+            }
+        } catch (e) {
+            console.warn(`[PREFETCH] Falha ao carregar ${id}`, e);
         }
     });
 
-    // --- OTHER UI LOGIC ---
-    document.querySelectorAll('.faq-question').forEach(q => {
-        q.addEventListener('click', () => {
-            const item = q.parentElement;
+    // 3. LAZY VIDEO LOADING (Intersection Observer)
+    const lazyVideo = document.getElementById('vsl-video');
+    if (lazyVideo && 'IntersectionObserver' in window) {
+        const videoObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const source = lazyVideo.querySelector('source');
+                    if (source && source.dataset.src) {
+                        source.src = source.dataset.src;
+                        lazyVideo.load();
+                        console.log("🎥 [VIDEO] Lazy Source Loaded");
+                    }
+                    observer.unobserve(lazyVideo);
+                }
+            });
+        }, { rootMargin: '200px' });
+        videoObserver.observe(lazyVideo);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- 1. FAQ Accordion Logic ---
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+            const item = question.parentElement;
             const isOpen = item.classList.contains('active');
-            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.faq-item').forEach(otherItem => otherItem.classList.remove('active'));
             if (!isOpen) item.classList.add('active');
         });
     });
 
+    // --- 2. Smooth Scroll ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
+
             e.preventDefault();
-            const target = document.querySelector(targetId);
-            if (target) {
+            const targetElement = document.querySelector(targetId);
+
+            if (targetElement) {
+                // Se o alvo for a seção de ofertas, tenta focar no Combo Elite
                 if (targetId === '#offer-focus' || targetId === '#offers') {
-                    const combo = document.querySelector('.price-card.featured');
-                    if (combo) { combo.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+                    const comboCard = document.querySelector('.price-card.featured');
+                    if (comboCard) {
+                        comboCard.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center',
+                            inline: 'center'
+                        });
+                        return;
+                    }
                 }
-                window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            } else if (targetId === '#offer-focus') {
+                // Fallback for when current card isn't loaded yet
+                const pricingSection = document.getElementById('offers');
+                if (pricingSection) {
+                    window.scrollTo({
+                        top: pricingSection.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
             }
         });
     });
 
+
+
+    // --- 4. Testimonials (Single-Slide Carousel - COMPACT) ---
+    const testimonials = [
+        { text: 'Meu galo tava com o olho fechado e a cara inchada. Vi o vídeo no insta e resolvi comprar, no mesmo dia já melhorou bastante.', author: 'Carlos Silva', location: 'Minas Gerais', stars: 5, avatar: 'carrosel/carlos.jpg' },
+        { text: 'Tava perdendo pintinho toda semana, não sabia o que fazer. Apliquei o protocolo e hoje não morre mais nenhum.', author: 'Maria Santos', location: 'São Paulo', stars: 5, avatar: 'carrosel/maria.jpg' },
+        { text: 'Tinha uma galinha que não comia, só ficava no canto. Segui o passo a passo e em 2 dias ela voltou ao normal.', author: 'João Oliveira', location: 'Bahia', stars: 5, avatar: 'carrosel/joao_new.jpg' },
+        { text: 'Meu galo tava morrendo de coriza, olho espumando e cheirando mal. Fiz o tratamento e salvei ele.', author: 'Ana Costa', location: 'Goiás', stars: 5, avatar: 'carrosel/ana.jpg' },
+        { text: 'Gastava uma fortuna em remédio e as galinhas continuavam morrendo. Descobri que tava errando no básico.', author: 'Ricardo Lima', location: 'Paraná', stars: 5, avatar: 'carrosel/ricardo.jpg' },
+        { text: 'Galinha parou de botar e tava com a crista caída. Segui o protocolo e voltou a produzir normal.', author: 'Lucas Ferreira', location: 'Mato Grosso', stars: 5, avatar: 'carrosel/lucas.jpg' },
+        { text: 'Tinha galo com a perna torta, achei que ia morrer. O tratamento salvou e hoje ele tá perfeito.', author: 'Isabella Lima', location: 'Santa Catarina', stars: 5, avatar: 'carrosel/isabella.jpg' },
+        { text: 'Perdi 15 aves em um mês antes de comprar. Depois que aprendi o manejo certo, zerou a mortalidade.', author: 'Juliana Freitas', location: 'Goiás', stars: 5, avatar: 'carrosel/juliana.jpg' }
+    ];
+
+    const testimonialsTrack = document.getElementById('testimonials-track');
+    if (testimonialsTrack) {
+        // Clear existing content
+        testimonialsTrack.innerHTML = '';
+
+        // Render all testimonials but hide them initially (except first)
+        testimonials.forEach((t, index) => {
+            const starsHTML = '<i class="fa-solid fa-star" style="color: #FFD700;"></i>'.repeat(t.stars);
+            const card = document.createElement('div');
+            card.className = 'testimonial-card-single'; // New class for single display
+            // Style for single focused card
+            card.style.opacity = index === 0 ? '1' : '0';
+            card.style.position = 'absolute';
+            card.style.top = '0';
+            card.style.left = index === 0 ? '0' : '100%'; // Start off-screen right
+            card.style.width = '100%';
+            card.style.height = '100%';
+            card.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            card.style.transform = index === 0 ? 'translateX(0)' : 'translateX(50px)'; // Helper for fade in
+
+            card.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <div style="width: 50px; height: 50px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0;">
+                        <img src="${t.avatar}" alt="${t.author}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://ui-avatars.com/api/?name=${t.author}&background=random&color=fff'">
+                    </div>
+                    <div>
+                        <strong style="display: block; color: #fff; font-size: 0.95rem; line-height: 1.2;">${t.author}</strong>
+                        <small style="color: rgba(255,255,255,0.5); font-size: 0.75rem;"><i class="fa-solid fa-location-dot" style="margin-right: 4px;"></i> ${t.location}</small>
+                        <div style="font-size: 0.7rem; color: #FFD700; margin-top: 2px;">${starsHTML}</div>
+                    </div>
+                </div>
+                <p style="font-style: normal; margin: 0; color: rgba(255,255,255,0.8); font-size: 0.85rem; line-height: 1.5;">"${t.text}"</p>
+            `;
+            testimonialsTrack.appendChild(card);
+        });
+
+        let currentIdx = 0;
+
+        function nextSlide() {
+            const cards = document.querySelectorAll('.testimonial-card-single');
+            const total = cards.length;
+            if (total === 0) return;
+
+            // Current card moves OUT to LEFT
+            const current = cards[currentIdx];
+            current.style.opacity = '0';
+            current.style.left = '-100%';
+            current.style.transform = 'translateX(-50px)';
+
+            // Wait briefly then reset it to RIGHT side for next cycle
+            setTimeout(() => {
+                current.style.transition = 'none'; // Disable transition for instant move
+                current.style.left = '100%';
+                setTimeout(() => {
+                    current.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)'; // Re-enable
+                }, 50);
+            }, 800); // Wait for exit animation
+
+            // Next card moves IN from RIGHT
+            currentIdx = (currentIdx + 1) % total;
+            const next = cards[currentIdx];
+
+            // Ensure next is ready at start position
+            next.style.left = '0';
+            next.style.opacity = '1';
+            next.style.transform = 'translateX(0)';
+        }
+
+        // Change slide every 5 seconds
+        setInterval(nextSlide, 5000);
+    }
+
+    // --- 5. Comparison Slider (Results) ---
     const sliderTrack = document.getElementById('comparison-slider-track');
     if (sliderTrack) {
-        const next = document.getElementById('comparison-next');
-        const prev = document.getElementById('comparison-prev');
-        if (next && prev) {
-            next.addEventListener('click', () => sliderTrack.scrollBy({ left: 300, behavior: 'smooth' }));
-            prev.addEventListener('click', () => sliderTrack.scrollBy({ left: -300, behavior: 'smooth' }));
+        const nextBtn = document.getElementById('comparison-next');
+        const prevBtn = document.getElementById('comparison-prev');
+        if (nextBtn && prevBtn) {
+            nextBtn.addEventListener('click', () => {
+                sliderTrack.scrollBy({ left: 300, behavior: 'smooth' });
+            });
+            prevBtn.addEventListener('click', () => {
+                sliderTrack.scrollBy({ left: -300, behavior: 'smooth' });
+            });
         }
     }
 
+    // --- 5. Initializations ---
     renderHomeProducts();
     setupFields();
-    setupFieldHints();
 
+    // --- 6. Sticky CTA Logic ---
     const stickyCta = document.querySelector('.sticky-cta-bar');
-    const hero = document.querySelector('.hero');
-    if (stickyCta && hero) {
+    const heroSection = document.querySelector('.hero');
+    if (stickyCta && heroSection) {
         window.addEventListener('scroll', () => {
-            if (window.scrollY > (hero.offsetHeight - 200)) stickyCta.classList.add('visible');
+            const triggerPoint = heroSection.offsetHeight - 200;
+            if (window.scrollY > triggerPoint) stickyCta.classList.add('visible');
             else stickyCta.classList.remove('visible');
         });
     }
 
+    // --- 7. Lazy Loading & Layout Stability ---
     if ('IntersectionObserver' in window) {
         const imageObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -269,16 +280,33 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
         }, { rootMargin: '50px' });
+
         document.querySelectorAll('img[loading="lazy"]').forEach(img => {
-            if (img.src) img.classList.add('loaded');
-            else imageObserver.observe(img);
+            if (img.src) {
+                // If it already has src, just mark as loaded
+                img.classList.add('loaded');
+            } else {
+                imageObserver.observe(img);
+            }
         });
     }
 
-    const setVh = () => document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
-    setVh();
-    window.addEventListener('resize', setVh);
+    // --- 8. Smooth Image Transitions ---
+    document.querySelectorAll('img').forEach(img => {
+        img.style.transition = 'opacity 0.4s ease-in-out';
+        img.onload = () => img.style.opacity = '1';
+        if (!img.complete) img.style.opacity = '0';
+    });
 
+    // --- 9. Mobile Vh Fix ---
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+    window.addEventListener('resize', () => {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    });
+
+    // Pixels tracking
     setTimeout(() => {
         if (typeof fbq === 'function') {
             fbq('trackCustom', 'TimeSpent_15s');
@@ -286,75 +314,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }, 15000);
 });
-
-function toggleVSL() {
-    const video = document.getElementById('vsl-video-player');
-    const overlay = document.getElementById('vsl-overlay');
-    if (!video) return;
-
-    if (video.paused) {
-        video.play().then(() => {
-            if (overlay) overlay.style.display = 'none';
-        }).catch(err => {
-            console.error("Video play failed:", err);
-            // Fallback: try to play muted if it's a browser restriction
-            video.muted = true;
-            video.play();
-            if (overlay) overlay.style.display = 'none';
-        });
-    } else {
-        video.pause();
-        if (overlay) overlay.style.display = 'flex';
-    }
-}
-
-// --- FIELD HINTS LOGIC (3s Idle) ---
-let hintTimeout = null;
-function setupFieldHints() {
-    const inputs = document.querySelectorAll('.vc-input[data-tip]');
-    if (inputs.length === 0) return;
-
-    // Create hint element if not exists
-    let hintEl = document.getElementById('field-hint-el');
-    if (!hintEl) {
-        hintEl = document.createElement('div');
-        hintEl.id = 'field-hint-el';
-        hintEl.className = 'vc-field-hint';
-        document.querySelector('.vc-wrapper')?.appendChild(hintEl);
-    }
-
-    inputs.forEach(input => {
-        const showHint = () => {
-            clearTimeout(hintTimeout);
-            const tipText = input.getAttribute('data-tip');
-            if (!tipText) return;
-
-            hintTimeout = setTimeout(() => {
-                if (document.activeElement === input && input.value.trim() === '') {
-                    const rect = input.getBoundingClientRect();
-                    const wrapper = document.querySelector('.vc-wrapper');
-                    const wrapperRect = wrapper.getBoundingClientRect();
-
-                    hintEl.innerText = tipText;
-                    hintEl.style.top = `${rect.top - wrapperRect.top + wrapper.scrollTop - hintEl.offsetHeight - 12}px`;
-                    hintEl.style.left = `${rect.left - wrapperRect.left + 10}px`;
-                    hintEl.classList.add('active');
-                }
-            }, 3000);
-        };
-
-        const hideHint = () => {
-            clearTimeout(hintTimeout);
-            hintEl.classList.remove('active');
-        };
-
-        input.addEventListener('focus', showHint);
-        input.addEventListener('input', hideHint);
-        input.addEventListener('blur', hideHint);
-    });
-}
-
-
 
 // --- 2. CHECKOUT & API LOGIC ---
 
@@ -435,11 +394,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     sessionStorage.setItem('mura_modal_open', 'true');
     if (typeof fbq === 'function') fbq('track', 'InitiateCheckout');
 
-    const checkoutModal = document.getElementById('checkout-modal');
-    if (!checkoutModal) {
-        console.error("ERRO: Elemento #checkout-modal não encontrado!");
-        return;
-    }
+    if (!checkoutModal) return;
 
     // --- RESET CHECKOUT STATE ---
     document.getElementById('checkout-main-view').classList.remove('hidden');
@@ -451,7 +406,10 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     }
 
     const secureOverlay = document.getElementById('secure-loading');
-    // Overlay will be shown AFTER data is fetched
+    if (secureOverlay) {
+        secureOverlay.classList.add('active');
+        document.body.classList.add('modal-open');
+    }
 
     // FALLBACK DATA (Offline Support)
     const fallbackData = {
@@ -462,7 +420,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             cover: 'capadasdoencas.jpg',
             fullBumps: [
                 { id: 'ebook-manejo', title: 'Manual de Pintinhos', price: 49.90, priceCard: 49.90, image: 'capadospintinhos.jpg', description: 'Crie pintinhos fortes e saudáveis.' },
-                { id: 'bump-6361', title: 'Tabela de Ração', price: 19.90, priceCard: 19.90, image: 'tabela_racao_bump.jpg', description: 'Alimentaçao correta em todas as fases da sua criaçao. Economize ate 65% na raçao e acelere o crescimento das suas aves com o balanceamento ideal.', tag: 'OFERTA ÚNICA' }
+                { id: 'bump-6361', title: 'Tabela de Ração', price: 19.90, priceCard: 19.90, image: 'tabela_racao_bump.jpg', description: 'Alimentaçao correta em todas as fases da sua criaçao. Economize na raçao e acelere o crescimento das suas aves com o balanceamento ideal.', tag: 'OFERTA ÚNICA' }
             ]
         },
         'combo-elite': {
@@ -496,31 +454,10 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         }
 
         cart.mainProduct = { ...productData, id: productId };
-
-        console.log('💠 [CHECKOUT] Abrindo para:', productId);
-        console.log('💠 [CHECKOUT] Bumps vinculados no DB:', cart.mainProduct.orderBumps);
-
-        // Ensure fullBumps exist even if prefetched
-        if ((!cart.mainProduct.fullBumps || cart.mainProduct.fullBumps.length === 0) && cart.mainProduct.orderBumps) {
-            console.log('💠 [CHECKOUT] Reconstruindo fullBumps do cache local...');
-            cart.mainProduct.fullBumps = cart.mainProduct.orderBumps
-                .map(id => {
-                    const found = prefetchedProducts[id];
-                    if (found) return { ...found, id: id }; // Garante que o ID esteja presente
-                    return null;
-                })
-                .filter(b => b);
-        }
-
-        console.log('💠 [CHECKOUT] Full Bumps Finais:', cart.mainProduct.fullBumps);
-
         cart.bumps = forceBumps || [];
 
-        const nameEl = document.getElementById('checkout-product-name');
-        if (nameEl) nameEl.innerText = productData.title;
-
-        const priceEl = document.getElementById('checkout-product-price-display');
-        if (priceEl) priceEl.innerText = formatBRL(productData.price);
+        document.getElementById('checkout-product-name').innerText = productData.title;
+        document.getElementById('checkout-product-price-display').innerText = formatBRL(productData.price);
 
         const iconContainer = document.getElementById('product-icon-container');
         if (iconContainer) {
@@ -542,70 +479,34 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             switchMethod('pix');
         }
 
-        renderOrderBumps(cart.mainProduct.fullBumps);
+        renderOrderBumps(productData.fullBumps);
         updateTotal();
 
-        // MOSTRAR LOADING DE TRANSIÇÃO (CADEADO DOURADO) - só após dados prontos
-        if (secureOverlay) {
-            secureOverlay.style.display = 'flex';
-            secureOverlay.classList.add('active');
-        }
-
-        // DELAY DE 2 SEGUNDOS ANTES DE ABRIR O CHECKOUT
+        const delay = (productData && productData.fullBumps) ? 10 : 250;
         setTimeout(() => {
-            // Remove o loading
-            if (secureOverlay) {
-                secureOverlay.classList.remove('active');
-                setTimeout(() => {
-                    secureOverlay.style.display = 'none';
-                }, 400); // Tempo da animação CSS de fade-out
-            }
-
-            // Mostra o checkout de forma suave
+            if (secureOverlay) secureOverlay.classList.remove('active');
             checkoutModal.classList.add('active');
             document.body.classList.add('modal-open');
-            document.documentElement.classList.add('modal-open');
-
-            // Reforçar disparo do Pixel ao abrir definitivamente
-            if (typeof fbq === 'function') fbq('track', 'InitiateCheckout');
-        }, 1200); // Reduzido de 2000ms para 1200ms para parecer mais ágil
+        }, delay);
 
     } catch (err) {
         console.error("Critical error opening checkout:", err);
-        if (secureOverlay) {
-            secureOverlay.classList.remove('active');
-            setTimeout(() => secureOverlay.style.display = 'none', 400);
-        }
+        if (secureOverlay) secureOverlay.classList.remove('active');
         document.body.classList.remove('modal-open');
     }
 }
-
-// function closeCheckout() removed (duplicate of line 818)
 
 function renderOrderBumps(bumps) {
     const area = document.getElementById('order-bump-area');
     if (!area) return;
 
+    // Filtra bumps que não devem aparecer
     const filteredBumps = (bumps || []).filter(bump => {
-        // Ignora o Manual de Manejo aqui, pois ele aparece no intersticial (clique em Pagar)
-        if (bump.id === 'ebook-manejo') return false;
-
-        // Usa o campo `enabled` do banco de dados (configurável pelo painel admin)
-        // Se o campo não existir, exibe o bump por padrão (retrocompatibilidade)
-        if (bump.enabled === false) return false;
-
-        // Também consulta o prefetchedProducts para verificar se o bump original tem enabled=false
-        // (útil quando o fullBumps foi construído a partir do cache local)
-        const sourceData = prefetchedProducts[bump.id];
-        if (sourceData && sourceData.enabled === false) return false;
-
+        // Remove Manual de Pintinhos do checkout (deve ser upsell posterior)
+        if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') return false;
+        // Mantém a Tabela de Ração no checkout
         return true;
     });
-
-    if (filteredBumps.length === 0) {
-        area.innerHTML = '';
-        return;
-    }
 
     area.innerHTML = filteredBumps.map(bump => {
         let imgSrc = bump.image;
@@ -634,7 +535,7 @@ function renderOrderBumps(bumps) {
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
                             <span class="order-bump-tag" style="background: #ef4444; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">${bump.tag || 'OFERTA ÚNICA'}</span>
                         </div>
-                        <strong class="order-bump-title" style="display: block; color: ${bump.id === 'bump-6361' ? '#3b82f6' : '#fff'}; font-size: 1.05rem; margin-top: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">${bump.title}</strong>
+                        <strong class="order-bump-title" style="display: block; color: #fff; font-size: 1.05rem; margin-top: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">${bump.title}</strong>
                         <span class="order-bump-description" style="display: block; color: rgba(255,255,255,0.9); font-size: 0.85rem; margin-top: 4px; line-height: 1.3; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">${bump.description}</span>
                         <div style="display: flex; align-items: baseline; gap: 10px; margin-top: 8px;">
                             <span class="order-bump-price" style="color: #fbbf24; font-weight: 900; font-size: 1.2rem; text-shadow: 0 2px 5px rgba(0,0,0,0.5);">+ ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}</span>
@@ -644,8 +545,6 @@ function renderOrderBumps(bumps) {
             </div>`;
     }).join('');
 }
-
-
 
 function toggleBump(bumpId) {
     const idx = cart.bumps.indexOf(bumpId);
@@ -666,11 +565,13 @@ function updateTotal() {
 
     // Adiciona Bumps com preços Dinâmicos do banco de dados
     cart.bumps.forEach(id => {
+        // Busca o bump no array fullBumps do produto
         let bump = cart.mainProduct.fullBumps?.find(b => b.id === id);
 
-        // FALLBACK: Se não encontrou em fullBumps, pode ser um produto (upsell) ou busca na config global
+        // FALLBACK: Se não encontrou em fullBumps, busca na config global (se carregada) ou prefetched
         if (!bump && id.startsWith('ebook-')) {
             const configData = (window.siteConfig && window.siteConfig.products) ? window.siteConfig.products[id] : prefetchedProducts[id];
+
             if (configData) {
                 bump = {
                     id: id,
@@ -678,16 +579,26 @@ function updateTotal() {
                     priceCard: configData.originalPrice || configData.price // Preço Cartão do banco (ou fallback)
                 };
             } else {
-                // Fallback de emergência (caso config não tenha carregado)
-                bump = { id: id, price: 59.9, priceCard: 59.9 };
+                // Fallback de emergência (caso config não tenha carregado) - EVITAR SE POSSÍVEL
+                bump = { id: id, price: id === 'ebook-manejo' ? 49.9 : 59.9, priceCard: id === 'ebook-manejo' ? 49.9 : 99.0 };
             }
         }
 
-        console.log('🔍 DEBUG updateTotal - Bump ID:', id, 'Encontrado:', bump);
+        console.log('ðŸ” DEBUG updateTotal - Bump ID:', id, 'Encontrado:', bump);
 
         if (bump) {
-            total += bump.price || 0;
-            cardTotal += (bump.priceCard || bump.price || 0);
+            // Usa o preço do banco de dados
+            const bumpPriceForPix = bump.price || 0;
+            const bumpPriceForCard = bump.priceCard || bump.price || 0;
+
+            console.log('💰 Preços do bump:', { pix: bumpPriceForPix, card: bumpPriceForCard });
+
+
+            // Usa preços do banco de dados (sem regras especiais)
+            total += bumpPriceForPix;
+            cardTotal += bumpPriceForCard;
+        } else {
+            console.error('âŒ Bump não encontrado em fullBumps:', id);
         }
     });
 
@@ -711,13 +622,6 @@ function updateTotal() {
     document.querySelectorAll('.checkout-total-display').forEach(el => {
         el.innerText = formatBRL(finalDisplayPrice);
     });
-
-    // In checkout modal, sync the specific reinforcement slot
-    // REMOVED per user request to simplify checkout
-    const checkoutReinforcement = document.querySelector('#checkout-modal .pix-discount-reinforcement');
-    if (checkoutReinforcement) {
-        checkoutReinforcement.style.display = 'none';
-    }
 
     const topPriceDisplay = document.getElementById('checkout-product-price-display');
     if (topPriceDisplay) {
@@ -746,12 +650,7 @@ function updateInstallments(total) {
 }
 
 function formatBRL(val) {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    }).format(val);
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
 }
 
 async function renderHomeProducts() {
@@ -784,9 +683,8 @@ async function renderHomeProducts() {
 
         const featuresHTML = (p.features || []).map(f => `<li><span class="check-icon">✓</span> ${f}</li>`).join('');
 
-        const coverHTML = `<img src="${p.cover || 'capadasdoencas.jpg'}" alt="${p.title}" style="max-width: 140px; margin: 10px auto; display: block; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));">`;
+        const coverHTML = `<img src="${p.cover}" alt="${p.title}" style="max-width: 140px; margin: 10px auto; display: block; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));">`;
         const isDiscounted = p.originalPrice && (p.originalPrice > p.price);
-        const discountPercent = isDiscounted ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100) : 0;
 
         card.innerHTML = `
             <span class="badge-featured">${p.badge || 'OFERTA ÚNICA'}</span>
@@ -795,18 +693,19 @@ async function renderHomeProducts() {
             ${coverHTML}
             
             <div class="price-container" style="margin: 20px 0;">
-                ${isDiscounted ? `<div style="text-decoration: line-through; color: #999; font-size: 0.9rem;">De R$ ${p.originalPrice.toFixed(2).replace('.', ',')} por apenas:</div>` : ''}
+                <div style="text-decoration: line-through; color: #999; font-size: 0.9rem;">De R$ ${p.originalPrice.toFixed(2).replace('.', ',')} por apenas:</div>
                 <div style="display: flex; flex-direction: column; align-items: center; line-height: 1.1;">
                     <span class="price-amount" style="color: var(--color-secondary); font-size: 3.5rem;">
-                        R$ ${Math.floor(p.price)}<small>,${String(Math.round((p.price % 1) * 100)).padStart(2, '0')}</small>
+                        R$ 109<small>,90</small>
                     </span>
-                    ${isDiscounted ? `<span style="font-size: 0.75rem; color: #10b981; font-weight: 800; margin-top: 3px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 15px;">🔥 ${discountPercent}% DE DESCONTO NO PIX</span>` : ''}
-                    <span style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 5px;">ou até 4x de <strong>R$ ${((p.originalPrice || p.price) / 4).toFixed(2).replace('.', ',')}</strong> s/ juros no cartão</span>
+                    <span style="font-size: 0.75rem; color: #10b981; font-weight: 800; margin-top: 3px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 15px;">🔥 27% DE DESCONTO NO PIX</span>
+                    <span style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 5px;">ou até 4x de <strong>R$ 37,47</strong> s/ juros</span>
                 </div>
             </div>
 
             <ul class="price-features" style="margin-top: 1rem;">
                 ${featuresHTML}
+                <li style="color: #32bcad; font-weight: 800;"><span class="check-icon">✓</span> + TABELA DE RAÇÃO (OFERTA ÚNICA)</li>
             </ul>
             
             <button onclick="openCheckout('${mainId}')" class="btn btn-primary btn-pulse" style="width:100%; font-size: 1.3rem; padding: 1.5rem;">
@@ -821,7 +720,164 @@ async function renderHomeProducts() {
     }
 }
 
+// --- FUNNEL LOGIC (UPSELL/DOWNSELL) ---
 
+let funnelState = {
+    mainId: null,
+    upsellAccepted: false,
+    downsellActive: false
+};
+
+function startFunnel(productId) {
+    funnelState.mainId = productId;
+    funnelState.upsellAccepted = false;
+    funnelState.downsellActive = false;
+
+    showUpsellModal();
+}
+
+function showSlideInUpsell(method) {
+    const obModal = document.getElementById('order-bump-modal');
+    if (!obModal) return;
+
+    // Inicia o timer de 5 minutos
+    let duration = 300; // 5 minutos em segundos
+    const timerInterval = setInterval(() => {
+        const timerEl = document.getElementById('upsell-timer');
+        if (!timerEl) {
+            clearInterval(timerInterval);
+            return;
+        }
+
+        const minutes = Math.floor(duration / 60);
+        const seconds = duration % 60;
+        timerEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+        if (--duration < 0) {
+            clearInterval(timerInterval);
+            timerEl.textContent = "0:00";
+        }
+    }, 1000);
+
+    obModal.innerHTML = `
+        <div class="order-bump-slide-content" style="border-top: 3px solid #fbbf24; background: #1a1a1a; box-shadow: 0 -10px 40px rgba(0,0,0,0.8);">
+            <button class="order-bump-close" onclick="declineSlideUpsell('${method}')" style="background: rgba(255,255,255,0.1); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; top: 5px; right: 5px;">
+                <i class="fa-solid fa-xmark" style="font-size: 0.8rem;"></i>
+            </button>
+
+            <div class="order-bump-header" style="text-align: center; padding: 5px 0;">
+                <div style="display: inline-block; background: #e74c3c; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: 900; font-size: 0.65rem; margin-bottom: 4px; letter-spacing: 1px;">PROMOÇÃO RELÂMPAGO</div>
+                <h3 style="margin-top: 2px; font-size: 1.05rem; color: #fbbf24; text-transform: uppercase; line-height: 1.1;">
+                    APENAS AGORA<br>
+                    <span style="font-size: 0.8rem; color: #fff; font-weight: 400; opacity: 0.8;">MANUAL DE PINTINHOS DE ELITE</span>
+                </h3>
+            </div>
+
+            <div style="background: rgba(251,191,36,0.1); border: 1px dashed #fbbf24; border-radius: 8px; padding: 6px; margin: 6px 0; text-align: center;">
+                <span style="color: #fff; font-size: 0.75rem;">Expira em: </span>
+                <span id="upsell-timer" style="color: #fbbf24; font-weight: 900; font-size: 1.1rem; font-family: monospace;">05:00</span>
+            </div>
+
+            <div class="order-bump-body" style="text-align: center; padding: 0 5px;">
+                <p style="color: #fff; font-size: 0.8rem; margin-bottom: 0.75rem; line-height: 1.3; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px;">
+                    <strong style="color: #e74c3c;">8 A CADA 10 PINTINHOS MORREM</strong> POR ERRO DE MANEJO. APRENDA COMO CRIAR PINTINHOS E SE LIVRE DE DOENÇA.<br>
+                    <strong style="color: #fbbf24; display: block; margin-top: 4px;">SE TORNE O CRIADOR COMPLETO</strong>
+                </p>
+                
+                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 0.75rem; text-align: left;">
+                    <div style="position: relative;">
+                         <img src="capadospintinhos.jpg" style="width: 75px; border-radius: 12px; border: 1.5px solid #fbbf24; box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);">
+                         <div style="position: absolute; top: -5px; right: -5px; background: #e74c3c; color: #fff; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 900; transform: rotate(15deg); border: 1.5px solid #fff;">-35%</div>
+                    </div>
+                    <ul style="color: #fff; font-size: 0.7rem; padding: 0; margin: 0; list-style: none; line-height: 1.3;">
+                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Sobrevivência de até 98%</li>
+                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Crescimento 3x mais rápido</li>
+                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Ambiente 100% adequado</li>
+                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> As principais doenças em pintinhos</li>
+                    </ul>
+                </div>
+
+                <div class="order-bump-price-tag" style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                    <div style="color: rgba(255,255,255,0.4); text-decoration: line-through; font-size: 0.75rem;">De R$ ${(prefetchedProducts['ebook-manejo']?.originalPrice || 99.90).toFixed(2).replace('.', ',')}</div>
+                    <div style="color: #fbbf24; font-size: 1.8rem; font-weight: 900; line-height: 1;">R$ ${(prefetchedProducts['ebook-manejo']?.price || 49.90).toFixed(2).split('.')[0]}<span style="font-size: 1rem;">,${(prefetchedProducts['ebook-manejo']?.price || 49.90).toFixed(2).split('.')[1]}</span></div>
+                    <div style="color: #fff; font-size: 0.8rem; opacity: 0.9; margin-top: 2px; font-weight: 600;">(4x de R$ ${((prefetchedProducts['ebook-manejo']?.price || 49.90) / 4).toFixed(2).replace('.', ',')} sem juros)</div>
+                </div>
+            </div>
+
+            <div class="order-bump-actions" style="padding: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <button class="btn-accept-bump" onclick="confirmSlideUpsell('${method}')" style="background: #fbbf24; color: #000; width: 100%; border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 0.9rem; text-transform: uppercase;">
+                    QUERO SALVAR MEUS PINTINHOS
+                </button>
+                <button class="btn-decline-bump" onclick="declineSlideUpsell('${method}')" style="background: none; border: none; color: rgba(255,255,255,0.4); text-decoration: underline; margin-top: 8px; cursor: pointer; display: block; width: 100%; font-size: 0.75rem;">
+                    Não, obrigado.
+                </button>
+            </div>
+        </div>
+    `;
+
+    obModal.classList.add('show');
+}
+
+function confirmSlideUpsell(method) {
+    console.log('✅ User ACCEPTED upsell');
+    midCheckoutUpsellPending = false;
+
+    // Add upsell to cart
+    if (!cart.bumps.includes('ebook-manejo')) {
+        cart.bumps.push('ebook-manejo');
+        updateTotal();
+    }
+
+    // Hide modal
+    const obModal = document.getElementById('order-bump-modal');
+    if (obModal) obModal.classList.remove('show');
+
+    // NOW generate the PIX/Card payment
+    if (method === 'pix') {
+        console.log('🔵 Proceeding to PIX generation after upsell acceptance');
+        processPixPayment();
+    } else {
+        console.log('🔵 Proceeding to Card payment after upsell acceptance');
+        processCardPayment();
+    }
+}
+
+function declineSlideUpsell(method) {
+    console.log('❌ User DECLINED upsell');
+    midCheckoutUpsellPending = false;
+
+    // Hide modal
+    const obModal = document.getElementById('order-bump-modal');
+    if (obModal) obModal.classList.remove('show');
+
+    // Generate PIX/Card payment WITHOUT upsell
+    if (method === 'pix') {
+        console.log('🔵 Proceeding to PIX generation after upsell decline');
+        processPixPayment();
+    } else {
+        console.log('🔵 Proceeding to Card payment after upsell decline');
+        processCardPayment();
+    }
+}
+
+function acceptUpsell() {
+    closeFunnelModal();
+    // Adiciona Pintinhos como Bump e abre checkout de Doenças
+    funnelState.upsellAccepted = true;
+    openCheckout(funnelState.mainId, ['ebook-manejo']);
+}
+
+function acceptDownsell() {
+    closeFunnelModal();
+    // Abre checkout direto do Combo
+    openCheckout('combo-elite');
+}
+
+function rejectFunnel() {
+    closeFunnelModal();
+    // Abre checkout apenas do produto principal
+    openCheckout(funnelState.mainId);
+}
 
 // --- Skeleton Loader Helper ---
 function showSkeletons(container, count = 3) {
@@ -846,7 +902,6 @@ function closeCheckout() {
     if (checkoutModal) checkoutModal.classList.remove('active');
     document.body.style.overflow = '';
     document.body.classList.remove('modal-open');
-    document.documentElement.classList.remove('modal-open');
     sessionStorage.removeItem('mura_modal_open');
     document.documentElement.style.overflow = '';
 
@@ -892,14 +947,6 @@ function switchMethod(method) {
         document.querySelector(`.method-btn[data-method="${method}"]`)?.classList.add('active');
     }
 
-    // NOVO CHECKOUT — VAULT (vc-method-tab)
-    const vcTabs = document.querySelectorAll('.vc-method-tab');
-    if (vcTabs.length > 0) {
-        vcTabs.forEach(t => t.classList.remove('selected'));
-        const activeTab = document.getElementById(`tab-${method}`);
-        if (activeTab) activeTab.classList.add('selected');
-    }
-
     const pixArea = document.getElementById('pix-area');
     const cardArea = document.getElementById('card-area');
     const btnPix = document.getElementById('btn-pay-pix');
@@ -911,27 +958,18 @@ function switchMethod(method) {
         if (btnPix) btnPix.style.display = 'block';
         if (btnCard) btnCard.style.display = 'none';
 
-        // Esconder CPF para PIX (CPF fallback no backend)
-
-        // Mostrar mensagem de urgência PIX
-        const pixUrgency = document.getElementById('pix-urgency-msg');
-        if (pixUrgency) pixUrgency.style.display = 'block';
-
     } else if (method === 'card') {
         if (pixArea) { pixArea.style.display = 'none'; }
         if (cardArea) { cardArea.style.display = 'block'; }
         if (btnPix) btnPix.style.display = 'none';
         if (btnCard) btnCard.style.display = 'block';
-
-        // Mostrar CPF para Cartão
-
-        // Esconder mensagem de urgência PIX
-        const pixUrgency = document.getElementById('pix-urgency-msg');
-        if (pixUrgency) pixUrgency.style.display = 'none';
     }
 
     // RECALCULATE TOTAL WHEN SWITCHING
-    updateTotal();
+    if (cart.mainProduct) {
+        renderOrderBumps(cart.mainProduct.fullBumps);
+        updateTotal();
+    }
 }
 
 
@@ -950,20 +988,21 @@ async function handlePayment(method) {
     if (method === 'pix') {
         customer = {
             ...commonData,
-            name: document.getElementById('payer-name').value
-            // CPF removido para PIX (opcional/fallback API)
+            name: document.getElementById('payer-name').value,
+            cpf: document.getElementById('payer-cpf').value ? document.getElementById('payer-cpf').value.replace(/\D/g, '') : ''
         };
     } else {
         // CARD MODE: Use Cardholder Data as Customer Data
+        // CPF now comes from common field (payer-cpf)
         customer = {
             ...commonData,
             name: document.getElementById('card-holder').value,
-            cpf: (document.getElementById('card-cpf')?.value || '').replace(/\D/g, ''),
+            cpf: (document.getElementById('payer-cpf')?.value || '').replace(/\D/g, ''),
             cep: (document.getElementById('card-cep')?.value || '').replace(/\D/g, '')
         };
     }
 
-    const isValid = validateAllFields(method);
+    const isValid = validateCheckoutInputs(method);
     if (!isValid) return;
 
     // PRICING LOGIC FOR API PAYLOAD
@@ -980,18 +1019,12 @@ async function handlePayment(method) {
 
         // FALLBACK: Se não encontrou em fullBumps, pode ser um produto (upsell)
         if (!b && id.startsWith('ebook-')) {
-            const configData = (window.siteConfig && window.siteConfig.products) ? window.siteConfig.products[id] : prefetchedProducts[id];
-            if (configData) {
-                b = {
-                    id: id,
-                    title: configData.title || (id === 'ebook-manejo' ? 'Manual de Manejo de Pintinhos' : 'Ebook'),
-                    price: configData.price,
-                    priceCard: configData.originalPrice || configData.price
-                };
-            } else {
-                // Hard Fallback requested in CORRECAO_UPSELL.txt
-                b = { id: id, price: 59.9, priceCard: 59.9, title: 'Manual de Pintinhos' };
-            }
+            b = {
+                id: id,
+                title: id === 'ebook-manejo' ? 'Manual de Manejo de Pintinhos' : 'Ebook',
+                price: id === 'ebook-manejo' ? 49.90 : 59.90, // UPSSELL EXCLUSIVO PIX
+                priceCard: id === 'ebook-manejo' ? 49.90 : 59.90
+            };
         }
 
         if (b) {
@@ -1026,16 +1059,14 @@ async function handlePayment(method) {
         }, 0);
         const itemIds = items.map(i => i.id).sort().join(',');
 
-        showLoadingOverlay('GERANDO QR CODE, POR FAVOR AGUARDE...');
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> GERANDO SEU PIX...';
         btn.disabled = true;
         btn.style.opacity = '0.7';
 
         try {
             // SET A HEARTBEAT / TIMEOUT for UI safety
             const timeout = setTimeout(() => {
-                const loader = document.getElementById('secure-loading');
-                if (loader && loader.classList.contains('active')) {
-                    hideLoadingOverlay();
+                if (btn.innerText === 'Gerando Pix...') {
                     btn.disabled = false;
                     btn.innerText = 'Tentar Novamente';
                     alert('O servidor está demorando para responder. Tente clicar novamente ou verifique se sua internet está estável.');
@@ -1049,12 +1080,7 @@ async function handlePayment(method) {
             });
 
             clearTimeout(timeout);
-            if (!res.ok) {
-                hideLoadingOverlay();
-                throw new Error('Falha ao gerar PIX');
-            }
             const data = await res.json();
-            hideLoadingOverlay();
 
             if (data.qr_code) {
                 // Save to Persistence
@@ -1067,25 +1093,21 @@ async function handlePayment(method) {
 
                 showPixResult(data, items);
 
-                // UPSELL PÓS-PIX: DESATIVADO
-                /*
+                // UPSELL PÓS-PIX: Mostra o upsell dos pintinhos após gerar o PIX
                 setTimeout(() => {
                     if (midCheckoutUpsellPending && !cart.bumps.includes('ebook-manejo') && cart.mainProduct.id !== 'combo-elite' && cart.mainProduct.id !== 'ebook-manejo') {
                         showSlideInUpsell('pix');
                     }
-                }, 2000);
-                */
+                }, 2000); // Aguarda 2 segundos após mostrar o QR Code
             } else {
                 // Error from server
                 console.error("Pix Error Response:", data);
                 const errorMsg = data.message || data.error || 'Erro desconhecido ao gerar PIX';
-                hideLoadingOverlay();
                 alert(`Erro ao gerar PIX: ${errorMsg}\n\nDetalhes: ${JSON.stringify(data.details || {})}`);
                 btn.disabled = false;
                 btn.innerText = originalText;
             }
         } catch (e) {
-            hideLoadingOverlay();
             console.error("Pix Error:", e);
             alert('Erro ao gerar Pix: ' + e.message);
             btn.disabled = false;
@@ -1248,129 +1270,216 @@ async function handlePayment(method) {
 
 // --- 1. PIX PAYMENT (MODIFIED FOR UPSELL INTERCEPTION) ---
 async function startPixPayment(event) {
+    console.log('🔵 startPixPayment CALLED');
     if (event) event.preventDefault();
 
-    // VALIDAÇÃO
-    if (!validateAllFields('pix')) {
-        return;
+    // NEW: VALIDAÇÃO ANTES DO UPSELL
+    if (!validateCheckoutInputs('pix')) {
+        console.warn('⚠️ Validation failed before upsell/pix');
+        return; // Para aqui se estiver inválido
     }
 
-    // INTERCEPTAÇÃO DE UPSELL (INTERSTICIAL)
-    if (shouldShowUpsell()) {
-        showUpsellInterstitial('pix');
-    } else {
+    try {
+        // Check if upsell (Manual de Pintinhos) is already in cart
+        const upsellId = 'ebook-manejo';
+        const isUpsellInCart = cart.bumps && cart.bumps.includes(upsellId);
+
+        console.log('📊 Upsell check:', { upsellId, isUpsellInCart, cartBumps: cart.bumps });
+
+        // If upsell NOT in cart, show modal and STOP (don't generate PIX yet)
+        if (!isUpsellInCart) {
+            console.log('🔔 Showing upsell modal (PIX will be generated after user decision)');
+            showSlideInUpsell('pix');
+            return; // STOP HERE - PIX will be generated when user accepts/rejects upsell
+        }
+
+        // If upsell already in cart, proceed directly to generate PIX
+        console.log('✅ Upsell already in cart, proceeding to PIX generation');
         await processPixPayment();
+    } catch (error) {
+        console.error('❌ Error in startPixPayment:', error);
+        alert('Erro ao processar pagamento PIX: ' + error.message);
     }
 }
 
 async function processPixPayment() {
-    console.log('✅ processPixPayment: Proceeding to handlePayment');
-    await handlePayment('pix');
+    console.log('🔵 processPixPayment CALLED');
+    const name = document.getElementById('payer-name').value;
+    const email = document.getElementById('payer-email').value;
+    const cpf = document.getElementById('payer-cpf')?.value?.trim();
+    const phone = document.getElementById('payer-phone')?.value?.trim();
+
+    console.log('📋 Form values:', { name, email, cpf, phone });
+
+    if (!name || !email || !cpf || !phone) {
+        console.warn('⚠️ Validation failed: Missing required fields');
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+    }
+
+    // Validação básica de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Por favor, insira um email válido.');
+        return;
+    }
+
+    // Validação de CPF (apenas formato)
+    const cpfClean = cpf.replace(/\D/g, '');
+    if (cpfClean.length !== 11) {
+        alert('Por favor, insira um CPF válido.');
+        return;
+    }
+
+    // Validação de telefone
+    const phoneClean = phone.replace(/\D/g, '');
+    if (phoneClean.length < 10) {
+        alert('Por favor, insira um telefone válido.');
+        return;
+    }
+
+    // If all validations pass, proceed with the original handlePayment('pix') logic
+    handlePayment('pix');
 }
 
 // --- 2. CARD PAYMENT (MODIFIED FOR UPSELL INTERCEPTION) ---
 async function startCardPayment(event) {
+    console.log('🔵 startCardPayment CALLED');
     if (event) event.preventDefault();
 
-    // VALIDAÇÃO
-    if (!validateAllFields('card')) {
-        return;
+    // NEW: VALIDAÇÃO ANTES DO UPSELL
+    if (!validateCheckoutInputs('card')) {
+        console.warn('⚠️ Validation failed before upsell/card');
+        return; // Para aqui se estiver inválido
     }
 
-    // INTERCEPTAÇÃO DE UPSELL (INTERSTICIAL)
-    if (shouldShowUpsell()) {
-        showUpsellInterstitial('card');
-    } else {
+    try {
+        // Check if upsell (Manual de Pintinhos) is already in cart
+        const upsellId = 'ebook-manejo';
+        const isUpsellInCart = cart.bumps && cart.bumps.includes(upsellId);
+
+        console.log('📊 Upsell check (Card):', { upsellId, isUpsellInCart, cartBumps: cart.bumps });
+
+        // If upsell NOT in cart, show modal and STOP
+        if (!isUpsellInCart) {
+            console.log('🔔 Showing upsell modal (Card payment will be processed after user decision)');
+            showSlideInUpsell('card');
+            return; // STOP HERE - Card payment will be processed when user accepts/rejects upsell
+        }
+
+        // If upsell already in cart, proceed directly to process payment
+        console.log('✅ Upsell already in cart, proceeding to Card payment');
         await processCardPayment();
+    } catch (error) {
+        console.error('❌ Error in startCardPayment:', error);
+        alert('Erro ao processar pagamento com cartão: ' + error.message);
     }
 }
 
 async function processCardPayment() {
-    console.log('✅ processCardPayment: Proceeding to handlePayment');
-    await handlePayment('card');
+    const name = document.getElementById('payer-name').value;
+    const email = document.getElementById('payer-email').value;
+    const cpf = document.getElementById('payer-cpf')?.value?.trim();
+    const phone = document.getElementById('payer-phone')?.value?.trim();
+
+    if (!name || !email || !cpf || !phone) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+    }
+
+    // Validação básica de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Por favor, insira um email válido.');
+        return;
+    }
+
+    // Validação de CPF (apenas formato)
+    const cpfClean = cpf.replace(/\D/g, '');
+    if (cpfClean.length !== 11) {
+        alert('Por favor, insira um CPF válido.');
+        return;
+    }
+
+    // Validação de telefone
+    const phoneClean = phone.replace(/\D/g, '');
+    if (phoneClean.length < 10) {
+        alert('Por favor, insira um telefone válido.');
+        return;
+    }
+
+    // Validações específicas para cartão
+    const cardNumber = document.getElementById('card-number')?.value?.trim();
+    const cardExpiration = document.getElementById('card-expiration')?.value?.trim();
+    const cardCvv = document.getElementById('card-cvv')?.value?.trim();
+    const cardHolder = document.getElementById('card-holder')?.value?.trim();
+
+    if (!cardNumber || !cardExpiration || !cardCvv || !cardHolder) {
+        alert('Por favor, preencha todos os dados do cartão.');
+        return false;
+    }
+
+    // If all validations pass, proceed with the original handlePayment('card') logic
+    handlePayment('card');
 }
 
-// --- UPSELL INTERSTITIAL LOGIC ---
-let pendingPaymentMethod = null;
+// --- VALIDATION AND INTERCEPTION FUNCTIONS ---
 
-function shouldShowUpsell() {
-    // Configurações do Upsell
-    const upsellId = 'ebook-manejo';
+// The original validateCheckoutInputs is now split and integrated into processPixPayment and processCardPayment
+// This function is no longer needed in its original form, but keeping it for context if other parts of the code still call it.
+function validateCheckoutInputs(method) {
+    const name = document.getElementById('payer-name')?.value?.trim();
+    const email = document.getElementById('payer-email')?.value?.trim();
+    const cpf = document.getElementById('payer-cpf')?.value?.trim();
+    const phone = document.getElementById('payer-phone')?.value?.trim();
 
-    // Verifica se o upsell está habilitado no banco de dados
-    const config = window.siteConfig?.products?.[upsellId] || prefetchedProducts[upsellId];
-    const isEnabled = config && config.enabled !== false;
+    if (!name || !email || !cpf || !phone) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return false;
+    }
 
-    // Se não estiver habilitado, ou o usuário já comprou (está no carrinho), ou o produto principal já é o combo/manejo
-    if (!isEnabled) return false;
-    if (cart.bumps.includes(upsellId)) return false;
-    if (cart.mainProduct && (cart.mainProduct.id === upsellId || cart.mainProduct.id === 'combo-elite')) return false;
+    // Validação básica de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Por favor, insira um email válido.');
+        return false;
+    }
+
+    // Validação de CPF (apenas formato)
+    const cpfClean = cpf.replace(/\D/g, '');
+    if (cpfClean.length !== 11) {
+        alert('Por favor, insira um CPF válido.');
+        return false;
+    }
+
+    // Validação de telefone
+    const phoneClean = phone.replace(/\D/g, '');
+    if (phoneClean.length < 10) {
+        alert('Por favor, insira um telefone válido.');
+        return false;
+    }
+
+    // Validações específicas para cartão
+    if (method === 'card') {
+        const cardNumber = document.getElementById('card-number')?.value?.trim();
+        const cardExpiration = document.getElementById('card-expiration')?.value?.trim();
+        const cardCvv = document.getElementById('card-cvv')?.value?.trim();
+        const cardHolder = document.getElementById('card-holder')?.value?.trim();
+
+        if (!cardNumber || !cardExpiration || !cardCvv || !cardHolder) {
+            alert('Por favor, preencha todos os dados do cartão.');
+            return false;
+        }
+    }
 
     return true;
 }
 
-function showUpsellInterstitial(method) {
-    pendingPaymentMethod = method;
-    const upsellId = 'ebook-manejo';
-    const config = window.siteConfig?.products?.[upsellId] || prefetchedProducts[upsellId];
-
-    // Atualiza os preços no modal
-    if (config) {
-        const oldPriceEl = document.getElementById('upsell-old-price');
-        const newPriceEl = document.getElementById('upsell-new-price');
-
-        if (oldPriceEl && config.originalPrice) {
-            oldPriceEl.innerText = `R$ ${config.originalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-        }
-        if (newPriceEl && config.price) {
-            newPriceEl.innerText = `R$ ${config.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-        }
-    }
-
-    const modal = document.getElementById('upsell-interstitial');
-    if (modal) {
-        modal.style.display = 'flex';
-        // Track visualização de upsell
-        trackEvent('upsell_interstitial_view');
-    } else {
-        // Fallback caso o modal não exista
-        if (method === 'pix') processPixPayment();
-        else processCardPayment();
-    }
+function interceptPaymentButton(callback) {
+    // Esta função pode ser usada para interceptar o pagamento com upsells
+    // Por enquanto, apenas retorna false para permitir o fluxo normal
+    return false;
 }
-
-function closeUpsellInterstitial() {
-    const modal = document.getElementById('upsell-interstitial');
-    if (modal) modal.style.display = 'none';
-}
-
-// Event Listeners para botões de Upsell
-document.getElementById('btn-upsell-accept')?.addEventListener('click', async () => {
-    trackEvent('upsell_interstitial_accept');
-
-    const upsellId = 'ebook-manejo';
-    if (!cart.bumps.includes(upsellId)) {
-        cart.bumps.push(upsellId);
-        updateTotal(); // Atualiza UI e totais
-    }
-
-    closeUpsellInterstitial();
-    showLoadingOverlay('GERANDO QR CODE, POR FAVOR AGUARDE...');
-
-    // Prossegue com o pagamento
-    if (pendingPaymentMethod === 'pix') await processPixPayment();
-    else await processCardPayment();
-});
-
-document.getElementById('btn-upsell-decline')?.addEventListener('click', async () => {
-    trackEvent('upsell_interstitial_decline');
-    closeUpsellInterstitial();
-    showLoadingOverlay('GERANDO QR CODE, POR FAVOR AGUARDE...');
-
-    // Prossegue sem o item extra
-    if (pendingPaymentMethod === 'pix') await processPixPayment();
-    else await processCardPayment();
-});
 
 // Event Listeners with Order Bump Interception
 document.getElementById('btn-pay-pix')?.addEventListener('click', startPixPayment);
@@ -1434,6 +1543,7 @@ function setupFields() {
     });
     // 2. Real-time Formatting & Validation
     const fieldMapping = {
+        'payer-cpf': 'cpf',
         'payer-phone': 'phone',
         'card-number': 'card',
         'card-expiration': 'date',
@@ -1449,7 +1559,13 @@ function setupFields() {
         el.addEventListener('input', e => {
             let val = e.target.value;
             if (masks[type]) e.target.value = masks[type](val);
+
+            // Validation Feedback Loop
+            validateField(el, type);
         });
+
+        // Initial validation on blur
+        el.addEventListener('blur', () => validateField(el, type));
     });
 
     // --- 2.1 Dynamic Card Brand Visual ---
@@ -1486,36 +1602,51 @@ function showPixResult(data, items) {
     document.getElementById('qr-code-img').src = `data:image/png;base64,${data.qr_code_base64}`;
     document.getElementById('pix-copy-paste').value = data.qr_code;
 
-    // Auto-copy PIX code
-    if (data.qr_code && navigator.clipboard) {
-        navigator.clipboard.writeText(data.qr_code).then(() => {
-            console.log('✅ PIX code auto-copied');
-            // Show Success Notification
-            const container = document.getElementById('toast-container') || document.body;
-            const toast = document.createElement('div');
-            toast.className = 'toast-card';
-            toast.style.cssText = "position: fixed; bottom: 20px; right: 20px; background: #16a34a; color: white; padding: 15px 25px; border-radius: 10px; z-index: 10000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); font-weight: bold;";
-            toast.innerHTML = `<i class="fa-solid fa-check-double"></i> codigo pix copiado com seucesso`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
-        }).catch(err => {
-            console.warn('❌ Auto-copy failed:', err);
-        });
-    }
-
     const copyBtn = document.getElementById('btn-copy-pix');
     if (copyBtn) {
-        copyBtn.onclick = () => {
+        // Tenta copiar automaticamente
+        try {
             navigator.clipboard.writeText(data.qr_code).then(() => {
-                // Show Success Notification
-                const container = document.getElementById('toast-container') || document.body;
+                // Feedback Discreto (Toast)
+                const container = document.getElementById('toast-container');
                 const toast = document.createElement('div');
                 toast.className = 'toast-card';
-                toast.style.cssText = "position: fixed; bottom: 20px; right: 20px; background: #16a34a; color: white; padding: 15px 25px; border-radius: 10px; z-index: 10000; box-shadow: 0 10px 25px rgba(0,0,0,0.2); font-weight: bold;";
-                toast.innerHTML = `<i class="fa-solid fa-check-double"></i> codigo pix copiado com seucesso`;
+                toast.style.borderColor = '#2ecc71'; // Green border for success
+                toast.innerHTML = `
+                    <div style="width: 40px; height: 40px; background: #2ecc71; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff;">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <div class="toast-content">
+                        <h4>Código PIX Copiado!</h4>
+                        <p>Código copiado com sucesso.</p>
+                    </div>
+                `;
                 container.appendChild(toast);
-                setTimeout(() => toast.remove(), 4000);
+                setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 4000);
+            }).catch(() => {
+                // Silently ignore or log internally
             });
+        } catch (err) { console.warn(err); }
+
+
+        copyBtn.onclick = () => {
+            navigator.clipboard.writeText(data.qr_code);
+            // Feedback Discreto (Toast)
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast-card';
+            toast.style.borderColor = '#2ecc71';
+            toast.innerHTML = `
+                <div style="width: 40px; height: 40px; background: #2ecc71; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff;">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <div class="toast-content">
+                    <h4>Código PIX Copiado!</h4>
+                    <p>Cole no app do seu banco para pagar.</p>
+                </div>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 4000);
         };
     }
 
@@ -1621,7 +1752,318 @@ function showRandomToast() {
     }, 5500); // wait for animation end (5s) + buffer
 }
 
-// Redundant code block (validation, help bubbles, global listeners) removed for consolidation.
+// --- 4. CHECKOUT COMPACTION & UX UTILS ---
+
+function validateCheckoutInputs(method) {
+    const email = document.getElementById('payer-email');
+    const phone = document.getElementById('payer-phone');
+    const name = (method === 'pix') ? document.getElementById('payer-name') : document.getElementById('card-holder');
+    const cpf = document.getElementById('payer-cpf');
+    const cep = (method === 'card') ? document.getElementById('card-cep') : null;
+
+    let isValid = true;
+
+    // Reset visual states
+    const fields = [email, phone, name, cpf];
+    if (cep) fields.push(cep);
+
+    fields.forEach(el => el.classList.remove('is-invalid'));
+
+    if (!email.value || !email.value.includes('@')) { email.classList.add('is-invalid'); isValid = false; }
+    if (!phone.value || phone.value.replace(/\D/g, '').length < 10) { phone.classList.add('is-invalid'); isValid = false; }
+    if (!name.value || name.value.trim().length < 3) { name.classList.add('is-invalid'); isValid = false; }
+    if (!cpf.value || cpf.value.replace(/\D/g, '').length < 11) { cpf.classList.add('is-invalid'); isValid = false; }
+    if (cep && (!cep.value || cep.value.replace(/\D/g, '').length < 8)) { cep.classList.add('is-invalid'); isValid = false; }
+
+    if (!isValid) {
+        // Log which fields failed validation
+        const invalidFields = [];
+        if (email.classList.contains('is-invalid')) invalidFields.push('email');
+        if (phone.classList.contains('is-invalid')) invalidFields.push('phone');
+        if (name.classList.contains('is-invalid')) invalidFields.push('name');
+        if (cpf.classList.contains('is-invalid')) invalidFields.push('cpf');
+        if (cep && cep.classList.contains('is-invalid')) invalidFields.push('cep');
+
+        trackEvent('ui_error', null, null, `Erro Validação Frontend: ${invalidFields.join(', ')}`);
+
+        fields.forEach(el => validateField(el, null, true));
+        const firstError = document.querySelector('.is-invalid');
+        if (firstError) firstError.focus();
+    }
+
+    return isValid;
+}
+
+// â³ Tooltip / Help Bubble Logic (5s Idle)
+let helpTimer = null;
+const HELP_MESSAGES = {
+    'payer-email': 'Insira seu melhor e-mail para receber o acesso.',
+    'payer-phone': 'Precisamos do seu WhatsApp para suporte técnico.',
+    'payer-name': 'Digite seu nome completo conforme documento.',
+    'payer-cpf': 'O CPF é necessário para emissão da sua nota fiscal.',
+    'card-holder': 'Nome exatamente como está escrito no seu cartão.',
+    'card-number': 'Digite os 16 números da frente do seu cartão.',
+    'card-cep': 'CEP da sua residência para validação de segurança.'
+};
+
+function initHelpBubbles() {
+    const inputs = document.querySelectorAll('.checkout-form input');
+
+    inputs.forEach(input => {
+        input.addEventListener('focus', () => {
+            clearTimeout(helpTimer);
+            if (!input.value) {
+                // Diminuído para 3 segundos conforme solicitado
+                helpTimer = setTimeout(() => showHelpBubble(input), 3000);
+            }
+        });
+
+        input.addEventListener('input', () => {
+            clearTimeout(helpTimer);
+            removeHelpBubbles();
+        });
+
+        input.addEventListener('blur', () => {
+            clearTimeout(helpTimer);
+            removeHelpBubbles();
+            // Show error if empty OR invalid on blur
+            validateField(input, null, true);
+        });
+    });
+}
+
+/**
+ * Consolidated Validation Logic
+ * Only shows error if field is not empty or if submission attempted.
+ */
+function validateField(input, type = null, forceShowError = false) {
+    const id = input.id;
+    const val = input.value.trim();
+    const cleanVal = val.replace(/\D/g, '');
+    let isValid = true;
+
+    // Use explicit type if provided, otherwise infer from ID
+    const validationType = type || (id.includes('cpf') ? 'cpf' : id.includes('phone') ? 'phone' : id.includes('email') ? 'email' : id.includes('number') ? 'card' : id.includes('expiration') ? 'date' : id.includes('cvv') ? 'cvv' : id.includes('cep') ? 'cep' : 'name');
+
+    if (validationType === 'email') isValid = val.includes('@') && val.length > 5;
+    else if (validationType === 'phone') isValid = cleanVal.length >= 10;
+    else if (validationType === 'cpf') isValid = cleanVal.length === 11;
+    else if (validationType === 'card') isValid = cleanVal.length >= 13 && cleanVal.length <= 16;
+    else if (validationType === 'date') isValid = /^\d{2}\/\d{2}$/.test(val);
+    else if (validationType === 'cvv') isValid = cleanVal.length >= 3;
+    else if (validationType === 'cep') isValid = cleanVal.length === 8;
+    else if (validationType === 'name' || id === 'card-holder') isValid = val.length >= 3;
+
+    // UI Feedback logic
+    if (val.length === 0 && !forceShowError) {
+        input.classList.remove('is-valid', 'is-invalid');
+    } else if (isValid) {
+        input.classList.add('is-valid');
+        input.classList.remove('is-invalid');
+    } else if (forceShowError || val.length > 0) {
+        // Only show invalid if there is content OR forceShowError (blur/submit)
+        input.classList.add('is-invalid');
+        input.classList.remove('is-valid');
+    }
+}
+
+function showHelpBubble(input) {
+    removeHelpBubbles();
+    const msg = HELP_MESSAGES[input.id] || 'Preencha este campo para continuar.';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'mura-help-bubble';
+    bubble.innerText = msg;
+
+    // Append to the input wrapper
+    input.parentElement.appendChild(bubble);
+}
+
+function removeHelpBubbles() {
+    document.querySelectorAll('.mura-help-bubble').forEach(b => b.remove());
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+    initHelpBubbles();
+
+    // Hide help bubbles on scroll to prevent "floating" issue
+    window.addEventListener('scroll', removeHelpBubbles, true);
+    // Also scroll on modal container if it's the one scrolling
+    const modalContent = document.querySelector('#checkout-modal .modal-content');
+    if (modalContent) {
+        modalContent.addEventListener('scroll', removeHelpBubbles);
+    }
+
+    // Global click to blur inputs (hide mobile keyboard)
+    document.addEventListener('click', (e) => {
+        if (typeof checkoutModal !== 'undefined' && checkoutModal.classList.contains('active')) {
+            if (!e.target.closest('input') && !e.target.closest('select') && !e.target.closest('button') && !e.target.closest('.method-btn')) {
+                if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+                    document.activeElement.blur();
+                }
+            }
+        }
+    });
+});
+
+
+// --- UPSELL LOGIC (GLOBAL SCOPE) ---
+let pendingPaymentMethod = null;
+
+function showUpsellModal(method) {
+    pendingPaymentMethod = method;
+    const modal = document.getElementById('upsell-modal-container');
+    modal.style.display = 'flex'; // Enable display to allow transition
+
+    // Small timeout to trigger CSS transition
+    setTimeout(() => {
+        modal.classList.add('active');
+    }, 10);
+}
+
+function acceptUpsell() {
+    // Add Manejo to order
+    const upsellId = 'ebook-manejo';
+    if (!selectedBumps.includes(upsellId)) {
+        selectedBumps.push(upsellId);
+        updateTotalDisplay();
+
+        // Update checkbox visually if it exists in the main list
+        const checkbox = document.querySelector(`input[type="checkbox"][value="${upsellId}"]`);
+        if (checkbox) checkbox.checked = true;
+    }
+
+    // Close modal
+    closeUpsellModal();
+
+    // Proceed with original payment
+    if (pendingPaymentMethod === 'pix') processPixPayment();
+    if (pendingPaymentMethod === 'card') processCardPayment();
+}
+
+function declineUpsell() {
+    // Close modal
+    closeUpsellModal();
+
+    // Proceed with original payment WITHOUT the item
+    if (pendingPaymentMethod === 'pix') processPixPayment();
+    if (pendingPaymentMethod === 'card') processCardPayment();
+}
+
+function closeUpsellModal() {
+    const modal = document.getElementById('upsell-modal-container');
+    modal.classList.remove('active');
+    setTimeout(() => {
+        modal.style.display = 'none';
+        pendingPaymentMethod = null;
+    }, 300); // Match CSS transition duration
+}
+
+// --- HELPER: DETECT PAYMENT METHOD ---
+// --- 5. VALIDATION HELPERS ---
+function isValidCPF(cpf) {
+    cpf = cpf.replace(/[^\d]+/g, '');
+    if (cpf == '') return false;
+    // Elimina CPFs invalidos conhecidos
+    if (cpf.length != 11 ||
+        cpf == "00000000000" ||
+        cpf == "11111111111" ||
+        cpf == "22222222222" ||
+        cpf == "33333333333" ||
+        cpf == "44444444444" ||
+        cpf == "55555555555" ||
+        cpf == "66666666666" ||
+        cpf == "77777777777" ||
+        cpf == "88888888888" ||
+        cpf == "99999999999")
+        return false;
+    // Valida 1o digito
+    let add = 0;
+    for (let i = 0; i < 9; i++)
+        add += parseInt(cpf.charAt(i)) * (10 - i);
+    let rev = 11 - (add % 11);
+    if (rev == 10 || rev == 11)
+        rev = 0;
+    if (rev != parseInt(cpf.charAt(9)))
+        return false;
+    // Valida 2o digito
+    add = 0;
+    for (let i = 0; i < 10; i++)
+        add += parseInt(cpf.charAt(i)) * (11 - i);
+    rev = 11 - (add % 11);
+    if (rev == 10 || rev == 11)
+        rev = 0;
+    if (rev != parseInt(cpf.charAt(10)))
+        return false;
+    return true;
+}
+
+function validateField(el, type) {
+    if (!el) return true;
+    const val = el.value.trim();
+    let isValid = true;
+
+    if (type === 'email') isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+    else if (type === 'phone') isValid = val.replace(/\D/g, '').length >= 10;
+    else if (type === 'cpf') isValid = isValidCPF(val);
+    else if (type === 'card') isValid = val.replace(/\D/g, '').length >= 15;
+    else if (type === 'date') isValid = /^\d{2}\/\d{2}$/.test(val);
+    else if (type === 'cvv') isValid = val.length >= 3;
+    else if (val.length < 3) isValid = false;
+
+    const errorId = `error-${el.id}`;
+    const errorEl = document.getElementById(errorId);
+
+    if (!isValid && val.length > 0) {
+        el.classList.add('input-error');
+        if (errorEl) errorEl.style.display = 'block';
+    } else {
+        el.classList.remove('input-error');
+        if (errorEl) errorEl.style.display = 'none';
+    }
+
+    return isValid;
+}
+
+function validateCheckoutInputs(method) {
+    let allValid = true;
+    const fields = ['payer-email', 'payer-phone'];
+
+    if (method === 'pix') {
+        fields.push('payer-name', 'payer-cpf');
+    } else {
+        fields.push('card-holder', 'payer-cpf', 'card-number', 'card-expiration', 'card-cvv');
+    }
+
+    fields.forEach(id => {
+        const el = document.getElementById(id);
+        const type = id.includes('email') ? 'email' : (id.includes('phone') ? 'phone' : (id.includes('cpf') ? 'cpf' : (id.includes('number') ? 'card' : (id.includes('expiration') ? 'date' : (id.includes('cvv') ? 'cvv' : 'text')))));
+        if (!validateField(el, type)) allValid = false;
+    });
+
+    if (!allValid) {
+        const container = document.getElementById('toast-container');
+        if (container) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-card';
+            toast.style.borderColor = '#e74c3c';
+            toast.innerHTML = `
+                <div style="width: 40px; height: 40px; background: #e74c3c; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="toast-content">
+                    <strong>Ops! Quase lá...</strong>
+                    <p>Por favor, preencha corretamente todos os campos destacados em vermelho.</p>
+                </div>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 500); }, 4000);
+        }
+    }
+
+    return allValid;
+}
 
 function getPaymentMethodId(number) {
     if (!number) return null;
@@ -1730,16 +2172,21 @@ if (comparisonSlider && prevButton && nextButton) {
 
 // --- VALIDATION LOGIC ---
 
-function validateAllFields(method) {
+function validateCheckoutInputs(method) {
     let isValid = true;
     const inputsToValidate = [
         'payer-name',
         'payer-email',
+        'payer-cpf',
         'payer-phone'
     ];
 
     if (method === 'card') {
         inputsToValidate.push('card-number', 'card-expiration', 'card-cvv', 'card-holder', 'card-cpf');
+        // Remove payer-cpf validation if it's card mode (we use card-cpf instead, or keeping both if backend needs it)
+        // User said: "quando for cartao esse CPF tem quee ser CPF DO TITULAR". 
+        // We still need payer-cpf for the account creation/invoice maybe? 
+        // Let's validate BOTH as they are both in the form and required.
     }
 
     inputsToValidate.forEach(id => {
@@ -1753,11 +2200,7 @@ function validateAllFields(method) {
     if (!isValid) {
         // Find first invalid input and focus
         const firstInvalid = document.querySelector('.input-error');
-        if (firstInvalid) {
-            firstInvalid.focus();
-            // Novo: Aviso visual/alerta sutil se algum campo estiver incorreto
-            alert('Ops! Alguns campos estão incorretos ou em branco. Por favor, verifique os avisos em vermelho.');
-        }
+        if (firstInvalid) firstInvalid.focus();
     }
 
     return isValid;
@@ -1766,61 +2209,21 @@ function validateAllFields(method) {
 function validateField(input) {
     const val = input.value.trim();
     let valid = true;
-    let errorMsg = 'Este campo está incorreto';
 
     // Basic validation: not empty
-    if (val.length === 0) {
-        valid = false;
-        errorMsg = 'Campo obrigatório';
-    } else {
-        // Specific validations
-        const id = input.id;
-        if (id === 'payer-name') {
-            if (!val.includes(' ') || val.split(' ').filter(p => p.length > 1).length < 2) {
-                valid = false;
-                errorMsg = 'Digite seu nome completo';
-            }
-        } else if (id === 'payer-email') {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(val)) {
-                valid = false;
-                errorMsg = 'e-mail inválido';
-            }
-        } else if (id.includes('cpf')) {
-            const cleanCpf = val.replace(/\D/g, '');
-            if (cleanCpf.length !== 11) {
-                valid = false;
-                errorMsg = 'CPF inválido';
-            }
-        } else if (id === 'payer-phone') {
-            const cleanPhone = val.replace(/\D/g, '');
-            if (cleanPhone.length < 10) {
-                valid = false;
-                errorMsg = 'Telefone inválido';
-            }
-        } else if (id === 'card-number') {
-            const cleanCard = val.replace(/\D/g, '');
-            if (cleanCard.length < 13) {
-                valid = false;
-                errorMsg = 'Número incompleto';
-            }
-        } else if (id === 'card-expiration') {
-            if (val.length < 5) {
-                valid = false;
-                errorMsg = 'Data inválida (MM/AA)';
-            }
-        } else if (id === 'card-cvv') {
-            const cleanCvv = val.replace(/\D/g, '');
-            if (cleanCvv.length < 3) {
-                valid = false;
-                errorMsg = 'CVV inválido';
-            }
-        }
-    }
+    if (val.length === 0) valid = false;
+
+    // Specific validations
+    if (input.id.includes('email') && !val.includes('@')) valid = false;
+    if (input.id.includes('cpf') && val.length < 11) valid = false;
+    if (input.id.includes('phone') && val.length < 10) valid = false;
+    if (input.id.includes('card-number') && val.length < 13) valid = false;
+    if (input.id.includes('expiration') && val.length < 4) valid = false;
+    if (input.id.includes('cvv') && val.length < 3) valid = false;
 
     // UI Feedback
     if (!valid) {
-        setInputError(input, errorMsg);
+        setInputError(input);
     } else {
         setInputSuccess(input);
     }
@@ -1828,24 +2231,18 @@ function validateField(input) {
     return valid;
 }
 
-function setInputError(input, customMsg) {
+function setInputError(input) {
     input.classList.add('input-error');
     input.classList.remove('input-success');
-
-    // Shake animation for attention
-    input.style.animation = 'none';
-    setTimeout(() => input.style.animation = 'vcShake 0.4s ease', 10);
 
     // Check if message exists
     let msg = input.parentElement.querySelector('.error-message');
     if (!msg) {
         msg = document.createElement('span');
         msg.className = 'error-message';
-        // Elegant styling for the error message
-        msg.style.cssText = 'display: block; color: #ef4444; font-size: 0.62rem; font-weight: 800; text-transform: uppercase; margin: 4px 0 10px 4px; animation: vcFadeIn 0.3s ease; letter-spacing: 0.5px;';
-        input.insertAdjacentElement('afterend', msg);
+        msg.innerText = 'ops esse campo esta errado';
+        input.parentElement.appendChild(msg);
     }
-    msg.innerHTML = `<i class="fa-solid fa-circle-exclamation" style="font-size: 0.7rem; margin-right: 4px;"></i> ${customMsg || 'ops esse campo esta errado'}`;
 }
 
 function setInputSuccess(input) {
@@ -1856,84 +2253,58 @@ function setInputSuccess(input) {
     if (msg) msg.remove();
 }
 
-// Attach listeners for all checkout fields (name, email, phone, card data)
+// Attach listeners for real-time validation removal/success
 document.addEventListener('DOMContentLoaded', () => {
-    const allCheckoutInputs = [
-        'payer-name', 'payer-email', 'payer-phone',
-        'card-number', 'card-expiration', 'card-cvv', 'card-holder', 'card-cpf', 'card-cep'
-    ];
-
-    allCheckoutInputs.forEach(id => {
-        const input = document.getElementById(id);
-        if (!input) return;
-
-        // Limpeza imediata ao digitar
+    const allInputs = document.querySelectorAll('.form-input');
+    allInputs.forEach(input => {
         input.addEventListener('input', () => {
-            input.classList.remove('input-error', 'input-success');
-            const msg = input.parentElement.querySelector('.error-message');
-            if (msg) msg.remove();
+            // Remove error immediately when typing starts
+            if (input.classList.contains('input-error')) {
+                input.classList.remove('input-error');
+                const msg = input.parentElement.querySelector('.error-message');
+                if (msg) msg.remove();
+            }
+
+            // Optional: validate on the fly for green border?
+            // "quadno o cliente começar a esrever de novo, o aviso some" - Done above.
+            // "se o campo estiveer correto, borda verde" - We can check this on blur or debounce.
+            // Let's check on input but maybe less strict? Or just stick to "remove error".
+            // User asked "se o campo estiveer correto, borda verde".
+
+            if (input.value.trim().length > 0) {
+                // Simple validation for green border during typing might be annoying if it flickers.
+                // Let's do it on blur OR if it meets length criteria.
+                // For now, let's keep it simple: clear error on input. Validate fully on blur.
+            }
         });
 
-        // Validação ao sair do campo
         input.addEventListener('blur', () => {
             if (input.value.trim().length > 0) {
+                validateField(input);
+            } else {
+                // If empty on blur, maybe don't show red yet unless form submitted? 
+                // Or user wants immediate feedback? "ops esse campo esta errado" implies feedback.
+                // Let's show error on blur if empty? Maybe too aggressive.
+                // Re-reading: "adicione log de erros no checkout... como o campo ficar vermelho se nao estiver correto"
+                // Usually this means after attempted submission OR on blur if invalid.
+                // I will add it to the validateCheckoutInputs function mainly, and maybe blur for green.
                 validateField(input);
             }
         });
     });
-});
 
-// Also setup the new card-cpf mask in smart_fields logic if needed, 
-// but I can add a simple listener here for the new field mask
-const cardCpf = document.getElementById('card-cpf');
-if (cardCpf) {
-    cardCpf.addEventListener('input', (e) => {
-        let v = e.target.value.replace(/\D/g, '');
-        if (v.length > 11) v = v.slice(0, 11);
-        if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
-        else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
-        else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
-        e.target.value = v;
-    });
-}
-
-// --- 10. VSL Live Counter Dynamism ---
-const vslCounter = document.getElementById('vsl-counter');
-if (vslCounter) {
-    let count = parseInt(vslCounter.innerText) || 247;
-
-    function fluctuateCounter() {
-        // Randomly add or subtract between 1 and 3 people
-        const variation = Math.floor(Math.random() * 7) - 3; // -3 to +3
-        count += variation;
-
-        // Keep it in a realistic range for this stage
-        if (count < 180) count += 5;
-        if (count > 350) count -= 5;
-
-        vslCounter.innerText = count;
-
-        // Next fluctuation in 3 to 10 seconds
-        const nextTime = Math.floor(Math.random() * 7000) + 3000;
-        setTimeout(fluctuateCounter, nextTime);
+    // Also setup the new card-cpf mask in smart_fields logic if needed, 
+    // but I can add a simple listener here for the new field mask
+    const cardCpf = document.getElementById('card-cpf');
+    if (cardCpf) {
+        cardCpf.addEventListener('input', (e) => {
+            let v = e.target.value.replace(/\D/g, '');
+            if (v.length > 11) v = v.slice(0, 11);
+            if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+            else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+            else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+            e.target.value = v;
+        });
     }
-
-    // Start after a short delay
-    setTimeout(fluctuateCounter, 3000);
-}
-
-// --- PIX/LOADING UTILITIES ---
-function showLoadingOverlay(message) {
-    const loader = document.getElementById('secure-loading');
-    if (!loader) return;
-    const title = loader.querySelector('h3');
-    if (title && message) title.innerText = message;
-    loader.classList.add('active');
-}
-
-function hideLoadingOverlay() {
-    const loader = document.getElementById('secure-loading');
-    if (loader) loader.classList.remove('active');
-}
-
+});
 
