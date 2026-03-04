@@ -509,7 +509,15 @@ function generateDownloadToken(email, items, paymentId = null) {
 }
 
 // Email Sender Function con Design Premium y Seguridad
+const sentEmails = new Set(); // Deduplicação: evita emails duplicados para o mesmo pagamento
 async function sendEmail(customer, items, paymentId = null) {
+    // Verifica se já enviou email para este pagamento
+    if (paymentId && sentEmails.has(String(paymentId))) {
+        console.log(`ℹ️ [EMAIL] Email já enviado para pagamento ${paymentId}. Pulando duplicata.`);
+        return true;
+    }
+    if (paymentId) sentEmails.add(String(paymentId));
+
     console.log(`📧 [EMAIL] Preparando envio PREMIUM para: ${customer.email}`);
 
     // Simplified Link Logic with Tracking Token (User Request)
@@ -716,8 +724,14 @@ app.post('/api/checkout/pix', async (req, res) => {
     console.log(`💠 [PIX] Nova solicitação Iniciada`);
     console.log(`👤 Cliente: ${customer.name} (${customer.email})`);
 
-    const totalAmount = Number(items.reduce((acc, item) => acc + Number(item.price), 0).toFixed(2));
-    console.log(`💰 Total Calculado: ${totalAmount}`);
+    const db = getDB();
+    const totalAmount = Number(items.reduce((acc, item) => {
+        // SEGURANÇA: Busca o preço REAL no banco de dados, ignorando o que veio do navegador
+        const product = db.products[item.id] || db.orderBumps[item.id];
+        const realPrice = product ? (product.price || 0) : 0;
+        return acc + Number(realPrice);
+    }, 0).toFixed(2));
+    console.log(`💰 Total Real (Banco de Dados): ${totalAmount}`);
 
     if (totalAmount <= 0) {
         console.error(`❌ [PIX ERROR] Valor inválido calculado: ${totalAmount}`);
@@ -804,8 +818,15 @@ app.post('/api/checkout/card', async (req, res) => {
         console.log(`📦 Itens: ${items.length}`);
         console.log(`🔢 Parcelas: ${installments}, Method: ${payment_method_id}`);
 
-        const totalAmount = Number(items.reduce((acc, item) => acc + Number(item.price), 0).toFixed(2));
-        console.log(`💰 Total Calculado: ${totalAmount}`);
+        const db = getDB();
+        const totalAmount = Number(items.reduce((acc, item) => {
+            // SEGURANÇA: Busca o preço REAL no banco de dados para CARTÃO
+            const product = db.products[item.id] || db.orderBumps[item.id];
+            // Para cartão, usamos o originalPrice (se existir) ou o price normal
+            const realPrice = product ? (product.originalPrice || product.price || 0) : 0;
+            return acc + Number(realPrice);
+        }, 0).toFixed(2));
+        console.log(`💰 Total Real (Banco de Dados - Cartão): ${totalAmount}`);
 
         if (totalAmount <= 0) {
             console.error(`❌ [CARTÃO ERROR] Valor inválido calculado: ${totalAmount}`);
@@ -955,6 +976,10 @@ app.get('/api/payment/:id', async (req, res) => {
             }));
 
             logSale(customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão');
+
+            // ENVIAR EMAIL (Fallback se webhook demorar)
+            console.log(`📤 [PAYMENT-CHECK] Enviando e-mail automático (fallback)...`);
+            sendEmail(customer, items, result.id);
 
             // Generate Secure Token for Redirect
             const token = generateDownloadToken(customer.email, items, result.id);

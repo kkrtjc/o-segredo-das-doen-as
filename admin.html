@@ -903,14 +903,19 @@
                     <i class="fa-solid fa-users"></i>
                 </div>
                 <div class="stat-card">
-                    <div class="label">Vídeo Views (VSL)</div>
-                    <div class="value" id="dash-video">0</div>
+                    <div class="label">Video 1</div>
+                    <div class="value" id="dash-vsl-venda">0</div>
                     <i class="fa-solid fa-play"></i>
                 </div>
                 <div class="stat-card">
-                    <div class="label">VSL Venda (Views)</div>
-                    <div class="value" id="dash-vsl-venda">0</div>
-                    <i class="fa-solid fa-cart-arrow-down"></i>
+                    <div class="label">Video 2</div>
+                    <div class="value" id="dash-vsl-ebook">0</div>
+                    <i class="fa-solid fa-play"></i>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Video 3</div>
+                    <div class="value" id="dash-vsl-auth">0</div>
+                    <i class="fa-solid fa-play"></i>
                 </div>
                 <div class="stat-card">
                     <div class="label">Checkout Abertos</div>
@@ -1203,7 +1208,7 @@
                 acc.vslVendaView += (day.vslVendaView || 0);
                 acc.checkoutOpens += (day.checkoutOpens || 0);
                 return acc;
-            }, { uniqueVisits: 0, videoPlay: 0, vslAuthorityView: 0, vslEbookView: 0, checkoutOpens: 0 });
+            }, { uniqueVisits: 0, videoPlay: 0, vslAuthorityView: 0, vslEbookView: 0, vslVendaView: 0, checkoutOpens: 0 });
 
             // Filtro de Vendas (cruzando com Histórico Real)
             const filteredSales = (historyData || []).filter(s => {
