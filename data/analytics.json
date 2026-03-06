@@ -1,8 +1,8 @@
 {
     "totals": {
-        "clicks": 207,
-        "checkoutOpens": 201,
-        "checkoutStarts": 57,
+        "clicks": 209,
+        "checkoutOpens": 203,
+        "checkoutStarts": 59,
         "uiErrors": 11,
         "trustClicks": 3,
         "mobileSessions": 0,
@@ -10,7 +10,7 @@
         "slowLoads": 0,
         "pageViews": 48,
         "ctaClicks": 37,
-        "uniqueVisits": 15,
+        "uniqueVisits": 16,
         "checkoutAbandons": 16
     },
     "daily": {
@@ -202,6 +202,22 @@
             "pageViews": 0,
             "emailClicks": 0,
             "uniqueVisits": 2,
+            "ctaClicks": 0,
+            "checkoutAbandons": 0,
+            "ctaBreakdown": {}
+        },
+        "2026-03-06": {
+            "clicks": 2,
+            "checkoutOpens": 2,
+            "checkoutStarts": 2,
+            "uiErrors": 0,
+            "trustClicks": 0,
+            "mobileSessions": 0,
+            "desktopSessions": 0,
+            "slowLoads": 0,
+            "pageViews": 0,
+            "emailClicks": 0,
+            "uniqueVisits": 1,
             "ctaClicks": 0,
             "checkoutAbandons": 0,
             "ctaBreakdown": {}

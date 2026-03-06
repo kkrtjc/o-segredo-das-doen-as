@@ -114,9 +114,12 @@ function getDB() {
     // if (cacheDB) return cacheDB; 
     try {
         cacheDB = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+        if (!cacheDB.settings) {
+            cacheDB.settings = { enableOrderBump: true, enableUpsell: true };
+        }
         return cacheDB;
     } catch (e) {
-        return { products: {}, orderBumps: {} };
+        return { products: {}, orderBumps: {}, settings: { enableOrderBump: true, enableUpsell: true } };
     }
 }
 function saveDB(data) {
@@ -342,6 +345,67 @@ app.post('/api/leads', (req, res) => {
     saveLeads(leads);
 
     console.log(`🎯 [LEAD] Novo lead capturado: ${name} (${phone})`);
+    res.json({ success: true });
+});
+
+// 4.2 Abandons API
+const ABANDON_PATH = path.join(DATA_DIR, 'abandons.json');
+if (!fs.existsSync(ABANDON_PATH)) fs.writeFileSync(ABANDON_PATH, '[]');
+
+function getAbandons() {
+    try {
+        return JSON.parse(fs.readFileSync(ABANDON_PATH, 'utf8'));
+    } catch (e) {
+        return [];
+    }
+}
+function saveAbandons(data) { fs.writeFileSync(ABANDON_PATH, JSON.stringify(data, null, 4)); }
+
+app.get('/api/abandons', (req, res) => {
+    const password = req.params.password || req.query.password || req.headers['x-admin-password'];
+    if (password !== (process.env.ADMIN_PASSWORD || 'mura2026')) return res.status(401).json({ error: 'Acesso Negado' });
+    res.json(getAbandons());
+});
+
+app.post('/api/abandon', (req, res) => {
+    const { name, email, phone, product } = req.body;
+
+    // Validar mínimo
+    if (!phone && !email) {
+        return res.status(400).json({ error: 'Contato não fornecido' });
+    }
+
+    const abandons = getAbandons();
+
+    // Evitar duplicatas do mesmo lead no mesmo dia
+    const todayStr = new Date().toISOString().split('T')[0];
+    const existing = abandons.find(a =>
+        (a.phone === phone || (a.email && a.email === email)) &&
+        a.date.startsWith(todayStr)
+    );
+
+    if (existing) {
+        // Apenas atualizar se tiver mais infos
+        if (name && !existing.name) existing.name = name;
+        if (email && !existing.email) existing.email = email;
+        if (phone && !existing.phone) existing.phone = phone;
+        saveAbandons(abandons);
+        return res.json({ success: true, message: 'Abandono atualizado' });
+    }
+
+    const abandonRecord = {
+        id: Date.now().toString(),
+        date: new Date().toISOString(),
+        name: name || '',
+        email: email || '',
+        phone: phone || '',
+        product: product || 'unknown'
+    };
+
+    abandons.push(abandonRecord);
+    saveAbandons(abandons);
+
+    console.log(`🛒 [ABANDON] Carrinho abandonado registrado: ${name || email || phone}`);
     res.json({ success: true });
 });
 

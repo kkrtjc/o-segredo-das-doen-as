@@ -500,6 +500,11 @@ function renderOrderBumps(bumps) {
     const area = document.getElementById('order-bump-area');
     if (!area) return;
 
+    if (window.siteConfig && window.siteConfig.settings && window.siteConfig.settings.enableOrderBump === false) {
+        area.innerHTML = '';
+        return;
+    }
+
     // Filtra bumps que não devem aparecer
     const filteredBumps = (bumps || []).filter(bump => {
         // Remove Manual de Pintinhos do checkout (deve ser upsell posterior)
@@ -686,6 +691,13 @@ async function renderHomeProducts() {
         const coverHTML = `<img src="${p.cover}" alt="${p.title}" style="max-width: 140px; margin: 10px auto; display: block; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));">`;
         const isDiscounted = p.originalPrice && (p.originalPrice > p.price);
 
+        // Calculando variáveis dinâmicas
+        const discountPercent = Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100);
+        const installmentPrice = (p.originalPrice / 4).toFixed(2).replace('.', ',');
+        const priceStr = p.price.toFixed(2).split('.');
+        const priceInt = priceStr[0];
+        const priceDec = priceStr[1];
+
         card.innerHTML = `
             <span class="badge-featured">${p.badge || 'OFERTA ÚNICA'}</span>
             <h3 class="price-title">${p.title}</h3>
@@ -696,10 +708,10 @@ async function renderHomeProducts() {
                 <div style="text-decoration: line-through; color: #999; font-size: 0.9rem;">De R$ ${p.originalPrice.toFixed(2).replace('.', ',')} por apenas:</div>
                 <div style="display: flex; flex-direction: column; align-items: center; line-height: 1.1;">
                     <span class="price-amount" style="color: var(--color-secondary); font-size: 3.5rem;">
-                        R$ 109<small>,90</small>
+                        R$ ${priceInt}<small>,${priceDec}</small>
                     </span>
-                    <span style="font-size: 0.75rem; color: #10b981; font-weight: 800; margin-top: 3px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 15px;">🔥 27% DE DESCONTO NO PIX</span>
-                    <span style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 5px;">ou até 4x de <strong>R$ 37,47</strong> s/ juros</span>
+                    <span style="font-size: 0.75rem; color: #10b981; font-weight: 800; margin-top: 3px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 15px;">🔥 ${discountPercent}% DE DESCONTO NO PIX</span>
+                    <span style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 5px;">ou até 4x de <strong>R$ ${installmentPrice}</strong> s/ juros</span>
                 </div>
             </div>
 
@@ -1286,14 +1298,18 @@ async function startPixPayment(event) {
 
         console.log('📊 Upsell check:', { upsellId, isUpsellInCart, cartBumps: cart.bumps });
 
-        // If upsell NOT in cart, show modal and STOP (don't generate PIX yet)
+        // If upsell NOT in cart, check global settings
         if (!isUpsellInCart) {
-            console.log('🔔 Showing upsell modal (PIX will be generated after user decision)');
-            showSlideInUpsell('pix');
-            return; // STOP HERE - PIX will be generated when user accepts/rejects upsell
+            if (window.siteConfig && window.siteConfig.settings && window.siteConfig.settings.enableUpsell === false) {
+                console.log('✅ Upsell disabled in settings, skipping to PIX');
+            } else {
+                console.log('🔔 Showing upsell modal (PIX will be generated after user decision)');
+                showSlideInUpsell('pix');
+                return; // STOP HERE - PIX will be generated when user accepts/rejects upsell
+            }
         }
 
-        // If upsell already in cart, proceed directly to generate PIX
+        // If upsell already in cart or disabled, proceed directly to generate PIX
         console.log('✅ Upsell already in cart, proceeding to PIX generation');
         await processPixPayment();
     } catch (error) {
@@ -1360,14 +1376,18 @@ async function startCardPayment(event) {
 
         console.log('📊 Upsell check (Card):', { upsellId, isUpsellInCart, cartBumps: cart.bumps });
 
-        // If upsell NOT in cart, show modal and STOP
+        // If upsell NOT in cart, check global settings
         if (!isUpsellInCart) {
-            console.log('🔔 Showing upsell modal (Card payment will be processed after user decision)');
-            showSlideInUpsell('card');
-            return; // STOP HERE - Card payment will be processed when user accepts/rejects upsell
+            if (window.siteConfig && window.siteConfig.settings && window.siteConfig.settings.enableUpsell === false) {
+                console.log('✅ Upsell disabled in settings, skipping to Card payment');
+            } else {
+                console.log('🔔 Showing upsell modal (Card payment will be processed after user decision)');
+                showSlideInUpsell('card');
+                return; // STOP HERE - Card payment will be processed when user accepts/rejects upsell
+            }
         }
 
-        // If upsell already in cart, proceed directly to process payment
+        // If upsell already in cart or disabled, proceed directly to process payment
         console.log('✅ Upsell already in cart, proceeding to Card payment');
         await processCardPayment();
     } catch (error) {

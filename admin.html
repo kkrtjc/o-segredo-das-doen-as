@@ -1651,6 +1651,63 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--accent);
         }
+
+        /* Toggle Switch CSS */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        input:checked+.slider {
+            background-color: var(--success);
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px var(--success);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(22px);
+        }
+
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
     </style>
 </head>
 
@@ -1724,8 +1781,13 @@
                 </div>
                 <div class="nav-item" data-tab="leads" onclick="switchTab('leads', this)">
                     <i class="fa-solid fa-users"></i>
-                    <span>Leads</span>
+                    <span>Leads (Isca)</span>
                 </div>
+                <div class="nav-item" data-tab="abandons" onclick="switchTab('abandons', this)">
+                    <i class="fa-solid fa-user-clock"></i>
+                    <span>Leads Perdidos</span>
+                </div>
+
                 <div class="nav-item" onclick="location.reload()" style="color: #ef4444;">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                     <span>Sair</span>
@@ -1996,6 +2058,10 @@
             </div>
         </div>
     </div>
+    </div>
+
+
+
     </main>
     </div>
 
@@ -2081,7 +2147,7 @@
     <!-- TAB: LEADS -->
     <div id="tab-leads" class="tab-content">
         <div class="header-content" style="padding:0; margin-bottom:20px; justify-content:space-between;">
-            <h2 style="font-family:'Outfit'; font-size:1.5rem;">Leads Capturados</h2>
+            <h2 style="font-family:'Outfit'; font-size:1.5rem;">Leads Capturados (Iscas)</h2>
             <button class="btn btn-primary" onclick="exportLeads()"><i class="fa fa-download"></i> Exportar CSV</button>
         </div>
         <div class="content-card">
@@ -2106,6 +2172,43 @@
                     </thead>
                     <tbody>
                         <!-- Leads injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB: ABANDONOS (LEADS PERDIDOS) -->
+    <div id="tab-abandons" class="tab-content">
+        <div class="header-content" style="padding:0; margin-bottom:20px; justify-content:space-between;">
+            <h2 style="font-family:'Outfit'; font-size:1.5rem;">Recuperação de Carrinho</h2>
+            <button class="btn btn-primary" onclick="exportAbandons()"><i class="fa fa-download"></i> Exportar
+                CSV</button>
+        </div>
+        <div class="content-card">
+            <p style="color: var(--text-dim); font-size: 0.9rem; margin-top: 0;">Clientes que abriram o checkout,
+                preencheram dados, mas não finalizaram a compra.</p>
+            <div class="table-controls" style="margin-top: 20px;">
+                <div class="search-wrapper">
+                    <i class="fa fa-search"></i>
+                    <input type="text" id="abandonSearch" placeholder="Buscar cliente..." onkeyup="filterAbandons()">
+                </div>
+                <div style="color:var(--text-dim); font-size:0.9rem;">Total: <span id="abandonsCount"
+                        style="color:#fff; font-weight:bold;">0</span></div>
+            </div>
+            <div style="overflow-x:auto;">
+                <table id="abandonsTable">
+                    <thead>
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Cliente</th>
+                            <th>Contato</th>
+                            <th>Produto Tentado</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Abandons injected here -->
                     </tbody>
                 </table>
             </div>
@@ -2268,7 +2371,11 @@
         function switchTab(tabId, el) {
             // Update Nav Items
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            el.classList.add('active');
+            if (el) el.classList.add('active');
+            else {
+                const navItem = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+                if (navItem) navItem.classList.add('active');
+            }
 
             // Show Content
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -2281,12 +2388,99 @@
                 'bumps': 'Order Bumps & Upsells',
                 'history': 'Registro de Transações',
                 'analytics': 'Análise de Funil Pro',
-                'leads': 'Gestão de Leads (Iscas)'
+                'leads': 'Gestão de Leads (Iscas)',
+                'abandons': 'Recuperação de Carrinho'
             };
-            document.getElementById('page-title').innerText = titles[tabId] || 'Mura Panel';
+            const pageTitle = document.getElementById('page-title');
+            if (pageTitle) pageTitle.innerText = titles[tabId] || 'Mura Panel';
 
             if (tabId === 'history') loadHistory();
             if (tabId === 'analytics' || tabId === 'dashboard') loadAnalytics();
+            if (tabId === 'leads') loadLeads();
+            if (tabId === 'abandons') loadAbandons();
+        }
+
+        async function loadAbandons() {
+            const tbody = document.querySelector('#abandonsTable tbody');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Carregando...</td></tr>';
+
+            try {
+                const res = await fetch(`${API_URL}/api/abandons`, {
+                    headers: { 'x-admin-password': masterPass }
+                });
+                const abandons = await res.json();
+
+                document.getElementById('abandonsCount').innerText = abandons.length;
+                tbody.innerHTML = '';
+
+                if (Array.isArray(abandons)) {
+                    abandons.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                    if (abandons.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhum carrinho abandonado registrado.</td></tr>';
+                        return;
+                    }
+
+                    abandons.forEach(abandon => {
+                        const date = new Date(abandon.date).toLocaleString('pt-BR');
+                        const contact = [
+                            abandon.phone ? `<a href="https://wa.me/55${abandon.phone.replace(/\D/g, '')}" target="_blank" style="color:#25D366; text-decoration:none;"><i class="fab fa-whatsapp"></i> ${abandon.phone}</a>` : '',
+                            abandon.email ? `<span style="color:#888; display:block; font-size: 0.85em;"><i class="fa fa-envelope"></i> ${abandon.email}</span>` : ''
+                        ].filter(Boolean).join('');
+
+                        const row = `
+                            <tr>
+                                <td style="color:#888; font-size:0.85rem;">${date}</td>
+                                <td style="font-weight:bold; color:#fff;">${abandon.name || '-'}</td>
+                                <td>${contact}</td>
+                                <td><span class="badge" style="background:var(--accent); color:#111; padding:2px 6px; border-radius:4px; font-size:0.75rem;">${abandon.product}</span></td>
+                                <td>
+                                    ${abandon.phone ? `<button class="btn btn-primary" onclick="window.open('https://wa.me/55${abandon.phone.replace(/\D/g, '')}?text=Ol%C3%A1%20${abandon.name}%2C%20vi%20que%20voc%C3%AA%20tentou%20comprar%20no%20nosso%20site%2C%20ficou%20alguma%20d%C3%BAvida%3F', '_blank')" style="padding: 5px 10px; font-size: 0.8rem;"><i class="fa-solid fa-comment-dots"></i> CHUTAR</button>` : '-'}
+                                </td>
+                            </tr>
+                        `;
+                        tbody.innerHTML += row;
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+                tbody.innerHTML = '<tr><td colspan="5" style="color:red; text-align:center;">Erro ao carregar recuperações.</td></tr>';
+            }
+        }
+
+        function filterAbandons() {
+            const term = document.getElementById('abandonSearch').value.toLowerCase();
+            const rows = document.querySelectorAll('#abandonsTable tbody tr');
+
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(term) ? '' : 'none';
+            });
+        }
+
+        function exportAbandons() {
+            const rows = document.querySelectorAll('#abandonsTable tbody tr');
+            let csv = 'Data,Nome,Contato,Produto\n';
+
+            rows.forEach(row => {
+                if (row.style.display !== 'none') {
+                    const cols = row.querySelectorAll('td');
+                    if (cols.length > 0) {
+                        const date = cols[0].innerText;
+                        const name = cols[1].innerText;
+                        const contact = cols[2].innerText.replace(/\n/g, ' ');
+                        const prod = cols[3].innerText;
+                        csv += `"${date}","${name}","${contact}","${prod}"\n`;
+                    }
+                }
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'recuperacao_mura.csv';
+            a.click();
         }
 
         function checkLastVisit(currentSales) {
@@ -2332,6 +2526,12 @@
             if (hasChanges) actions.classList.remove('hidden');
             else actions.classList.add('hidden');
             return hasChanges;
+        }
+
+        function updateSettings(key, value) {
+            if (!db.settings) db.settings = { enableOrderBump: true, enableUpsell: true };
+            db.settings[key] = value;
+            checkChanges();
         }
 
         function discardChanges() {
@@ -2736,10 +2936,12 @@
         }
 
         function renderAdmin() {
-            // PRODUCTS RENDERING
+            // PRODUCTS RENDERING (Only main products, filter out upsells like ebook-manejo)
             const pList = document.getElementById('products-list');
             pList.innerHTML = '';
             Object.keys(db.products).forEach(id => {
+                if (id === 'ebook-manejo') return; // Hide upsell from Products tab
+
                 const p = db.products[id];
                 const card = document.createElement('div');
                 card.className = 'product-card';
@@ -2755,7 +2957,6 @@
                             <div style="display:flex; gap:5px; margin-top:5px">
                                 <span class="status-badge info">#${id}</span>
                                 ${id === 'ebook-doencas' ? '<span class="status-badge success">PRINCIPAL</span>' : ''}
-                                ${id === 'ebook-manejo' ? '<span class="status-badge warning">UPSELL</span>' : ''}
                                 ${id === 'combo-elite' ? '<span class="status-badge" style="background:purple; color:white">COMBO</span>' : ''}
                             </div>
                         </div>
@@ -2802,11 +3003,15 @@
                 renderBumpSelector(id, card.querySelector(`#sel-${id}`));
             });
 
-            // BUMPS RENDERING
+            // BUMPS & UPSELLS RENDERING
             const bList = document.getElementById('bumps-list');
             bList.innerHTML = '';
+
+            // 1. Renderizar os Order Bumps (Normalmente Tabela de Ração)
             Object.keys(db.orderBumps).forEach(id => {
                 const b = db.orderBumps[id];
+                const bumpEnabled = db.settings ? !!db.settings.enableOrderBump : true;
+
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.innerHTML = `
@@ -2817,11 +3022,21 @@
                             <input type="file" style="display:none" onchange="previewImg(this, '', '', (url) => { db.orderBumps['${id}'].image = url; renderAdmin(); })">
                         </div>
                         <div class="compact-info">
-                            <strong>Bump: ${b.title}</strong>
-                            <span>#${id}</span>
+                            <strong>Order Bump: ${b.title}</strong>
+                            <div style="display:flex; gap:5px; margin-top:5px">
+                                <span class="status-badge info">#${id}</span>
+                                <span class="status-badge ${bumpEnabled ? 'success' : 'danger'}">${bumpEnabled ? 'ATIVO' : 'DESATIVADO'}</span>
+                            </div>
                         </div>
                         <div style="display:flex; align-items:center; gap:10px">
                             <div class="price-tag">+ R$ ${b.price.toFixed(2)}</div>
+                            <div style="display:flex; flex-direction:column; align-items:center; gap:5px; margin-right: 15px;">
+                                <label class="switch" style="transform: scale(0.8);">
+                                    <input type="checkbox" onchange="updateSettings('enableOrderBump', this.checked); renderAdmin();" ${bumpEnabled ? 'checked' : ''}>
+                                    <span class="slider round"></span>
+                                </label>
+                                <span style="font-size:0.65rem; color:var(--text-dim); text-transform:uppercase;">${bumpEnabled ? 'Ligado' : 'Desligado'}</span>
+                            </div>
                             <button class="btn-icon" style="color:var(--accent); border-color:var(--accent)" onclick="editBump('${id}')"><i class="fa-solid fa-pen-to-square"></i></button>
                             <button class="btn-icon danger" onclick="deleteBump('${id}')"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
@@ -2829,6 +3044,57 @@
                 `;
                 bList.appendChild(card);
             });
+
+            // 2. Renderizar o Upsell (Manual de Pintinhos)
+            if (db.products['ebook-manejo']) {
+                const u = db.products['ebook-manejo'];
+                const id = 'ebook-manejo';
+                const upsellEnabled = db.settings ? !!db.settings.enableUpsell : true;
+
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.style.border = '1px solid var(--warning)';
+                card.innerHTML = `
+                    <div class="card-header-main">
+                        <div class="img-container" style="width:80px; height:80px">
+                            <img src="${u.cover}">
+                            <div class="img-overlay" onclick="this.nextElementSibling.click()">ALTERAR</div>
+                            <input type="file" style="display:none" onchange="previewImg(this, '', '', (url) => { db.products['${id}'].cover = url; renderAdmin(); })">
+                        </div>
+                        <div class="compact-info">
+                            <strong>Upsell: ${u.title}</strong>
+                            <div style="display:flex; gap:5px; margin-top:5px">
+                                <span class="status-badge warning">UPSELL</span>
+                                <span class="status-badge ${upsellEnabled ? 'success' : 'danger'}">${upsellEnabled ? 'ATIVO' : 'DESATIVADO'}</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px">
+                            <div class="price-tag">R$ ${u.price.toFixed(2)}</div>
+                            <div style="display:flex; flex-direction:column; align-items:center; gap:5px; margin-right: 15px;">
+                                <label class="switch" style="transform: scale(0.8);">
+                                    <input type="checkbox" onchange="updateSettings('enableUpsell', this.checked); renderAdmin();" ${upsellEnabled ? 'checked' : ''}>
+                                    <span class="slider round"></span>
+                                </label>
+                                <span style="font-size:0.65rem; color:var(--text-dim); text-transform:uppercase;">${upsellEnabled ? 'Ligado' : 'Desligado'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Configurações Upsell -->
+                    <div class="collapsible-trigger" onclick="toggleCollapsible(this)">
+                        <span><i class="fa-solid fa-sliders"></i> PREÇO E TEXTO</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="input-group">
+                            <div class="control"><label>Título</label><input type="text" value="${u.title}" onchange="db.products['${id}'].title=this.value; renderAdmin(); checkChanges()"></div>
+                            <div class="control"><label>Preço PIX (Oferta)</label><input type="number" step="0.01" value="${u.price}" onchange="db.products['${id}'].price=parseFloat(this.value)||0; renderAdmin(); checkChanges()"></div>
+                            <div class="control"><label>Preço Cartão (Cheio)</label><input type="number" step="0.01" value="${u.originalPrice || 0}" onchange="db.products['${id}'].originalPrice=parseFloat(this.value)||0; renderAdmin(); checkChanges()"></div>
+                        </div>
+                    </div>
+                `;
+                bList.appendChild(card);
+            }
         }
 
         function toggleCollapsible(el, isManual = false) {
