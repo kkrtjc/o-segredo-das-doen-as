@@ -119,6 +119,7 @@
             font-weight: 900;
             background: var(--accent-linear);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: 1px;
         }
@@ -1811,7 +1812,17 @@
                     <p style="color: var(--text-dim); margin: 5px 0 0;">Bem-vindo ao comando da sua operação,
                         Mura.</p>
                 </div>
-                <div style="display: flex; gap: 15px;">
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <div class="glass-date-picker">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <select id="date-range-select" onchange="applyLocalFiltering()">
+                            <option value="today">Hoje</option>
+                            <option value="yesterday">Ontem</option>
+                            <option value="7d">Últimos 7 dias</option>
+                            <option value="30d">Últimos 30 dias</option>
+                            <option value="all" selected>Todo o período</option>
+                        </select>
+                    </div>
                     <button onclick="saveData()" class="stat-card"
                         style="padding: 12px 25px; cursor: pointer; background: var(--accent-linear); color: #000; border: none; font-weight: 900; border-radius: 12px; display: flex; align-items: center; gap: 10px;">
                         <i class="fa-solid fa-floppy-disk"></i> SALVAR ALTERAÇÕES
@@ -1893,6 +1904,18 @@
 
             <!-- Analytics Tab (New) -->
             <div id="tab-analytics" class="tab-content">
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+                    <div class="glass-date-picker">
+                        <i class="fa-solid fa-filter"></i>
+                        <select id="analytics-date-select" onchange="applyLocalFiltering()">
+                            <option value="today">Hoje</option>
+                            <option value="yesterday">Ontem</option>
+                            <option value="7d">Últimos 7 dias</option>
+                            <option value="30d">Últimos 30 dias</option>
+                            <option value="all" selected>Todo o período</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="funnel-container">
                     <h3
                         style="font-family: var(--font-heading); margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; font-size: 1rem; opacity: 0.7;">

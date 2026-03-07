@@ -28,10 +28,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         localStorage.setItem('mura_visita_hoje', today);
     }
 
-    // 1.1 TIME SPENT 15S TRACKING
-    setTimeout(() => {
-        trackEvent('time_spent_15s');
-    }, 15000);
+    // 1.1 TIME SPENT 15S TRACKING (REMOVIDO POR SOLICITAÇÃO)
+
 
     // 2. CTA CLICK TRACKING
     document.querySelectorAll('a[href^="#offer"]').forEach(btn => {
@@ -50,6 +48,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const s = await fetch(`${API_URL}/api/payment/${session.data.id}`);
                     const sd = await s.json();
                     if (sd.status === 'approved') {
+                        // PIXEL: Purchase (Success from background session)
+                        trackPixel('Purchase', {
+                            value: session.total || 0,
+                            currency: 'BRL',
+                            content_name: 'Combo Elite / Produtos',
+                            content_ids: session.itemIds ? session.itemIds.split(',') : []
+                        });
                         localStorage.removeItem('active_pix_session');
                         window.location.href = `downloads.html?items=${session.itemIds}&total=${session.total.toFixed(2)}`;
                     } else {
@@ -80,6 +85,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (priceElement && resp.price) {
                         priceElement.innerText = resp.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
                     }
+
+                    // PIXEL: ViewContent (For static page support)
+                    trackPixel('ViewContent', {
+                        content_ids: [id],
+                        content_name: resp.title,
+                        content_type: 'product',
+                        value: resp.price,
+                        currency: 'BRL'
+                    });
                 }
             }
         } catch (e) {
@@ -314,13 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
     });
-
-    // Pixels tracking
-    setTimeout(() => {
-        if (typeof fbq === 'function') {
-            fbq('trackCustom', 'TimeSpent_15s');
-        }
-    }, 15000);
 });
 
 // --- 2. CHECKOUT & API LOGIC ---
@@ -359,6 +366,28 @@ async function trackEvent(type, isMobileManual = null, ctaId = null, details = n
                 console.warn(`📈 [TRACK] Evento "${type}" descartado após 3 tentativas.`);
             }
         }
+    }
+}
+
+// Helper para disparar Pixels com resiliência (espera o fbq estar pronto)
+function trackPixel(eventName, params = {}) {
+    if (typeof fbq === 'function') {
+        fbq('track', eventName, params);
+        console.log(`📈 [PIXEL OK] ${eventName}`, params);
+    } else {
+        // Tenta novamente em 500ms se o Pixel ainda não carregou (max 5 tentativas)
+        let attempts = 0;
+        const interval = setInterval(() => {
+            attempts++;
+            if (typeof fbq === 'function') {
+                fbq('track', eventName, params);
+                console.log(`📈 [PIXEL OK] ${eventName} (após espera)`, params);
+                clearInterval(interval);
+            } else if (attempts >= 10) {
+                console.warn(`📈 [PIXEL FAIL] ${eventName} - fbq não inicializado.`);
+                clearInterval(interval);
+            }
+        }, 500);
     }
 }
 
@@ -420,17 +449,18 @@ function declineEliteCombo() {
 }
 
 async function startCheckoutProcess(productId, forceBumps = []) {
-    trackEvent('checkout_open');
+    // Session-based guard for checkout_open to prevent duplicates
+    if (!sessionStorage.getItem('mura_checkout_opened')) {
+        trackEvent('checkout_open');
+        sessionStorage.setItem('mura_checkout_opened', 'true');
+    }
+    
     trackEvent('click');
     sessionStorage.setItem('mura_modal_open', 'true');
-    if (typeof fbq === 'function') {
-        fbq('track', 'InitiateCheckout', {
-            content_ids: [productId],
-            content_type: 'product',
-            value: 0, // Will be updated when data is loaded
-            currency: 'BRL'
-        });
-    }
+    trackEvent('click');
+    sessionStorage.setItem('mura_modal_open', 'true');
+    // InitiateCheckout will be fired in loadCheckoutData once we have the price and name
+
 
     if (!checkoutModal) return;
 
@@ -503,6 +533,15 @@ async function startCheckoutProcess(productId, forceBumps = []) {
 
         cart.mainProduct = { ...productData, id: productId };
         cart.bumps = forceBumps || [];
+
+        // PIXEL: InitiateCheckout (Now with real data)
+        trackPixel('InitiateCheckout', {
+            content_ids: [productId],
+            content_name: productData.title,
+            content_type: 'product',
+            value: productData.price,
+            currency: 'BRL'
+        });
 
         document.getElementById('checkout-product-name').innerText = productData.title;
         document.getElementById('checkout-product-price-display').innerText = formatBRL(productData.price);
@@ -736,6 +775,15 @@ async function renderHomeProducts() {
             container.innerHTML = `<p style="color: #fff; text-align: center;">Produto principal não encontrado.</p>`;
             return;
         }
+
+        // PIXEL: ViewContent
+        trackPixel('ViewContent', {
+            content_ids: [mainId],
+            content_name: p.title,
+            content_type: 'product',
+            value: p.price,
+            currency: 'BRL'
+        });
 
         const card = document.createElement('div');
         card.className = `price-card featured`;
@@ -1270,6 +1318,15 @@ async function handlePayment(method) {
 
             if (result.status === 'approved') {
                 const totalVal = document.querySelector('.checkout-total-display').innerText.replace(/[^\d,]/g, '').replace(',', '.');
+                
+                // PIXEL: Purchase (Card Approval)
+                trackPixel('Purchase', {
+                    value: Number(totalVal) || cart.total || 0,
+                    currency: 'BRL',
+                    content_name: cart.mainProduct ? cart.mainProduct.title : 'Checkout',
+                    content_ids: items.map(i => i.id)
+                });
+
                 window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
             } else if (result.status === 'in_process' || result.status === 'pending') {
                 // NOVO: Pagamento em análise - Tela Profissional
@@ -1351,14 +1408,8 @@ async function handlePayment(method) {
 async function startPixPayment(event) {
     if (event) event.preventDefault();
 
-    // PIXEL: AddPaymentInfo (PIX)
-    if (typeof fbq === 'function') {
-        fbq('track', 'AddPaymentInfo', {
-            payment_type: 'pix',
-            value: cart.total || 0,
-            currency: 'BRL'
-        });
-    }
+    // PIXEL: AddPaymentInfo (Removido por soliciteção do usuário - Purchase será o evento final)
+
 
     console.log('🔵 startPixPayment CALLED');
 
@@ -1377,11 +1428,15 @@ async function startPixPayment(event) {
 
         // If upsell NOT in cart, check individual enabled flag
         if (!isUpsellInCart) {
-            const upsellProduct = window.siteConfig?.products?.['ebook-manejo'];
+            // Use prefetchedProducts instead of window.siteConfig for absolute reliability
+            const upsellProduct = (typeof prefetchedProducts !== 'undefined' && prefetchedProducts['ebook-manejo']) 
+                ? prefetchedProducts['ebook-manejo'] 
+                : (window.siteConfig?.products?.['ebook-manejo']);
+
             const isUpsellEnabled = upsellProduct && upsellProduct.enabled !== false;
 
             if (!isUpsellEnabled) {
-                console.log('✅ Upsell disabled in admin panel, skipping to PIX');
+                console.log('✅ Upsell disabled in config, skipping to PIX');
             } else {
                 console.log('🔔 Showing upsell modal (PIX will be generated after user decision)');
                 showSlideInUpsell('pix');
@@ -1390,7 +1445,7 @@ async function startPixPayment(event) {
         }
 
         // If upsell already in cart or disabled, proceed directly to generate PIX
-        console.log('✅ Upsell already in cart, proceeding to PIX generation');
+        console.log('✅ Upsell already in cart or disabled, proceeding to PIX generation');
         await processPixPayment();
     } catch (error) {
         console.error('❌ Error in startPixPayment:', error);
@@ -1458,11 +1513,15 @@ async function startCardPayment(event) {
 
         // If upsell NOT in cart, check individual enabled flag
         if (!isUpsellInCart) {
-            const upsellProduct = window.siteConfig?.products?.['ebook-manejo'];
+            // Use prefetchedProducts instead of window.siteConfig for absolute reliability
+            const upsellProduct = (typeof prefetchedProducts !== 'undefined' && prefetchedProducts['ebook-manejo']) 
+                ? prefetchedProducts['ebook-manejo'] 
+                : (window.siteConfig?.products?.['ebook-manejo']);
+
             const isUpsellEnabled = upsellProduct && upsellProduct.enabled !== false;
 
             if (!isUpsellEnabled) {
-                console.log('✅ Upsell disabled in admin panel, skipping to Card payment');
+                console.log('✅ Upsell disabled in config, skipping to Card payment');
             } else {
                 console.log('🔔 Showing upsell modal (Card payment will be processed after user decision)');
                 showSlideInUpsell('card');
@@ -1471,7 +1530,7 @@ async function startCardPayment(event) {
         }
 
         // If upsell already in cart or disabled, proceed directly to process payment
-        console.log('✅ Upsell already in cart, proceeding to Card payment');
+        console.log('✅ Upsell already in cart or disabled, proceeding to Card payment');
         await processCardPayment();
     } catch (error) {
         console.error('❌ Error in startCardPayment:', error);
@@ -1480,14 +1539,8 @@ async function startCardPayment(event) {
 }
 
 async function processCardPayment() {
-    // PIXEL: AddPaymentInfo (CARTÃO)
-    if (typeof fbq === 'function') {
-        fbq('track', 'AddPaymentInfo', {
-            payment_type: 'credit_card',
-            value: cart.total || 0,
-            currency: 'BRL'
-        });
-    }
+    // PIXEL: Purchase will be fired in handlePayment upon success
+
 
     const name = document.getElementById('payer-name').value;
     const email = document.getElementById('payer-email').value;
@@ -1601,8 +1654,7 @@ async function captureAbandonedLead() {
 
     // Só captura se tiver pelo menos o telefone ou e-mail preenchido
     if ((phone && phone.length > 5) || (email && email.length > 5)) {
-        // PIXEL: Contact (Lead capturado)
-        if (typeof fbq === 'function') fbq('track', 'Contact');
+        // PIXEL: Contact (Removido por solicitação do usuário)
 
         console.log("🛒 [ABANDON] Tentando capturar lead abandonado...");
         try {
@@ -1814,6 +1866,15 @@ function showPixResult(data, items) {
                 localStorage.removeItem('active_pix_session');
 
                 const totalVal = document.querySelector('.checkout-total-display').innerText.replace(/[^\d,]/g, '').replace(',', '.');
+
+                // PIXEL: Purchase (PIX Poll Success)
+                trackPixel('Purchase', {
+                    value: Number(totalVal) || cart.total || 0,
+                    currency: 'BRL',
+                    content_name: cart.mainProduct ? cart.mainProduct.title : 'Checkout',
+                    content_ids: items.map(i => i.id)
+                });
+
                 window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
             } else {
                 // If not approved yet, schedule next poll
