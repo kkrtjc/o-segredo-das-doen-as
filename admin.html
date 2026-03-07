@@ -1830,9 +1830,9 @@
                     <!-- 1. VISITORS -->
                     <div class="stat-card">
                         <div class="icon-box"><i class="fa-solid fa-users"></i></div>
-                        <div class="label">Visitantes Únicos</div>
+                        <div class="label">Acessos à Página</div>
                         <div class="value" id="dash-unique">0</div>
-                        <div class="sub-text">Entraram na página</div>
+                        <div class="sub-text">Visitantes únicos</div>
                     </div>
 
                     <!-- 2. ENGAGEMENT -->
@@ -1846,9 +1846,17 @@
                     <!-- 3. INTEREST -->
                     <div class="stat-card">
                         <div class="icon-box"><i class="fa-solid fa-cart-shopping"></i></div>
-                        <div class="label">Abriu Checkout</div>
+                        <div class="label">Checkouts Abertos</div>
                         <div class="value" id="dash-checkout">0</div>
                         <div class="sub-text" id="dash-checkout-rate">0% Conversão</div>
+                    </div>
+
+                    <!-- 3.1 PIX GERADOS (NOVO) -->
+                    <div class="stat-card">
+                        <div class="icon-box" style="color: #00f2ea;"><i class="fa-solid fa-qrcode"></i></div>
+                        <div class="label">Pix Gerados</div>
+                        <div class="value" id="dash-starts">0</div>
+                        <div class="sub-text">Iniciaram pagamento</div>
                     </div>
 
                     <!-- 4. SALES -->
@@ -2400,6 +2408,51 @@
             if (tabId === 'abandons') loadAbandons();
         }
 
+        async function loadLeads() {
+            const tbody = document.querySelector('#leadsTable tbody');
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Carregando...</td></tr>';
+
+            try {
+                const res = await fetch(`${API_URL}/api/leads`, {
+                    headers: { 'x-admin-password': masterPass }
+                });
+                const leads = await res.json();
+
+                document.getElementById('leadsCount').innerText = leads.length;
+                tbody.innerHTML = '';
+
+                if (Array.isArray(leads)) {
+                    // Sort descending by date
+                    leads.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                    if (leads.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Nenhum lead capturado ainda.</td></tr>';
+                        return;
+                    }
+
+                    leads.forEach(lead => {
+                        const date = new Date(lead.date).toLocaleDateString('pt-BR');
+                        const row = `
+                            <tr>
+                                <td style="font-weight:bold; color:#fff;">${lead.name}</td>
+                                <td>
+                                    <a href="https://wa.me/55${lead.phone.replace(/\D/g, '')}" target="_blank" style="color:#25D366; text-decoration:none;">
+                                        <i class="fab fa-whatsapp"></i> ${lead.phone}
+                                    </a>
+                                </td>
+                                <td><span class="badge">${lead.source || 'Geral'}</span></td>
+                                <td style="color:#888; font-size:0.85rem;">${date}</td>
+                            </tr>
+                        `;
+                        tbody.innerHTML += row;
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+                tbody.innerHTML = '<tr><td colspan="4" style="color:red; text-align:center;">Erro ao carregar leads.</td></tr>';
+            }
+        }
+
         async function loadAbandons() {
             const tbody = document.querySelector('#abandonsTable tbody');
             tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Carregando...</td></tr>';
@@ -2707,6 +2760,7 @@
             const visitors = data.uniqueVisits || data.pageViews || 0; // Fallback
             const cta = data.ctaClicks || data.clicks || 0;
             const checkouts = data.checkoutOpens || 0;
+            const starts = data.checkoutStarts || 0; // PIX GERADOS
             const sales = data.approvedCount || 0;
             const abandon = data.checkoutAbandons || 0;
             const revenue = data.totalRevenue || 0;
@@ -2722,6 +2776,7 @@
             safeSetText('dash-cta-rate', rate1 + '% Conversão');
             safeSetText('dash-checkout', checkouts);
             safeSetText('dash-checkout-rate', rate2 + '% Conversão');
+            safeSetText('dash-starts', starts); // NOVO: PIX GERADOS
             safeSetText('dash-sales', sales);
             safeSetText('dash-sales-rate', rate3 + '% Conversão (do checkout)');
 

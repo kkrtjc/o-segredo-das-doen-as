@@ -482,7 +482,12 @@
                 try {
                     const total = parseFloat(params.get('total') || '0');
                     if (total > 0 && typeof fbq === 'function') {
-                        fbq('track', 'Purchase', { value: total, currency: 'BRL' });
+                        fbq('track', 'Purchase', {
+                            value: total,
+                            currency: 'BRL',
+                            content_ids: itemIds.split(','),
+                            content_type: 'product'
+                        });
                     }
                 } catch (e) { console.error('Erro tracking pixel', e); }
 

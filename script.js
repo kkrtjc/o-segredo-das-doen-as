@@ -16,9 +16,14 @@ const prefetchedProducts = {};
 
 // --- INIT: CHECK PENDING PIX (Recover Logic) ---
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. UNIQUE VISITOR TRACKING
+    // 1. UNIQUE VISITOR + SESSÃO TRACKING
     const today = new Date().toISOString().split('T')[0];
     const lastVisit = localStorage.getItem('mura_visita_hoje');
+
+    // Sempre dispara session_start em cada carregamento de página
+    trackEvent('session_start');
+
+    // unique_visit é disparado apenas uma vez por dia
     if (lastVisit !== today) {
         trackEvent('unique_visit');
         localStorage.setItem('mura_visita_hoje', today);
@@ -310,7 +315,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         if (typeof fbq === 'function') {
             fbq('trackCustom', 'TimeSpent_15s');
-            fbq('track', 'ViewContent');
         }
     }, 15000);
 });
@@ -320,15 +324,38 @@ document.addEventListener('DOMContentLoaded', () => {
 // mp is initialized in index.html to avoid duplicate declaration errors
 const checkoutModal = document.getElementById('checkout-modal');
 
+// --- TRACKING ENGINE (resiliente para cold start do Render) ---
 async function trackEvent(type, isMobileManual = null, ctaId = null, details = null) {
-    const isMobile = isMobileManual !== null ? isMobileManual : (window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || ('ontouchstart' in window));
-    try {
-        fetch(`${API_URL}/api/track`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ type, isMobile, ctaId, details })
-        }).catch(e => console.warn("Track sync failed", e));
-    } catch (e) { }
+    const isMobile = isMobileManual !== null ? isMobileManual : (
+        window.innerWidth <= 768 ||
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+        ('ontouchstart' in window)
+    );
+
+    const body = JSON.stringify({ type, isMobile, ctaId, details });
+
+    // Tenta enviar até 3 vezes para lidar com o cold start do Render
+    for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+            const resp = await fetch(`${API_URL}/api/track`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body,
+                signal: AbortSignal.timeout(8000) // 8s timeout
+            });
+            if (resp.ok) {
+                console.log(`📈 [TRACK OK] ${type} (tentativa ${attempt})`);
+                return; // Sucesso, para de tentar
+            }
+        } catch (e) {
+            if (attempt < 3) {
+                console.warn(`📈 [TRACK] Tentativa ${attempt} falhou (${e.message}), retentando em 3s...`);
+                await new Promise(r => setTimeout(r, 3000)); // aguarda 3s antes de retentar
+            } else {
+                console.warn(`📈 [TRACK] Evento "${type}" descartado após 3 tentativas.`);
+            }
+        }
+    }
 }
 
 // Interceptador para Promoção de Elite (Pré-Checkout)
@@ -392,7 +419,14 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     trackEvent('checkout_open');
     trackEvent('click');
     sessionStorage.setItem('mura_modal_open', 'true');
-    if (typeof fbq === 'function') fbq('track', 'InitiateCheckout');
+    if (typeof fbq === 'function') {
+        fbq('track', 'InitiateCheckout', {
+            content_ids: [productId],
+            content_type: 'product',
+            value: 0, // Will be updated when data is loaded
+            currency: 'BRL'
+        });
+    }
 
     if (!checkoutModal) return;
 
@@ -553,8 +587,11 @@ function renderOrderBumps(bumps) {
 
 function toggleBump(bumpId) {
     const idx = cart.bumps.indexOf(bumpId);
-    if (idx > -1) cart.bumps.splice(idx, 1);
-    else cart.bumps.push(bumpId);
+    if (idx > -1) {
+        cart.bumps.splice(idx, 1);
+    } else {
+        cart.bumps.push(bumpId);
+    }
 
     const chk = document.getElementById(`bump-chk-${bumpId}`);
     if (chk) chk.checked = cart.bumps.includes(bumpId);
@@ -1282,8 +1319,18 @@ async function handlePayment(method) {
 
 // --- 1. PIX PAYMENT (MODIFIED FOR UPSELL INTERCEPTION) ---
 async function startPixPayment(event) {
-    console.log('🔵 startPixPayment CALLED');
     if (event) event.preventDefault();
+
+    // PIXEL: AddPaymentInfo (PIX)
+    if (typeof fbq === 'function') {
+        fbq('track', 'AddPaymentInfo', {
+            payment_type: 'pix',
+            value: cart.total || 0,
+            currency: 'BRL'
+        });
+    }
+
+    console.log('🔵 startPixPayment CALLED');
 
     // NEW: VALIDAÇÃO ANTES DO UPSELL
     if (!validateCheckoutInputs('pix')) {
@@ -1397,6 +1444,15 @@ async function startCardPayment(event) {
 }
 
 async function processCardPayment() {
+    // PIXEL: AddPaymentInfo (CARTÃO)
+    if (typeof fbq === 'function') {
+        fbq('track', 'AddPaymentInfo', {
+            payment_type: 'credit_card',
+            value: cart.total || 0,
+            currency: 'BRL'
+        });
+    }
+
     const name = document.getElementById('payer-name').value;
     const email = document.getElementById('payer-email').value;
     const cpf = document.getElementById('payer-cpf')?.value?.trim();
@@ -1501,14 +1557,42 @@ function interceptPaymentButton(callback) {
     return false;
 }
 
+async function captureAbandonedLead() {
+    const name = document.getElementById('payer-name')?.value?.trim();
+    const email = document.getElementById('payer-email')?.value?.trim();
+    const phone = document.getElementById('payer-phone')?.value?.trim();
+    const productId = cart.id || 'unknown';
+
+    // Só captura se tiver pelo menos o telefone ou e-mail preenchido
+    if ((phone && phone.length > 5) || (email && email.length > 5)) {
+        // PIXEL: Contact (Lead capturado)
+        if (typeof fbq === 'function') fbq('track', 'Contact');
+
+        console.log("🛒 [ABANDON] Tentando capturar lead abandonado...");
+        try {
+            await fetch(`${API_URL}/api/abandon`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, phone, product: productId })
+            });
+        } catch (e) {
+            console.warn("Falha ao registrar abandono", e);
+        }
+    }
+}
+
 // Event Listeners with Order Bump Interception
 document.getElementById('btn-pay-pix')?.addEventListener('click', startPixPayment);
 document.getElementById('btn-pay-card')?.addEventListener('click', startCardPayment);
+document.getElementById('btn-pay-card-direct')?.addEventListener('click', processCardPayment);
+
 document.querySelectorAll('.method-btn').forEach(b => b.addEventListener('click', () => switchMethod(b.dataset.method)));
-document.querySelector('.close-modal')?.addEventListener('click', () => {
+
+document.querySelector('.close-modal')?.addEventListener('click', async () => {
     // TRACK ABANDON
     if (sessionStorage.getItem('mura_modal_open') === 'true') {
         trackEvent('checkout_abandon');
+        await captureAbandonedLead(); // Captura os dados antes de fechar
         sessionStorage.removeItem('mura_modal_open');
         sessionStorage.removeItem('checkout_started');
     }
@@ -1538,6 +1622,13 @@ document.querySelector('.close-modal')?.addEventListener('click', () => {
             window.activePixPoll = null;
         }
     }, 300);
+});
+
+// Captura se fechar a aba/janela
+window.addEventListener('beforeunload', () => {
+    if (sessionStorage.getItem('mura_modal_open') === 'true') {
+        captureAbandonedLead();
+    }
 });
 
 // --- 4. MASKS ---
