@@ -2020,7 +2020,7 @@
                             onclick="clearHistory()"><i class="fa-solid fa-trash-can"></i> LIMPAR</button>
                         <button class="btn btn-primary"
                             style="background: #111; border: 1px solid #333; padding: 8px 12px; font-size: 0.8rem;"
-                            onclick="factoryReset()"><i class="fa-solid fa-rotate-left"></i> RESETAR FÁBRICA</button>
+                            onclick="syncFromGit()"><i class="fa-solid fa-rotate-left"></i> SINCRONIZAR COM GIT</button>
                     </div>
                     <br>
                     <div class="table-responsive">
@@ -2556,13 +2556,32 @@
 
         async function checkAuth() {
             const pass = document.getElementById('admin-pass').value;
+            // First check locally for quick local dev
             if (pass === 'mura2026') {
                 masterPass = pass;
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('admin-panel').classList.remove('hidden');
                 loadData();
                 loadAnalytics();
-            } else alert('Senha Incorreta!');
+                return;
+            }
+
+            // If not local default, try to verify with server by attempting loadData
+            try {
+                const res = await fetch(`${API_URL}/api/config?t=${Date.now()}`);
+                if (res.ok) {
+                    masterPass = pass;
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('admin-panel').classList.remove('hidden');
+                    loadData();
+                    loadAnalytics();
+                } else {
+                    alert('Senha Incorreta!');
+                }
+            } catch (e) {
+                alert('Erro de conexão com o servidor: ' + API_URL);
+                console.error(e);
+            }
         }
 
         async function loadData() {
@@ -2614,10 +2633,11 @@
                     checkChanges();
                     showToast('✅ Alterações salvas com sucesso!');
                 } else {
-                    throw new Error('Erro ao salvar');
+                    const errorMsg = await res.text();
+                    throw new Error(errorMsg || 'Erro ' + res.status);
                 }
             } catch (e) {
-                alert('Erro ao salvar alterações. Verifique sua conexão.');
+                alert('❌ ERRO AO SALVAR: ' + e.message + '\n\nVerifique:\n1. Se o servidor ' + API_URL + ' está online.\n2. Se a senha está correta.\n3. Se sua conexão está ativa.');
                 console.error(e);
             }
         }
@@ -3355,8 +3375,8 @@
             }
         }
 
-        async function factoryReset() {
-            if (!confirm('🚨 PERIGO: Isso vai APAGAR todas as alterações de preço, bumps e textos que você fez no painel e restaurar o site para o original de fábrica (código). \n\nIsso é útil para corrigir erros no "Disco Persistente" do Render. \n\nDeseja continuar?')) return;
+        async function syncFromGit() {
+            if (!confirm('🔄 SINCRONIZAR COM GIT: Isso vai aplicar as configurações de Preços, Bumps e Upsells que estão no seu código do Repositório (Git) no "Disco Persistente" do Render. \n\nUse isso se você alterou algo manualmente nos arquivos do projeto e quer que apareça aqui.\n\nContinuar?')) return;
 
             try {
                 const res = await fetch(`${API_URL}/api/config/reset`, {
@@ -3368,13 +3388,13 @@
                 const data = await res.json();
 
                 if (data.success) {
-                    alert('✅ Sistema restaurado com sucesso! A página será recarregada.');
+                    alert('✅ Sistema sincronizado com o Git! A página será recarregada.');
                     location.reload();
                 } else {
-                    alert('Erro ao restaurar: ' + (data.error || 'Erro desconhecido'));
+                    alert('Erro ao sincronizar: ' + (data.error || 'Erro desconhecido'));
                 }
             } catch (e) {
-                alert('Erro de conexão. Verifique se o servidor está online.');
+                alert('Erro de conexão ao sincronizar. Verifique se o servidor está online.');
             }
         }
     </script>
