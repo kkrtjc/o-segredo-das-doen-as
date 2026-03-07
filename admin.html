@@ -1853,14 +1853,6 @@
                         <div class="sub-text">Acessos únicos</div>
                     </div>
 
-                    <!-- 2. RETENTION 15S (PREMIUM ONLY) -->
-                    <div class="stat-card" style="border-color: rgba(16, 185, 129, 0.3);">
-                        <div class="icon-box" style="background: rgba(16, 185, 129, 0.1); color: #10b981;"><i
-                                class="fa-solid fa-hourglass-start"></i></div>
-                        <div class="label">Retenção 15s</div>
-                        <div class="value" id="dash-15s">0</div>
-                        <div class="sub-text" id="dash-15s-rate">0% da Audiência</div>
-                    </div>
 
                     <!-- 3. INTEREST -->
                     <div class="stat-card">
@@ -1929,24 +1921,11 @@
                         </div>
 
                         <div class="funnel-connector">
-                            <span class="conversion-rate" id="conv-page-15s">0%</span>
+                            <span class="conversion-rate" id="conv-page-check">0%</span>
                             <div class="connector-line"></div>
                         </div>
 
-                        <!-- Step 2 (NEW) -->
-                        <div class="funnel-step">
-                            <div class="funnel-circle" style="color: #10b981;"><i
-                                    class="fa-solid fa-hourglass-half"></i></div>
-                            <div class="funnel-val" id="funnel-15s">0</div>
-                            <div class="funnel-label">RETENÇÃO 15S</div>
-                        </div>
-
-                        <div class="funnel-connector">
-                            <span class="conversion-rate" id="conv-15s-check">0%</span>
-                            <div class="connector-line"></div>
-                        </div>
-
-                        <!-- Step 3 -->
+                        <!-- Step 2 -->
                         <div class="funnel-step">
                             <div class="funnel-circle" style="color: var(--warning);"><i
                                     class="fa-solid fa-cart-shopping"></i></div>
@@ -2813,15 +2792,12 @@
             const revenue = data.totalRevenue || 0;
 
             // RATES
-            const rate15s = ((stay15s / visitors) * 100).toFixed(1);
-            const rateCheck = stay15s > 0 ? ((checkouts / stay15s) * 100).toFixed(1) : 0;
+            const rateCheck = visitors > 0 ? ((checkouts / visitors) * 100).toFixed(1) : 0;
             const ratePix = checkouts > 0 ? ((starts / checkouts) * 100).toFixed(1) : 0;
             const rateFinalSale = starts > 0 ? ((sales / starts) * 100).toFixed(1) : 0;
 
             // --- TOP CARDS ---
             safeSetText('dash-unique', visitors);
-            safeSetText('dash-15s', stay15s);
-            safeSetText('dash-15s-rate', rate15s + '% de Retenção');
             safeSetText('dash-checkout', checkouts);
             safeSetText('dash-checkout-rate', rateCheck + '% Intenção');
             safeSetText('dash-starts', starts);
@@ -2830,13 +2806,11 @@
 
             // --- FUNNEL ROW ---
             safeSetText('funnel-unique', visitors);
-            safeSetText('funnel-15s', stay15s);
             safeSetText('funnel-checkout', checkouts);
             safeSetText('funnel-starts', starts);
             safeSetText('funnel-sales-val', sales);
 
-            safeSetText('conv-page-15s', rate15s + '%');
-            safeSetText('conv-15s-check', rateCheck + '%');
+            safeSetText('conv-page-check', rateCheck + '%');
             safeSetText('conv-check-pix', ratePix + '%');
             safeSetText('conv-pix-sale', rateFinalSale + '%');
 

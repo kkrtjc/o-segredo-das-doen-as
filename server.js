@@ -442,7 +442,6 @@ app.post('/api/track', (req, res) => {
             uiErrors: 0, trustClicks: 0, mobileSessions: 0,
             desktopSessions: 0, slowLoads: 0, pageViews: 0,
             emailClicks: 0, uniqueVisits: 0, ctaClicks: 0, checkoutAbandons: 0,
-            timeSpent15s: 0,
             ctaBreakdown: {} // Detailed CTA ID breakdown
         };
     }
@@ -471,7 +470,6 @@ app.post('/api/track', (req, res) => {
     else if (type === 'ui_error' || type === 'checkout_error') increment('uiErrors');
     else if (type === 'trust_click') increment('trustClicks');
     else if (type === 'slow_load') increment('slowLoads');
-    else if (type === 'time_spent_15s') increment('timeSpent15s');
     else if (type === 'session_start') {
         increment('pageViews');
         if (isMobile) increment('mobileSessions');
