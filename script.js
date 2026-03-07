@@ -443,6 +443,16 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         window.activePixPoll = null;
     }
 
+    // RESET PIX BUTTON AND UPSELL STATE
+    const btnPix = document.getElementById('btn-pay-pix');
+    if (btnPix) {
+        btnPix.innerText = 'Gerar PIX';
+        btnPix.disabled = false;
+        btnPix.style.opacity = '1';
+    }
+    midCheckoutUpsellPending = true;
+    localStorage.removeItem('active_pix_session');
+
     const secureOverlay = document.getElementById('secure-loading');
     if (secureOverlay) {
         secureOverlay.classList.add('active');
@@ -538,10 +548,11 @@ function renderOrderBumps(bumps) {
     const area = document.getElementById('order-bump-area');
     if (!area) return;
 
-    if (window.siteConfig && window.siteConfig.settings && window.siteConfig.settings.enableOrderBump === false) {
-        area.innerHTML = '';
-        return;
-    }
+    // Global check removed to support individual toggles
+    // if (window.siteConfig && window.siteConfig.settings && window.siteConfig.settings.enableOrderBump === false) {
+    //     area.innerHTML = '';
+    //     return;
+    // }
 
     // Filtra bumps que não devem aparecer
     const filteredBumps = (bumps || []).filter(bump => {
@@ -970,6 +981,15 @@ function closeCheckout() {
         logoOverlay.classList.remove('active');
         logoOverlay.classList.remove('run-left');
     }
+
+    // RESET STATES ON CLOSE
+    const btnPix = document.getElementById('btn-pay-pix');
+    if (btnPix) {
+        btnPix.innerText = 'Gerar PIX';
+        btnPix.disabled = false;
+        btnPix.style.opacity = '1';
+    }
+    midCheckoutUpsellPending = true;
 }
 
 
@@ -1151,7 +1171,10 @@ async function handlePayment(method) {
 
                 // UPSELL PÓS-PIX: Mostra o upsell dos pintinhos após gerar o PIX
                 setTimeout(() => {
-                    if (midCheckoutUpsellPending && !cart.bumps.includes('ebook-manejo') && cart.mainProduct.id !== 'combo-elite' && cart.mainProduct.id !== 'ebook-manejo') {
+                    const upsellProduct = window.siteConfig?.products?.['ebook-manejo'];
+                    const isUpsellEnabled = upsellProduct && upsellProduct.enabled !== false;
+                    
+                    if (midCheckoutUpsellPending && isUpsellEnabled && !cart.bumps.includes('ebook-manejo') && cart.mainProduct.id !== 'combo-elite' && cart.mainProduct.id !== 'ebook-manejo') {
                         showSlideInUpsell('pix');
                     }
                 }, 2000); // Aguarda 2 segundos após mostrar o QR Code
@@ -1352,10 +1375,13 @@ async function startPixPayment(event) {
 
         console.log('📊 Upsell check:', { upsellId, isUpsellInCart, cartBumps: cart.bumps });
 
-        // If upsell NOT in cart, check global settings
+        // If upsell NOT in cart, check individual enabled flag
         if (!isUpsellInCart) {
-            if (window.siteConfig && window.siteConfig.settings && window.siteConfig.settings.enableUpsell === false) {
-                console.log('✅ Upsell disabled in settings, skipping to PIX');
+            const upsellProduct = window.siteConfig?.products?.['ebook-manejo'];
+            const isUpsellEnabled = upsellProduct && upsellProduct.enabled !== false;
+
+            if (!isUpsellEnabled) {
+                console.log('✅ Upsell disabled in admin panel, skipping to PIX');
             } else {
                 console.log('🔔 Showing upsell modal (PIX will be generated after user decision)');
                 showSlideInUpsell('pix');
@@ -1430,10 +1456,13 @@ async function startCardPayment(event) {
 
         console.log('📊 Upsell check (Card):', { upsellId, isUpsellInCart, cartBumps: cart.bumps });
 
-        // If upsell NOT in cart, check global settings
+        // If upsell NOT in cart, check individual enabled flag
         if (!isUpsellInCart) {
-            if (window.siteConfig && window.siteConfig.settings && window.siteConfig.settings.enableUpsell === false) {
-                console.log('✅ Upsell disabled in settings, skipping to Card payment');
+            const upsellProduct = window.siteConfig?.products?.['ebook-manejo'];
+            const isUpsellEnabled = upsellProduct && upsellProduct.enabled !== false;
+
+            if (!isUpsellEnabled) {
+                console.log('✅ Upsell disabled in admin panel, skipping to Card payment');
             } else {
                 console.log('🔔 Showing upsell modal (Card payment will be processed after user decision)');
                 showSlideInUpsell('card');
