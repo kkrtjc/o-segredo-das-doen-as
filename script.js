@@ -23,11 +23,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Sempre dispara session_start em cada carregamento de página
     trackEvent('session_start');
 
-    // unique_visit é disparado apenas uma vez por dia
     if (lastVisit !== today) {
         trackEvent('unique_visit');
         localStorage.setItem('mura_visita_hoje', today);
     }
+
+    // 1.1 TIME SPENT 15S TRACKING
+    setTimeout(() => {
+        trackEvent('time_spent_15s');
+    }, 15000);
 
     // 2. CTA CLICK TRACKING
     document.querySelectorAll('a[href^="#offer"]').forEach(btn => {
@@ -541,6 +545,9 @@ function renderOrderBumps(bumps) {
 
     // Filtra bumps que não devem aparecer
     const filteredBumps = (bumps || []).filter(bump => {
+        // Respect individual enabled flag
+        if (bump.enabled === false) return false;
+
         // Remove Manual de Pintinhos do checkout (deve ser upsell posterior)
         if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') return false;
         // Mantém a Tabela de Ração no checkout

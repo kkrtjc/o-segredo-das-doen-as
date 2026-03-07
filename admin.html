@@ -10,33 +10,47 @@
     <style>
         :root {
             --bg-deep: #050505;
-            --bg-sidebar: rgba(10, 10, 10, 0.95);
-            --bg-card: rgba(18, 18, 18, 0.7);
+            --bg-sidebar: rgba(8, 8, 8, 0.98);
+            --bg-card: rgba(15, 15, 15, 0.6);
             --accent: #d4af37;
-            --accent-hover: #f1c40f;
-            --accent-dim: rgba(212, 175, 55, 0.1);
-            --accent-glow: rgba(212, 175, 55, 0.3);
+            --accent-glow: rgba(212, 175, 55, 0.4);
+            --accent-linear: linear-gradient(135deg, #d4af37, #f1c40f);
             --text-main: #ffffff;
-            --text-dim: #94a3b8;
-            --border: rgba(255, 255, 255, 0.08);
+            --text-dim: #a1a1aa;
+            --border: rgba(212, 175, 55, 0.15);
             --glass: rgba(255, 255, 255, 0.03);
+            --glass-strong: rgba(255, 255, 255, 0.05);
             --success: #10b981;
             --danger: #ef4444;
-            --blue: #3b82f6;
-            --sidebar-width: 260px;
-            --sidebar-collapsed: 80px;
-            --radius-lg: 24px;
-            --radius-md: 16px;
+            --warning: #f59e0b;
+            --radius-xl: 32px;
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --font-main: 'Inter', sans-serif;
             --font-heading: 'Outfit', sans-serif;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
         }
 
         body {
             background: var(--bg-deep);
-            background-image: radial-gradient(circle at 20% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.02) 0%, transparent 40%),
-                linear-gradient(to bottom, #050505, #0a0a0a);
+            background-image:
+                radial-gradient(circle at 10% 10%, rgba(212, 175, 55, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+                linear-gradient(135deg, #050505 0%, #0a0a0b 100%);
             color: var(--text-main);
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-main);
             margin: 0;
             min-height: 100vh;
             display: flex;
@@ -49,210 +63,137 @@
             display: flex;
             width: 100%;
             min-height: 100vh;
-            animation: fadeIn 0.4s ease-out;
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .main-content {
             flex: 1;
-            padding: 30px;
+            padding: 40px;
             margin: 0 auto;
             max-width: 1400px;
             width: 100%;
             box-sizing: border-box;
+            position: relative;
+        }
+
+        /* --- SIDEBAR REINVENTED --- */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            box-sizing: border-box;
+            backdrop-filter: blur(20px);
+            z-index: 1000;
         }
 
         .sidebar-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 0 15px 40px;
+            gap: 15px;
+            padding: 0 10px 40px;
             border-bottom: 1px solid var(--border);
             margin-bottom: 30px;
         }
 
-        .sidebar-logo i {
-            font-size: 1.8rem;
-            color: var(--accent);
-            filter: drop-shadow(0 0 10px var(--accent-glow));
-        }
-
         .sidebar-logo h1 {
             font-family: var(--font-heading);
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 900;
+            background: var(--accent-linear);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             letter-spacing: 1px;
-            color: #fff;
-            margin: 0;
-        }
-
-        .nav-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            flex: 1;
         }
 
         .nav-item {
-            padding: 14px 20px;
-            border-radius: 14px;
+            padding: 16px 20px;
+            border-radius: var(--radius-md);
             cursor: pointer;
             color: var(--text-dim);
             font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s;
+            font-size: 0.9rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             align-items: center;
             gap: 15px;
-            position: relative;
-            overflow: hidden;
+            margin-bottom: 4px;
+            border: 1px solid transparent;
         }
 
         .nav-item i {
             font-size: 1.1rem;
             width: 20px;
             text-align: center;
+            opacity: 0.7;
         }
 
         .nav-item.active {
-            background: var(--accent-dim);
+            background: rgba(212, 175, 55, 0.08);
             color: var(--accent);
-            border: 1px solid rgba(212, 175, 55, 0.1);
+            border-color: rgba(212, 175, 55, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .nav-item.active::before {
+        .nav-item.active i {
+            opacity: 1;
+        }
+
+        .nav-item:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.03);
+            color: #fff;
+            transform: translateX(8px);
+        }
+
+        /* --- CARDS & GLASS --- */
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
             content: '';
             position: absolute;
-            left: 0;
-            top: 20%;
-            height: 60%;
-            width: 4px;
-            background: var(--accent);
-            border-radius: 0 4px 4px 0;
-            box-shadow: 2px 0 10px var(--accent-glow);
-        }
-
-        .nav-item:hover:not(.active) {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateX(5px);
-        }
-
-        .sidebar-footer {
-            padding: 20px 15px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        /* Delicate Header */
-        .glass-header {
-            background: var(--glass);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-            padding: 15px 0;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
             top: 0;
-            z-index: 100;
-        }
-
-        .header-content {
+            left: 0;
             width: 100%;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(212, 175, 55, 0.03) 100%);
+            opacity: 0;
+            transition: 0.5s;
         }
 
-        /* Removed sidebar mobile adjustments */
-        @media (max-width: 768px) {
-            .main-content {
-                padding: 15px;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .stat-card {
-                padding: 20px;
-            }
-
-            /* ... rest of the media query ... */
-
-            .table-responsive {
-                width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                margin-bottom: 1rem;
-            }
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(212, 175, 55, 0.1);
         }
 
-        .logo-area h1 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            margin: 0;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-area h1 span {
-            color: var(--accent);
-            font-weight: 300;
-        }
-
-        /* Compact Nav */
-        .admin-nav {
-            display: flex;
-            gap: 5px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 4px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            margin-bottom: 30px;
-            width: fit-content;
-        }
-
-        .nav-item {
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            color: var(--text-dim);
-            font-weight: 500;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .nav-item.active {
-            background: var(--accent-dim);
-            color: var(--accent);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-        }
-
-        .nav-item:hover:not(.active) {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        /* --- PREMIUM DASHBOARD CARDS --- */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
+        .stat-card:hover::after {
+            opacity: 1;
         }
 
         .stat-card {
@@ -289,35 +230,50 @@
             opacity: 1;
         }
 
+        /* --- DASHBOARD GRID --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
         .stat-card .icon-box {
-            width: 32px;
-            height: 32px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
+            width: 48px;
+            height: 48px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-dim);
-            margin-bottom: 12px;
-            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover .icon-box {
+            background: var(--accent);
+            color: #000;
+            transform: rotate(-10deg);
         }
 
         .stat-card .label {
             color: var(--text-dim);
-            font-size: 0.7rem;
-            font-weight: 600;
+            font-size: 0.8rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
         }
 
         .stat-card .value {
-            font-size: 1.6rem;
-            font-weight: 700;
+            font-size: 2.2rem;
+            font-weight: 900;
             color: #fff;
-            font-family: 'Outfit', sans-serif;
-            letter-spacing: -0.5px;
-            line-height: 1.1;
+            font-family: var(--font-heading);
+            letter-spacing: -1px;
         }
 
         .stat-card .sub-text {
@@ -414,28 +370,48 @@
             border: 1px solid rgba(212, 175, 55, 0.2);
         }
 
+        /* --- FUNNEL REVAMPED --- */
+        .funnel-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .funnel-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
         .funnel-step {
             text-align: center;
         }
 
         .funnel-circle {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.3);
+            width: 65px;
+            height: 65px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 10px;
+            margin: 0 auto 15px;
             color: var(--text-dim);
-            transition: 0.3s;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1.3rem;
         }
 
         .funnel-step:hover .funnel-circle {
             border-color: var(--accent);
             color: var(--accent);
-            box-shadow: 0 0 15px var(--accent-glow);
+            background: rgba(212, 175, 55, 0.05);
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 25px var(--accent-glow);
         }
 
         .funnel-label {
@@ -467,63 +443,103 @@
         }
 
         .conversion-rate {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: #000;
-            background: var(--accent);
-            padding: 3px 8px;
+            background: var(--accent-linear);
+            padding: 4px 12px;
             border-radius: 20px;
-            font-weight: 800;
-            box-shadow: 0 0 10px var(--accent-glow);
+            font-weight: 900;
+            box-shadow: 0 4px 15px var(--accent-glow);
         }
 
         /* --- PREMIUM TABLES --- */
+        .table-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
         table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 10px;
-            margin-top: -10px;
+            border-collapse: collapse;
         }
 
         th {
+            background: rgba(255, 255, 255, 0.02);
             text-align: left;
-            padding: 15px 20px;
+            padding: 20px;
             color: var(--text-dim);
             font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             font-weight: 800;
-        }
-
-        tr {
-            transition: all 0.3s;
-        }
-
-        tbody tr {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(5px);
-        }
-
-        tbody tr:hover {
-            background: rgba(255, 255, 255, 0.05);
-            transform: scale(1.01);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--border);
         }
 
         td {
-            padding: 18px 20px;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            color: #fff;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            color: var(--text-main);
+            font-weight: 500;
         }
 
-        td:first-child {
-            border-left: 1px solid var(--border);
-            border-radius: var(--radius-md) 0 0 var(--radius-md);
+        tr:hover td {
+            background: rgba(212, 175, 55, 0.03);
         }
 
-        td:last-child {
-            border-right: 1px solid var(--border);
-            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        /* --- PRETTY TOGGLE --- */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 34px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background-color: #fff;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        input:checked+.slider {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(24px);
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px var(--accent);
         }
 
         /* Status Badges Glass */
@@ -1744,59 +1760,65 @@
     </div>
 
     <!-- Shell Elite -->
-    <div id="admin-panel" class="admin-shell hidden" style="flex-direction: column;">
+    <div id="admin-panel" class="admin-shell hidden">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-fire-glow"></i>
+                <h1>MURA<span>ENGINE</span></h1>
+            </div>
 
-        <!-- Branding Top Bar -->
-        <header style="padding: 40px 20px 20px; text-align: center;">
-            <img src="logo.png" alt="Logo"
-                style="width: 120px; height: auto; margin-bottom: 15px; filter: drop-shadow(0 0 20px var(--accent-glow));">
-            <h1
-                style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900; letter-spacing: 2px; color: #fff; margin: 0;">
-                GALOS MURA BRASIL</h1>
-            <p style="color: var(--text-dim); margin-top: 5px;">Painel Administrativo Profissional</p>
-        </header>
-
-        <!-- Horizontal Navigation -->
-        <div style="display: flex; justify-content: center; margin-bottom: 40px;">
-            <nav class="admin-nav" style="flex-wrap: wrap; justify-content: center;">
-                <div class="nav-item active" data-tab="dashboard" onclick="switchTab('dashboard', this)">
-                    <i class="fa-solid fa-chart-pie"></i>
-                    <span>Dashboard</span>
+            <nav class="nav-list">
+                <div class="nav-item active" onclick="switchTab('dashboard')">
+                    <i class="fa-solid fa-chart-line"></i> Dashboard
                 </div>
-                <div class="nav-item" data-tab="products" onclick="switchTab('products', this)">
-                    <i class="fa-solid fa-box-archive"></i>
-                    <span>Produtos</span>
+                <div class="nav-item" onclick="switchTab('analytics')">
+                    <i class="fa-solid fa-microchip"></i> Inteligência
                 </div>
-                <div class="nav-item" data-tab="bumps" onclick="switchTab('bumps', this)">
-                    <i class="fa-solid fa-layer-group"></i>
-                    <span>Bumps</span>
+                <div class="nav-item" onclick="switchTab('products')">
+                    <i class="fa-solid fa-box-open"></i> Produtos
                 </div>
-                <div class="nav-item" data-tab="history" onclick="switchTab('history', this)">
-                    <i class="fa-solid fa-receipt"></i>
-                    <span>Vendas</span>
+                <div class="nav-item" onclick="switchTab('bumps')">
+                    <i class="fa-solid fa-tags"></i> Order Bumps
                 </div>
-                <div class="nav-item" data-tab="analytics" onclick="switchTab('analytics', this)">
-                    <i class="fa-solid fa-bullseye"></i>
-                    <span>Funil</span>
+                <div class="nav-item" onclick="switchTab('history')">
+                    <i class="fa-solid fa-receipt"></i> Vendas
                 </div>
-                <div class="nav-item" data-tab="leads" onclick="switchTab('leads', this)">
-                    <i class="fa-solid fa-users"></i>
-                    <span>Leads (Isca)</span>
+                <div class="nav-item" onclick="switchTab('leads')">
+                    <i class="fa-solid fa-users-viewfinder"></i> Leads
                 </div>
-                <div class="nav-item" data-tab="abandons" onclick="switchTab('abandons', this)">
-                    <i class="fa-solid fa-user-clock"></i>
-                    <span>Leads Perdidos</span>
-                </div>
-
-                <div class="nav-item" onclick="location.reload()" style="color: #ef4444;">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    <span>Sair</span>
+                <div class="nav-item" onclick="switchTab('abandons')">
+                    <i class="fa-solid fa-cart-arrow-down"></i> Abandonos
                 </div>
             </nav>
-        </div>
 
-        <!-- Main Workspace -->
+            <div class="sidebar-footer">
+                <button class="nav-item" onclick="syncFromGit()"
+                    style="width: 100%; border: 1px solid var(--border); background: var(--glass);">
+                    <i class="fa-solid fa-sync"></i> Sincronizar Git
+                </button>
+                <div style="font-size: 10px; opacity: 0.3; text-align: center; margin-top: 10px;">
+                    MURA ENGINE v4.0 Ultra
+                </div>
+            </div>
+        </aside>
+
         <main class="main-content">
+            <!-- Glass Header -->
+            <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+                <div>
+                    <h2 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 800; margin: 0;">
+                        Painel de Controle</h2>
+                    <p style="color: var(--text-dim); margin: 5px 0 0;">Bem-vindo ao comando da sua operação,
+                        Mura.</p>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <button onclick="saveData()" class="stat-card"
+                        style="padding: 12px 25px; cursor: pointer; background: var(--accent-linear); color: #000; border: none; font-weight: 900; border-radius: 12px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-floppy-disk"></i> SALVAR ALTERAÇÕES
+                    </button>
+                </div>
+            </header>
+
             <!-- Removed mobile glass-header -->
 
             <!-- Botão Flutuante de Salvar -->
@@ -1811,47 +1833,33 @@
             </div>
 
             <div id="tab-dashboard" class="tab-content active">
-                <!-- Top Controls -->
-                <div class="top-bar">
-                    <div class="glass-date-picker">
-                        <i class="fa-regular fa-calendar"></i>
-                        <select id="date-range-select" onchange="loadAnalytics()">
-                            <option value="today">HOJE</option>
-                            <option value="yesterday">ONTEM</option>
-                            <option value="7d">ÚLTIMOS 7 DIAS</option>
-                            <option value="30d">ÚLTIMOS 30 DIAS</option>
-                            <option value="all">TODO O PERÍODO</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Main Metrics Grid -->
                 <div class="dashboard-grid">
                     <!-- 1. VISITORS -->
                     <div class="stat-card">
                         <div class="icon-box"><i class="fa-solid fa-users"></i></div>
-                        <div class="label">Acessos à Página</div>
+                        <div class="label">Visitantes Ágeis</div>
                         <div class="value" id="dash-unique">0</div>
-                        <div class="sub-text">Visitantes únicos</div>
+                        <div class="sub-text">Acessos únicos</div>
                     </div>
 
-                    <!-- 2. ENGAGEMENT -->
-                    <div class="stat-card">
-                        <div class="icon-box"><i class="fa-solid fa-bullseye"></i></div>
-                        <div class="label">Cliques CTA</div>
-                        <div class="value" id="dash-cta">0</div>
-                        <div class="sub-text" id="dash-cta-rate">0% Conversão</div>
+                    <!-- 2. RETENTION 15S (PREMIUM ONLY) -->
+                    <div class="stat-card" style="border-color: rgba(16, 185, 129, 0.3);">
+                        <div class="icon-box" style="background: rgba(16, 185, 129, 0.1); color: #10b981;"><i
+                                class="fa-solid fa-hourglass-start"></i></div>
+                        <div class="label">Retenção 15s</div>
+                        <div class="value" id="dash-15s">0</div>
+                        <div class="sub-text" id="dash-15s-rate">0% da Audiência</div>
                     </div>
 
                     <!-- 3. INTEREST -->
                     <div class="stat-card">
-                        <div class="icon-box"><i class="fa-solid fa-cart-shopping"></i></div>
+                        <div class="icon-box"><i class="fa-solid fa-eye text-warning"></i></div>
                         <div class="label">Checkouts Abertos</div>
                         <div class="value" id="dash-checkout">0</div>
-                        <div class="sub-text" id="dash-checkout-rate">0% Conversão</div>
+                        <div class="sub-text" id="dash-checkout-rate">0% Intenção</div>
                     </div>
 
-                    <!-- 3.1 PIX GERADOS (NOVO) -->
+                    <!-- 4. PIX (GOAL) -->
                     <div class="stat-card">
                         <div class="icon-box" style="color: #00f2ea;"><i class="fa-solid fa-qrcode"></i></div>
                         <div class="label">Pix Gerados</div>
@@ -1859,217 +1867,282 @@
                         <div class="sub-text">Iniciaram pagamento</div>
                     </div>
 
-                    <!-- 4. SALES -->
-                    <div class="stat-card">
-                        <div class="icon-box" style="color: var(--success);"><i class="fa-solid fa-check"></i></div>
-                        <div class="label">Vendas Aprovadas</div>
+                    <!-- 5. SALES -->
+                    <div class="stat-card"
+                        style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%);">
+                        <div class="icon-box" style="background: var(--success); color: #000;"><i
+                                class="fa-solid fa-dollar-sign"></i></div>
+                        <div class="label">Vendas Reais</div>
                         <div class="value" id="dash-sales">0</div>
-                        <div class="sub-text" id="dash-sales-rate" style="color: var(--success);">0% Conversão</div>
+                        <div class="sub-text" id="dash-sales-rate" style="color: var(--success); font-weight: 800;">
+                            0% ROI</div>
                     </div>
                 </div>
 
+                <!-- Revenue Bar -->
                 <div class="stat-card"
-                    style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;">
+                    style="display: flex; align-items: center; justify-content: space-between; padding: 20px 40px; margin-bottom: 30px; background: var(--accent-linear); color: #000; border: none;">
                     <div>
-                        <div class="label">Faturamento Período</div>
-                        <div class="value" id="dash-revenue" style="font-size: 1.2rem;">R$ 0,00</div>
+                        <div class="label" style="color: rgba(0,0,0,0.6);">FATURAMENTO BRUTO</div>
+                        <div class="value" id="dash-revenue" style="color: #000; font-size: 2.5rem;">R$ 0,00
+                        </div>
                     </div>
-                    <div style="font-size: 1.5rem; color: var(--accent); opacity: 0.5;"><i
-                            class="fa-solid fa-wallet"></i>
-                    </div>
+                    <i class="fa-solid fa-vault" style="font-size: 3rem; opacity: 0.2;"></i>
                 </div>
-
             </div>
 
             <!-- Analytics Tab (New) -->
             <div id="tab-analytics" class="tab-content">
-                <div class="top-bar">
-                    <div class="glass-date-picker">
-                        <i class="fa-regular fa-calendar"></i>
-                        <select id="analytics-date-select" onchange="loadAnalytics()">
-                            <option value="today">HOJE</option>
-                            <option value="yesterday">ONTEM</option>
-                            <option value="7d">ÚLTIMOS 7 DIAS</option>
-                            <option value="30d">ÚLTIMOS 30 DIAS</option>
-                            <option value="all">TODO O PERÍODO</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Funnel Flow -->
-                <div class="funnel-row">
-                    <!-- Step 1 -->
-                    <div class="funnel-step">
-                        <div class="funnel-circle"><i class="fa-solid fa-users"></i></div>
-                        <div class="funnel-label">VISITANTES</div>
-                        <div class="funnel-val" id="funnel-unique">0</div>
-                    </div>
-
-                    <!-- Connector -->
-                    <div class="funnel-connector">
-                        <div class="connector-line"></div>
-                        <span class="conversion-rate" id="conv-page-cta">0%</span>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div class="funnel-step">
-                        <div class="funnel-circle"><i class="fa-solid fa-mouse-pointer"></i></div>
-                        <div class="funnel-label">CLIQUES CTA</div>
-                        <div class="funnel-val" id="funnel-cta">0</div>
-                    </div>
-
-                    <!-- Connector -->
-                    <div class="funnel-connector">
-                        <div class="connector-line"></div>
-                        <span class="conversion-rate" id="conv-cta-check">0%</span>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="funnel-step">
-                        <div class="funnel-circle"><i class="fa-solid fa-cart-arrow-down"></i></div>
-                        <div class="funnel-label">CHECKOUT</div>
-                        <div class="funnel-val" id="funnel-checkout">0</div>
-                    </div>
-
-                    <!-- Connector -->
-                    <div class="funnel-connector">
-                        <div class="connector-line"></div>
-                        <span class="conversion-rate" id="conv-check-sale">0%</span>
-                    </div>
-
-                    <!-- Step 4 -->
-                    <div class="funnel-step">
-                        <div class="funnel-circle" style="color: var(--success); border-color: var(--success);"><i
-                                class="fa-solid fa-trophy"></i></div>
-                        <div class="funnel-label">VENDAS</div>
-                        <div class="funnel-val" id="funnel-sales-val">0</div>
-                    </div>
-                </div>
-
-                <!-- Extra Details / Abandons -->
-                <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 25px;">
-                    <div class="stat-card" style="display: flex; align-items: center; justify-content: space-between;">
-                        <div>
-                            <div class="label">Abandonos de Checkout</div>
-                            <div class="value" id="dash-abandon" style="font-size: 1.2rem;">0</div>
+                <div class="funnel-container">
+                    <h3
+                        style="font-family: var(--font-heading); margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; font-size: 1rem; opacity: 0.7;">
+                        Análise de Funil Ultra</h3>
+                    <div class="funnel-row">
+                        <!-- Step 1 -->
+                        <div class="funnel-step">
+                            <div class="funnel-circle"><i class="fa-solid fa-users"></i></div>
+                            <div class="funnel-val" id="funnel-unique">0</div>
+                            <div class="funnel-label">VISITANTES</div>
                         </div>
-                        <div style="font-size: 1.5rem; color: var(--danger); opacity: 0.5;"><i
-                                class="fa-solid fa-person-walking-arrow-right"></i></div>
+
+                        <div class="funnel-connector">
+                            <span class="conversion-rate" id="conv-page-15s">0%</span>
+                            <div class="connector-line"></div>
+                        </div>
+
+                        <!-- Step 2 (NEW) -->
+                        <div class="funnel-step">
+                            <div class="funnel-circle" style="color: #10b981;"><i
+                                    class="fa-solid fa-hourglass-half"></i></div>
+                            <div class="funnel-val" id="funnel-15s">0</div>
+                            <div class="funnel-label">RETENÇÃO 15S</div>
+                        </div>
+
+                        <div class="funnel-connector">
+                            <span class="conversion-rate" id="conv-15s-check">0%</span>
+                            <div class="connector-line"></div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="funnel-step">
+                            <div class="funnel-circle" style="color: var(--warning);"><i
+                                    class="fa-solid fa-cart-shopping"></i></div>
+                            <div class="funnel-val" id="funnel-checkout">0</div>
+                            <div class="funnel-label">CHECKOUT</div>
+                        </div>
+
+                        <div class="funnel-connector">
+                            <span class="conversion-rate" id="conv-check-pix">0%</span>
+                            <div class="connector-line"></div>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="funnel-step">
+                            <div class="funnel-circle" style="color: #00f2ea;"><i
+                                    class="fa-solid fa-qrcode"></i></div>
+                            <div class="funnel-val" id="funnel-starts">0</div>
+                            <div class="funnel-label">PIX GERADOS</div>
+                        </div>
+
+                        <div class="funnel-connector">
+                            <span class="conversion-rate" id="conv-pix-sale">0%</span>
+                            <div class="connector-line"></div>
+                        </div>
+
+                        <!-- Step 5 -->
+                        <div class="funnel-step">
+                            <div class="funnel-circle"
+                                style="color: var(--success); border-color: var(--success); background: rgba(16, 185, 129, 0.1);">
+                                <i class="fa-solid fa-trophy"></i>
+                            </div>
+                            <div class="funnel-val" id="funnel-sales-val" style="color: var(--success);">0</div>
+                            <div class="funnel-label">VENDAS</div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- AI Insight (Compact) -->
-                <div class="ai-assistant-card" style="padding: 20px; gap: 15px;">
-                    <div class="ai-avatar" style="width: 50px; height: 50px; font-size: 1.2rem;">
-                        <i class="fa-solid fa-brain"></i>
+                <!-- Premium AI Assistant -->
+                <div class="ai-assistant-card">
+                    <div class="ai-avatar">
+                        <i class="fa-solid fa-ghost"></i>
                     </div>
                     <div class="ai-content">
-                        <div class="ai-title" style="font-size: 1rem;">MURA AI LITE</div>
-                        <div class="ai-message" id="ai-response" style="font-size: 0.85rem; min-height: auto;">
-                            Calculando eficiência do funil...
+                        <div class="ai-title">MURA INTELLIGENCE <span class="ai-badge">Deep Analysis</span>
+                        </div>
+                        <div class="ai-message" id="ai-response">
+                            Analisando padrões de tráfego e comportamento térmico dos leads...
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Products Tab -->
-            <div id="tab-products" class="tab-content">
-                <div class="header-row">
-                    <h3>Gerenciar Produtos</h3>
-                    <button class="btn btn-primary" onclick="openModal('product-modal')"><i
-                            class="fa-solid fa-plus"></i>
-                        NOVO PRODUTO</button>
-                </div>
-                <div id="products-list" class="product-grid"></div>
-            </div>
-
-            <!-- Bumps Tab -->
-            <div id="tab-bumps" class="tab-content">
-                <div class="header-row">
-                    <h3>Venda Casada (Order Bumps)</h3>
-                    <button class="btn btn-primary" onclick="openModal('bump-modal')"><i class="fa-solid fa-plus"></i>
-                        NOVO
-                        BUMP</button>
-                </div>
-                <div id="bumps-list" class="product-grid"></div>
-            </div>
-
-            <!-- History Tab -->
-            <div id="tab-history" class="tab-content">
-                <div class="content-card">
-                    <div class="table-controls" style="gap: 10px; flex-wrap: wrap;">
-                        <h3 style="flex: 1 1 100%;">Registro de Transações</h3>
-                        <div class="search-wrapper" style="flex: 1; min-width: 250px;">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="history-search" placeholder="Buscar cliente, email ou produto..."
-                                oninput="filterHistory()">
-                        </div>
-                        <div class="date-input-group" style="flex: 0 1 auto; margin-top: 0;">
-                            <input type="date" id="history-start" onchange="filterHistory()"
-                                style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff; padding: 6px 10px; font-size: 0.8rem;">
-                        </div>
-                        <div class="date-input-group" style="flex: 0 1 auto; margin-top: 0;">
-                            <input type="date" id="history-end" onchange="filterHistory()"
-                                style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff; padding: 6px 10px; font-size: 0.8rem;">
-                        </div>
-                        <button class="btn btn-secondary" onclick="exportHistory()"
-                            style="padding: 8px 12px; font-size: 0.8rem;"><i class="fa-solid fa-download"></i>
-                            EXPORTAR</button>
-                        <button class="btn btn-primary"
-                            style="background: #ef4444; border: none; padding: 8px 12px; font-size: 0.8rem;"
-                            onclick="clearHistory()"><i class="fa-solid fa-trash-can"></i> LIMPAR</button>
-                        <button class="btn btn-primary"
-                            style="background: #111; border: 1px solid #333; padding: 8px 12px; font-size: 0.8rem;"
-                            onclick="syncFromGit()"><i class="fa-solid fa-rotate-left"></i> SINCRONIZAR COM GIT</button>
+            <!-- Extra Details / Abandons -->
+            <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 25px;">
+                <div class="stat-card" style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <div class="label">Abandonos de Checkout</div>
+                        <div class="value" id="dash-abandon" style="font-size: 1.2rem;">0</div>
                     </div>
-                    <br>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>DATA/HORA</th>
-                                    <th>CLIENTE</th>
-                                    <th>PRODUTO(S)</th>
-                                    <th>EMAIL/CONTATO</th>
-                                    <th>VALOR/MÉTODO</th>
-                                    <th>LINK ACESSO</th>
-                                    <th>STATUS</th>
-                                    <th>AÇÕES</th>
-                                </tr>
-                            </thead>
-                            <tbody id="history-list"></tbody>
-                        </table>
+                    <div style="font-size: 1.5rem; color: var(--danger); opacity: 0.5;"><i
+                            class="fa-solid fa-person-walking-arrow-right"></i></div>
+                </div>
+            </div>
+
+            <!-- AI Insight (Compact) -->
+            <div class="ai-assistant-card" style="padding: 20px; gap: 15px;">
+                <div class="ai-avatar" style="width: 50px; height: 50px; font-size: 1.2rem;">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <div class="ai-content">
+                    <div class="ai-title" style="font-size: 1rem;">MURA AI LITE</div>
+                    <div class="ai-message" id="ai-response" style="font-size: 0.85rem; min-height: auto;">
+                        Calculando eficiência do funil...
                     </div>
                 </div>
             </div>
     </div>
 
-    <!-- Leads Tab -->
-    <div id="tab-leads" class="tab-content">
+    <!-- Products Tab -->
+    <div id="tab-products" class="tab-content">
         <div class="header-row">
-            <h3>Leads Capturados (Isca Digital)</h3>
+            <h3>Gerenciar Produtos</h3>
+            <button class="btn btn-primary" onclick="openModal('product-modal')"><i class="fa-solid fa-plus"></i>
+                NOVO PRODUTO</button>
         </div>
+        <div id="products-list" class="product-grid"></div>
+    </div>
+
+    <!-- Bumps Tab -->
+    <div id="tab-bumps" class="tab-content">
+        <div class="header-row">
+            <h3>Venda Casada (Order Bumps)</h3>
+            <button class="btn btn-primary" onclick="openModal('bump-modal')"><i class="fa-solid fa-plus"></i>
+                NOVO
+                BUMP</button>
+        </div>
+        <div id="bumps-list" class="product-grid"></div>
+    </div>
+
+    <!-- History Tab -->
+    <div id="tab-history" class="tab-content">
         <div class="content-card">
+            <div class="table-controls" style="gap: 10px; flex-wrap: wrap;">
+                <h3 style="flex: 1 1 100%;">Registro de Transações</h3>
+                <div class="search-wrapper" style="flex: 1; min-width: 250px;">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="history-search" placeholder="Buscar cliente, email ou produto..."
+                        oninput="filterHistory()">
+                </div>
+                <div class="date-input-group" style="flex: 0 1 auto; margin-top: 0;">
+                    <input type="date" id="history-start" onchange="filterHistory()"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff; padding: 6px 10px; font-size: 0.8rem;">
+                </div>
+                <div class="date-input-group" style="flex: 0 1 auto; margin-top: 0;">
+                    <input type="date" id="history-end" onchange="filterHistory()"
+                        style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: #fff; padding: 6px 10px; font-size: 0.8rem;">
+                </div>
+                <button class="btn btn-secondary" onclick="exportHistory()"
+                    style="padding: 8px 12px; font-size: 0.8rem;"><i class="fa-solid fa-download"></i>
+                    EXPORTAR</button>
+                <button class="btn btn-primary"
+                    style="background: #ef4444; border: none; padding: 8px 12px; font-size: 0.8rem;"
+                    onclick="clearHistory()"><i class="fa-solid fa-trash-can"></i> LIMPAR</button>
+                <button class="btn btn-primary"
+                    style="background: #111; border: 1px solid #333; padding: 8px 12px; font-size: 0.8rem;"
+                    onclick="syncFromGit()"><i class="fa-solid fa-rotate-left"></i> SINCRONIZAR COM
+                    GIT</button>
+            </div>
+            <br>
             <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
-                            <th>DATA</th>
-                            <th>NOME</th>
-                            <th>WHATSAPP</th>
-                            <th>EMAIL</th>
-                            <th>ORIGEM</th>
+                            <th>DATA/HORA</th>
+                            <th>CLIENTE</th>
+                            <th>PRODUTO(S)</th>
+                            <th>EMAIL/CONTATO</th>
+                            <th>VALOR/MÉTODO</th>
+                            <th>LINK ACESSO</th>
+                            <th>STATUS</th>
+                            <th>AÇÕES</th>
                         </tr>
                     </thead>
-                    <tbody id="leads-list"></tbody>
+                    <tbody id="history-list"></tbody>
                 </table>
             </div>
         </div>
     </div>
+
+    <!-- TAB: LEADS -->
+    <div id="tab-leads" class="tab-content">
+        <div class="header-content" style="padding:0; margin-bottom:20px; justify-content:space-between;">
+            <h2 style="font-family:'Outfit'; font-size:1.5rem;">Leads Capturados (Iscas)</h2>
+            <button class="btn btn-primary" onclick="exportLeads()"><i class="fa fa-download"></i> Exportar CSV</button>
+        </div>
+        <div class="content-card">
+            <div class="table-controls">
+                <div class="search-wrapper">
+                    <i class="fa fa-search"></i>
+                    <input type="text" id="leadSearch" placeholder="Buscar por nome ou telefone..."
+                        onkeyup="filterLeads()">
+                </div>
+                <div style="color:var(--text-dim); font-size:0.9rem;">Total: <span id="leadsCount"
+                        style="color:#fff; font-weight:bold;">0</span></div>
+            </div>
+            <div style="overflow-x:auto;">
+                <table id="leadsTable">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>WhatsApp</th>
+                            <th>Origem</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Leads injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-
-
+    <!-- TAB: ABANDONOS (LEADS PERDIDOS) -->
+    <div id="tab-abandons" class="tab-content">
+        <div class="header-content" style="padding:0; margin-bottom:20px; justify-content:space-between;">
+            <h2 style="font-family:'Outfit'; font-size:1.5rem;">Recuperação de Carrinho</h2>
+            <button class="btn btn-primary" onclick="exportAbandons()"><i class="fa fa-download"></i> Exportar
+                CSV</button>
+        </div>
+        <div class="content-card">
+            <p style="color: var(--text-dim); font-size: 0.9rem; margin-top: 0;">Clientes que abriram o checkout,
+                preencheram dados, mas não finalizaram a compra.</p>
+            <div class="table-controls" style="margin-top: 20px;">
+                <div class="search-wrapper">
+                    <i class="fa fa-search"></i>
+                    <input type="text" id="abandonSearch" placeholder="Buscar cliente..." onkeyup="filterAbandons()">
+                </div>
+                <div style="color:var(--text-dim); font-size:0.9rem;">Total: <span id="abandonsCount"
+                        style="color:#fff; font-weight:bold;">0</span></div>
+            </div>
+            <div style="overflow-x:auto;">
+                <table id="abandonsTable">
+                    <thead>
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Cliente</th>
+                            <th>Contato</th>
+                            <th>Produto Tentado</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Abandons injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     </main>
     </div>
 
@@ -2152,76 +2225,7 @@
         </div>
     </div>
 
-    <!-- TAB: LEADS -->
-    <div id="tab-leads" class="tab-content">
-        <div class="header-content" style="padding:0; margin-bottom:20px; justify-content:space-between;">
-            <h2 style="font-family:'Outfit'; font-size:1.5rem;">Leads Capturados (Iscas)</h2>
-            <button class="btn btn-primary" onclick="exportLeads()"><i class="fa fa-download"></i> Exportar CSV</button>
-        </div>
-        <div class="content-card">
-            <div class="table-controls">
-                <div class="search-wrapper">
-                    <i class="fa fa-search"></i>
-                    <input type="text" id="leadSearch" placeholder="Buscar por nome ou telefone..."
-                        onkeyup="filterLeads()">
-                </div>
-                <div style="color:var(--text-dim); font-size:0.9rem;">Total: <span id="leadsCount"
-                        style="color:#fff; font-weight:bold;">0</span></div>
-            </div>
-            <div style="overflow-x:auto;">
-                <table id="leadsTable">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>WhatsApp</th>
-                            <th>Origem</th>
-                            <th>Data</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Leads injected here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 
-    <!-- TAB: ABANDONOS (LEADS PERDIDOS) -->
-    <div id="tab-abandons" class="tab-content">
-        <div class="header-content" style="padding:0; margin-bottom:20px; justify-content:space-between;">
-            <h2 style="font-family:'Outfit'; font-size:1.5rem;">Recuperação de Carrinho</h2>
-            <button class="btn btn-primary" onclick="exportAbandons()"><i class="fa fa-download"></i> Exportar
-                CSV</button>
-        </div>
-        <div class="content-card">
-            <p style="color: var(--text-dim); font-size: 0.9rem; margin-top: 0;">Clientes que abriram o checkout,
-                preencheram dados, mas não finalizaram a compra.</p>
-            <div class="table-controls" style="margin-top: 20px;">
-                <div class="search-wrapper">
-                    <i class="fa fa-search"></i>
-                    <input type="text" id="abandonSearch" placeholder="Buscar cliente..." onkeyup="filterAbandons()">
-                </div>
-                <div style="color:var(--text-dim); font-size:0.9rem;">Total: <span id="abandonsCount"
-                        style="color:#fff; font-weight:bold;">0</span></div>
-            </div>
-            <div style="overflow-x:auto;">
-                <table id="abandonsTable">
-                    <thead>
-                        <tr>
-                            <th>Data/Hora</th>
-                            <th>Cliente</th>
-                            <th>Contato</th>
-                            <th>Produto Tentado</th>
-                            <th>Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Abandons injected here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 
     <script>
         let db = { products: {}, orderBumps: {} };
@@ -2732,7 +2736,7 @@
                 clicks: 0, checkoutOpens: 0, checkoutStarts: 0,
                 uniqueVisits: 0, ctaClicks: 0, checkoutAbandons: 0,
                 mobileSessions: 0, desktopSessions: 0, pageViews: 0,
-                emailClicks: 0,
+                emailClicks: 0, timeSpent15s: 0,
                 approvedCount: 0, totalRevenue: 0
             };
 
@@ -2777,8 +2781,8 @@
 
         function renderDashboard(data) {
             // SAFE GUARDS
-            const visitors = data.uniqueVisits || data.pageViews || 0; // Fallback
-            const cta = data.ctaClicks || data.clicks || 0;
+            const visitors = data.uniqueVisits || data.pageViews || 1;
+            const stay15s = data.timeSpent15s || 0;
             const checkouts = data.checkoutOpens || 0;
             const starts = data.checkoutStarts || 0; // PIX GERADOS
             const sales = data.approvedCount || 0;
@@ -2786,29 +2790,32 @@
             const revenue = data.totalRevenue || 0;
 
             // RATES
-            const rate1 = visitors > 0 ? ((cta / visitors) * 100).toFixed(1) : 0;
-            const rate2 = cta > 0 ? ((checkouts / cta) * 100).toFixed(1) : 0;
-            const rate3 = checkouts > 0 ? ((sales / checkouts) * 100).toFixed(1) : 0;
+            const rate15s = ((stay15s / visitors) * 100).toFixed(1);
+            const rateCheck = stay15s > 0 ? ((checkouts / stay15s) * 100).toFixed(1) : 0;
+            const ratePix = checkouts > 0 ? ((starts / checkouts) * 100).toFixed(1) : 0;
+            const rateFinalSale = starts > 0 ? ((sales / starts) * 100).toFixed(1) : 0;
 
             // --- TOP CARDS ---
             safeSetText('dash-unique', visitors);
-            safeSetText('dash-cta', cta);
-            safeSetText('dash-cta-rate', rate1 + '% Conversão');
+            safeSetText('dash-15s', stay15s);
+            safeSetText('dash-15s-rate', rate15s + '% de Retenção');
             safeSetText('dash-checkout', checkouts);
-            safeSetText('dash-checkout-rate', rate2 + '% Conversão');
-            safeSetText('dash-starts', starts); // NOVO: PIX GERADOS
+            safeSetText('dash-checkout-rate', rateCheck + '% Intenção');
+            safeSetText('dash-starts', starts);
             safeSetText('dash-sales', sales);
-            safeSetText('dash-sales-rate', rate3 + '% Conversão (do checkout)');
+            safeSetText('dash-sales-rate', rateFinalSale + '% Final');
 
             // --- FUNNEL ROW ---
             safeSetText('funnel-unique', visitors);
-            safeSetText('funnel-cta', cta);
+            safeSetText('funnel-15s', stay15s);
             safeSetText('funnel-checkout', checkouts);
+            safeSetText('funnel-starts', starts);
             safeSetText('funnel-sales-val', sales);
 
-            safeSetText('conv-page-cta', rate1 + '%');
-            safeSetText('conv-cta-check', rate2 + '%');
-            safeSetText('conv-check-sale', rate3 + '%');
+            safeSetText('conv-page-15s', rate15s + '%');
+            safeSetText('conv-15s-check', rateCheck + '%');
+            safeSetText('conv-check-pix', ratePix + '%');
+            safeSetText('conv-pix-sale', rateFinalSale + '%');
 
             // --- BOTTOM SALES/ABANDON ---
             safeSetText('dash-abandon', abandon);
@@ -3085,38 +3092,38 @@
             // 1. Renderizar os Order Bumps (Normalmente Tabela de Ração)
             Object.keys(db.orderBumps).forEach(id => {
                 const b = db.orderBumps[id];
-                const bumpEnabled = db.settings ? !!db.settings.enableOrderBump : true;
+                const bumpEnabled = b.enabled !== false;
 
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.innerHTML = `
-                    <div class="card-header-main" style="margin-bottom:0">
-                        <div class="img-container" style="width:80px; height:80px">
-                            <img src="${b.image || 'https://via.placeholder.com/80'}">
-                            <div class="img-overlay" onclick="this.nextElementSibling.click()">ALTERAR</div>
-                            <input type="file" style="display:none" onchange="previewImg(this, '', '', (url) => { db.orderBumps['${id}'].image = url; renderAdmin(); })">
-                        </div>
-                        <div class="compact-info">
-                            <strong>Order Bump: ${b.title}</strong>
-                            <div style="display:flex; gap:5px; margin-top:5px">
-                                <span class="status-badge info">#${id}</span>
-                                <span class="status-badge ${bumpEnabled ? 'success' : 'danger'}">${bumpEnabled ? 'ATIVO' : 'DESATIVADO'}</span>
+                        <div class="card-header-main" style="margin-bottom:0">
+                            <div class="img-container" style="width:80px; height:80px">
+                                <img src="${b.image || 'https://via.placeholder.com/80'}">
+                                <div class="img-overlay" onclick="this.nextElementSibling.click()">ALTERAR</div>
+                                <input type="file" style="display:none" onchange="previewImg(this, '', '', (url) => { db.orderBumps['${id}'].image = url; renderAdmin(); })">
+                            </div>
+                            <div class="compact-info">
+                                <strong>Order Bump: ${b.title}</strong>
+                                <div style="display:flex; gap:5px; margin-top:5px">
+                                    <span class="status-badge info">#${id}</span>
+                                    <span class="status-badge ${bumpEnabled ? 'success' : 'danger'}">${bumpEnabled ? 'ATIVO' : 'DESATIVADO'}</span>
+                                </div>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:10px">
+                                <div class="price-tag">+ R$ ${b.price.toFixed(2)}</div>
+                                <div style="display:flex; flex-direction:column; align-items:center; gap:5px; margin-right: 15px;">
+                                    <label class="switch" style="transform: scale(0.8);">
+                                        <input type="checkbox" onchange="db.orderBumps['${id}'].enabled = this.checked; renderAdmin(); checkChanges();" ${bumpEnabled ? 'checked' : ''}>
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <span style="font-size:0.65rem; color:var(--text-dim); text-transform:uppercase;">${bumpEnabled ? 'Ligado' : 'Desligado'}</span>
+                                </div>
+                                <button class="btn-icon" style="color:var(--accent); border-color:var(--accent)" onclick="editBump('${id}')"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button class="btn-icon danger" onclick="deleteBump('${id}')"><i class="fa-solid fa-trash-can"></i></button>
                             </div>
                         </div>
-                        <div style="display:flex; align-items:center; gap:10px">
-                            <div class="price-tag">+ R$ ${b.price.toFixed(2)}</div>
-                            <div style="display:flex; flex-direction:column; align-items:center; gap:5px; margin-right: 15px;">
-                                <label class="switch" style="transform: scale(0.8);">
-                                    <input type="checkbox" onchange="updateSettings('enableOrderBump', this.checked); renderAdmin();" ${bumpEnabled ? 'checked' : ''}>
-                                    <span class="slider round"></span>
-                                </label>
-                                <span style="font-size:0.65rem; color:var(--text-dim); text-transform:uppercase;">${bumpEnabled ? 'Ligado' : 'Desligado'}</span>
-                            </div>
-                            <button class="btn-icon" style="color:var(--accent); border-color:var(--accent)" onclick="editBump('${id}')"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button class="btn-icon danger" onclick="deleteBump('${id}')"><i class="fa-solid fa-trash-can"></i></button>
-                        </div>
-                    </div>
-                `;
+                    `;
                 bList.appendChild(card);
             });
 
@@ -3124,7 +3131,7 @@
             if (db.products['ebook-manejo']) {
                 const u = db.products['ebook-manejo'];
                 const id = 'ebook-manejo';
-                const upsellEnabled = db.settings ? !!db.settings.enableUpsell : true;
+                const upsellEnabled = u.enabled !== false;
 
                 const card = document.createElement('div');
                 card.className = 'product-card';
@@ -3147,7 +3154,7 @@
                             <div class="price-tag">R$ ${u.price.toFixed(2)}</div>
                             <div style="display:flex; flex-direction:column; align-items:center; gap:5px; margin-right: 15px;">
                                 <label class="switch" style="transform: scale(0.8);">
-                                    <input type="checkbox" onchange="updateSettings('enableUpsell', this.checked); renderAdmin();" ${upsellEnabled ? 'checked' : ''}>
+                                    <input type="checkbox" onchange="db.products['${id}'].enabled = this.checked; renderAdmin(); checkChanges();" ${upsellEnabled ? 'checked' : ''}>
                                     <span class="slider round"></span>
                                 </label>
                                 <span style="font-size:0.65rem; color:var(--text-dim); text-transform:uppercase;">${upsellEnabled ? 'Ligado' : 'Desligado'}</span>
