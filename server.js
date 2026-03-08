@@ -614,6 +614,11 @@ app.get('/test-email', async (req, res) => {
 
 // Ebook Download Routes
 app.get('/download/:type', (req, res) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+    res.set('Surrogate-Control', 'no-store');
+
     const type = req.params.type;
     const token = req.query.t;
     let filePath = '';
@@ -1158,6 +1163,7 @@ app.post('/api/config/reset', (req, res) => {
     }
 });
 
+// ============================================================
 const PORT = process.env.PORT || 10000;
 const HOST = '0.0.0.0';
 

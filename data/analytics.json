@@ -6,11 +6,11 @@
         "uiErrors": 11,
         "trustClicks": 3,
         "mobileSessions": 0,
-        "desktopSessions": 72,
+        "desktopSessions": 73,
         "slowLoads": 0,
-        "pageViews": 72,
+        "pageViews": 73,
         "ctaClicks": 39,
-        "uniqueVisits": 19,
+        "uniqueVisits": 20,
         "checkoutAbandons": 17,
         "timeSpent15s": 22
     },
@@ -241,6 +241,23 @@
             "ctaBreakdown": {
                 "generic_cta": 2
             }
+        },
+        "2026-03-08": {
+            "clicks": 0,
+            "checkoutOpens": 0,
+            "checkoutStarts": 0,
+            "uiErrors": 0,
+            "trustClicks": 0,
+            "mobileSessions": 0,
+            "desktopSessions": 1,
+            "slowLoads": 0,
+            "pageViews": 1,
+            "emailClicks": 0,
+            "uniqueVisits": 1,
+            "ctaClicks": 0,
+            "checkoutAbandons": 0,
+            "timeSpent15s": 0,
+            "ctaBreakdown": {}
         }
     }
 }

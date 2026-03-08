@@ -86,9 +86,10 @@ body {
 /* Fix for mobile horizontal scroll when keyboard opens */
 body.modal-open {
     overflow: hidden !important;
-    position: fixed;
-    width: 100%;
-    height: 100%;
+    /* Do NOT use position:fixed here - it breaks scroll position */
+    /* touch-action prevents touchmove events from scrolling the background */
+    touch-action: none;
+    -webkit-overflow-scrolling: auto;
 }
 
 body.no-scroll {
@@ -576,10 +577,11 @@ header.sticky {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    /* Use dvh (dynamic viewport height) which adjusts for keyboard; fallback to 100vh */
+    height: 100dvh;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.7);
     z-index: 10000;
-    /* Increased to stay above everything */
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -588,9 +590,11 @@ header.sticky {
     transition: opacity 0.3s ease;
     overflow-y: auto;
     overflow-x: hidden;
-    /* Lock horizontal */
     padding: 1rem;
     -webkit-overflow-scrolling: touch;
+    /* Prevent the overlay itself from scrolling horizontally */
+    box-sizing: border-box;
+    max-width: 100vw;
 }
 
 .modal-overlay.active {
@@ -606,14 +610,36 @@ header.sticky {
     border-radius: 1rem;
     transform: translateY(20px);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin: 2rem auto;
+    margin: 1rem auto;  /* reduced top margin on mobile */
     position: relative;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     will-change: transform;
+    /* Absolutely prevent any content from overflowing horizontally */
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .modal-overlay.active .modal-content {
     transform: translateY(0);
+}
+
+/* Mobile-specific checkout fixes */
+@media (max-width: 768px) {
+    .modal-overlay {
+        padding: 0;
+        align-items: stretch;
+    }
+
+    .modal-content {
+        border-radius: 20px 20px 0 0;
+        margin: auto 0 0 0;  /* snap to bottom like a bottom sheet */
+        max-height: 90dvh;
+        max-height: 90vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-sizing: border-box;
+        width: 100%;
+    }
 }
 
 .modal-header {

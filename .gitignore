@@ -1,0 +1,26 @@
+# Dependências (nunca deve ir pro git)
+node_modules/
+
+# Variáveis de ambiente
+.env
+
+# Arquivos de dados DINÂMICOS (são gerados em runtime pelo servidor)
+# Estes arquivos NÃO devem ir pro git, pois cada deploy reseta eles!
+data/history.json
+data/leads.json
+data/analytics.json
+data/abandons.json
+data/lost_leads.json
+data/webhook_debug.json
+data/uploads/
+
+# ATENÇÃO: data/db.json NÃO está aqui porque contém os dados dos produtos
+# e precisa ser versionado no git.
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db

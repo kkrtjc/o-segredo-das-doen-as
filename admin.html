@@ -163,6 +163,32 @@
             transform: translateX(8px);
         }
 
+        /* --- MOBILE MENU & OVERLAY --- */
+        #mobile-menu-btn {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--accent);
+            padding: 10px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            z-index: 1100;
+            font-size: 1.2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        #sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+        }
+
         /* --- CARDS & GLASS --- */
         .stat-card {
             background: var(--bg-card);
@@ -603,8 +629,35 @@
         }
 
         @media (max-width: 900px) {
+            #mobile-menu-btn {
+                display: block;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -300px;
+                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                box-shadow: 20px 0 50px rgba(0, 0, 0, 0.8);
+            }
+
+            .sidebar.mobile-active {
+                left: 0;
+            }
+
+            #sidebar-overlay.active {
+                display: block;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
             .dashboard-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
             }
 
             .funnel-row {
@@ -616,6 +669,49 @@
             .connector-line {
                 width: 2px;
                 height: 30px;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .glass-date-picker {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table {
+                min-width: 600px;
+            }
+
+            .ai-assistant-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .ai-avatar {
+                margin: 0 auto;
+            }
+
+            .date-filter-wrapper {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .quick-ranges {
+                justify-content: center;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -1803,6 +1899,12 @@
             </div>
         </aside>
 
+        <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <button id="mobile-menu-btn" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
         <main class="main-content">
             <!-- Glass Header -->
             <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
@@ -2262,6 +2364,29 @@
             if (name === 'history') loadHistory();
             if (name === 'analytics') loadAnalytics();
             if (name === 'leads') loadLeads();
+
+            // Close sidebar on mobile after clicking
+            if (window.innerWidth <= 900) {
+                toggleSidebar(false);
+            }
+        }
+
+        function toggleSidebar(force) {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const btn = document.getElementById('mobile-menu-btn');
+
+            const willBeActive = force !== undefined ? force : !sidebar.classList.contains('mobile-active');
+
+            if (willBeActive) {
+                sidebar.classList.add('mobile-active');
+                overlay.classList.add('active');
+                btn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+            } else {
+                sidebar.classList.remove('mobile-active');
+                overlay.classList.remove('active');
+                btn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+            }
         }
 
         async function loadLeads() {
