@@ -695,26 +695,42 @@ app.get('/downloads', (req, res) => {
 function formatErrorLog(context, customer, error) {
     let msg = `❌ [${context} ERROR]`;
     if (customer && customer.email) msg += ` Cliente: ${customer.email} |`;
+    msg += ` ${getFriendlyErrorMessage(error)}`;
+    return msg;
+}
 
+// Map technical errors to user-friendly messages
+function getFriendlyErrorMessage(error) {
     if (error.response && error.response.data && error.response.data.cause) {
         const causes = error.response.data.cause;
         const mainCause = Array.isArray(causes) ? causes[0] : causes;
 
         // Mapeamento de erros comuns do Mercado Pago
-        if (mainCause.code === 2067) msg += ` CPF inválido ou mal formatado.`;
-        else if (mainCause.code === 324) msg += ` CPF inválido (Não existente).`;
-        else if (mainCause.code === 325) msg += ` Mês de validade inválido.`;
-        else if (mainCause.code === 326) msg += ` Ano de validade inválido.`;
-        else if (mainCause.code === 221) msg += ` Sobrenome ausente ou inválido.`;
-        else if (mainCause.code === 214) msg += ` CPF ausente.`;
-        else if (mainCause.code === 205) msg += ` Número do cartão nulo/inválido.`;
-        else msg += ` Erro API: ${mainCause.description || JSON.stringify(mainCause)}`;
+        const errorMap = {
+            2067: 'CPF inválido ou mal formatado.',
+            324: 'O CPF informado não é válido.',
+            325: 'O mês de validade do cartão é inválido.',
+            326: 'O ano de validade do cartão é inválido.',
+            221: 'O sobrenome é obrigatório ou inválido.',
+            214: 'O CPF é obrigatório para este pagamento.',
+            205: 'Número do cartão inválido.',
+            208: 'Mês de vencimento inválido.',
+            209: 'Ano de vencimento inválido.',
+            212: 'Tipo de documento inválido.',
+            213: 'Número de documento inválido.',
+            301: 'Data de expiração do cartão inválida.',
+            302: 'Código de segurança (CVV) inválido.',
+            'p_rejected_bad_filled_identification': 'O CPF informado não foi reconhecido.'
+        };
+
+        return errorMap[mainCause.code] || errorMap[mainCause.id] || mainCause.description || 'Os dados informados possuem erros. Verifique o CPF e tente novamente.';
     }
-    else if (error.message) {
-        msg += ` Erro: ${error.message}`;
+    
+    if (error.message && error.message.includes('identification.number')) {
+        return 'O CPF informado é inválido.';
     }
 
-    return msg;
+    return error.message || 'Ocorreu um erro inesperado. Tente novamente ou use outro método de pagamento.';
 }
 
 app.post('/api/checkout/pix', async (req, res) => {
@@ -798,9 +814,9 @@ app.post('/api/checkout/pix', async (req, res) => {
         console.error(formatErrorLog('PIX', customer, error));
 
         res.status(500).json({
-            error: 'Erro ao gerar PIX',
-            message: error.message,
-            details: error.response ? error.response.data : (error.cause || 'Sem detalhes')
+            error: getFriendlyErrorMessage(error),
+            originalError: error.message,
+            code: error.response?.data?.cause?.[0]?.code || error.response?.data?.cause?.[0]?.id
         });
     }
 });
@@ -936,9 +952,9 @@ app.post('/api/checkout/card', async (req, res) => {
         console.error(formatErrorLog('CARTÃO', customerRef, error));
 
         res.status(500).json({
-            error: 'Erro ao processar pagamento',
-            message: error.message,
-            details: error.response ? error.response.data : (error.cause || 'No details')
+            error: getFriendlyErrorMessage(error),
+            originalError: error.message,
+            code: error.response?.data?.cause?.[0]?.code || error.response?.data?.cause?.[0]?.id
         });
     }
 });

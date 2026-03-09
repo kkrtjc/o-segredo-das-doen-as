@@ -1166,56 +1166,40 @@ async function handlePayment(method) {
         if (b) {
             let bumpPrice = b.price;
 
-            // Aplica preços específicos baseados no método de pagamento
             if (method === 'card' && b.priceCard) {
-                // Se tiver preços específicos para cartão, usa ele
                 bumpPrice = b.priceCard;
             }
-
             items.push({ id: b.id, title: b.title, price: bumpPrice });
         }
     });
 
     if (method === 'pix') {
         const btn = document.getElementById('btn-pay-pix');
-        const originalText = btn.innerText;
+        const originalText = (btn) ? btn.innerText : 'Gerar PIX';
 
-        // --- ðŸ›¡ï¸ PIX LOGIC (ALWAYS NEW) ---
-        // We removed the "Reuse Only" logic to fix the "Stuck" issue.
-        // Logic fix: Calculate total again or rely on updateTotal? 
-        // Ideally rely on the calculated values, but for safety lets reclac logic briefly
+        // --- INSTANT UI FEEDBACK ---
+        document.getElementById('checkout-main-view').classList.add('hidden');
+        const pixResult = document.getElementById('pix-result');
+        pixResult.classList.remove('hidden');
+        
+        // Show loader and hide content until ready
+        document.getElementById('qr-loader').classList.remove('hidden');
+        document.getElementById('qr-code-img').style.opacity = '0';
+        document.getElementById('pix-receiver-info').classList.add('hidden');
+        document.getElementById('btn-copy-pix').style.display = 'none';
 
-        let finalPrice = cart.mainProduct.price; // PIX = Discount Price
-
-        const totalAmount = items.reduce((acc, item) => {
-            // If item is main product, ensure we use correct price, but for PIX it IS the base price
-            // Actually items array was built using cart.mainProduct.price which IS the discounted one
-            // So this reduce is correct for PIX.
-            return acc + Number(item.price);
-        }, 0);
+        let finalPrice = cart.mainProduct.price; 
+        const totalAmount = items.reduce((acc, item) => acc + Number(item.price), 0);
         const itemIds = items.map(i => i.id).sort().join(',');
 
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> GERANDO SEU PIX...';
-        btn.disabled = true;
-        btn.style.opacity = '0.7';
-
         try {
-            // SET A HEARTBEAT / TIMEOUT for UI safety
-            const timeout = setTimeout(() => {
-                if (btn.innerText === 'Gerando Pix...') {
-                    btn.disabled = false;
-                    btn.innerText = 'Tentar Novamente';
-                    alert('O servidor está demorando para responder. Tente clicar novamente ou verifique se sua internet está estável.');
-                }
-            }, 15000);
-
             const res = await fetch(`${API_URL}/api/checkout/pix`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ items, customer })
+                body: JSON.stringify({ items, customer }),
+                signal: AbortSignal.timeout(20000) 
             });
 
-            clearTimeout(timeout);
             const data = await res.json();
 
             if (data.qr_code) {
@@ -1241,14 +1225,14 @@ async function handlePayment(method) {
             } else {
                 // Error from server
                 console.error("Pix Error Response:", data);
-                const errorMsg = data.message || data.error || 'Erro desconhecido ao gerar PIX';
-                alert(`Erro ao gerar PIX: ${errorMsg}\n\nDetalhes: ${JSON.stringify(data.details || {})}`);
+                const errorMsg = data.error || data.message || 'Houve um erro ao gerar o PIX. Verifique seus dados e tente novamente.';
+                alert(errorMsg);
                 btn.disabled = false;
                 btn.innerText = originalText;
             }
         } catch (e) {
             console.error("Pix Error:", e);
-            alert('Erro ao gerar Pix: ' + e.message);
+            alert('Não foi possível gerar o seu PIX agora. Verifique sua conexão e tente novamente.');
             btn.disabled = false;
             btn.innerText = originalText;
         }
@@ -1383,7 +1367,8 @@ async function handlePayment(method) {
                     alert(map[result.status_detail] + '\n\n💡 Dica: O PIX tem aprovação instantânea!');
                 } else {
                     console.error("Erro detalhado:", result);
-                    alert(`Pagamento não autorizado.\n\nDetalhe: ${msg}\n\nTente usar outro cartão ou PIX.`);
+                    const errorMsg = result.error || result.message || 'Pagamento não autorizado.';
+                    alert(`${errorMsg}\n\nTente usar outro cartão ou pague via PIX para liberação imediata.`);
                 }
 
                 // Return to form if failed
@@ -1808,12 +1793,21 @@ function setupFields() {
 // function validateField was moved and consolidated below.
 
 function showPixResult(data, items) {
-    document.getElementById('checkout-main-view').classList.add('hidden');
-    document.getElementById('pix-result').classList.remove('hidden');
-    document.getElementById('qr-code-img').src = `data:image/png;base64,${data.qr_code_base64}`;
+    const qrImg = document.getElementById('qr-code-img');
+    const qrLoader = document.getElementById('qr-loader');
+    const receiverInfo = document.getElementById('pix-receiver-info');
+    const copyBtn = document.getElementById('btn-copy-pix');
+
+    qrImg.src = `data:image/png;base64,${data.qr_code_base64}`;
     document.getElementById('pix-copy-paste').value = data.qr_code;
 
-    const copyBtn = document.getElementById('btn-copy-pix');
+    qrImg.onload = () => {
+        qrLoader.classList.add('hidden');
+        qrImg.style.opacity = '1';
+        if (receiverInfo) receiverInfo.classList.remove('hidden');
+        if (copyBtn) copyBtn.style.display = 'block';
+    };
+
     if (copyBtn) {
         // Tenta copiar automaticamente
         try {
