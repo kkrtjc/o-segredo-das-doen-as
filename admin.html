@@ -2234,9 +2234,9 @@
                     <thead>
                         <tr>
                             <th>Data/Hora</th>
+                            <th>Status</th>
                             <th>Cliente</th>
                             <th>Contato</th>
-                            <th>Produto Tentado</th>
                             <th>Ação</th>
                         </tr>
                     </thead>
@@ -2586,7 +2586,7 @@
 
         async function loadAbandons() {
             const tbody = document.querySelector('#abandonsTable tbody');
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Carregando...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Carregando...</td></tr>';
 
             try {
                 const res = await fetch(`${API_URL}/api/abandons`, {
@@ -2594,41 +2594,53 @@
                 });
                 const abandons = await res.json();
 
-                document.getElementById('abandonsCount').innerText = abandons.length;
+                // Filtra apenas os NAO pagos para exibicao
+                const active = Array.isArray(abandons) ? abandons.filter(a => !a.paid) : [];
+                document.getElementById('abandonsCount').innerText = active.length;
                 tbody.innerHTML = '';
 
-                if (Array.isArray(abandons)) {
-                    abandons.sort((a, b) => new Date(b.date) - new Date(a.date));
+                if (active.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nenhum carrinho abandonado registrado.</td></tr>';
+                    return;
+                }
 
-                    if (abandons.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhum carrinho abandonado registrado.</td></tr>';
-                        return;
+                active.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                active.forEach(abandon => {
+                    const date = new Date(abandon.date).toLocaleString('pt-BR');
+                    const contact = [
+                        abandon.phone ? `<a href="https://wa.me/55${abandon.phone.replace(/\D/g, '')}" target="_blank" style="color:#25D366; text-decoration:none;"><i class="fab fa-whatsapp"></i> ${abandon.phone}</a>` : '',
+                        abandon.email ? `<span style="color:#888; display:block; font-size: 0.85em;"><i class="fa fa-envelope"></i> ${abandon.email}</span>` : ''
+                    ].filter(Boolean).join('');
+
+                    // Badge de status
+                    let statusBadge = '';
+                    if (abandon.pixGenerated) {
+                        statusBadge = `<span style="background:#7f1d1d; color:#fca5a5; padding:3px 8px; border-radius:12px; font-size:0.72rem; font-weight:bold; white-space:nowrap;">🔴 PIX GERADO</span>`;
+                    } else {
+                        statusBadge = `<span style="background:#422006; color:#fcd34d; padding:3px 8px; border-radius:12px; font-size:0.72rem; font-weight:bold; white-space:nowrap;">🟡 FORMULÁRIO</span>`;
                     }
 
-                    abandons.forEach(abandon => {
-                        const date = new Date(abandon.date).toLocaleString('pt-BR');
-                        const contact = [
-                            abandon.phone ? `<a href="https://wa.me/55${abandon.phone.replace(/\D/g, '')}" target="_blank" style="color:#25D366; text-decoration:none;"><i class="fab fa-whatsapp"></i> ${abandon.phone}</a>` : '',
-                            abandon.email ? `<span style="color:#888; display:block; font-size: 0.85em;"><i class="fa fa-envelope"></i> ${abandon.email}</span>` : ''
-                        ].filter(Boolean).join('');
+                    const whatsappMsg = abandon.pixGenerated
+                        ? `Ol%C3%A1%20${encodeURIComponent(abandon.name || '')}%2C%20vi%20que%20voc%C3%AA%20gerou%20um%20PIX%20em%20nosso%20site%20mas%20n%C3%A3o%20finalizou%20o%20pagamento.%20Ficou%20alguma%20d%C3%BAvida%3F`
+                        : `Ol%C3%A1%20${encodeURIComponent(abandon.name || '')}%2C%20vi%20que%20voc%C3%AA%20tentou%20comprar%20no%20nosso%20site%2C%20ficou%20alguma%20d%C3%BAvida%3F`;
 
-                        const row = `
-                            <tr>
-                                <td style="color:#888; font-size:0.85rem;">${date}</td>
-                                <td style="font-weight:bold; color:#fff;">${abandon.name || '-'}</td>
-                                <td>${contact}</td>
-                                <td><span class="badge" style="background:var(--accent); color:#111; padding:2px 6px; border-radius:4px; font-size:0.75rem;">${abandon.product}</span></td>
-                                <td>
-                                    ${abandon.phone ? `<button class="btn btn-primary" onclick="window.open('https://wa.me/55${abandon.phone.replace(/\D/g, '')}?text=Ol%C3%A1%20${abandon.name}%2C%20vi%20que%20voc%C3%AA%20tentou%20comprar%20no%20nosso%20site%2C%20ficou%20alguma%20d%C3%BAvida%3F', '_blank')" style="padding: 5px 10px; font-size: 0.8rem;"><i class="fa-solid fa-comment-dots"></i> CHUTAR</button>` : '-'}
-                                </td>
-                            </tr>
-                        `;
-                        tbody.innerHTML += row;
-                    });
-                }
+                    const row = `
+                        <tr>
+                            <td style="color:#888; font-size:0.83rem;">${date}</td>
+                            <td>${statusBadge}</td>
+                            <td style="font-weight:bold; color:#fff;">${abandon.name || '-'}</td>
+                            <td>${contact}</td>
+                            <td>
+                                ${abandon.phone ? `<button class="btn btn-primary" onclick="window.open('https://wa.me/55${abandon.phone.replace(/\D/g, '')}?text=${whatsappMsg}', '_blank')" style="padding: 5px 10px; font-size: 0.8rem;"><i class="fa-solid fa-comment-dots"></i> CHUTAR</button>` : '-'}
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
             } catch (error) {
                 console.error(error);
-                tbody.innerHTML = '<tr><td colspan="5" style="color:red; text-align:center;">Erro ao carregar recuperações.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="color:red; text-align:center;">Erro ao carregar recuperações.</td></tr>';
             }
         }
 

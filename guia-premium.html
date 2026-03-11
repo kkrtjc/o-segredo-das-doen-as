@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo Elite - Guia Premium de Doenças</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #020617;
+            --bg-card: #0f172a;
+            --brand-red: #e11d48;
+            --brand-red-hover: #be123c;
+            --accent-blue: #38bdf8;
+            --accent-emerald: #10b981;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(15, 23, 42, 0.7);
+            --font-outfit: 'Outfit', sans-serif;
+            --font-inter: 'Inter', sans-serif;
+            --shadow-premium: 0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: var(--font-inter);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* --- Layout --- */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 320px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+            padding: 2rem 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-area img {
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .logo-text {
+            font-family: var(--font-outfit);
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Image Placeholder Styles */
+        .image-placeholder {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+            border: 1px dashed rgba(255,255,255,0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: var(--text-secondary);
+            margin: 1.5rem 0;
+            overflow: hidden;
+            position: relative;
+        }
+        .image-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: rgba(255,255,255,0.2);
+        }
+        .image-placeholder p {
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-section { margin-bottom: 2rem; }
+        .nav-title {
+            font-family: var(--font-outfit);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--brand-red);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(to right, rgba(225, 29, 72, 0.1), transparent);
+            color: var(--text-primary);
+            border-left: 3px solid var(--brand-red);
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex: 1;
+            margin-left: 320px;
+            padding: 3rem;
+            max-width: 1000px;
+        }
+
+        /* --- Welcome Section --- */
+        .welcome-hero {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 3rem;
+            border-radius: 2rem;
+            border: 1px solid var(--border-color);
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: var(--brand-red);
+            filter: blur(120px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .welcome-hero h1 {
+            font-family: var(--font-outfit);
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .welcome-hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        /* --- Search Bar --- */
+        .search-container {
+            position: sticky;
+            top: 2rem;
+            z-index: 90;
+            margin-bottom: 3rem;
+        }
+
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1.5rem;
+            border-radius: 100px;
+            box-shadow: var(--shadow-premium);
+            transition: border-color 0.3s ease;
+        }
+
+        .search-wrapper:focus-within {
+            border-color: var(--brand-red);
+        }
+
+        .search-wrapper input {
+            background: none;
+            border: none;
+            color: #fff;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            width: 100%;
+            outline: none;
+        }
+
+        .search-wrapper i { color: var(--text-secondary); }
+
+        /* --- Disease Cards --- */
+        .disease-section {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .disease-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .disease-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-premium);
+        }
+
+        .disease-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+        }
+
+        .disease-title h2 {
+            font-family: var(--font-outfit);
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .category-badge {
+            background: rgba(225, 29, 72, 0.1);
+            color: var(--brand-red);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .disease-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-block {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-block h3 {
+            font-family: var(--font-outfit);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-block.symptoms h3 { color: var(--accent-blue); }
+        .info-block.prevention h3 { color: var(--accent-emerald); }
+        .info-block.treatment h3 { color: var(--brand-red); }
+
+        .info-block p, .info-block li {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .treatment-box {
+            background: #020617;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px dashed rgba(225, 29, 72, 0.3);
+            position: relative;
+        }
+
+        .treatment-box code {
+            color: var(--brand-red);
+            font-weight: 700;
+            font-family: inherit;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        .copy-btn:hover { color: #fff; }
+
+        /* --- Tables --- */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+            margin: 2rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            text-align: left;
+            padding: 1rem 1.5rem;
+            font-family: var(--font-outfit);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--brand-red);
+        }
+
+        td {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- Footer --- */
+        footer {
+            margin-top: 5rem;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* --- Mobile Tweaks --- */
+        @media (max-width: 968px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 1.5rem; }
+            .welcome-hero { padding: 2rem; }
+            .welcome-hero h1 { font-size: 1.75rem; }
+            .disease-card { padding: 1.5rem; }
+            
+            .mobile-header {
+                background: var(--glass-bg);
+                backdrop-filter: blur(10px);
+                position: sticky;
+                top: 0;
+                padding: 1rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                z-index: 110;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .menu-toggle {
+                background: none;
+                border: none;
+                color: #fff;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+
+        @media (min-width: 969px) {
+            .mobile-header { display: none; }
+        }
+
+        .disclaimer-banner {
+            background: rgba(255, 171, 0, 0.1);
+            border-left: 4px solid #ffab00;
+            padding: 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            color: #ffab00;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="mobile-header">
+        <div class="logo-area" style="margin-bottom: 0;">
+            <img src="logo.png" alt="Logo">
+            <span class="logo-text">Protocolo Elite</span>
+        </div>
+        <button class="menu-toggle" onclick="toggleMenu()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </header>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="logo-area">
+                <img src="logo.png" alt="Logo">
+                <span class="logo-text">Protocolo Elite</span>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Início</div>
+                <a href="#" class="nav-item active" onclick="showSection('home')">
+                    <i class="fa-solid fa-house"></i> Apresentação
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Doenças</div>
+                <a href="#" class="nav-item" onclick="showSection('respiratorias')">
+                    <i class="fa-solid fa-lungs"></i> Respiratórias
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('virais')">
+                    <i class="fa-solid fa-virus"></i> Virais Sistêmicas
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('bacterianas')">
+                    <i class="fa-solid fa-bacterium"></i> Bacterianas
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('parasitarias')">
+                    <i class="fa-solid fa-bug"></i> Parasitárias
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('nutricionais')">
+                    <i class="fa-solid fa-apple-whole"></i> Nutricionais
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Ferramentas</div>
+                <a href="#" class="nav-item" onclick="showSection('tabelas')">
+                    <i class="fa-solid fa-table-list"></i> Tabelas Rápidas
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('checklist')">
+                    <i class="fa-solid fa-square-check"></i> Checklist Diário
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('calendario')">
+                    <i class="fa-solid fa-calendar-days"></i> Calendário Vacinal
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('vermifugacao')">
+                    <i class="fa-solid fa-worm"></i> Protocolos Vermífugo
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Home / Introduction -->
+            <section id="home" class="disease-section active">
+                <div class="welcome-hero">
+                    <h1>O Guia Definitivo: <br><span style="color: var(--brand-red);">Cura das Galinhas</span></h1>
+                    <p>Proteja seu plantel com o conhecimento de mais de 10 anos de experiência prática. Identifique, trate e previna prejuízos.</p>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <div class="search-wrapper">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="disease-search" placeholder="O que sua galinha tem? Ex: diarreia, sementes, ronco...">
+                    </div>
+                </div>
+
+                <div class="disclaimer-banner">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <strong>Aviso Importante:</strong> Este material tem caráter educativo e informativo. Não substitui o atendimento veterinário profissional. O uso das informações é por sua conta e risco.
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-title">
+                        <h2>Sobre este Guia</h2>
+                    </div>
+                    <p style="margin-top: 1rem; color: var(--text-secondary);">
+                        Olá, amigo criador! Este guia nasceu da necessidade de clareza no campo. Aqui você encontrará:
+                    </p>
+                    <ul style="list-style: none; margin-top: 1.5rem; display: grid; gap: 1rem;">
+                        <li style="display: flex; gap: 12px; align-items: flex-start;">
+                            <i class="fa-solid fa-circle-check" style="color: var(--accent-emerald); margin-top: 4px;"></i>
+                            <span>Principais doenças e orientações para identificação rápida.</span>
+                        </li>
+                        <li style="display: flex; gap: 12px; align-items: flex-start;">
+                            <i class="fa-solid fa-circle-check" style="color: var(--accent-emerald); margin-top: 4px;"></i>
+                            <span>Causas e sintomas explicados de forma simples.</span>
+                        </li>
+                        <li style="display: flex; gap: 12px; align-items: flex-start;">
+                            <i class="fa-solid fa-circle-check" style="color: var(--accent-emerald); margin-top: 4px;"></i>
+                            <span>Tratamentos testados na prática com dosagens específicas.</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Respiratory Diseases -->
+            <section id="respiratorias" class="disease-section">
+                <h3 style="font-family: var(--font-outfit); font-size: 2rem; margin-bottom: 2rem;">Doenças Respiratórias</h3>
+                
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Viral</span>
+                            <h2>Bronquite Infecciosa (IBV)</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Espirros, tosse, respiração ruidosa, secreção nasal e ocular. Em poedeiras: queda na produção, casca mole ou deformada.</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Vacinação é a principal medida. Biosseguridade rigorosa e evitar contato com aves silvestres.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <p>Tratamento de suporte. Antibióticos para infecções secundárias:</p>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Tilosina 15mg/kg por 3-5 dias')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Tilosina (Tylan): 15mg/kg (via oral) por 3 a 5 dias.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Bacteriana</span>
+                            <h2>Coriza Infecciosa</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Secreção nasal fétida, inchaço severo da face e olhos, lacrimejamento e dificuldade respiratória.</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Vacinação em áreas de risco. Isolamento de aves doentes e desinfecção total do galinheiro.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <p>Antibióticos são eficazes se administrados no início:</p>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Enrofloxacino 10mg/kg por 5-7 dias')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Enrofloxacino: 10mg/kg (via oral) por 5 a 7 dias.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Viral</span>
+                            <h2>Laringotraqueíte Infecciosa (ILT)</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Dificuldade respiratória severa, tosse com sangue, estiramento do pescoço (bombeamento), conjuntivite e inchaço da face.</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>A vacinação é a medida mais eficaz. Rigorosa limpeza e desinfecção do ambiente.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <p>Apenas suporte. Antibióticos para secundárias:</p>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Oxitetraciclina 30mg/kg por 5-7 dias')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Oxitetraciclina: 30mg/kg (via oral) por 5 a 7 dias.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Viral</span>
+                            <h2>Metapneumovirose Aviária (aMPV)</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Síndrome da Cabeça Inchada: inchaço dos seios infraorbitários, espirros, secreção nasal, e ovos com casca fina.</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Vacinação e controle crucial de poeira e amônia no ambiente.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Doxiciclina 15mg/kg por 5-7 dias')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Doxiciclina: 15 mg/kg (via oral) por 5 a 7 dias.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Bacteriana (DRC)</span>
+                            <h2>Micoplasmose Respiratória</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Inchaço da face e dos seios da face, dificuldade respiratória crônica, espirros e lacrimejamento constante.</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Aquisição de aves livres de micoplasma. Controle rigoroso de ventilação.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Tiamulina 25mg/kg por 3-5 dias')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Tiamulina: 25 mg/kg (via oral) por 3 a 5 dias.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Bacteriana</span>
+                            <h2>Ornithobacterium (ORT)</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Tosse, inchaço da cabeça e seios da face, associado a lesões nas articulações.</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Evitar superlotação. Vacinação considerada para plantéis com histórico.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Enrofloxacina 10mg/kg por 5 dias')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Enrofloxacina (Baytril): 10 mg/kg por 5 dias.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- Viral Systems -->
+            <section id="virais" class="disease-section">
+                <h3 style="font-family: var(--font-outfit); font-size: 2rem; margin-bottom: 2rem;">Doenças Virais Sistêmicas</h3>
+                
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Viral Gravíssima</span>
+                            <h2>Doença de Newcastle</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Tosse, diarreia esverdeada, tremores, paralisia e torcicolo. Mortalidade altíssima.</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Vacinação OBG. Controle total de tráfego de pessoas e limpeza rigorosa.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <p>Suporte imunológico. Não há cura viral, apenas para infecções secundárias:</p>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Oxitetraciclina 30mg/kg por 5-7 dias')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Oxitetraciclina: 30mg/kg por 5-7 dias.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Viral Linfoproliferativa</span>
+                            <h2>Doença de Marek</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Paralisia progressiva de asas e pernas (uma para frente e outra para trás), tumores visíveis, cegueira "olho cinza".</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Vacinação OBRIGATÓRIA de pintinhos no 1º dia de vida. Limpeza para reduzir carga viral ambiental.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <p>Incurável e sem tratamento medicamentoso. Medidas paliativas:</p>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Suporte nutricional e isolamento. Sem cura.')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Sem cura. Tratamento de suporte compassivo.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Viral Imunossupressora</span>
+                            <h2>Doença de Gumboro (Bursite)</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Depressão, prostração, penas arrepiadas, diarreia aquosa e tremores. Ataca o sistema imunológico jovem.</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Vacinação é essencial. Higiene estrita para evitar o vírus altamente resistente.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <p>Tratamento de suporte imunológico e proteção contra infecções secundárias:</p>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Complexo B + Oxitetraciclina 30mg/kg (associada)')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Complexo B e Oxitetraciclina (suporte)</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Viral Zoonótica</span>
+                            <h2>Influenza Aviária (IA)</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Queda drástica de postura, edema e cianose (barbelas azuis), hemorragias. Alta letalidade sistêmica.</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Biosseguridade total. Evitar aves silvestres. Vacinação restrita governamental.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-triangle-exclamation"></i> Notificação Oficial</h3>
+                            <p>Doença grave e sem cura. O foco é na contenção:</p>
+                            <div class="treatment-box" style="border-color: #ffab00;">
+                                <i style="color: #ffab00; font-size: 0.8rem;">Em caso de suspeita, notifique IMEDIATAMENTE as autoridades (MAPA).</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Viral</span>
+                            <h2>Varíola Aviária (Bouba)</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Nódulos (verrugas) na crista/barbelas (Seca) ou placas amareladas na boca/garganta (Úmida).</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Vacinação e controle de mosquitos (vetores da doença).</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Thuya Avícola + Limpeza com Iodo')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Thuya Avícola + Limpeza com Iodo ou Violeta.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- Bacterial Diseases -->
+            <section id="bacterianas" class="disease-section">
+                <h3 style="font-family: var(--font-outfit); font-size: 2rem; margin-bottom: 2rem;">Doenças Bacterianas</h3>
+                
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Bacteriana</span>
+                            <h2>Salmonelose (Tifo Aviário)</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Diarreia (esbranquiçada em pintos), prostração, asas caídas e queda na produção. Em adultos: penas arrepiadas e desidratação.</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Controle de roedores e insetos. Limpeza rigorosa e aquisição de aves de plantéis certificados livres de Salmonella.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <p>Antibióticos reduzem sintomas, mas a ave pode continuar portadora:</p>
+                            <div class="treatment-box">
+                                <code>Enrofloxacina: 10mg/kg por 5-7 dias (Via Oral).</code>
+                            </div>
+                            <div class="treatment-box" style="margin-top: 5px;">
+                                <code>Bactrim Veterinário: 30mg/kg por 5-7 dias (Via Oral).</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Bacteriana</span>
+                            <h2>Colibacilose (E. coli)</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Espirros, tosse, diarreia, inflamação do saco vitelino (pintos) e septicemia generalizada.</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Qualidade da água, ventilação e controle de amônia/poeira no ambiente.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Gentamicina 5mg/kg por 3 dias (Via Muscular)')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Gentamicina: 5mg/kg por 3 dias (Via Intramuscular).</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Bacteriana Intestinal</span>
+                            <h2>Enterite Necrótica (Clostridium)</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Diarreia, depressão, desidratação e morte súbita. Lesões necróticas severas no intestino.</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Controle da qualidade da água/ração. Cuidado em não sobrecarregar com alta amônia.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Amoxicilina 20mg/kg por 5 dias')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Amoxicilina: 20 mg/kg por 5 dias (Oral).</code>
+                            </div>
+                            <div class="treatment-box" style="margin-top: 5px;">
+                                <button class="copy-btn" onclick="copyText('Bacitracina na água de bebida')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Bacitracina (conforme fabricante na água).</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Parasitic Diseases -->
+            <section id="parasitarias" class="disease-section">
+                <h3 style="font-family: var(--font-outfit); font-size: 2rem; margin-bottom: 2rem;">Doenças Parasitárias</h3>
+                
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Protozoário</span>
+                            <h2>Coccidiose (Eimeria)</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Diarreia (contendo sangue), penas arrepiadas, perda de peso e má absorção (sementes inteiras nas fezes).</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Higiene do galinheiro, controle de umidade da cama e rotação de piquetes.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <div class="treatment-box">
+                                <code>Toltrazuril (Baycox): 7mg/kg (Dose Única), repetir após 5 dias se necessário.</code>
+                            </div>
+                            <div class="treatment-box" style="margin-top: 5px;">
+                                <code>Amprolium: 125mg/litro de água por 5-7 dias.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Parasita</span>
+                            <h2>Verminoses (Lombriga/Tênias)</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Emagrecimento, anemia, diarreia e diminuição da postura. Vermes visíveis nas fezes.</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Vermifugação regular. Rotação de princípios ativos para evitar resistência.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <div class="treatment-box">
+                                <code>Levamisol (Ripercol): 20-25mg/kg (Dose Única).</code>
+                            </div>
+                            <div class="treatment-box" style="margin-top: 5px;">
+                                <code>Fenbendazol (Panacur): 10-20mg/kg por 3-5 dias.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Protozoário</span>
+                            <h2>Histomoníase (Cabeça Negra)</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Diarreia amarelada/esverdeada, emagrecimento, prostração, e cianose (escurecimento) da cabeça em casos graves.</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Controle do verme cecal (Heterakis) que transmite o protozoário. Evitar criar galinhas junto com perus.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Metronidazol 35mg/kg por 5-7 dias')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Metronidazol: 35mg/kg por 5 a 7 dias.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Protozoário</span>
+                            <h2>Tricomoníase</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Placas amareladas espessas (caseosas) na boca e garganta, salivação excessiva, dificuldade grave para comer e respirar.</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Higiene severa de bebedouros. Evitar pombos e aves silvestres (vetores comuns).</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Metronidazol 25-50mg/kg por 5-7 dias')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Metronidazol: 25-50mg/kg (Via Oral) por 5-7 dias.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Protozoário</span>
+                            <h2>Criptosporidiose</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Tosse e espirros (forma respiratória) ou diarreia aquosa grave com desidratação (forma intestinal).</p>
+                        </div>
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-shield-virus"></i> Prevenção</h3>
+                            <p>Limpeza e qualidade total da água. O protozoário é extremamente resistente no ambiente.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <p>Não há tratamento específico 100% eficaz. Suporte e redução de carga:</p>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Toltrazuril 7mg/kg e Suporte Vitamínico')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Toltrazuril (Baycox) 7mg/kg + Eletrólitos/Vitaminas.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Nutritional -->
+            <section id="nutricionais" class="disease-section">
+                <h3 style="font-family: var(--font-outfit); font-size: 2rem; margin-bottom: 2rem;">Condições Nutricionais</h3>
+                
+                <div class="disease-card">
+                    <div class="disease-title">
+                        <h2>Retenção de Ovo (Egg Binding)</h2>
+                    </div>
+                    <div class="info-block symptoms" style="margin: 1.5rem 0;">
+                        <h3><i class="fa-solid fa-eye"></i> Sinais de Alerta</h3>
+                        <p>Agalinha prostrada, "andar de pinguim", esforço para defecar, inchaço abdominal.</p>
+                    </div>
+                    <div class="info-block treatment">
+                        <h3><i class="fa-solid fa-briefcase-medical"></i> Procedimento de Emergência</h3>
+                        <div style="color: var(--text-secondary);">
+                            <p>1. <strong>Banho Morno:</strong> 15-20 min com Sal Epsom (submergir parte inferior).</p>
+                            <p>2. <strong>Lubrificação:</strong> Aplicar azeite ou óleo de coco suavemente na cloaca.</p>
+                            <p>3. <strong>Suporte:</strong> Fornecer cálcio líquido imediato.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-title">
+                        <h2>Deficiência de Cálcio</h2>
+                    </div>
+                    <p style="color: var(--text-secondary); margin: 1rem 0;">Causa ovos com casca fina ou mole e fraqueza nas pernas.</p>
+                    <div class="info-block prevention">
+                        <h3><i class="fa-solid fa-pills"></i> Correção</h3>
+                        <p>Disponibilizar farinha de ostra, calcário moído ou casca de ovo seca e moída à vontade.</p>
+                        <p><strong>Vitamina D3:</strong> Essencial para a absorção. Garantir acesso ao sol.</p>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);">Nutricional</span>
+                            <h2>Deficiências Vitamínicas</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas por Deficiência</h3>
+                            <p><strong>Vit. A:</strong> Problemas de visão e mucosas.</p>
+                            <p><strong>Vit. D3:</strong> Raquitismo e ovos moles.</p>
+                            <p><strong>Vit. E:</strong> Problemas neurológicos (Encefalomalácia).</p>
+                            <p><strong>Vit. B2:</strong> Paralisia dos dedos (curvatura para dentro).</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Suplementação com Complexo Vitamínico Básico e A/D3/E')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Complexos Vitamínicos específicos na água.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge" style="background: rgba(225, 29, 72, 0.2); color: #e11d48; border: 1px solid rgba(225, 29, 72, 0.3);">Comportamental</span>
+                            <h2>Ferimentos, Bicagem e Canibalismo</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Causas e Sinais</h3>
+                            <p>Superlotação, estresse, falta de proteína. Aves com penas arrancadas, sangue, foco na cloaca.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento Imediato</h3>
+                            <div class="treatment-box">
+                                <code>Isolamento imediato. Limpeza com Clorexidina/Iodo. Pomada cicatrizante/repelente ou Violeta Genciana.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge">Parasita Externo</span>
+                            <h2>Ectoparasitoses (Ácaros/Piolhos)</h2>
+                        </div>
+                    </div>
+                    <div class="disease-grid">
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-eye"></i> Sintomas</h3>
+                            <p>Coceira constante, queda de penas, crostas, anemia profunda em infestações severas. Aves agitadas.</p>
+                        </div>
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-kit-medical"></i> Tratamento</h3>
+                            <div class="treatment-box">
+                                <button class="copy-btn" onclick="copyText('Ivermectina Pour-on 0,2mg/kg (nuca) ou Fipronil Spray')"><i class="fa-solid fa-copy"></i></button>
+                                <code>Ivermectina (0,2mg/kg) ou Fipronil na ave. Aplicação no ambiente com Cipermetrina ou Terra Diatomácea.</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-card">
+                    <div class="disease-header">
+                        <div class="disease-title">
+                            <span class="category-badge" style="background: rgba(255, 171, 0, 0.2); color: #ffab00; border: 1px solid rgba(255, 171, 0, 0.3);">Sintoma / Alerta de Manejo</span>
+                            <h2>"Peito Seco" (Atrofia Muscular)</h2>
+                        </div>
+                    </div>
+                    
+                    <div class="image-placeholder">
+                        <i class="fa-solid fa-image"></i>
+                        <p>Ilustração: Musculatura Atrofiada</p>
+                    </div>
+
+                    <p style="color: var(--text-secondary); margin: 1rem 0;">Atenção: Peito Seco não é a doença em si, mas um <strong>sintoma crônico</strong> de desnutrição severa resultante de outras enfermidades que impedem a ave de comer ou absorver nutrientes.</p>
+                    <div class="info-block prevention">
+                        <h3><i class="fa-solid fa-magnifying-glass"></i> Investigação Recomendada</h3>
+                        <p>Principal causa primária na avicultura caipira: <strong>Coccidiose e Verminoses Severas.</strong></p>
+                        <p>Procure tratar os parasitas primários para que a ave volte a ganhar massa e suplemente o plantel vitamínicos.</p>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- Tables Section -->
+            <section id="tabelas" class="disease-section">
+                <h3 style="font-family: var(--font-outfit); font-size: 2rem; margin-bottom: 2rem;">Tabela de Sintomas x Probabilidades</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sintomas</th>
+                                <th>Provável Doença</th>
+                                <th>Tratamento Sugerido</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Face Inchada + Secreção</td>
+                                <td>Coriza Infecciosa / Micoplasmose</td>
+                                <td>Enrofloxacino / Tilosina</td>
+                            </tr>
+                            <tr>
+                                <td>Diarreia Sangue / Sementes Inteiras</td>
+                                <td>Coccidiose</td>
+                                <td>Toltrazuril (Baycox)</td>
+                            </tr>
+                            <tr>
+                                <td>Paralisia / Torcicolo</td>
+                                <td>Marek / Newcastle / Vit. B2</td>
+                                <td>Isolamento + Suporte Vitamínico</td>
+                            </tr>
+                            <tr>
+                                <td>Verrugas na Crista / Perna</td>
+                                <td>Varíola Aviária (Bouba)</td>
+                                <td>Iodo + Thuya Avícola</td>
+                            </tr>
+                            <tr>
+                                <td>Placas Amarelas na Boca</td>
+                                <td>Tricomoníase / Bouba Úmida</td>
+                                <td>Metronidazol / Remoção Manual</td>
+                            </tr>
+                            <tr>
+                                <td>Morte Súbita</td>
+                                <td>Cólera Aviária / Influenza</td>
+                                <td>Antibióticos Imediatos (Oxitetraciclina)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Checklist Section -->
+            <section id="checklist" class="disease-section">
+                <h3 style="font-family: var(--font-outfit); font-size: 2rem; margin-bottom: 2rem;">Checklist de Manejo Diário</h3>
+                <div class="disease-card">
+                    <div style="display: grid; gap: 2rem;">
+                        <div>
+                            <h4 style="color: var(--brand-red); margin-bottom: 1rem;"><i class="fa-solid fa-sun"></i> Período da Manhã</h4>
+                            <ul style="list-style: none; display: grid; gap: 0.75rem; color: var(--text-secondary);">
+                                <li><i class="fa-regular fa-square"></i> Observar comportamento (ativas/alertas)</li>
+                                <li><i class="fa-regular fa-square"></i> Lavar bebedouros e trocar água</li>
+                                <li><i class="fa-regular fa-square"></i> Abastecer ração e colher ovos</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--accent-emerald); margin-bottom: 1rem;"><i class="fa-solid fa-moon"></i> Final do Dia</h4>
+                            <ul style="list-style: none; display: grid; gap: 0.75rem; color: var(--text-secondary);">
+                                <li><i class="fa-regular fa-square"></i> Garantir que todas voltaram ao galinheiro</li>
+                                <li><i class="fa-regular fa-square"></i> Trancar para proteção contra predadores</li>
+                                <li><i class="fa-regular fa-square"></i> Observação final do plantel</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Calendar Section -->
+            <section id="calendario" class="disease-section">
+                <h3 style="font-family: var(--font-outfit); font-size: 2rem; margin-bottom: 2rem;">Calendário de Vacinação <span style="color: var(--brand-red);">Premium</span></h3>
+                
+                <div class="disease-card">
+                    <h4 style="margin-bottom: 1rem; color: var(--accent-blue);">Fase 1: Pintinhos (1 a 8 semanas)</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Idade</th>
+                                    <th>Vacina</th>
+                                    <th>Via de Aplicação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1º Dia</td><td>Marek</td><td>Subcutânea (Pescoço)</td></tr>
+                                <tr><td>7º Dia</td><td>Gumboro</td><td>Ocular ou Oral</td></tr>
+                                <tr><td>14-18 Dias</td><td>Gumboro (Reforço)</td><td>Ocular ou Oral</td></tr>
+                                <tr><td>21-28 Dias</td><td>Newcastle + Bronquite</td><td>Ocular ou Oral</td></tr>
+                                <tr><td>35-42 Dias</td><td>Bouba Aviária (Cepa Suave)</td><td>Punção na Membrana da Asa</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="disease-card" style="margin-top: 1.5rem;">
+                    <h4 style="margin-bottom: 1rem; color: var(--accent-emerald);">Fase 2: Frangas (9 a 16 semanas)</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Idade</th>
+                                    <th>Vacina</th>
+                                    <th>Via de Aplicação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>9-10 Sem.</td><td>Newcastle + Bronquite (Reforços)</td><td>Ocular, Oral ou Spray</td></tr>
+                                <tr><td>12-14 Sem.</td><td>Coriza Infecciosa (1ª Dose)</td><td>Subcutânea ou Intramuscular</td></tr>
+                                <tr><td>13-14 Sem.</td><td>Coriza Infecciosa (2ª Dose)</td><td>Subcutânea ou Intramuscular</td></tr>
+                                <tr><td>15-16 Sem.</td><td>Bouba Aviária (Cepa Forte)</td><td>Punção na Membrana da Asa</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vermifugation Section -->
+            <section id="vermifugacao" class="disease-section">
+                <h3 style="font-family: var(--font-outfit); font-size: 2rem; margin-bottom: 2rem;">Protocolos de <span style="color: var(--accent-emerald);">Vermifugação</span></h3>
+                <div class="disease-card">
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">A vermifugação regular é essencial para o controle de parasitas internos que sugam nutrientes e causam o "Peito Seco".</p>
+                    
+                    <div style="display: grid; gap: 1.5rem;">
+                        <div class="info-block prevention">
+                            <h3><i class="fa-solid fa-stopwatch"></i> Ciclo de Aves Jovens</h3>
+                            <p><strong>1ª Dose:</strong> Aos 30-45 dias de idade.</p>
+                            <p><strong>Reforço:</strong> Repetir a dose estritamente após 15 dias para quebrar o ciclo reprodutivo dos vermes.</p>
+                        </div>
+
+                        <div class="info-block symptoms">
+                            <h3><i class="fa-solid fa-calendar-check"></i> Ciclo de Aves Adultas</h3>
+                            <p>Vermifugar o plantel a cada <strong>3 a 6 meses</strong>, dependendo do sistema (sistema de piquetes ao ar livre exige mais frequência).</p>
+                        </div>
+
+                        <div class="info-block treatment">
+                            <h3><i class="fa-solid fa-prescription-bottle-medical"></i> Regras de Ouro</h3>
+                            <p><strong>1. Rotação de Princípios:</strong> Alterne os remédios (ex: Use Mebendazol num ciclo, Levamisol no outro) para evitar resistência.</p>
+                            <p><strong>2. Período de Carência:</strong> Nunca consuma ou venda ovos/carne durante o período indicado na bula do vermífugo escolhido.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer>
+                <p>&copy; 2026 Protocolo Elite - Galos Mura Brasil Oficial</p>
+                <p style="margin-top: 0.5rem; opacity: 0.6;">Transformando a criação de galinhas com conhecimento prático.</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Update Navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Handle clicking from sidebar or search
+            const navItem = document.querySelector(`.nav-item[onclick*="${sectionId}"]`);
+            if (navItem) navItem.classList.add('active');
+
+            // Update Sections
+            document.querySelectorAll('.disease-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+
+            // Close mobile menu
+            document.getElementById('sidebar').classList.remove('open');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Simple toast-like feedback
+                const btn = event.currentTarget;
+                const original = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                setTimeout(() => btn.innerHTML = original, 2000);
+            });
+        }
+
+        // --- Search Logic ---
+        const searchInput = document.getElementById('disease-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const cards = document.querySelectorAll('.disease-card');
+                
+                if (term.length > 0) {
+                    // Show all sections that contain a match
+                    document.querySelectorAll('.disease-section').forEach(s => s.classList.add('active'));
+                    
+                    cards.forEach(card => {
+                        const text = card.innerText.toLowerCase();
+                        if (text.includes(term)) {
+                            card.style.display = 'block';
+                            card.style.border = '1px solid var(--brand-red)';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                } else {
+                    // Reset to Home
+                    showSection('home');
+                    cards.forEach(card => {
+                        card.style.display = 'block';
+                        card.style.border = '1px solid var(--border-color)';
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>

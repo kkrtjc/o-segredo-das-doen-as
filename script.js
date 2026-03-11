@@ -1211,6 +1211,10 @@ async function handlePayment(method) {
                     timestamp: Date.now()
                 }));
 
+                // 🔴 FIX: Captura abandono IMEDIATAMENTE ao gerar o PIX
+                // Se o usuário não pagar, este registro aparece no painel
+                captureAbandonedLead({ pixGenerated: true, pixId: data.id });
+
                 showPixResult(data, items);
 
                 // UPSELL PÓS-PIX: Mostra o upsell dos pintinhos após gerar o PIX
@@ -1643,22 +1647,27 @@ function interceptPaymentButton(callback) {
     return false;
 }
 
-async function captureAbandonedLead() {
+async function captureAbandonedLead(extra = {}) {
     const name = document.getElementById('payer-name')?.value?.trim();
     const email = document.getElementById('payer-email')?.value?.trim();
     const phone = document.getElementById('payer-phone')?.value?.trim();
-    const productId = cart.id || 'unknown';
+    const productId = cart.id || (cart.mainProduct && cart.mainProduct.id) || 'unknown';
 
     // Só captura se tiver pelo menos o telefone ou e-mail preenchido
     if ((phone && phone.length > 5) || (email && email.length > 5)) {
-        // PIXEL: Contact (Removido por solicitação do usuário)
-
-        console.log("🛒 [ABANDON] Tentando capturar lead abandonado...");
+        console.log("🛒 [ABANDON] Capturando lead abandonado...", extra.pixGenerated ? '(PIX gerado)' : '(saída do modal)');
         try {
             await fetch(`${API_URL}/api/abandon`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, phone, product: productId })
+                body: JSON.stringify({
+                    name,
+                    email,
+                    phone,
+                    product: productId,
+                    pixGenerated: extra.pixGenerated || false,
+                    pixId: extra.pixId || null
+                })
             });
         } catch (e) {
             console.warn("Falha ao registrar abandono", e);
@@ -1870,6 +1879,15 @@ function showPixResult(data, items) {
                 if (window.activePixPoll) clearTimeout(window.activePixPoll);
                 window.activePixPoll = null;
                 localStorage.removeItem('active_pix_session');
+
+                // 🔴 FIX: Marca o abandono como PAGO para não poluir o painel
+                try {
+                    fetch(`${API_URL}/api/abandon/convert`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ pixId: data.id })
+                    });
+                } catch(e) { /* Silencioso — não bloqueia o redirect */ }
 
                 const totalVal = document.querySelector('.checkout-total-display').innerText.replace(/[^\d,]/g, '').replace(',', '.');
 

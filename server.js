@@ -368,7 +368,7 @@ app.get('/api/abandons', (req, res) => {
 });
 
 app.post('/api/abandon', (req, res) => {
-    const { name, email, phone, product } = req.body;
+    const { name, email, phone, product, pixGenerated, pixId } = req.body;
 
     // Validar mínimo
     if (!phone && !email) {
@@ -385,10 +385,16 @@ app.post('/api/abandon', (req, res) => {
     );
 
     if (existing) {
-        // Apenas atualizar se tiver mais infos
+        // Atualiza se tiver mais informações
         if (name && !existing.name) existing.name = name;
         if (email && !existing.email) existing.email = email;
         if (phone && !existing.phone) existing.phone = phone;
+        // Upgrade: se agora temos PIX, atualiza o registro
+        if (pixGenerated && !existing.pixGenerated) {
+            existing.pixGenerated = true;
+            existing.pixId = pixId || existing.pixId;
+            existing.pixGeneratedAt = new Date().toISOString();
+        }
         saveAbandons(abandons);
         return res.json({ success: true, message: 'Abandono atualizado' });
     }
@@ -399,14 +405,39 @@ app.post('/api/abandon', (req, res) => {
         name: name || '',
         email: email || '',
         phone: phone || '',
-        product: product || 'unknown'
+        product: product || 'unknown',
+        pixGenerated: pixGenerated || false,
+        pixId: pixId || null,
+        pixGeneratedAt: pixGenerated ? new Date().toISOString() : null,
+        paid: false
     };
 
     abandons.push(abandonRecord);
     saveAbandons(abandons);
 
-    console.log(`🛒 [ABANDON] Carrinho abandonado registrado: ${name || email || phone}`);
+    const label = pixGenerated ? '🔴 PIX GERADO SEM PAGAMENTO' : '🟡 FORMULÁRIO PREENCHIDO';
+    console.log(`🛒 [ABANDON] ${label}: ${name || email || phone}`);
     res.json({ success: true });
+});
+
+// Marca abandono como pago (chamado pelo frontend quando polling confirma pagamento)
+app.post('/api/abandon/convert', (req, res) => {
+    const { pixId } = req.body;
+    if (!pixId) return res.status(400).json({ error: 'pixId obrigatório' });
+
+    const abandons = getAbandons();
+    const idx = abandons.findIndex(a => a.pixId === String(pixId));
+
+    if (idx > -1) {
+        abandons[idx].paid = true;
+        abandons[idx].paidAt = new Date().toISOString();
+        saveAbandons(abandons);
+        console.log(`✅ [ABANDON] Convertido em venda: pixId=${pixId}`);
+        return res.json({ success: true });
+    }
+
+    // Não encontrou — pode não ter sido registrado ainda, tudo bem
+    res.json({ success: true, message: 'Nenhum abandono encontrado com esse pixId' });
 });
 
 app.get('/api/analytics', (req, res) => {
@@ -1048,6 +1079,16 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
                 }));
 
                 logSale(customer, items, paymentId, paymentResult.payment_method_id === 'pix' ? 'pix' : 'cartão');
+
+                // Marca abandono como pago via webhook (caso o frontend não tenha feito isso)
+                const abandons = getAbandons();
+                const aIdx = abandons.findIndex(a => a.pixId === String(paymentId));
+                if (aIdx > -1 && !abandons[aIdx].paid) {
+                    abandons[aIdx].paid = true;
+                    abandons[aIdx].paidAt = new Date().toISOString();
+                    saveAbandons(abandons);
+                    console.log(`✅ [WEBHOOK] Abandono marcado como pago: ${paymentId}`);
+                }
 
                 console.log(`📤 [WEBHOOK] Enviando e-mail automático...`);
                 sendEmail(customer, items, paymentId);
