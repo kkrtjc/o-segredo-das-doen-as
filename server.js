@@ -518,7 +518,11 @@ app.get('/api/products/:id', (req, res) => {
     if (!product) return res.status(404).json({ error: 'Produto não encontrado' });
 
     // CORREÇÃO: Busca em orderBumps E products (para permitir upsell de produtos como o ebook-manejo)
-    const bumps = (product.orderBumps || []).map(id => db.orderBumps[id] || db.products[id]).filter(k => k);
+    const bumps = (product.orderBumps || []).map(id => {
+        const b = db.orderBumps[id] || db.products[id];
+        if (b && !b.id) return { ...b, id }; // Garante que o ID esteja presente (importante para o ebook-manejo)
+        return b;
+    }).filter(k => k);
 
     res.json({ ...product, fullBumps: bumps });
 });

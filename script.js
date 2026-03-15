@@ -20,16 +20,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const today = new Date().toISOString().split('T')[0];
     const lastVisit = localStorage.getItem('mura_visita_hoje');
 
-    // Sempre dispara session_start em cada carregamento de página
     trackEvent('session_start');
 
     if (lastVisit !== today) {
         trackEvent('unique_visit');
         localStorage.setItem('mura_visita_hoje', today);
     }
-
-    // 1.1 TIME SPENT 15S TRACKING (REMOVIDO POR SOLICITAÇÃO)
-
 
     // 2. CTA CLICK TRACKING
     document.querySelectorAll('a[href^="#offer"]').forEach(btn => {
@@ -39,6 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
+    // 3. PIX RECOVERY
     const cached = localStorage.getItem('active_pix_session');
     if (cached) {
         try {
@@ -48,7 +45,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const s = await fetch(`${API_URL}/api/payment/${session.data.id}`);
                     const sd = await s.json();
                     if (sd.status === 'approved') {
-                        // PIXEL: Purchase (Success from background session)
                         trackPixel('Purchase', {
                             value: session.total || 0,
                             currency: 'BRL',
@@ -60,25 +56,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                     } else {
                         localStorage.removeItem('active_pix_session');
                     }
-                } catch (e) { console.warn("Background check failed", e); }
+                } catch (e) { /* Recover silently */ }
             } else {
                 localStorage.removeItem('active_pix_session');
             }
-        } catch (e) {
-            localStorage.removeItem('active_pix_session');
-        }
+        } catch (e) { localStorage.removeItem('active_pix_session'); }
     }
 
-    // --- 5. DYNAMIC PRE-FETCH (Instant Checkout) ---
+    // 4. PRE-FETCH
     const productsToPreload = ['ebook-doencas', 'combo-elite', 'ebook-manejo'];
     productsToPreload.forEach(async (id) => {
         try {
             const response = await fetch(`${API_URL}/api/products/${id}`);
             if (response.ok) {
                 prefetchedProducts[id] = await response.json();
-                console.log(`🚀 [PREFETCH] ${id} carregado`);
-
-                // Update specific price elements if they exist
+                
                 if (id === 'ebook-doencas') {
                     const resp = prefetchedProducts[id];
                     const priceElement = document.getElementById('display-price-value');
@@ -86,22 +78,27 @@ document.addEventListener('DOMContentLoaded', async () => {
                         priceElement.innerText = resp.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
                     }
 
-                    // PIXEL: ViewContent (For static page support)
                     trackPixel('ViewContent', {
-                        content_ids: [id],
-                        content_name: resp.title,
-                        content_type: 'product',
-                        value: resp.price,
-                        currency: 'BRL'
+                        content_ids: [id], content_name: resp.title, content_type: 'product',
+                        value: resp.price, currency: 'BRL'
                     });
                 }
             }
-        } catch (e) {
-            console.warn(`[PREFETCH] Falha ao carregar ${id}`, e);
-        }
+        } catch (e) { console.warn(`[PREFETCH] Failed: ${id}`); }
     });
 
-    // 3. LAZY VIDEO LOADING (Intersection Observer)
+    // 5. COMPONENTS INIT
+    initFAQ();
+    initSmoothScroll();
+    initComparisonSlider();
+    initStickyCTA();
+    initLazyLoading();
+    initImageTransitions();
+    initHelpBubbles();
+    setupFields();
+    renderHomeProducts();
+
+    // 6. LAZY VIDEO
     const lazyVideo = document.getElementById('vsl-video');
     if (lazyVideo && 'IntersectionObserver' in window) {
         const videoObserver = new IntersectionObserver((entries, observer) => {
@@ -111,7 +108,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (source && source.dataset.src) {
                         source.src = source.dataset.src;
                         lazyVideo.load();
-                        console.log("🎥 [VIDEO] Lazy Source Loaded");
                     }
                     observer.unobserve(lazyVideo);
                 }
@@ -119,11 +115,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, { rootMargin: '200px' });
         videoObserver.observe(lazyVideo);
     }
+
+    // 7. GLOBAL MOBILE FIXES
+    initMobileFixes();
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+// --- COMPONENT INITIALIZERS (Refactored for clarity) ---
 
-    // --- 1. FAQ Accordion Logic ---
+function initFAQ() {
     document.querySelectorAll('.faq-question').forEach(question => {
         question.addEventListener('click', () => {
             const item = question.parentElement;
@@ -132,153 +131,31 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isOpen) item.classList.add('active');
         });
     });
+}
 
-    // --- 2. Smooth Scroll ---
+function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
-
             e.preventDefault();
             const targetElement = document.querySelector(targetId);
 
             if (targetElement) {
-                // Se o alvo for a seção de ofertas, tenta focar no Combo Elite
                 if (targetId === '#offer-focus' || targetId === '#offers') {
                     const comboCard = document.querySelector('.price-card.featured');
                     if (comboCard) {
-                        comboCard.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center',
-                            inline: 'center'
-                        });
+                        comboCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         return;
                     }
                 }
-
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80,
-                    behavior: 'smooth'
-                });
-            } else if (targetId === '#offer-focus') {
-                // Fallback for when current card isn't loaded yet
-                const pricingSection = document.getElementById('offers');
-                if (pricingSection) {
-                    window.scrollTo({
-                        top: pricingSection.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
+                window.scrollTo({ top: targetElement.offsetTop - 80, behavior: 'smooth' });
             }
         });
     });
+}
 
-
-
-    // --- 4. Testimonials (Single-Slide Carousel - COMPACT) ---
-    const testimonials = [
-        { text: 'Meu galo tava com o olho fechado e a cara inchada. Vi o vídeo no insta e resolvi comprar, no mesmo dia já melhorou bastante.', author: 'Carlos Silva', location: 'Minas Gerais', stars: 5, avatar: 'carrosel/carlos.jpg' },
-        { text: 'Tava perdendo pintinho toda semana, não sabia o que fazer. Apliquei o protocolo e hoje não morre mais nenhum.', author: 'Maria Santos', location: 'São Paulo', stars: 5, avatar: 'carrosel/maria.jpg' },
-        { text: 'Tinha uma galinha que não comia, só ficava no canto. Segui o passo a passo e em 2 dias ela voltou ao normal.', author: 'João Oliveira', location: 'Bahia', stars: 5, avatar: 'carrosel/joao_new.jpg' },
-        { text: 'Meu galo tava morrendo de coriza, olho espumando e cheirando mal. Fiz o tratamento e salvei ele.', author: 'Ana Costa', location: 'Goiás', stars: 5, avatar: 'carrosel/ana.jpg' },
-        { text: 'Gastava uma fortuna em remédio e as galinhas continuavam morrendo. Descobri que tava errando no básico.', author: 'Ricardo Lima', location: 'Paraná', stars: 5, avatar: 'carrosel/ricardo.jpg' },
-        { text: 'Galinha parou de botar e tava com a crista caída. Segui o protocolo e voltou a produzir normal.', author: 'Lucas Ferreira', location: 'Mato Grosso', stars: 5, avatar: 'carrosel/lucas.jpg' },
-        { text: 'Tinha galo com a perna torta, achei que ia morrer. O tratamento salvou e hoje ele tá perfeito.', author: 'Isabella Lima', location: 'Santa Catarina', stars: 5, avatar: 'carrosel/isabella.jpg' },
-        { text: 'Perdi 15 aves em um mês antes de comprar. Depois que aprendi o manejo certo, zerou a mortalidade.', author: 'Juliana Freitas', location: 'Goiás', stars: 5, avatar: 'carrosel/juliana.jpg' }
-    ];
-
-    const testimonialsTrack = document.getElementById('testimonials-track');
-    if (testimonialsTrack) {
-        // Clear existing content
-        testimonialsTrack.innerHTML = '';
-
-        // Render all testimonials but hide them initially (except first)
-        testimonials.forEach((t, index) => {
-            const starsHTML = '<i class="fa-solid fa-star" style="color: #FFD700;"></i>'.repeat(t.stars);
-            const card = document.createElement('div');
-            card.className = 'testimonial-card-single'; // New class for single display
-            // Style for single focused card
-            card.style.opacity = index === 0 ? '1' : '0';
-            card.style.position = 'absolute';
-            card.style.top = '0';
-            card.style.left = index === 0 ? '0' : '100%'; // Start off-screen right
-            card.style.width = '100%';
-            card.style.height = '100%';
-            card.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-            card.style.transform = index === 0 ? 'translateX(0)' : 'translateX(50px)'; // Helper for fade in
-
-            card.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                    <div style="width: 50px; height: 50px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0;">
-                        <img src="${t.avatar}" alt="${t.author}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://ui-avatars.com/api/?name=${t.author}&background=random&color=fff'">
-                    </div>
-                    <div>
-                        <strong style="display: block; color: #fff; font-size: 0.95rem; line-height: 1.2;">${t.author}</strong>
-                        <small style="color: rgba(255,255,255,0.5); font-size: 0.75rem;"><i class="fa-solid fa-location-dot" style="margin-right: 4px;"></i> ${t.location}</small>
-                        <div style="font-size: 0.7rem; color: #FFD700; margin-top: 2px;">${starsHTML}</div>
-                    </div>
-                </div>
-                <p style="font-style: normal; margin: 0; color: rgba(255,255,255,0.8); font-size: 0.85rem; line-height: 1.5;">"${t.text}"</p>
-            `;
-            testimonialsTrack.appendChild(card);
-        });
-
-        let currentIdx = 0;
-
-        function nextSlide() {
-            const cards = document.querySelectorAll('.testimonial-card-single');
-            const total = cards.length;
-            if (total === 0) return;
-
-            // Current card moves OUT to LEFT
-            const current = cards[currentIdx];
-            current.style.opacity = '0';
-            current.style.left = '-100%';
-            current.style.transform = 'translateX(-50px)';
-
-            // Wait briefly then reset it to RIGHT side for next cycle
-            setTimeout(() => {
-                current.style.transition = 'none'; // Disable transition for instant move
-                current.style.left = '100%';
-                setTimeout(() => {
-                    current.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)'; // Re-enable
-                }, 50);
-            }, 800); // Wait for exit animation
-
-            // Next card moves IN from RIGHT
-            currentIdx = (currentIdx + 1) % total;
-            const next = cards[currentIdx];
-
-            // Ensure next is ready at start position
-            next.style.left = '0';
-            next.style.opacity = '1';
-            next.style.transform = 'translateX(0)';
-        }
-
-        // Change slide every 5 seconds
-        setInterval(nextSlide, 5000);
-    }
-
-    // --- 5. Comparison Slider (Results) ---
-    const sliderTrack = document.getElementById('comparison-slider-track');
-    if (sliderTrack) {
-        const nextBtn = document.getElementById('comparison-next');
-        const prevBtn = document.getElementById('comparison-prev');
-        if (nextBtn && prevBtn) {
-            nextBtn.addEventListener('click', () => {
-                sliderTrack.scrollBy({ left: 300, behavior: 'smooth' });
-            });
-            prevBtn.addEventListener('click', () => {
-                sliderTrack.scrollBy({ left: -300, behavior: 'smooth' });
-            });
-        }
-    }
-
-    // --- 5. Initializations ---
-    renderHomeProducts();
-    setupFields();
-
-    // --- 6. Sticky CTA Logic ---
+function initStickyCTA() {
     const stickyCta = document.querySelector('.sticky-cta-bar');
     const heroSection = document.querySelector('.hero');
     if (stickyCta && heroSection) {
@@ -288,51 +165,50 @@ document.addEventListener('DOMContentLoaded', () => {
             else stickyCta.classList.remove('visible');
         });
     }
+}
 
-    // --- 7. Lazy Loading & Layout Stability ---
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    if (img.dataset.src) {
-                        img.src = img.dataset.src;
-                        img.classList.add('loaded');
-                        imageObserver.unobserve(img);
-                    }
+function initLazyLoading() {
+    if (!('IntersectionObserver' in window)) return;
+    const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.classList.add('loaded');
+                    imageObserver.unobserve(img);
                 }
-            });
-        }, { rootMargin: '50px' });
-
-        document.querySelectorAll('img[loading="lazy"]').forEach(img => {
-            if (img.src) {
-                // If it already has src, just mark as loaded
-                img.classList.add('loaded');
-            } else {
-                imageObserver.observe(img);
             }
         });
-    }
+    }, { rootMargin: '50px' });
 
-    // --- 8. Smooth Image Transitions ---
+    document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+        if (img.src) img.classList.add('loaded');
+        else imageObserver.observe(img);
+    });
+}
+
+function initImageTransitions() {
     document.querySelectorAll('img').forEach(img => {
+        if (img.closest('.testimonial-track-original')) {
+            img.style.opacity = '1';
+            return;
+        }
         img.style.transition = 'opacity 0.4s ease-in-out';
         img.onload = () => img.style.opacity = '1';
         if (!img.complete) img.style.opacity = '0';
     });
+}
 
-    // --- 9. Mobile Vh Fix ---
-    const vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-    window.addEventListener('resize', () => {
+function initMobileFixes() {
+    const updateVh = () => {
         const vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
-    });
+    };
+    window.addEventListener('resize', updateVh);
+    updateVh();
 
-    // --- 10. Mobile Checkout: Prevent background horizontal scroll when keyboard opens ---
-    // This is the most reliable fix for iOS/Android horizontal drift
     document.addEventListener('touchmove', (e) => {
-        // Only block if modal is open AND the touch is NOT inside the modal
         if (document.body.classList.contains('modal-open')) {
             const modal = document.querySelector('.modal-overlay');
             if (modal && !modal.contains(e.target)) {
@@ -340,82 +216,51 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }, { passive: false });
-});
+}
 
 // --- 2. CHECKOUT & API LOGIC ---
 
 // mp is initialized in index.html to avoid duplicate declaration errors
 const checkoutModal = document.getElementById('checkout-modal');
 
-// --- TRACKING ENGINE (resiliente para cold start do Render) ---
+// --- TRACKING ENGINE ---
 async function trackEvent(type, isMobileManual = null, ctaId = null, details = null) {
     const isMobile = isMobileManual !== null ? isMobileManual : (
-        window.innerWidth <= 768 ||
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-        ('ontouchstart' in window)
+        window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
     );
 
     const body = JSON.stringify({ type, isMobile, ctaId, details });
 
-    // Tenta enviar até 3 vezes para lidar com o cold start do Render
-    for (let attempt = 1; attempt <= 3; attempt++) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
         try {
             const resp = await fetch(`${API_URL}/api/track`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body,
-                signal: AbortSignal.timeout(8000) // 8s timeout
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body, signal: AbortSignal.timeout(5000)
             });
-            if (resp.ok) {
-                console.log(`📈 [TRACK OK] ${type} (tentativa ${attempt})`);
-                return; // Sucesso, para de tentar
-            }
+            if (resp.ok) return;
         } catch (e) {
-            if (attempt < 3) {
-                console.warn(`📈 [TRACK] Tentativa ${attempt} falhou (${e.message}), retentando em 3s...`);
-                await new Promise(r => setTimeout(r, 3000)); // aguarda 3s antes de retentar
-            } else {
-                console.warn(`📈 [TRACK] Evento "${type}" descartado após 3 tentativas.`);
-            }
+            if (attempt < 2) await new Promise(r => setTimeout(r, 2000));
         }
     }
 }
 
-// Helper para disparar Pixels com resiliência (espera o fbq estar pronto)
 function trackPixel(eventName, params = {}) {
     if (typeof fbq === 'function') {
         fbq('track', eventName, params);
-        console.log(`📈 [PIXEL OK] ${eventName}`, params);
     } else {
-        // Tenta novamente em 500ms se o Pixel ainda não carregou (max 5 tentativas)
         let attempts = 0;
         const interval = setInterval(() => {
             attempts++;
             if (typeof fbq === 'function') {
                 fbq('track', eventName, params);
-                console.log(`📈 [PIXEL OK] ${eventName} (após espera)`, params);
                 clearInterval(interval);
-            } else if (attempts >= 10) {
-                console.warn(`📈 [PIXEL FAIL] ${eventName} - fbq não inicializado.`);
-                clearInterval(interval);
-            }
+            } else if (attempts >= 10) clearInterval(interval);
         }, 500);
     }
 }
 
-// Interceptador para Promoção de Elite (Pré-Checkout)
+// Interceptador para Promoção de Elite (Pré-Checkout) - REMOVIDO PARA USAR MURA ENGINE DIRETO
 async function openCheckout(productId, forceBumps = []) {
-    // Se for o guia de doenças, mostra a oferta do combo primeiro
-    if (productId === 'ebook-doencas') {
-        const promoModal = document.getElementById('elite-promo-modal');
-        if (promoModal) {
-            promoModal.classList.add('show');
-            startEliteTimer(300); // 5 minutos
-            return;
-        }
-    }
-
-    // Caso contrário (ou se o modal não existir), segue o fluxo original
     return startCheckoutProcess(productId, forceBumps);
 }
 
@@ -461,14 +306,11 @@ function declineEliteCombo() {
 }
 
 async function startCheckoutProcess(productId, forceBumps = []) {
-    // Session-based guard for checkout_open to prevent duplicates
     if (!sessionStorage.getItem('mura_checkout_opened')) {
         trackEvent('checkout_open');
         sessionStorage.setItem('mura_checkout_opened', 'true');
     }
     
-    trackEvent('click');
-    sessionStorage.setItem('mura_modal_open', 'true');
     trackEvent('click');
     sessionStorage.setItem('mura_modal_open', 'true');
     // InitiateCheckout will be fired in loadCheckoutData once we have the price and name
@@ -602,64 +444,102 @@ function renderOrderBumps(bumps) {
     // Global check removed to support individual toggles
     // if (window.siteConfig && window.siteConfig.settings && window.siteConfig.settings.enableOrderBump === false) {
     //     area.innerHTML = '';
-    //     return;
     // }
 
     // Filtra bumps que não devem aparecer
-    const filteredBumps = (bumps || []).filter(bump => {
-        // Respect individual enabled flag
-        if (bump.enabled === false) return false;
+    let manualPresent = false;
+    (bumps || []).forEach(b => {
+        if (b.id === 'ebook-manejo' || b.title?.includes('Pintinhos')) manualPresent = true;
+    });
 
-        // Remove Manual de Pintinhos do checkout (deve ser upsell posterior)
-        if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') return false;
-        // Mantém a Tabela de Ração no checkout
+    const filteredBumps = (bumps || []).filter(bump => {
+        if (!bump.id) {
+            if (bump.title?.includes('Pintinhos') || bump.title?.includes('Manejo')) bump.id = 'ebook-manejo';
+            else if (bump.title?.includes('Ração')) bump.id = 'bump-6361';
+        }
+        
+        // Se o Manual está presente, escondemos a Tabela individual para forçar o Combo
+        if (manualPresent && bump.id === 'bump-6361') return false;
+
+        if (bump.enabled === false) return false;
         return true;
     });
 
-    area.innerHTML = filteredBumps.map(bump => {
-        let imgSrc = bump.image;
-        if (!imgSrc) {
-            if (bump.id === 'ebook-doencas' || bump.id === 'bump-doencas') imgSrc = 'capadasdoencas.jpg';
-            else if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') imgSrc = 'capadospintinhos.jpg';
-            else if (bump.id === 'bump-6361') imgSrc = 'tabela_racao_bump.jpg';
-        }
+    // Configura o container para grid se houver mais de um bump
+    area.style.display = 'block'; // Usar block para gerenciar o título em cima
+    area.style.marginTop = '1.5rem';
+    area.style.padding = '0.5rem';
+    area.style.background = 'rgba(251, 191, 36, 0.05)';
+    area.style.borderRadius = '12px';
+    area.style.border = '1px solid rgba(251, 191, 36, 0.1)';
 
-        return `
-            <div class="order-bump-container" onclick="toggleBump('${bump.id}')" 
-                style="margin-top: 1rem; position: relative; overflow: hidden; border: 2px solid #d97706; border-radius: 12px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; min-height: 120px; display: flex;">
-                
-                <!-- Imagem de Fundo Preenchendo Tudo -->
-                ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">` : ''}
-                
-                <!-- Overlay Gradiente para Legibilidade -->
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.3) 100%); z-index: 1;"></div>
+    const bumpHeader = `
+        <div style="text-align: center; margin-bottom: 12px; padding: 0 5px;">
+            <p style="color: #d97706; font-size: 0.75rem; font-weight: 900; line-height: 1.3; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">
+                ⚠️ OFERTAS EXCLUSIVAS PARA CLIENTES<br>
+                <span style="color: #475569; font-weight: 500; font-size: 0.65rem;">VOCÊ NÃO ENCONTRARÁ ESSES VALORES EM OUTRO LUGAR.</span>
+            </p>
+        </div>
+    `;
 
-                <!-- Conteúdo por cima do fundo -->
-                <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 15px; padding: 15px; width: 100%;">
-                    <input type="checkbox" class="order-bump-checkbox" id="bump-chk-${bump.id}" ${cart.bumps.includes(bump.id) ? 'checked' : ''} 
-                        style="width: 24px; height: 24px; cursor: pointer; accent-color: #fbbf24; flex-shrink: 0; filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));">
-                    
-                    <div class="order-bump-content" style="flex: 1;">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
-                            <span class="order-bump-tag" style="background: #ef4444; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">${bump.tag || 'OFERTA ÚNICA'}</span>
+    const gridLayout = `
+        <div style="display: grid; grid-template-columns: ${filteredBumps.length > 1 ? '1fr 1fr' : '1fr'}; gap: 8px;">
+            ${filteredBumps.map(bump => {
+                let imgSrc = bump.image;
+                if (!imgSrc) {
+                    if (bump.id === 'ebook-doencas' || bump.id === 'bump-doencas') imgSrc = 'capadasdoencas.jpg';
+                    else if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') imgSrc = 'capadospintinhos.jpg';
+                    else if (bump.id === 'bump-6361') imgSrc = 'tabela_racao_bump.jpg';
+                }
+
+                return `
+                    <div class="order-bump-container" onclick="toggleBump('${bump.id}')" 
+                        style="position: relative; overflow: hidden; border: 2px solid #d97706; border-radius: 10px; cursor: pointer; transition: transform 0.2s; min-height: 110px; display: flex;">
+                        
+                        <!-- Imagem de Fundo -->
+                        ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">` : ''}
+                        
+                        <!-- Overlay -->
+                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.85) 100%); z-index: 1;"></div>
+
+                        <!-- Conteúdo -->
+                        <div style="position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px; width: 100%;">
+                            <div style="display: flex; align-items: flex-start; gap: 6px; margin-bottom: 4px;">
+                                <input type="checkbox" class="order-bump-checkbox" id="bump-chk-${bump.id}" ${cart.bumps.includes(bump.id) ? 'checked' : ''} 
+                                    style="width: 18px; height: 18px; cursor: pointer; accent-color: #fbbf24; flex-shrink: 0; margin-top: 2px;">
+                                <span class="order-bump-tag" style="background: #ef4444; color: #fff; padding: 1px 4px; border-radius: 3px; font-size: 0.55rem; font-weight: 900; text-transform: uppercase;">PROMO</span>
+                            </div>
+                            <strong class="order-bump-title" style="display: block; color: #fff; font-size: 0.8rem; text-shadow: 0 1px 2px rgba(0,0,0,0.8); line-height: 1.1; margin-bottom: 2px;">
+                                ${bump.id === 'ebook-manejo' ? 'COMBO: MANUAL DE PINTINHOS + TABELA 🎁' : bump.title}
+                            </strong>
+                            <p style="color: rgba(255,255,255,0.85); font-size: 0.65rem; line-height: 1.2; margin: 2px 0 4px 0; text-shadow: 0 1px 1px rgba(0,0,0,0.5); font-weight: 700;">
+                                ${bump.id === 'ebook-manejo' ? '🐣 <span style="color: #fca5a5;"><strong>90% das mortes</strong></span> em pintinhos é por manejo errado. <span style="color: #4ade80;"><strong>Garanta 95% de sobrevivência</strong></span> com o manejo correto. E leve <span style="color: #fbbf24;"><strong>DE GRAÇA</strong></span> nosso conteúdo (R$ 19,90) para economizar <span style="color: #fbbf24;"><strong>até 70%</strong></span> na alimentação.' : '🌾 Economize até 70% na alimentação produzindo sua própria ração.'}
+                            </p>
+                            <span class="order-bump-price" style="color: #fbbf24; font-weight: 900; font-size: 0.95rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">+ ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}</span>
                         </div>
-                        <strong class="order-bump-title" style="display: block; color: #fff; font-size: 1.05rem; margin-top: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">${bump.title}</strong>
-                        <span class="order-bump-description" style="display: block; color: rgba(255,255,255,0.9); font-size: 0.85rem; margin-top: 4px; line-height: 1.3; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">${bump.description}</span>
-                        <div style="display: flex; align-items: baseline; gap: 10px; margin-top: 8px;">
-                            <span class="order-bump-price" style="color: #fbbf24; font-weight: 900; font-size: 1.2rem; text-shadow: 0 2px 5px rgba(0,0,0,0.5);">+ ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-    }).join('');
+                    </div>`;
+            }).join('')}
+        </div>
+    `;
+
+    area.innerHTML = bumpHeader + gridLayout;
 }
 
 function toggleBump(bumpId) {
     const idx = cart.bumps.indexOf(bumpId);
     if (idx > -1) {
         cart.bumps.splice(idx, 1);
+        // Se remover o manual, remove a tabela automática do combo
+        if (bumpId === 'ebook-manejo') {
+            const tableIdx = cart.bumps.indexOf('bump-6361');
+            if (tableIdx > -1) cart.bumps.splice(tableIdx, 1);
+        }
     } else {
         cart.bumps.push(bumpId);
+        // Se adicionar o manual, adiciona a tabela automática como parte do combo
+        if (bumpId === 'ebook-manejo') {
+            if (!cart.bumps.includes('bump-6361')) cart.bumps.push('bump-6361');
+        }
     }
 
     const chk = document.getElementById(`bump-chk-${bumpId}`);
@@ -695,21 +575,19 @@ function updateTotal() {
             }
         }
 
-        console.log('ðŸ” DEBUG updateTotal - Bump ID:', id, 'Encontrado:', bump);
-
         if (bump) {
-            // Usa o preço do banco de dados
-            const bumpPriceForPix = bump.price || 0;
-            const bumpPriceForCard = bump.priceCard || bump.price || 0;
+            // Regra Especial de Combo: Se o Manual estiver no carrinho, a Tabela é grátis (R$ 0)
+            let isFreeGift = (id === 'bump-6361' && cart.bumps.includes('ebook-manejo'));
+            
+            const bumpPriceForPix = isFreeGift ? 0 : (bump.price || 0);
+            const bumpPriceForCard = isFreeGift ? 0 : (bump.priceCard || bump.price || 0);
 
-            console.log('💰 Preços do bump:', { pix: bumpPriceForPix, card: bumpPriceForCard });
+            console.log(`💰 Preços do bump (${id}):`, { pix: bumpPriceForPix, card: bumpPriceForCard, isFree: isFreeGift });
 
-
-            // Usa preços do banco de dados (sem regras especiais)
             total += bumpPriceForPix;
             cardTotal += bumpPriceForCard;
         } else {
-            console.error('âŒ Bump não encontrado em fullBumps:', id);
+            console.error('❌ Bump não encontrado em fullBumps:', id);
         }
     });
 
@@ -719,15 +597,15 @@ function updateTotal() {
 
     // Adiciona badge de desconto se PIX estiver selecionado e houver desconto
     if (currentPaymentMethod === 'pix' && cardTotal > total) {
-        const discountPercent = Math.round(((cardTotal - total) / cardTotal) * 100);
-        const topPriceDisplay = document.getElementById('checkout-product-price-display');
-        if (topPriceDisplay && topPriceDisplay.parentElement) {
-            const discountBadge = document.createElement('span');
-            discountBadge.className = 'pix-discount-badge';
-            discountBadge.style.cssText = 'display: inline-block; margin-left: 8px; font-size: 0.7rem; color: #10b981; font-weight: 800; background: rgba(16, 185, 129, 0.1); padding: 3px 8px; border-radius: 12px;';
-            discountBadge.innerHTML = `🔥 ${discountPercent}% OFF`;
-            topPriceDisplay.parentElement.appendChild(discountBadge);
-        }
+        document.querySelectorAll('.checkout-total-display').forEach(el => {
+            if (el.parentElement) {
+                const discountBadge = document.createElement('span');
+                discountBadge.className = 'pix-discount-badge';
+                discountBadge.style.cssText = 'display: inline-block; margin-left: 8px; font-size: 0.6rem; color: #10b981; font-weight: 900; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 20px; text-transform: uppercase; vertical-align: middle;';
+                discountBadge.innerHTML = `🔥 27% DE DESCONTO NO PIX`;
+                el.parentElement.appendChild(discountBadge);
+            }
+        });
     }
 
     document.querySelectorAll('.checkout-total-display').forEach(el => {
@@ -863,149 +741,6 @@ function startFunnel(productId) {
     showUpsellModal();
 }
 
-function showSlideInUpsell(method) {
-    const obModal = document.getElementById('order-bump-modal');
-    if (!obModal) return;
-
-    // Inicia o timer de 5 minutos
-    let duration = 300; // 5 minutos em segundos
-    const timerInterval = setInterval(() => {
-        const timerEl = document.getElementById('upsell-timer');
-        if (!timerEl) {
-            clearInterval(timerInterval);
-            return;
-        }
-
-        const minutes = Math.floor(duration / 60);
-        const seconds = duration % 60;
-        timerEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-        if (--duration < 0) {
-            clearInterval(timerInterval);
-            timerEl.textContent = "0:00";
-        }
-    }, 1000);
-
-    obModal.innerHTML = `
-        <div class="order-bump-slide-content" style="border-top: 3px solid #fbbf24; background: #1a1a1a; box-shadow: 0 -10px 40px rgba(0,0,0,0.8);">
-            <button class="order-bump-close" onclick="declineSlideUpsell('${method}')" style="background: rgba(255,255,255,0.1); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; top: 5px; right: 5px;">
-                <i class="fa-solid fa-xmark" style="font-size: 0.8rem;"></i>
-            </button>
-
-            <div class="order-bump-header" style="text-align: center; padding: 5px 0;">
-                <div style="display: inline-block; background: #e74c3c; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: 900; font-size: 0.65rem; margin-bottom: 4px; letter-spacing: 1px;">PROMOÇÃO RELÂMPAGO</div>
-                <h3 style="margin-top: 2px; font-size: 1.05rem; color: #fbbf24; text-transform: uppercase; line-height: 1.1;">
-                    APENAS AGORA<br>
-                    <span style="font-size: 0.8rem; color: #fff; font-weight: 400; opacity: 0.8;">MANUAL DE PINTINHOS DE ELITE</span>
-                </h3>
-            </div>
-
-            <div style="background: rgba(251,191,36,0.1); border: 1px dashed #fbbf24; border-radius: 8px; padding: 6px; margin: 6px 0; text-align: center;">
-                <span style="color: #fff; font-size: 0.75rem;">Expira em: </span>
-                <span id="upsell-timer" style="color: #fbbf24; font-weight: 900; font-size: 1.1rem; font-family: monospace;">05:00</span>
-            </div>
-
-            <div class="order-bump-body" style="text-align: center; padding: 0 5px;">
-                <p style="color: #fff; font-size: 0.8rem; margin-bottom: 0.75rem; line-height: 1.3; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px;">
-                    <strong style="color: #e74c3c;">8 A CADA 10 PINTINHOS MORREM</strong> POR ERRO DE MANEJO. APRENDA COMO CRIAR PINTINHOS E SE LIVRE DE DOENÇA.<br>
-                    <strong style="color: #fbbf24; display: block; margin-top: 4px;">SE TORNE O CRIADOR COMPLETO</strong>
-                </p>
-                
-                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 0.75rem; text-align: left;">
-                    <div style="position: relative;">
-                         <img src="capadospintinhos.jpg" style="width: 75px; border-radius: 12px; border: 1.5px solid #fbbf24; box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);">
-                         <div style="position: absolute; top: -5px; right: -5px; background: #e74c3c; color: #fff; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 900; transform: rotate(15deg); border: 1.5px solid #fff;">-35%</div>
-                    </div>
-                    <ul style="color: #fff; font-size: 0.7rem; padding: 0; margin: 0; list-style: none; line-height: 1.3;">
-                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Sobrevivência de até 98%</li>
-                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Crescimento 3x mais rápido</li>
-                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> Ambiente 100% adequado</li>
-                        <li style="margin-bottom: 2px;"><i class="fa-solid fa-check" style="color: #fbbf24; margin-right: 4px;"></i> As principais doenças em pintinhos</li>
-                    </ul>
-                </div>
-
-                <div class="order-bump-price-tag" style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                    <div style="color: rgba(255,255,255,0.4); text-decoration: line-through; font-size: 0.75rem;">De R$ ${(prefetchedProducts['ebook-manejo']?.originalPrice || 99.90).toFixed(2).replace('.', ',')}</div>
-                    <div style="color: #fbbf24; font-size: 1.8rem; font-weight: 900; line-height: 1;">R$ ${(prefetchedProducts['ebook-manejo']?.price || 49.90).toFixed(2).split('.')[0]}<span style="font-size: 1rem;">,${(prefetchedProducts['ebook-manejo']?.price || 49.90).toFixed(2).split('.')[1]}</span></div>
-                    <div style="color: #fff; font-size: 0.8rem; opacity: 0.9; margin-top: 2px; font-weight: 600;">(4x de R$ ${((prefetchedProducts['ebook-manejo']?.price || 49.90) / 4).toFixed(2).replace('.', ',')} sem juros)</div>
-                </div>
-            </div>
-
-            <div class="order-bump-actions" style="padding: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
-                <button class="btn-accept-bump" onclick="confirmSlideUpsell('${method}')" style="background: #fbbf24; color: #000; width: 100%; border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 0.9rem; text-transform: uppercase;">
-                    QUERO SALVAR MEUS PINTINHOS
-                </button>
-                <button class="btn-decline-bump" onclick="declineSlideUpsell('${method}')" style="background: none; border: none; color: rgba(255,255,255,0.4); text-decoration: underline; margin-top: 8px; cursor: pointer; display: block; width: 100%; font-size: 0.75rem;">
-                    Não, obrigado.
-                </button>
-            </div>
-        </div>
-    `;
-
-    obModal.classList.add('show');
-}
-
-function confirmSlideUpsell(method) {
-    console.log('✅ User ACCEPTED upsell');
-    midCheckoutUpsellPending = false;
-
-    // Add upsell to cart
-    if (!cart.bumps.includes('ebook-manejo')) {
-        cart.bumps.push('ebook-manejo');
-        updateTotal();
-    }
-
-    // Hide modal
-    const obModal = document.getElementById('order-bump-modal');
-    if (obModal) obModal.classList.remove('show');
-
-    // NOW generate the PIX/Card payment
-    if (method === 'pix') {
-        console.log('🔵 Proceeding to PIX generation after upsell acceptance');
-        processPixPayment();
-    } else {
-        console.log('🔵 Proceeding to Card payment after upsell acceptance');
-        processCardPayment();
-    }
-}
-
-function declineSlideUpsell(method) {
-    console.log('❌ User DECLINED upsell');
-    midCheckoutUpsellPending = false;
-
-    // Hide modal
-    const obModal = document.getElementById('order-bump-modal');
-    if (obModal) obModal.classList.remove('show');
-
-    // Generate PIX/Card payment WITHOUT upsell
-    if (method === 'pix') {
-        console.log('🔵 Proceeding to PIX generation after upsell decline');
-        processPixPayment();
-    } else {
-        console.log('🔵 Proceeding to Card payment after upsell decline');
-        processCardPayment();
-    }
-}
-
-function acceptUpsell() {
-    closeFunnelModal();
-    // Adiciona Pintinhos como Bump e abre checkout de Doenças
-    funnelState.upsellAccepted = true;
-    openCheckout(funnelState.mainId, ['ebook-manejo']);
-}
-
-function acceptDownsell() {
-    closeFunnelModal();
-    // Abre checkout direto do Combo
-    openCheckout('combo-elite');
-}
-
-function rejectFunnel() {
-    closeFunnelModal();
-    // Abre checkout apenas do produto principal
-    openCheckout(funnelState.mainId);
-}
-
 // --- Skeleton Loader Helper ---
 function showSkeletons(container, count = 3) {
     if (!container) return;
@@ -1109,7 +844,6 @@ function switchMethod(method) {
 }
 
 
-let midCheckoutUpsellPending = true;
 
 async function handlePayment(method) {
     // UPSELL REMOVIDO: Fluxo direto para pagamento
@@ -1128,8 +862,7 @@ async function handlePayment(method) {
             cpf: document.getElementById('payer-cpf').value ? document.getElementById('payer-cpf').value.replace(/\D/g, '') : ''
         };
     } else {
-        // CARD MODE: Use Cardholder Data as Customer Data
-        // CPF now comes from common field (payer-cpf)
+        // CARD MODE
         customer = {
             ...commonData,
             name: document.getElementById('card-holder').value,
@@ -1149,29 +882,42 @@ async function handlePayment(method) {
 
     const items = [{ id: cart.mainProduct.id, title: cart.mainProduct.title, price: mainPrice }];
 
-    // Adiciona bumps com preços corretos baseados no método de pagamento
+    // Adiciona bumps com preços corretos
     cart.bumps.forEach(id => {
         let b = cart.mainProduct.fullBumps?.find(x => x.id === id);
-
-        // FALLBACK: Se não encontrou em fullBumps, pode ser um produto (upsell)
+        
+        // CORREÇÃO: Fallback idêntico ao updateTotal para garantir soma correta no PIX
         if (!b && id.startsWith('ebook-')) {
-            b = {
-                id: id,
-                title: id === 'ebook-manejo' ? 'Manual de Manejo de Pintinhos' : 'Ebook',
-                price: id === 'ebook-manejo' ? 49.90 : 59.90, // UPSSELL EXCLUSIVO PIX
-                priceCard: id === 'ebook-manejo' ? 49.90 : 59.90
-            };
+            const prod = window.siteConfig?.products?.[id] || prefetchedProducts[id];
+            if (prod) {
+                b = {
+                    id: id,
+                    title: prod.title,
+                    price: prod.price,
+                    priceCard: prod.originalPrice || prod.price
+                };
+            } else {
+                // Fallback de emergência (mesmo do updateTotal)
+                const fallbackPrice = id === 'ebook-manejo' ? 49.9 : 59.9;
+                b = { 
+                    id: id, 
+                    title: id === 'ebook-manejo' ? 'Manual de Pintinhos' : 'Ebook Adicional',
+                    price: fallbackPrice, 
+                    priceCard: id === 'ebook-manejo' ? 49.9 : 99.0 
+                };
+            }
         }
 
         if (b) {
-            let bumpPrice = b.price;
-
-            if (method === 'card' && b.priceCard) {
-                bumpPrice = b.priceCard;
-            }
+            // Regra Especial de Combo: Se o Manual estiver no carrinho, a Tabela é grátis (R$ 0)
+            let isFreeGift = (id === 'bump-6361' && cart.bumps.includes('ebook-manejo'));
+            
+            let bumpPrice = isFreeGift ? 0 : ((method === 'card' && b.priceCard) ? b.priceCard : b.price);
             items.push({ id: b.id, title: b.title, price: bumpPrice });
         }
     });
+
+    console.log(`📦 [CHECKOUT] Payload Items (${method}):`, items);
 
     if (method === 'pix') {
         const btn = document.getElementById('btn-pay-pix');
@@ -1188,11 +934,18 @@ async function handlePayment(method) {
         document.getElementById('pix-receiver-info').classList.add('hidden');
         document.getElementById('btn-copy-pix').style.display = 'none';
 
-        let finalPrice = cart.mainProduct.price; 
         const totalAmount = items.reduce((acc, item) => acc + Number(item.price), 0);
         const itemIds = items.map(i => i.id).sort().join(',');
 
         try {
+            if (!cart.mainProduct) {
+                console.error("Cart Error: No main product selected");
+                alert("Houve um erro: produto não selecionado. Por favor, reinicie a compra.");
+                document.getElementById('checkout-main-view').classList.remove('hidden');
+                pixResult.classList.add('hidden');
+                return;
+            }
+
             const res = await fetch(`${API_URL}/api/checkout/pix`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1203,7 +956,6 @@ async function handlePayment(method) {
             const data = await res.json();
 
             if (data.qr_code) {
-                // Save to Persistence
                 localStorage.setItem('active_pix_session', JSON.stringify({
                     data: data,
                     total: totalAmount,
@@ -1211,34 +963,28 @@ async function handlePayment(method) {
                     timestamp: Date.now()
                 }));
 
-                // 🔴 FIX: Captura abandono IMEDIATAMENTE ao gerar o PIX
-                // Se o usuário não pagar, este registro aparece no painel
                 captureAbandonedLead({ pixGenerated: true, pixId: data.id });
-
                 showPixResult(data, items);
 
-                // UPSELL PÓS-PIX: Mostra o upsell dos pintinhos após gerar o PIX
-                setTimeout(() => {
-                    const upsellProduct = window.siteConfig?.products?.['ebook-manejo'];
-                    const isUpsellEnabled = upsellProduct && upsellProduct.enabled !== false;
-                    
-                    if (midCheckoutUpsellPending && isUpsellEnabled && !cart.bumps.includes('ebook-manejo') && cart.mainProduct.id !== 'combo-elite' && cart.mainProduct.id !== 'ebook-manejo') {
-                        showSlideInUpsell('pix');
-                    }
-                }, 2000); // Aguarda 2 segundos após mostrar o QR Code
             } else {
-                // Error from server
                 console.error("Pix Error Response:", data);
-                const errorMsg = data.error || data.message || 'Houve um erro ao gerar o PIX. Verifique seus dados e tente novamente.';
-                alert(errorMsg);
-                btn.disabled = false;
-                btn.innerText = originalText;
+                alert(data.error || data.message || 'Houve um erro ao gerar o PIX.');
+                document.getElementById('checkout-main-view').classList.remove('hidden');
+                pixResult.classList.add('hidden');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerText = originalText;
+                }
             }
         } catch (e) {
             console.error("Pix Error:", e);
-            alert('Não foi possível gerar o seu PIX agora. Verifique sua conexão e tente novamente.');
-            btn.disabled = false;
-            btn.innerText = originalText;
+            alert('Não foi possível gerar o seu PIX agora.');
+            document.getElementById('checkout-main-view').classList.remove('hidden');
+            pixResult.classList.add('hidden');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
         }
     } else {
         // CARD PAYMENT (Restored complex logic)
@@ -1393,7 +1139,6 @@ async function handlePayment(method) {
             else if (e && e.cause) errDisplay = JSON.stringify(e.cause);
             else if (typeof e === 'string') errDisplay = e;
             else if (typeof e === 'object') errDisplay = JSON.stringify(e);
-
             trackEvent('checkout_error', null, null, `Erro Cartão (JS): ${errDisplay}`);
             alert('Houve um erro ao processar seu cartão.\n\nDetalhe técnico: ' + errDisplay + '\n\nTente novamente ou use o PIX.');
 
@@ -1405,239 +1150,121 @@ async function handlePayment(method) {
     }
 }
 
-// --- 1. PIX PAYMENT (MODIFIED FOR UPSELL INTERCEPTION) ---
+// --- 1. PIX PAYMENT (Simplified) ---
 async function startPixPayment(event) {
     if (event) event.preventDefault();
-
-    // PIXEL: AddPaymentInfo (Removido por soliciteção do usuário - Purchase será o evento final)
-
-
     console.log('🔵 startPixPayment CALLED');
 
-    // NEW: VALIDAÇÃO ANTES DO UPSELL
     if (!validateCheckoutInputs('pix')) {
-        console.warn('⚠️ Validation failed before upsell/pix');
-        return; // Para aqui se estiver inválido
+        return;
     }
 
-    try {
-        // Check if upsell (Manual de Pintinhos) is already in cart
-        const upsellId = 'ebook-manejo';
-        const isUpsellInCart = cart.bumps && cart.bumps.includes(upsellId);
-
-        console.log('📊 Upsell check:', { upsellId, isUpsellInCart, cartBumps: cart.bumps });
-
-        // If upsell NOT in cart, check individual enabled flag
-        if (!isUpsellInCart) {
-            // Use prefetchedProducts instead of window.siteConfig for absolute reliability
-            const upsellProduct = (typeof prefetchedProducts !== 'undefined' && prefetchedProducts['ebook-manejo']) 
-                ? prefetchedProducts['ebook-manejo'] 
-                : (window.siteConfig?.products?.['ebook-manejo']);
-
-            const isUpsellEnabled = upsellProduct && upsellProduct.enabled !== false;
-
-            if (!isUpsellEnabled) {
-                console.log('✅ Upsell disabled in config, skipping to PIX');
-            } else {
-                console.log('🔔 Showing upsell modal (PIX will be generated after user decision)');
-                showSlideInUpsell('pix');
-                return; // STOP HERE - PIX will be generated when user accepts/rejects upsell
-            }
-        }
-
-        // If upsell already in cart or disabled, proceed directly to generate PIX
-        console.log('✅ Upsell already in cart or disabled, proceeding to PIX generation');
-        await processPixPayment();
-    } catch (error) {
-        console.error('❌ Error in startPixPayment:', error);
-        alert('Erro ao processar pagamento PIX: ' + error.message);
-    }
+    await processPixPayment();
 }
 
 async function processPixPayment() {
     console.log('🔵 processPixPayment CALLED');
-    const name = document.getElementById('payer-name').value;
-    const email = document.getElementById('payer-email').value;
-    const cpf = document.getElementById('payer-cpf')?.value?.trim();
-    const phone = document.getElementById('payer-phone')?.value?.trim();
-
-    console.log('📋 Form values:', { name, email, cpf, phone });
-
-    if (!name || !email || !cpf || !phone) {
-        console.warn('⚠️ Validation failed: Missing required fields');
-        alert('Por favor, preencha todos os campos obrigatórios.');
+    
+    if (!validateCheckoutInputs('pix')) {
         return;
     }
 
-    // Validação básica de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        alert('Por favor, insira um email válido.');
-        return;
-    }
-
-    // Validação de CPF (apenas formato)
-    const cpfClean = cpf.replace(/\D/g, '');
-    if (cpfClean.length !== 11) {
-        alert('Por favor, insira um CPF válido.');
-        return;
-    }
-
-    // Validação de telefone
-    const phoneClean = phone.replace(/\D/g, '');
-    if (phoneClean.length < 10) {
-        alert('Por favor, insira um telefone válido.');
-        return;
-    }
-
-    // If all validations pass, proceed with the original handlePayment('pix') logic
+    console.log('✅ Validation passed! Proceeding to handlePayment(pix)');
     handlePayment('pix');
 }
 
-// --- 2. CARD PAYMENT (MODIFIED FOR UPSELL INTERCEPTION) ---
+// --- 2. CARD PAYMENT (Simplified) ---
 async function startCardPayment(event) {
     console.log('🔵 startCardPayment CALLED');
     if (event) event.preventDefault();
 
-    // NEW: VALIDAÇÃO ANTES DO UPSELL
     if (!validateCheckoutInputs('card')) {
-        console.warn('⚠️ Validation failed before upsell/card');
-        return; // Para aqui se estiver inválido
+        return;
     }
 
-    try {
-        // Check if upsell (Manual de Pintinhos) is already in cart
-        const upsellId = 'ebook-manejo';
-        const isUpsellInCart = cart.bumps && cart.bumps.includes(upsellId);
-
-        console.log('📊 Upsell check (Card):', { upsellId, isUpsellInCart, cartBumps: cart.bumps });
-
-        // If upsell NOT in cart, check individual enabled flag
-        if (!isUpsellInCart) {
-            // Use prefetchedProducts instead of window.siteConfig for absolute reliability
-            const upsellProduct = (typeof prefetchedProducts !== 'undefined' && prefetchedProducts['ebook-manejo']) 
-                ? prefetchedProducts['ebook-manejo'] 
-                : (window.siteConfig?.products?.['ebook-manejo']);
-
-            const isUpsellEnabled = upsellProduct && upsellProduct.enabled !== false;
-
-            if (!isUpsellEnabled) {
-                console.log('✅ Upsell disabled in config, skipping to Card payment');
-            } else {
-                console.log('🔔 Showing upsell modal (Card payment will be processed after user decision)');
-                showSlideInUpsell('card');
-                return; // STOP HERE - Card payment will be processed when user accepts/rejects upsell
-            }
-        }
-
-        // If upsell already in cart or disabled, proceed directly to process payment
-        console.log('✅ Upsell already in cart or disabled, proceeding to Card payment');
-        await processCardPayment();
-    } catch (error) {
-        console.error('❌ Error in startCardPayment:', error);
-        alert('Erro ao processar pagamento com cartão: ' + error.message);
-    }
+    await processCardPayment();
 }
 
 async function processCardPayment() {
-    // PIXEL: Purchase will be fired in handlePayment upon success
+    console.log('🔵 processCardPayment CALLED');
 
-
-    const name = document.getElementById('payer-name').value;
-    const email = document.getElementById('payer-email').value;
-    const cpf = document.getElementById('payer-cpf')?.value?.trim();
-    const phone = document.getElementById('payer-phone')?.value?.trim();
-
-    if (!name || !email || !cpf || !phone) {
-        alert('Por favor, preencha todos os campos obrigatórios.');
+    // NEW: Unified Validation instead of manual alerts
+    if (!validateCheckoutInputs('card')) {
+        console.warn('⚠️ Validation failed in processCardPayment');
         return;
     }
 
-    // Validação básica de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        alert('Por favor, insira um email válido.');
-        return;
-    }
-
-    // Validação de CPF (apenas formato)
-    const cpfClean = cpf.replace(/\D/g, '');
-    if (cpfClean.length !== 11) {
-        alert('Por favor, insira um CPF válido.');
-        return;
-    }
-
-    // Validação de telefone
-    const phoneClean = phone.replace(/\D/g, '');
-    if (phoneClean.length < 10) {
-        alert('Por favor, insira um telefone válido.');
-        return;
-    }
-
-    // Validações específicas para cartão
-    const cardNumber = document.getElementById('card-number')?.value?.trim();
-    const cardExpiration = document.getElementById('card-expiration')?.value?.trim();
-    const cardCvv = document.getElementById('card-cvv')?.value?.trim();
-    const cardHolder = document.getElementById('card-holder')?.value?.trim();
-
-    if (!cardNumber || !cardExpiration || !cardCvv || !cardHolder) {
-        alert('Por favor, preencha todos os dados do cartão.');
-        return false;
-    }
-
-    // If all validations pass, proceed with the original handlePayment('card') logic
+    // If all validations pass, proceed with original handlePayment('card') logic
+    console.log('✅ Validation passed! Proceeding to handlePayment(card)');
     handlePayment('card');
 }
 
 // --- VALIDATION AND INTERCEPTION FUNCTIONS ---
 
-// The original validateCheckoutInputs is now split and integrated into processPixPayment and processCardPayment
-// This function is no longer needed in its original form, but keeping it for context if other parts of the code still call it.
+
+function showToast(title, message, type = 'error') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-card';
+    if (type === 'success') toast.style.borderColor = '#2ecc71';
+    
+    toast.innerHTML = `
+        <div style="width: 40px; height: 40px; background: ${type === 'success' ? '#2ecc71' : '#ef4444'}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff;">
+            <i class="fa-solid ${type === 'success' ? 'fa-check' : 'fa-triangle-exclamation'}"></i>
+        </div>
+        <div class="toast-content">
+            <h4>${title}</h4>
+            <p>${message}</p>
+        </div>
+    `;
+    container.appendChild(toast);
+    setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 4000);
+}
+
 function validateCheckoutInputs(method) {
-    const name = document.getElementById('payer-name')?.value?.trim();
-    const email = document.getElementById('payer-email')?.value?.trim();
-    const cpf = document.getElementById('payer-cpf')?.value?.trim();
-    const phone = document.getElementById('payer-phone')?.value?.trim();
+    console.log('🔍 [VALIDATE] Inicando validação para:', method);
+    
+    const name = document.getElementById(method === 'pix' ? 'payer-name' : 'card-holder');
+    const email = document.getElementById('payer-email');
+    const phone = document.getElementById('payer-phone');
+    const cpf = document.getElementById('payer-cpf');
 
-    if (!name || !email || !cpf || !phone) {
-        alert('Por favor, preencha todos os campos obrigatórios.');
-        return false;
+    if (!validateField(name, 'text')) { 
+        showToast('Nome incompleto', 'Por favor, informe seu nome completo para emissão da nota.'); 
+        name.focus();
+        return false; 
+    }
+    if (!validateField(email, 'email')) { 
+        showToast('E-mail inválido', 'Precisamos de um e-mail válido para enviar seu acesso.'); 
+        email.focus();
+        return false; 
+    }
+    if (!validateField(phone, 'phone')) { 
+        showToast('Telefone inválido', 'Informe um telefone com DDD para suporte via WhatsApp.'); 
+        phone.focus();
+        return false; 
+    }
+    if (!validateField(cpf, 'cpf')) { 
+        showToast('CPF Inválido', 'O CPF é obrigatório para processar o pagamento com segurança.'); 
+        cpf.focus();
+        return false; 
     }
 
-    // Validação básica de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        alert('Por favor, insira um email válido.');
-        return false;
-    }
-
-    // Validação de CPF (apenas formato)
-    const cpfClean = cpf.replace(/\D/g, '');
-    if (cpfClean.length !== 11) {
-        alert('Por favor, insira um CPF válido.');
-        return false;
-    }
-
-    // Validação de telefone
-    const phoneClean = phone.replace(/\D/g, '');
-    if (phoneClean.length < 10) {
-        alert('Por favor, insira um telefone válido.');
-        return false;
-    }
-
-    // Validações específicas para cartão
     if (method === 'card') {
-        const cardNumber = document.getElementById('card-number')?.value?.trim();
-        const cardExpiration = document.getElementById('card-expiration')?.value?.trim();
-        const cardCvv = document.getElementById('card-cvv')?.value?.trim();
-        const cardHolder = document.getElementById('card-holder')?.value?.trim();
+        const number = document.getElementById('card-number');
+        const expiry = document.getElementById('card-expiration');
+        const cvv = document.getElementById('card-cvv');
+        const cep = document.getElementById('card-cep');
 
-        if (!cardNumber || !cardExpiration || !cardCvv || !cardHolder) {
-            alert('Por favor, preencha todos os dados do cartão.');
-            return false;
-        }
+        if (!validateField(number, 'card')) { showToast('Cartão Inválido', 'Verifique o número do cartão impresso na frente.'); number.focus(); return false; }
+        if (!validateField(expiry, 'date')) { showToast('Validade Expirada/Incorreta', 'A validade deve estar no formato MM/AA.'); expiry.focus(); return false; }
+        if (!validateField(cvv, 'cvv')) { showToast('Código CVV', 'O código de 3 dígitos atrás do cartão está incorreto.'); cvv.focus(); return false; }
+        if (!validateField(cep, 'cep')) { showToast('CEP Inválido', 'Informe o CEP de cobrança do cartão.'); cep.focus(); return false; }
     }
 
+    console.log('✅ [VALIDATE] Tudo certo!');
     return true;
 }
 
@@ -1651,7 +1278,7 @@ async function captureAbandonedLead(extra = {}) {
     const name = document.getElementById('payer-name')?.value?.trim();
     const email = document.getElementById('payer-email')?.value?.trim();
     const phone = document.getElementById('payer-phone')?.value?.trim();
-    const productId = cart.id || (cart.mainProduct && cart.mainProduct.id) || 'unknown';
+    const productId = (cart && cart.id) || (cart && cart.mainProduct && cart.mainProduct.id) || 'unknown';
 
     // Só captura se tiver pelo menos o telefone ou e-mail preenchido
     if ((phone && phone.length > 5) || (email && email.length > 5)) {
@@ -1978,125 +1605,9 @@ function showRandomToast() {
 
     container.appendChild(toast);
 
-    // Remove logic handled by CSS animation mainly, but cleanup DOM
     setTimeout(() => {
         if (toast.parentNode) toast.parentNode.removeChild(toast);
-    }, 5500); // wait for animation end (5s) + buffer
-}
-
-// --- 4. CHECKOUT COMPACTION & UX UTILS ---
-
-function validateCheckoutInputs(method) {
-    const email = document.getElementById('payer-email');
-    const phone = document.getElementById('payer-phone');
-    const name = (method === 'pix') ? document.getElementById('payer-name') : document.getElementById('card-holder');
-    const cpf = document.getElementById('payer-cpf');
-    const cep = (method === 'card') ? document.getElementById('card-cep') : null;
-
-    let isValid = true;
-
-    // Reset visual states
-    const fields = [email, phone, name, cpf];
-    if (cep) fields.push(cep);
-
-    fields.forEach(el => el.classList.remove('is-invalid'));
-
-    if (!email.value || !email.value.includes('@')) { email.classList.add('is-invalid'); isValid = false; }
-    if (!phone.value || phone.value.replace(/\D/g, '').length < 10) { phone.classList.add('is-invalid'); isValid = false; }
-    if (!name.value || name.value.trim().length < 3) { name.classList.add('is-invalid'); isValid = false; }
-    if (!cpf.value || cpf.value.replace(/\D/g, '').length < 11) { cpf.classList.add('is-invalid'); isValid = false; }
-    if (cep && (!cep.value || cep.value.replace(/\D/g, '').length < 8)) { cep.classList.add('is-invalid'); isValid = false; }
-
-    if (!isValid) {
-        // Log which fields failed validation
-        const invalidFields = [];
-        if (email.classList.contains('is-invalid')) invalidFields.push('email');
-        if (phone.classList.contains('is-invalid')) invalidFields.push('phone');
-        if (name.classList.contains('is-invalid')) invalidFields.push('name');
-        if (cpf.classList.contains('is-invalid')) invalidFields.push('cpf');
-        if (cep && cep.classList.contains('is-invalid')) invalidFields.push('cep');
-
-        trackEvent('ui_error', null, null, `Erro Validação Frontend: ${invalidFields.join(', ')}`);
-
-        fields.forEach(el => validateField(el, null, true));
-        const firstError = document.querySelector('.is-invalid');
-        if (firstError) firstError.focus();
-    }
-
-    return isValid;
-}
-
-// â³ Tooltip / Help Bubble Logic (5s Idle)
-let helpTimer = null;
-const HELP_MESSAGES = {
-    'payer-email': 'Insira seu melhor e-mail para receber o acesso.',
-    'payer-phone': 'Precisamos do seu WhatsApp para suporte técnico.',
-    'payer-name': 'Digite seu nome completo conforme documento.',
-    'payer-cpf': 'O CPF é necessário para emissão da sua nota fiscal.',
-    'card-holder': 'Nome exatamente como está escrito no seu cartão.',
-    'card-number': 'Digite os 16 números da frente do seu cartão.',
-    'card-cep': 'CEP da sua residência para validação de segurança.'
-};
-
-function initHelpBubbles() {
-    const inputs = document.querySelectorAll('.checkout-form input');
-
-    inputs.forEach(input => {
-        input.addEventListener('focus', () => {
-            clearTimeout(helpTimer);
-            if (!input.value) {
-                // Diminuído para 3 segundos conforme solicitado
-                helpTimer = setTimeout(() => showHelpBubble(input), 3000);
-            }
-        });
-
-        input.addEventListener('input', () => {
-            clearTimeout(helpTimer);
-            removeHelpBubbles();
-        });
-
-        input.addEventListener('blur', () => {
-            clearTimeout(helpTimer);
-            removeHelpBubbles();
-            // Show error if empty OR invalid on blur
-            validateField(input, null, true);
-        });
-    });
-}
-
-/**
- * Consolidated Validation Logic
- * Only shows error if field is not empty or if submission attempted.
- */
-function validateField(input, type = null, forceShowError = false) {
-    const id = input.id;
-    const val = input.value.trim();
-    const cleanVal = val.replace(/\D/g, '');
-    let isValid = true;
-
-    // Use explicit type if provided, otherwise infer from ID
-    const validationType = type || (id.includes('cpf') ? 'cpf' : id.includes('phone') ? 'phone' : id.includes('email') ? 'email' : id.includes('number') ? 'card' : id.includes('expiration') ? 'date' : id.includes('cvv') ? 'cvv' : id.includes('cep') ? 'cep' : 'name');
-
-    if (validationType === 'email') isValid = val.includes('@') && val.length > 5;
-    else if (validationType === 'phone') isValid = cleanVal.length >= 10;
-    else if (validationType === 'cpf') isValid = cleanVal.length === 11;
-    else if (validationType === 'card') isValid = cleanVal.length >= 13 && cleanVal.length <= 16;
-    else if (validationType === 'date') isValid = /^\d{2}\/\d{2}$/.test(val);
-    else if (validationType === 'cvv') isValid = cleanVal.length >= 3;
-    else if (validationType === 'cep') isValid = cleanVal.length === 8;
-    else if (validationType === 'name' || id === 'card-holder') isValid = val.length >= 3;
-
-    // UI Feedback logic
-    if (val.length === 0 && !forceShowError) {
-        input.classList.remove('is-valid', 'is-invalid');
-    } else if (isValid) {
-        input.classList.add('is-valid');
-        input.classList.remove('is-invalid');
-    } else if (forceShowError || val.length > 0) {
-        // Only show invalid if there is content OR forceShowError (blur/submit)
-        input.classList.add('is-invalid');
-        input.classList.remove('is-valid');
-    }
+    }, 5500);
 }
 
 function showHelpBubble(input) {
@@ -2140,57 +1651,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// --- UPSELL LOGIC (GLOBAL SCOPE) ---
-let pendingPaymentMethod = null;
-
-function showUpsellModal(method) {
-    pendingPaymentMethod = method;
-    const modal = document.getElementById('upsell-modal-container');
-    modal.style.display = 'flex'; // Enable display to allow transition
-
-    // Small timeout to trigger CSS transition
-    setTimeout(() => {
-        modal.classList.add('active');
-    }, 10);
-}
-
-function acceptUpsell() {
-    // Add Manejo to order
-    const upsellId = 'ebook-manejo';
-    if (!selectedBumps.includes(upsellId)) {
-        selectedBumps.push(upsellId);
-        updateTotalDisplay();
-
-        // Update checkbox visually if it exists in the main list
-        const checkbox = document.querySelector(`input[type="checkbox"][value="${upsellId}"]`);
-        if (checkbox) checkbox.checked = true;
-    }
-
-    // Close modal
-    closeUpsellModal();
-
-    // Proceed with original payment
-    if (pendingPaymentMethod === 'pix') processPixPayment();
-    if (pendingPaymentMethod === 'card') processCardPayment();
-}
-
-function declineUpsell() {
-    // Close modal
-    closeUpsellModal();
-
-    // Proceed with original payment WITHOUT the item
-    if (pendingPaymentMethod === 'pix') processPixPayment();
-    if (pendingPaymentMethod === 'card') processCardPayment();
-}
-
-function closeUpsellModal() {
-    const modal = document.getElementById('upsell-modal-container');
-    modal.classList.remove('active');
-    setTimeout(() => {
-        modal.style.display = 'none';
-        pendingPaymentMethod = null;
-    }, 300); // Match CSS transition duration
-}
+// --- OLD UPSELL LOGIC REMOVED ---
 
 // --- HELPER: DETECT PAYMENT METHOD ---
 // --- 5. VALIDATION HELPERS ---
@@ -2217,8 +1678,6 @@ function isValidCPF(cpf) {
     let rev = 11 - (add % 11);
     if (rev == 10 || rev == 11)
         rev = 0;
-    if (rev != parseInt(cpf.charAt(9)))
-        return false;
     // Valida 2o digito
     add = 0;
     for (let i = 0; i < 10; i++)
@@ -2244,57 +1703,25 @@ function validateField(el, type) {
     else if (type === 'cvv') isValid = val.length >= 3;
     else if (val.length < 3) isValid = false;
 
-    const errorId = `error-${el.id}`;
-    const errorEl = document.getElementById(errorId);
-
     if (!isValid && val.length > 0) {
-        el.classList.add('input-error');
-        if (errorEl) errorEl.style.display = 'block';
+        setInputError(el);
+    } else if (isValid && val.length > 0) {
+        setInputSuccess(el);
     } else {
-        el.classList.remove('input-error');
-        if (errorEl) errorEl.style.display = 'none';
+        el.classList.remove('input-error', 'is-invalid', 'input-success', 'is-valid');
     }
 
     return isValid;
 }
 
-function validateCheckoutInputs(method) {
-    let allValid = true;
-    const fields = ['payer-email', 'payer-phone'];
+function setInputError(el) {
+    el.classList.add('input-error', 'is-invalid');
+    el.classList.remove('input-success', 'is-valid');
+}
 
-    if (method === 'pix') {
-        fields.push('payer-name', 'payer-cpf');
-    } else {
-        fields.push('card-holder', 'payer-cpf', 'card-number', 'card-expiration', 'card-cvv');
-    }
-
-    fields.forEach(id => {
-        const el = document.getElementById(id);
-        const type = id.includes('email') ? 'email' : (id.includes('phone') ? 'phone' : (id.includes('cpf') ? 'cpf' : (id.includes('number') ? 'card' : (id.includes('expiration') ? 'date' : (id.includes('cvv') ? 'cvv' : 'text')))));
-        if (!validateField(el, type)) allValid = false;
-    });
-
-    if (!allValid) {
-        const container = document.getElementById('toast-container');
-        if (container) {
-            const toast = document.createElement('div');
-            toast.className = 'toast-card';
-            toast.style.borderColor = '#e74c3c';
-            toast.innerHTML = `
-                <div style="width: 40px; height: 40px; background: #e74c3c; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff;">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                </div>
-                <div class="toast-content">
-                    <strong>Ops! Quase lá...</strong>
-                    <p>Por favor, preencha corretamente todos os campos destacados em vermelho.</p>
-                </div>
-            `;
-            container.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 500); }, 4000);
-        }
-    }
-
-    return allValid;
+function setInputSuccess(el) {
+    el.classList.remove('input-error', 'is-invalid');
+    el.classList.add('input-success', 'is-valid');
 }
 
 function getPaymentMethodId(number) {
@@ -2307,235 +1734,76 @@ function getPaymentMethodId(number) {
     if (/^(38|60)/.test(n)) return 'hipercard';
     return 'other';
 }
-// Comparison Slider Navigation Logic with Boundary Detection
-const comparisonSlider = document.getElementById('comparison-slider-track');
-const prevButton = document.getElementById('comparison-prev');
-const nextButton = document.getElementById('comparison-next');
 
-if (comparisonSlider && prevButton && nextButton) {
+// --- 11. INITIALIZATION HELPERS ---
+function initComparisonSlider() {
+    const comparisonSlider = document.getElementById('comparison-slider-track');
+    const prevButton = document.getElementById('comparison-prev');
+    const nextButton = document.getElementById('comparison-next');
 
-    // Function to update arrow states based on scroll position
-    function updateArrowStates() {
-        const scrollLeft = comparisonSlider.scrollLeft;
-        const maxScroll = comparisonSlider.scrollWidth - comparisonSlider.clientWidth;
-
-        // Disable/enable left arrow
-        if (scrollLeft <= 0) {
-            prevButton.disabled = true;
-            prevButton.style.opacity = '0.3';
-            prevButton.style.cursor = 'not-allowed';
-        } else {
-            prevButton.disabled = false;
-            prevButton.style.opacity = '1';
-            prevButton.style.cursor = 'pointer';
-        }
-
-        // Disable/enable right arrow
-        if (scrollLeft >= maxScroll - 1) { // -1 for rounding tolerance
-            nextButton.disabled = true;
-            nextButton.style.opacity = '0.3';
-            nextButton.style.cursor = 'not-allowed';
-        } else {
-            nextButton.disabled = false;
-            nextButton.style.opacity = '1';
-            nextButton.style.cursor = 'pointer';
-        }
-    }
-
-    // Initial state check
-    updateArrowStates();
-
-    // Update on scroll
-    comparisonSlider.addEventListener('scroll', updateArrowStates);
-
-    // Click handlers
-    prevButton.addEventListener('click', () => {
-        if (!prevButton.disabled) {
-            const slideWidth = comparisonSlider.querySelector('.comparison-slide').offsetWidth;
-            comparisonSlider.scrollBy({
-                left: -slideWidth,
-                behavior: 'smooth'
-            });
-        }
-    });
-
-    nextButton.addEventListener('click', () => {
-        if (!nextButton.disabled) {
-            const slideWidth = comparisonSlider.querySelector('.comparison-slide').offsetWidth;
-            comparisonSlider.scrollBy({
-                left: slideWidth,
-                behavior: 'smooth'
-            });
-        }
-    });
-}
-// Mobile Checkout Modal Fix - Apply body class to prevent background scroll
-(function () {
-    // Get any modal elements
-    const modalElements = document.querySelectorAll('[id*="modal"], [id*="checkout"]');
-
-    // Create a MutationObserver to watch for modal display changes
-    const observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
-            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                const target = mutation.target;
-                const display = window.getComputedStyle(target).display;
-
-                if (display === 'flex' || display === 'block') {
-                    // Modal is opening
-                    document.body.classList.add('modal-open');
-                } else if (display === 'none') {
-                    // Modal is closing
-                    document.body.classList.remove('modal-open');
-                }
-            }
-        });
-    });
-
-    // Observe each modal for style changes
-    modalElements.forEach(function (modal) {
-        observer.observe(modal, {
-            attributes: true,
-            attributeFilter: ['style']
-        });
-    });
-})();
-
-
-// --- VALIDATION LOGIC ---
-
-function validateCheckoutInputs(method) {
-    let isValid = true;
-    const inputsToValidate = [
-        'payer-name',
-        'payer-email',
-        'payer-cpf',
-        'payer-phone'
-    ];
-
-    if (method === 'card') {
-        inputsToValidate.push('card-number', 'card-expiration', 'card-cvv', 'card-holder', 'card-cpf');
-        // Remove payer-cpf validation if it's card mode (we use card-cpf instead, or keeping both if backend needs it)
-        // User said: "quando for cartao esse CPF tem quee ser CPF DO TITULAR". 
-        // We still need payer-cpf for the account creation/invoice maybe? 
-        // Let's validate BOTH as they are both in the form and required.
-    }
-
-    inputsToValidate.forEach(id => {
-        const input = document.getElementById(id);
-        if (input) {
-            const isFieldValid = validateField(input);
-            if (!isFieldValid) isValid = false;
-        }
-    });
-
-    if (!isValid) {
-        // Find first invalid input and focus
-        const firstInvalid = document.querySelector('.input-error');
-        if (firstInvalid) firstInvalid.focus();
-    }
-
-    return isValid;
-}
-
-function validateField(input) {
-    const val = input.value.trim();
-    let valid = true;
-
-    // Basic validation: not empty
-    if (val.length === 0) valid = false;
-
-    // Specific validations
-    if (input.id.includes('email') && !val.includes('@')) valid = false;
-    if (input.id.includes('cpf') && val.length < 11) valid = false;
-    if (input.id.includes('phone') && val.length < 10) valid = false;
-    if (input.id.includes('card-number') && val.length < 13) valid = false;
-    if (input.id.includes('expiration') && val.length < 4) valid = false;
-    if (input.id.includes('cvv') && val.length < 3) valid = false;
-
-    // UI Feedback
-    if (!valid) {
-        setInputError(input);
-    } else {
-        setInputSuccess(input);
-    }
-
-    return valid;
-}
-
-function setInputError(input) {
-    input.classList.add('input-error');
-    input.classList.remove('input-success');
-
-    // Check if message exists
-    let msg = input.parentElement.querySelector('.error-message');
-    if (!msg) {
-        msg = document.createElement('span');
-        msg.className = 'error-message';
-        msg.innerText = 'ops esse campo esta errado';
-        input.parentElement.appendChild(msg);
+    if (comparisonSlider && prevButton && nextButton) {
+        const updateArrows = () => {
+            const scrollLeft = comparisonSlider.scrollLeft;
+            const maxScroll = comparisonSlider.scrollWidth - comparisonSlider.clientWidth;
+            prevButton.disabled = scrollLeft <= 0;
+            prevButton.style.opacity = scrollLeft <= 0 ? '0.3' : '1';
+            nextButton.disabled = scrollLeft >= maxScroll - 1;
+            nextButton.style.opacity = scrollLeft >= maxScroll - 1 ? '0.3' : '1';
+        };
+        updateArrows();
+        comparisonSlider.addEventListener('scroll', updateArrows);
+        prevButton.addEventListener('click', () => comparisonSlider.scrollBy({ left: -300, behavior: 'smooth' }));
+        nextButton.addEventListener('click', () => comparisonSlider.scrollBy({ left: 300, behavior: 'smooth' }));
     }
 }
 
-function setInputSuccess(input) {
-    input.classList.remove('input-error');
-    input.classList.add('input-success');
-
-    const msg = input.parentElement.querySelector('.error-message');
-    if (msg) msg.remove();
+function initHelpBubbles() {
+    // Placeholder if logic needs to scale
 }
 
-// Attach listeners for real-time validation removal/success
+// Global Listener for Input Effects
 document.addEventListener('DOMContentLoaded', () => {
-    const allInputs = document.querySelectorAll('.form-input');
-    allInputs.forEach(input => {
+    document.querySelectorAll('.form-input').forEach(input => {
         input.addEventListener('input', () => {
-            // Remove error immediately when typing starts
-            if (input.classList.contains('input-error')) {
-                input.classList.remove('input-error');
-                const msg = input.parentElement.querySelector('.error-message');
-                if (msg) msg.remove();
+            if (input.classList.contains('input-error') || input.classList.contains('is-invalid')) {
+                input.classList.remove('input-error', 'is-invalid');
             }
-
-            // Optional: validate on the fly for green border?
-            // "quadno o cliente começar a esrever de novo, o aviso some" - Done above.
-            // "se o campo estiveer correto, borda verde" - We can check this on blur or debounce.
-            // Let's check on input but maybe less strict? Or just stick to "remove error".
-            // User asked "se o campo estiveer correto, borda verde".
+            
+            const type = input.id.includes('email') ? 'email' :
+                         (input.id.includes('phone') ? 'phone' :
+                         (input.id.includes('cpf') ? 'cpf' :
+                         (input.id.includes('number') ? 'card' :
+                         (input.id.includes('expiration') ? 'date' :
+                         (input.id.includes('cvv') ? 'cvv' : 'text')))));
 
             if (input.value.trim().length > 0) {
-                // Simple validation for green border during typing might be annoying if it flickers.
-                // Let's do it on blur OR if it meets length criteria.
-                // For now, let's keep it simple: clear error on input. Validate fully on blur.
+                if (validateField(input, type)) setInputSuccess(input);
+                else input.classList.remove('input-success', 'is-valid');
+            } else {
+                input.classList.remove('input-success', 'input-error', 'is-invalid', 'is-valid');
             }
         });
 
         input.addEventListener('blur', () => {
-            if (input.value.trim().length > 0) {
-                validateField(input);
-            } else {
-                // If empty on blur, maybe don't show red yet unless form submitted? 
-                // Or user wants immediate feedback? "ops esse campo esta errado" implies feedback.
-                // Let's show error on blur if empty? Maybe too aggressive.
-                // Re-reading: "adicione log de erros no checkout... como o campo ficar vermelho se nao estiver correto"
-                // Usually this means after attempted submission OR on blur if invalid.
-                // I will add it to the validateCheckoutInputs function mainly, and maybe blur for green.
-                validateField(input);
-            }
+            const type = input.id.includes('email') ? 'email' :
+                         (input.id.includes('phone') ? 'phone' :
+                         (input.id.includes('cpf') ? 'cpf' :
+                         (input.id.includes('number') ? 'card' :
+                         (input.id.includes('expiration') ? 'date' :
+                         (input.id.includes('cvv') ? 'cvv' : 'text')))));
+            validateField(input, type);
         });
     });
 
-    // Also setup the new card-cpf mask in smart_fields logic if needed, 
-    // but I can add a simple listener here for the new field mask
     const cardCpf = document.getElementById('card-cpf');
     if (cardCpf) {
         cardCpf.addEventListener('input', (e) => {
             let v = e.target.value.replace(/\D/g, '');
             if (v.length > 11) v = v.slice(0, 11);
-            if (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
-            else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
-            else if (v.length > 3) v = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
-            e.target.value = v;
+            if (v.length > 9) e.target.value = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+            else if (v.length > 6) e.target.value = v.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+            else if (v.length > 3) e.target.value = v.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+            else e.target.value = v;
         });
     }
 });

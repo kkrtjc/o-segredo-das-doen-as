@@ -15,13 +15,15 @@
             ],
             "cover": "capadasdoencas.jpg",
             "orderBumps": [
-                "bump-6361"
+                "bump-6361",
+                "ebook-manejo"
             ]
         },
         "ebook-manejo": {
             "title": "Manejo de Pintinhos (Upsell)",
             "price": 49.9,
             "originalPrice": 99,
+            "enabled": true,
             "description": "Manual de Criação",
             "features": [
                 "Incubação Perfeita",

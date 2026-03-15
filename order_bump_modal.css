@@ -14,7 +14,7 @@
     background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
     border-radius: 0 15px 15px 0;
     box-shadow: 5px 0 30px rgba(0, 0, 0, 0.5);
-    z-index: 10002;
+    z-index: 1000001;
     transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     border: 2px solid #fbbf24;
     border-left: none;
