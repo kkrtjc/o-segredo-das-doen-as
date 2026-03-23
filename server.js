@@ -479,12 +479,12 @@ app.post('/api/track', (req, res) => {
     }
 
     const t = analytics.totals;
-    const d = analytics.daily[today];
+    const dailyStats = analytics.daily[today];
 
     // Helper to safely increment
     const increment = (key) => {
         if (t[key] !== undefined) t[key]++; else t[key] = 1;
-        if (d[key] !== undefined) d[key]++; else d[key] = 1;
+        if (dailyStats[key] !== undefined) dailyStats[key]++; else dailyStats[key] = 1;
     };
 
     if (type === 'click') increment('clicks');
@@ -492,8 +492,8 @@ app.post('/api/track', (req, res) => {
     else if (type === 'cta_click') {
         increment('ctaClicks');
         if (ctaId) {
-            d.ctaBreakdown = d.ctaBreakdown || {};
-            d.ctaBreakdown[ctaId] = (d.ctaBreakdown[ctaId] || 0) + 1;
+            dailyStats.ctaBreakdown = dailyStats.ctaBreakdown || {};
+            dailyStats.ctaBreakdown[ctaId] = (dailyStats.ctaBreakdown[ctaId] || 0) + 1;
         }
     }
     else if (type === 'checkout_open') increment('checkoutOpens');
