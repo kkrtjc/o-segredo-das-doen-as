@@ -441,11 +441,6 @@ function renderOrderBumps(bumps) {
     const area = document.getElementById('order-bump-area');
     if (!area) return;
 
-    // Global check removed to support individual toggles
-    // if (window.siteConfig && window.siteConfig.settings && window.siteConfig.settings.enableOrderBump === false) {
-    //     area.innerHTML = '';
-    // }
-
     // Filtra bumps que não devem aparecer
     let manualPresent = false;
     (bumps || []).forEach(b => {
@@ -458,33 +453,31 @@ function renderOrderBumps(bumps) {
             else if (bump.title?.includes('Ração')) bump.id = 'bump-6361';
         }
         
-        // Se o Manual está presente, escondemos a Tabela individual para forçar o Combo
         if (manualPresent && bump.id === 'bump-6361') return false;
-
         if (bump.enabled === false) return false;
         return true;
     });
 
-    // Configura o container para grid se houver mais de um bump
-    area.style.display = 'block'; // Usar block para gerenciar o título em cima
-    area.style.marginTop = '1.5rem';
-    area.style.padding = '0.5rem';
-    area.style.background = 'rgba(251, 191, 36, 0.05)';
-    area.style.borderRadius = '12px';
-    area.style.border = '1px solid rgba(251, 191, 36, 0.1)';
+    if (filteredBumps.length === 0) {
+        area.style.display = 'none';
+        return;
+    }
+
+    area.style.display = 'block';
+    area.style.marginTop = '1.2rem';
 
     const bumpHeader = `
-        <div style="text-align: center; margin-bottom: 12px; padding: 0 5px;">
-            <p style="color: #d97706; font-size: 0.75rem; font-weight: 900; line-height: 1.3; text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">
-                ⚠️ OFERTAS EXCLUSIVAS PARA CLIENTES<br>
-                <span style="color: #475569; font-weight: 500; font-size: 0.65rem;">VOCÊ NÃO ENCONTRARÁ ESSES VALORES EM OUTRO LUGAR.</span>
+        <div style="text-align: center; margin-bottom: 10px;">
+            <p style="color: #d97706; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; margin: 0;">
+                📢 OFERTAS EXCLUSIVAS PARA ESTE PEDIDO
             </p>
         </div>
     `;
 
     const gridLayout = `
-        <div style="display: grid; grid-template-columns: ${filteredBumps.length > 1 ? '1fr 1fr' : '1fr'}; gap: 8px;">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
             ${filteredBumps.map(bump => {
+                const isSelected = cart.bumps.includes(bump.id);
                 let imgSrc = bump.image;
                 if (!imgSrc) {
                     if (bump.id === 'ebook-doencas' || bump.id === 'bump-doencas') imgSrc = 'capadasdoencas.jpg';
@@ -492,30 +485,53 @@ function renderOrderBumps(bumps) {
                     else if (bump.id === 'bump-6361') imgSrc = 'tabela_racao_bump.jpg';
                 }
 
-                return `
-                    <div class="order-bump-container" onclick="toggleBump('${bump.id}')" 
-                        style="position: relative; overflow: hidden; border: 2px solid #d97706; border-radius: 10px; cursor: pointer; transition: transform 0.2s; min-height: 110px; display: flex;">
-                        
-                        <!-- Imagem de Fundo -->
-                        ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">` : ''}
-                        
-                        <!-- Overlay -->
-                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.85) 100%); z-index: 1;"></div>
+                const isManejo = (bump.id === 'ebook-manejo' || bump.title?.includes('Pintinhos'));
+                const title = isManejo ? 'COMBO: MANUAL DE PINTINHOS + TABELA 🎁' : bump.title;
+                const desc = isManejo 
+                    ? '🐣 <span style="color: #fca5a5;"><strong>90% das mortes</strong></span> em pintinhos é por manejo errado. <span style="color: #4ade80;"><strong>Garanta 95% de sobrevivência, nos pintinhos com o manual de elite</strong></span>. E leve <span style="color: #fbbf24; font-weight: 900;">GRÁTIS</span> a Tabela de Ração (Economia de <span style="color: #fbbf24; font-weight: 900;">65% na alimentação</span> em todas as idades).' 
+                    : '🌾 Economize até 70% na alimentação produzindo sua própria ração.';
 
-                        <!-- Conteúdo -->
-                        <div style="position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px; width: 100%;">
-                            <div style="display: flex; align-items: flex-start; gap: 6px; margin-bottom: 4px;">
-                                <input type="checkbox" class="order-bump-checkbox" id="bump-chk-${bump.id}" ${cart.bumps.includes(bump.id) ? 'checked' : ''} 
-                                    style="width: 18px; height: 18px; cursor: pointer; accent-color: #fbbf24; flex-shrink: 0; margin-top: 2px;">
-                                <span class="order-bump-tag" style="background: #ef4444; color: #fff; padding: 1px 4px; border-radius: 3px; font-size: 0.55rem; font-weight: 900; text-transform: uppercase;">PROMO</span>
+                return `
+                    <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')">
+                        
+                        <!-- Background Image with Darker Overlay -->
+                        ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.65;">` : ''}
+                        
+                        <!-- Gradient Overlay for Contrast -->
+                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, #0f172a 25%, rgba(15, 23, 42, 0.4) 100%); z-index: 1;"></div>
+
+                        <!-- Content -->
+                        <div style="position: relative; z-index: 2; display: flex; align-items: center; padding: 12px; width: 100%; gap: 12px;">
+                            
+                            <!-- Checkbox and Social Proof -->
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                                <div class="bump-check-wrapper" style="width: 24px; height: 24px; border-radius: 6px; border: 2px solid ${isSelected ? '#10b981' : '#fbbf24'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#10b981' : 'transparent'}; transition: all 0.3s;">
+                                    ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.9rem;"></i>' : ''}
+                                </div>
+                                <input type="checkbox" id="bump-chk-${bump.id}" ${isSelected ? 'checked' : ''} style="display: none;">
                             </div>
-                            <strong class="order-bump-title" style="display: block; color: #fff; font-size: 0.8rem; text-shadow: 0 1px 2px rgba(0,0,0,0.8); line-height: 1.1; margin-bottom: 2px;">
-                                ${bump.id === 'ebook-manejo' ? 'COMBO: MANUAL DE PINTINHOS + TABELA 🎁' : bump.title}
-                            </strong>
-                            <p style="color: rgba(255,255,255,0.85); font-size: 0.65rem; line-height: 1.2; margin: 2px 0 4px 0; text-shadow: 0 1px 1px rgba(0,0,0,0.5); font-weight: 700;">
-                                ${bump.id === 'ebook-manejo' ? '🐣 <span style="color: #fca5a5;"><strong>90% das mortes</strong></span> em pintinhos é por manejo errado. <span style="color: #4ade80;"><strong>Garanta 95% de sobrevivência</strong></span> com o manejo correto. E leve <span style="color: #fbbf24;"><strong>DE GRAÇA</strong></span> nosso conteúdo (R$ 19,90) para economizar <span style="color: #fbbf24;"><strong>até 70%</strong></span> na alimentação.' : '🌾 Economize até 70% na alimentação produzindo sua própria ração.'}
-                            </p>
-                            <span class="order-bump-price" style="color: #fbbf24; font-weight: 900; font-size: 0.95rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">+ ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}</span>
+
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap;">
+                                    <span class="order-bump-tag" style="background: #ef4444; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase;">95% LEVARAM</span>
+                                    ${isManejo ? '<span class="order-bump-free-tag order-bump-badge-pulse">🎁 + TABELA GRÁTIS</span>' : ''}
+                                </div>
+                                
+                                <strong class="order-bump-title" style="display: block; color: #fff; font-size: 0.95rem; line-height: 1.2; margin-bottom: 4px; font-weight: 800;">
+                                    ${title}
+                                </strong>
+                                
+                                <p class="order-bump-description" style="color: #cbd5e1; font-size: 0.75rem; line-height: 1.3; margin: 0; font-weight: 500;">
+                                    ${desc}
+                                </p>
+
+                                <div style="margin-top: 6px; display: flex; align-items: center;">
+                                    <span class="order-bump-old-price">R$ 79,90</span>
+                                    <span class="order-bump-price" style="color: #fbbf24; font-weight: 900; font-size: 1.1rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">
+                                        + ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>`;
             }).join('')}
@@ -529,21 +545,39 @@ function toggleBump(bumpId) {
     const idx = cart.bumps.indexOf(bumpId);
     if (idx > -1) {
         cart.bumps.splice(idx, 1);
-        // Se remover o manual, remove a tabela automática do combo
         if (bumpId === 'ebook-manejo') {
             const tableIdx = cart.bumps.indexOf('bump-6361');
             if (tableIdx > -1) cart.bumps.splice(tableIdx, 1);
         }
     } else {
         cart.bumps.push(bumpId);
-        // Se adicionar o manual, adiciona a tabela automática como parte do combo
         if (bumpId === 'ebook-manejo') {
             if (!cart.bumps.includes('bump-6361')) cart.bumps.push('bump-6361');
         }
     }
 
-    const chk = document.getElementById(`bump-chk-${bumpId}`);
-    if (chk) chk.checked = cart.bumps.includes(bumpId);
+    // Atualiza classes visuais sem renderizar tudo de novo (para não quebrar animações)
+    const card = document.getElementById(`bump-card-${bumpId}`);
+    if (card) {
+        if (cart.bumps.includes(bumpId)) {
+            card.classList.add('selected');
+            const check = card.querySelector('.bump-check-wrapper');
+            if (check) {
+                check.style.background = '#10b981';
+                check.style.borderColor = '#10b981';
+                check.innerHTML = '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.9rem;"></i>';
+            }
+        } else {
+            card.classList.remove('selected');
+            const check = card.querySelector('.bump-check-wrapper');
+            if (check) {
+                check.style.background = 'transparent';
+                check.style.borderColor = '#fbbf24';
+                check.innerHTML = '';
+            }
+        }
+    }
+
     updateTotal();
 }
 

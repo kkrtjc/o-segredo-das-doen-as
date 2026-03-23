@@ -464,7 +464,8 @@ app.post('/api/track', (req, res) => {
     }
 
     const analytics = getAnalytics();
-    const today = new Date().toISOString().split('T')[0];
+    const d = new Date();
+    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
     // Ensure today's bucket exists
     if (!analytics.daily[today]) {
@@ -1150,7 +1151,8 @@ app.get('/api/access/:token', (req, res) => {
         // The length depends on if paymentId was included (old vs new tokens)
 
         const analytics = getAnalytics();
-        const today = new Date().toISOString().split('T')[0];
+        const d = new Date();
+        const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         if (!analytics.daily[today]) analytics.daily[today] = { clicks: 0, checkoutOpens: 0, checkoutStarts: 0, uiErrors: 0, trustClicks: 0, mobileSessions: 0, desktopSessions: 0, slowLoads: 0, pageViews: 0, emailClicks: 0, ctaClicks: {} };
 
         analytics.totals.emailClicks = (analytics.totals.emailClicks || 0) + 1;

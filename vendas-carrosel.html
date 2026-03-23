@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrossel de Vendas - Protocolo Elite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #e11d48;
+            --primary-hover: #be123c;
+            --bg: #020617;
+            --card-bg: #0f172a;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --accent-green: #10b981;
+            --accent-blue: #38bdf8;
+            --font-h: 'Outfit', sans-serif;
+            --font-b: 'Inter', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font-b);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .carousel-container {
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 1 / 1;
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
+        }
+
+        .carousel-track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px;
+            overflow: hidden;
+        }
+
+        .slide img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            filter: brightness(0.6);
+        }
+
+        .slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(2, 6, 23, 1) 0%, rgba(2, 6, 23, 0.4) 50%, transparent 100%);
+            z-index: 2;
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 3;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            background: var(--primary);
+            color: white;
+        }
+
+        .slide-title {
+            font-family: var(--font-h);
+            font-weight: 900;
+            font-size: 1.8rem;
+            line-height: 1.1;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .slide-desc {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .alert-box {
+            background: rgba(225, 29, 72, 0.15);
+            border-left: 4px solid var(--primary);
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-weight: 700;
+            color: white;
+            font-size: 0.85rem;
+        }
+
+        /* Slide specific styles */
+        .slide-cover .slide-title { font-size: 2.2rem; }
+        .slide-offer { background: var(--bg); justify-content: center; text-align: center; }
+        .slide-offer img { opacity: 0.2; }
+
+        .price-tag {
+            font-family: var(--font-h);
+            margin: 20px 0;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: var(--text-sub);
+            font-size: 1.1rem;
+        }
+
+        .new-price {
+            display: block;
+            color: var(--accent-green);
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .discount-badge {
+            background: var(--accent-green);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 900;
+            margin-left: 10px;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 900;
+            text-decoration: none;
+            font-family: var(--font-h);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 20px rgba(225, 29, 72, 0.3);
+            margin-top: 15px;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05);
+            background: var(--primary-hover);
+        }
+
+        /* Navigation dots */
+        .dots {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: var(--primary);
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        /* Controls */
+        .nav-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(15, 23, 42, 0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-prev { left: 10px; }
+        .nav-next { right: 10px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="carousel-container">
+        <div class="carousel-track" id="track">
+            <!-- Slide 1: Cover -->
+            <div class="slide slide-cover">
+                <img src="galo_curado_novo.png" alt="Healthy Chicken">
+                <div class="slide-overlay"></div>
+                <div class="slide-content">
+                    <div class="badge">Atenção Criador</div>
+                    <h1 class="slide-title">As 3 Doenças que mais matam galinhas</h1>
+                    <p class="slide-desc">E como evitá-las sem gastar fortunas com remédios errados ou consultas caras.</p>
+                </div>
+            </div>
+
+            <!-- Slide 2: Bronquite Infecciosa -->
+            <div class="slide">
+                <img src="bronquite_infecciosa_chicken_v2_1773701515614.png" alt="Bronquite Infecciosa">
+                <div class="slide-overlay"></div>
+                <div class="slide-content">
+                    <div class="badge">1. Bronquite Infecciosa</div>
+                    <h2 class="slide-title">Silenciosa e Devastadora</h2>
+                    <p class="slide-desc">Doença viral altamente contagiosa. Ataca o sistema respiratório e reduz a produção de ovos deformados. Pode acabar com sua criação em dias.</p>
+                    <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> Identificação e tratamento no Guia.</div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Verminose -->
+            <div class="slide">
+                <img src="verminose_peito_seco_chicken_v2_1773701529788.png" alt="Verminose">
+                <div class="slide-overlay"></div>
+                <div class="slide-content">
+                    <div class="badge">2. Verminose</div>
+                    <h2 class="slide-title">O Inimigo Invisível</h2>
+                    <p class="slide-desc">Causa emagrecimento severo, anemia e o famoso "Peito Seco". Suas aves comem, mas não ganham peso?</p>
+                    <div class="alert-box"><i class="fa-solid fa-circle-info"></i> Aprenda a quebrar o ciclo hoje.</div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Salmonelose -->
+            <div class="slide">
+                <img src="img_bacterianas.jpeg" alt="Salmonelose">
+                <div class="slide-overlay"></div>
+                <div class="slide-content">
+                    <div class="badge">3. Salmonelose</div>
+                    <h2 class="slide-title">Mortal em Pintinhos</h2>
+                    <p class="slide-desc">Causada por falta de higiene e roedores. Causa diarreia branca e morte rápida. Não deixe um erro de manejo destruir seu sonho.</p>
+                    <div class="alert-box"><i class="fa-solid fa-skull-crossbones"></i> O guia ensina a higienização blindada.</div>
+                </div>
+            </div>
+
+            <!-- Slide 5: The Ebook -->
+            <div class="slide">
+                <img src="capadasdoencas.png" alt="Protocolo Elite Mockup">
+                <div class="slide-overlay"></div>
+                <div class="slide-content">
+                    <div class="badge">A Solução Definitiva</div>
+                    <h2 class="slide-title">Não espere seu plantel morrer!</h2>
+                    <p class="slide-desc">Aprenda a identificar e tratar <strong>mais de 10 doenças</strong> com quem vive a prática há mais de 10 anos.</p>
+                    <div class="alert-box" style="background: rgba(16, 185, 129, 0.1); border-color: var(--accent-green);">
+                        <i class="fa-solid fa-check-double"></i> Economia real com longevidade das aves.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Offer -->
+            <div class="slide slide-offer">
+                <img src="capadasdoencas.png" alt="Protocolo Elite Offer">
+                <div class="slide-content">
+                    <div class="badge" style="background: var(--accent-green); color: #000;">Oferta de Lançamento</div>
+                    <h2 class="slide-title">Guia Protocolo Elite: Cura das Galinhas</h2>
+                    <div class="price-tag">
+                        <span class="old-price">De R$ 149,00</span>
+                        <span class="new-price">R$ 109,00 <span class="discount-badge">27% OFF</span></span>
+                        <p style="color: var(--text-sub); margin-top: 5px;">no PIX ou até 4x de R$ 37,25</p>
+                    </div>
+                    <a href="#" class="cta-btn">Garantir Meu Acesso</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-control nav-prev" id="prev"><i class="fa-solid fa-chevron-left"></i></div>
+        <div class="nav-control nav-next" id="next"><i class="fa-solid fa-chevron-right"></i></div>
+
+        <!-- Dots -->
+        <div class="dots" id="dots"></div>
+    </div>
+
+    <script>
+        const track = document.getElementById('track');
+        const slides = Array.from(track.children);
+        const nextBtn = document.getElementById('next');
+        const prevBtn = document.getElementById('prev');
+        const dotsContainer = document.getElementById('dots');
+        
+        let currentIndex = 0;
+
+        // Create dots
+        slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(i));
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = Array.from(dotsContainer.children);
+
+        function updateCarousel() {
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIndex);
+            });
+        }
+
+        function goToSlide(index) {
+            currentIndex = index;
+            updateCarousel();
+        }
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateCarousel();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            updateCarousel();
+        });
+
+        // Swipe support (simple)
+        let touchStart = 0;
+        let touchEnd = 0;
+
+        track.addEventListener('touchstart', e => touchStart = e.changedTouches[0].screenX);
+        track.addEventListener('touchend', e => {
+            touchEnd = e.changedTouches[0].screenX;
+            if (touchStart - touchEnd > 50) nextBtn.click();
+            if (touchEnd - touchStart > 50) prevBtn.click();
+        });
+    </script>
+</body>
+</html>

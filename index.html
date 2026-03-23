@@ -1249,6 +1249,101 @@
                         from { opacity: 0; transform: translateY(10px); }
                         to { opacity: 1; transform: translateY(0); }
                     }
+
+                    /* --- Optimized Order Bump Styles --- */
+                    #order-bump-area {
+                        margin-top: 1.5rem;
+                        padding: 0;
+                        border-radius: 12px;
+                        overflow: hidden;
+                    }
+
+                    .order-bump-container {
+                        position: relative;
+                        overflow: hidden;
+                        border: 2px solid #d97706;
+                        border-radius: 12px;
+                        cursor: pointer;
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                        min-height: 120px;
+                        display: flex;
+                        margin-bottom: 10px;
+                        background: #0f172a;
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                    }
+
+                    .order-bump-container.selected {
+                        border-color: #10b981;
+                        background: rgba(16, 185, 129, 0.05);
+                        box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+                    }
+
+                    .order-bump-container::before {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        border: 2px solid transparent;
+                        border-radius: 10px;
+                        z-index: 5;
+                        pointer-events: none;
+                        transition: all 0.3s;
+                    }
+
+                    .order-bump-container:not(.selected) {
+                        animation: goldenGlow 3s infinite;
+                    }
+
+                    @keyframes goldenGlow {
+                        0% { box-shadow: 0 0 5px rgba(217, 119, 6, 0.3); border-color: #d97706; }
+                        50% { box-shadow: 0 0 15px rgba(217, 119, 6, 0.6); border-color: #fbbf24; }
+                        100% { box-shadow: 0 0 5px rgba(217, 119, 6, 0.3); border-color: #d97706; }
+                    }
+
+                    .order-bump-badge-pulse {
+                        animation: badgePulse 2s infinite;
+                    }
+
+                    @keyframes badgePulse {
+                        0% { transform: scale(1); }
+                        50% { transform: scale(1.1); }
+                        100% { transform: scale(1); }
+                    }
+
+                    .order-bump-free-tag {
+                        background: #10b981;
+                        color: #fff;
+                        padding: 2px 8px;
+                        border-radius: 4px;
+                        font-size: 0.7rem;
+                        font-weight: 900;
+                        text-transform: uppercase;
+                        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+                        display: inline-block;
+                        margin-left: 5px;
+                    }
+
+                    .order-bump-old-price {
+                        text-decoration: line-through;
+                        color: rgba(255,255,255,0.4);
+                        font-size: 0.7rem;
+                        margin-right: 5px;
+                    }
+
+                    /* Mobile Optimization for Bump Card */
+                    @media (max-width: 480px) {
+                        .order-bump-title {
+                            font-size: 0.85rem !important;
+                        }
+                        .order-bump-description {
+                            font-size: 0.75rem !important;
+                        }
+                        .order-bump-price {
+                            font-size: 1rem !important;
+                        }
+                    }
                 </style>
 
                 <!-- 1. Resumo do Pedido (Compacto) -->
@@ -1411,8 +1506,8 @@
                 <div class="qr-container" style="background: #fff; padding: 1rem; border-radius: 1.2rem; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 320px; margin: 1.5rem auto; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.05); min-height: 320px; position: relative;">
                     <!-- Loader Spinner -->
                     <div id="qr-loader" class="hidden" style="position: absolute; display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                        <i class="fa-solid fa-spinner fa-spin" style="font-size: 2.5rem; color: #10b981;"></i>
-                        <p style="font-size: 0.8rem; color: #64748b; font-weight: 600;">GERANDO QR CODE...</p>
+                        <i class="fa-solid fa-shield-halved fa-beat" style="font-size: 2.5rem; color: #10b981;"></i>
+                        <p style="font-size: 0.85rem; color: #0f172a; font-weight: 800; text-align: center;">CONECTANDO AO BANCO...<br><span style="font-size: 0.7rem; color: #64748b; font-weight: 600;">Gerando PIX com segurança</span></p>
                     </div>
                     <img id="qr-code-img" src="" alt="QR Code PIX" style="width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 8px; image-rendering: pixelated;">
                 </div>
@@ -1493,7 +1588,7 @@
                         <li style="margin-bottom: 8px;"><i class="fa-solid fa-clock"></i> Prazo de análise: de
                             alguns
                             minutos até 48h.</li>
-                        <li><i class="fa-solid fa-check-double"></i> Fique atento à sua caixa de entrada e Spam.
+                        <li style="color: #b91c1c; font-weight: bold;"><i class="fa-solid fa-triangle-exclamation"></i> IMPORTANTE: Verifique sempre sua pasta de SPAM e Lixo Eletrônico. O e-mail costuma cair lá!
                         </li>
                     </ul>
                 </div>
@@ -1579,7 +1674,7 @@
     <script src="https://sdk.mercadopago.com/js/v2" defer></script>
     <script>const mp = new MercadoPago('APP_USR-73238612-450f-4fbe-9a9f-3d5f9919f2d1');</script>
     <script src="smart_fields.js" defer></script>
-    <script src="script.js?v=26" defer></script>
+    <script src="script.js?v=30" defer></script>
 
 </body>
 
