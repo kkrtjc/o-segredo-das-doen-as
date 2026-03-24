@@ -392,8 +392,15 @@
                 <img src="logo.png" alt="Logo" style="height: 60px; border-radius: 8px;">
                 <h1>PROTOCOLO <span style="color: var(--amber-600)">ELITE</span></h1>
             </div>
-            <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary">SALVAR MINHAS GALINHAS
-                AGORA</button>
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <div style="text-align: right; line-height: 1.2;">
+                    <span style="font-size: 0.7rem; color: #9ca3af; text-decoration: line-through; display: block;">De R$ 149,90</span>
+                    <span style="font-size: 1rem; font-weight: 900; color: #22c55e;">Por R$ 109,90 no PIX</span>
+                    <span style="font-size: 0.65rem; background: #dc2626; color: #fff; padding: 1px 7px; border-radius: 10px; font-weight: 800; display: inline-block; margin-top: 2px;">Super desconto no pix de 27%</span>
+                </div>
+                <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary">SALVAR MINHAS GALINHAS
+                    AGORA</button>
+            </div>
         </div>
     </header>
 
@@ -781,7 +788,7 @@
                         style="display: block; font-size: 0.85rem; color: var(--slate-400); font-weight: 600; text-transform: uppercase; margin-bottom: 5px; opacity: 0.8;">POR
                         APENAS</span>
                     <span style="display: block; font-size: 1.5rem; color: var(--white); font-weight: 900;">R$ <span
-                            id="display-price-value">119,90</span> no pix</span>
+                            id="display-price-value">109,90</span> no pix</span>
                     <span
                         style="font-size: 0.75rem; color: #10b981; font-weight: 800; display: block; margin-top: 3px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 15px; display: inline-block;">🔥
                         27% DE DESCONTO NO PIX</span>
@@ -800,28 +807,28 @@
     </section>
 
     <!-- Social Proof Bar -->
-    <div class="social-proof-bar">
+    <div class="social-proof-bar" style="background: var(--slate-900) !important; border-top: 1px solid var(--slate-800); border-bottom: 1px solid var(--slate-800);">
         <div class="container">
             <div class="stat-grid">
                 <div class="stat-item">
-                    <i class="fa-solid fa-users"></i>
+                    <i class="fa-solid fa-users" style="background: rgba(225,29,72,0.1); color: var(--brand-red);"></i>
                     <div class="stat-text">
-                        <strong>+12.000 Pessoas</strong>
-                        acompanham meu trabalho
+                        <strong style="color: var(--white);">+12.000 Pessoas</strong>
+                        <span style="color: var(--slate-400);">acompanham meu trabalho</span>
                     </div>
                 </div>
                 <div class="stat-item">
-                    <i class="fa-solid fa-graduation-cap"></i>
+                    <i class="fa-solid fa-graduation-cap" style="background: rgba(225,29,72,0.1); color: var(--brand-red);"></i>
                     <div class="stat-text">
-                        <strong>+1.600 Alunos</strong>
-                        que já salvaram suas galinhas
+                        <strong style="color: var(--white);">+1.600 Alunos</strong>
+                        <span style="color: var(--slate-400);">que já salvaram suas galinhas</span>
                     </div>
                 </div>
                 <div class="stat-item">
-                    <i class="fa-solid fa-circle-check"></i>
+                    <i class="fa-solid fa-circle-check" style="background: rgba(225,29,72,0.1); color: var(--brand-red);"></i>
                     <div class="stat-text">
-                        <strong>Método Comprovado</strong>
-                        resultados reais e garantidos
+                        <strong style="color: var(--white);">Método Comprovado</strong>
+                        <span style="color: var(--slate-400);">resultados reais e garantidos</span>
                     </div>
                 </div>
             </div>
@@ -865,24 +872,24 @@
             </h3>
             <div class="grid-2-2">
                 <div class="card">
-                    <div class="icon-circle"><i class="fa-solid fa-chart-line"></i></div>
-                    <h4>Economize com Veterinários</h4>
-                    <p>Trate seu plantel por uma fração do preço de uma consulta.</p>
+                    <div class="icon-circle"><i class="fa-solid fa-syringe"></i></div>
+                    <h4>Sua galinha com ronqueira?</h4>
+                    <p>Descubra o medicamento certo em minutos — sem gastar R$ 300 no veterinário.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><i class="fa-solid fa-heart"></i></div>
-                    <h4>Saúde do Seu Plantel</h4>
-                    <p>Identifique doenças no início e aplique tratamentos corretos.</p>
+                    <div class="icon-circle"><i class="fa-solid fa-skull-crossbones"></i></div>
+                    <h4>Chega de perder aves sem saber o porquê</h4>
+                    <p>Identifique a doença nos primeiros sintomas e salve seu plantel antes que seja tarde.</p>
                 </div>
                 <div class="card">
                     <div class="icon-circle"><i class="fa-solid fa-book-open"></i></div>
-                    <h4>Consulta Rápida</h4>
-                    <p>Guia prático e organizado para encontrar a solução em minutos.</p>
+                    <h4>Protocolo pronto, passo a passo</h4>
+                    <p>Nada de achismo. Cada doença tem o tratamento certo descrito com clareza e dosagem exata.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><i class="fa-solid fa-flask"></i></div>
-                    <h4>Dosagens Exatas</h4>
-                    <p>Saiba a quantidade exata para cada estágio da doença e tipo de ave.</p>
+                    <div class="icon-circle"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h4>Teste sem risco por 7 dias</h4>
+                    <p>Se não ajudar sua criação, devolvemos 100% do seu dinheiro. Sem perguntas.</p>
                 </div>
             </div>
         </div>
@@ -904,8 +911,95 @@
     <section class="urgency-bar">
         <div class="container urgency-content">
             <div class="urgency-pill"><i class="fa-solid fa-triangle-exclamation"></i> Oferta Por Tempo Limitado</div>
-            <p style="font-size: 1.5rem; font-weight: 700;">Preço especial de R$ 109,90 (em breve será R$ 149,90)</p>
-            <p style="opacity: 0.8;">Aproveite agora antes que o preço suba!</p>
+            <p style="font-size: 1.5rem; font-weight: 700;">⏰ Economize R$ 40 hoje — preço sobe em breve!</p>
+            <p style="font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; font-family: monospace;" id="urgency-countdown">23:59:59</p>
+        </div>
+    </section>
+    <script>
+    (function(){
+        var key = 'urgency_end';
+        var end = localStorage.getItem(key);
+        if (!end || Date.now() > parseInt(end)) {
+            end = Date.now() + 24 * 60 * 60 * 1000;
+            localStorage.setItem(key, end);
+        }
+        function tick() {
+            var diff = Math.max(0, parseInt(end) - Date.now());
+            var h = Math.floor(diff / 3600000);
+            var m = Math.floor((diff % 3600000) / 60000);
+            var s = Math.floor((diff % 60000) / 1000);
+            var el = document.getElementById('urgency-countdown');
+            if (el) el.textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+            if (diff > 0) setTimeout(tick, 1000);
+        }
+        document.addEventListener('DOMContentLoaded', tick);
+    })();
+    </script>
+
+    <!-- FAQ Section -->
+    <section class="bg-white" style="padding: 4rem 0; border-top: 1px solid var(--slate-800);">
+        <div class="container" style="max-width: 42rem;">
+            <h3 style="text-align: center; font-size: 1.875rem; font-weight: 900; color: var(--white); margin-bottom: 2.5rem; letter-spacing: -0.5px;">
+                <i class="fa-solid fa-circle-question" style="color: var(--brand-red);"></i> Perguntas Frequentes
+            </h3>
+
+            <style>
+                .faq-item { border: 1px solid var(--slate-800); border-radius: 12px; margin-bottom: 10px; overflow: hidden; background: rgba(30,41,59,0.3); transition: 0.3s; }
+                .faq-item:hover { border-color: var(--slate-600); }
+                .faq-q { padding: 14px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 0.95rem; color: var(--white); }
+                .faq-q i { font-size: 0.75rem; color: var(--slate-400); transition: transform 0.3s; }
+                .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; padding: 0 18px; color: var(--slate-400); font-size: 0.9rem; line-height: 1.6; }
+                .faq-item.open .faq-a { max-height: 300px; padding: 0 18px 14px; }
+                .faq-item.open .faq-q i { transform: rotate(180deg); }
+            </style>
+
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    Recebo o ebook na hora?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">Sim! Após a confirmação do pagamento (PIX é instantâneo), você recebe o acesso ao download e uma copia direto no seu e-mail em poucos segundos.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    Funciona para qualquer tipo de galinha?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">Sim. O protocolo cobre doenças que afetam galinhas caipiras, de granja, ornamentais, e outras aves domésticas. Os tratamentos são universais.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    Preciso ter experiência para usar?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">Não. O guia foi feito para criadores iniciantes e avançados. Tudo é explicado passo a passo, com linguagem simples e direta.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    E se eu não gostar?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">Você tem 7 dias de garantia incondicional. Se por qualquer motivo não ficar satisfeito, devolvemos 100% do seu dinheiro sem perguntas.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    O pagamento é seguro?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">Totalmente. O pagamento é processado pelo Mercado Pago, uma das maiores plataformas de pagamento do Brasil, com criptografia de ponta.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    Onde encontro os remédios indicados?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">Todos os medicamentos indicados são encontrados facilmente em agropecuárias ou lojas online. O guia indica nomes comerciais e genéricos.</div>
+            </div>
         </div>
     </section>
 
@@ -927,70 +1021,61 @@
     <div id="checkout-modal" class="modal-overlay">
         <div class="modal-content">
             <div id="checkout-main-view" style="position: relative;">
-                <div class="modal-header"
-                    style="margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 20px;">
-                    <div style="flex: 1;">
-                        <h3 class="modal-title" style="margin-bottom: 4px;">Finalize Sua Compra</h3>
-                        <p style="font-size: 0.95rem; color: #15803d; font-weight: 700; margin-bottom: 4px;">...e
-                            tenha
-                            acesso imediato ao ebook após o pagamento!</p>
-                        <p style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 0;"><strong>Mais de
-                                1600
-                                criadores</strong> já tiveram resultados reais.</p>
-                    </div>
-                    <img src="logo.png" alt="Logo" style="height: 140px; flex-shrink: 0;">
+
+                <!-- Bloco de oferta e garantia no topo do checkout -->
+                <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 1px solid #fbbf24; border-radius: 10px; padding: 8px 12px; margin-bottom: 10px; text-align: center;">
+                    <p style="margin: 0 0 4px 0; font-size: 0.8rem; font-weight: 800; color: #fbbf24; line-height: 1.3;">
+                        <i class="fa-solid fa-crown"></i> O conteúdo mais completo sobre doenças em galinhas na internet — mais de 1.600 criadores já estão salvando suas aves!
+                    </p>
+                    <p style="margin: 0; font-size: 0.75rem; color: #cbd5e1; line-height: 1.4;">
+                        <i class="fa-solid fa-shield-halved" style="color: #22c55e;"></i> <strong style="color: #fff;">Sem risco:</strong> 7 dias de garantia — não gostou, devolvemos 100%.
+                    </p>
                 </div>
-                <div class="modal-trust-info">
-                    <span><i class="fa-solid fa-circle-check"></i> Garantia de 7 Dias</span>
-                    <span><i class="fa-solid fa-circle-check"></i> +1.600 Alunos</span>
-                    <span><i class="fa-solid fa-circle-check"></i> 100% Seguro</span>
+
+                <div class="modal-header" style="margin-bottom: 8px;">
+                    <h3 class="modal-title" style="margin-bottom: 2px; font-size: 1.1rem;">Finalize Sua Compra</h3>
+                    <p style="font-size: 0.82rem; color: #15803d; font-weight: 700; margin-bottom: 0;">Acesso imediato ao ebook após o pagamento!</p>
                 </div>
+
 
                 <!-- CSS Otimizado para Checkout Compacto e Tooltips -->
                 <style>
                     .checkout-summary {
                         display: flex;
-                        background: #0f172a; /* slate-900 - dark premium box */
+                        background: #0f172a;
                         border: 1px solid #1e293b;
-                        border-radius: 12px;
-                        margin-bottom: 15px;
+                        border-radius: 10px;
+                        margin-bottom: 10px;
                         align-items: stretch;
                         overflow: hidden;
-                        min-height: 130px;
+                        min-height: 0;
                         position: relative;
                     }
 
                     .summary-img-wrap {
                         position: relative;
                         flex-shrink: 0;
-                        width: 110px;
+                        width: 85px;
                         display: flex;
-                        align-items: center; /* center vertically in column */
+                        align-items: center;
                         justify-content: center;
                         overflow: hidden;
-                        padding: 10px 0 10px 10px;
+                        padding: 8px 0 8px 8px;
                     }
 
                     .summary-img {
-                        width: 105px;
+                        width: 80px;
                         height: auto;
-                        max-height: 160px;
+                        max-height: 120px;
                         object-fit: cover;
-                        border-radius: 8px 8px 0 0;
-                        border: 2px solid rgba(255,255,255,0.15);
-                        box-shadow:
-                            0 -8px 24px rgba(0,0,0,0.5),
-                            0 4px 12px rgba(0,0,0,0.4),
-                            inset 0 1px 0 rgba(255,255,255,0.1);
+                        border-radius: 6px;
+                        border: 1px solid rgba(255,255,255,0.15);
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
                         display: block;
-                        position: relative;
-                        bottom: 0;
-                        transform: translateY(0);
-                        transition: transform 0.3s ease;
                     }
 
                     .summary-details {
-                        padding: 14px 14px 14px 8px;
+                        padding: 8px 10px 8px 6px;
                         display: flex;
                         flex-direction: column;
                         justify-content: center;
@@ -998,9 +1083,9 @@
                     }
 
                     .summary-details h4 {
-                        font-size: 0.9rem;
+                        font-size: 0.8rem;
                         color: #f8fafc;
-                        margin: 0 0 6px 0;
+                        margin: 0 0 4px 0;
                         font-weight: 800;
                     }
 
@@ -1008,43 +1093,43 @@
                         list-style: none;
                         padding: 0;
                         margin: 0;
-                        font-size: 0.78rem;
-                        color: #94a3b8; /* slate-400 - visible on dark bg */
+                        font-size: 0.72rem;
+                        color: #94a3b8;
                     }
 
                     .summary-features li {
                         display: flex;
                         align-items: center;
                         gap: 4px;
-                        margin-bottom: 2px;
+                        margin-bottom: 1px;
                     }
 
                     .summary-features i {
                         color: #059669;
+                        font-size: 0.65rem;
                     }
 
                     /* Compactação do Form */
                     .form-group {
-                        margin-bottom: 4px !important;
-                        /* Menos espaço entre campos */
+                        margin-bottom: 3px !important;
                     }
 
                     .form-label {
                         text-transform: uppercase;
-                        font-size: 0.75rem !important;
+                        font-size: 0.7rem !important;
                         font-weight: 800 !important;
                         color: #374151 !important;
-                        margin-bottom: 2px !important;
+                        margin-bottom: 1px !important;
                     }
 
                     .form-input {
-                        padding: 8px 10px !important;
-                        /* Input mais compacto */
-                        font-size: 0.9rem !important;
+                        padding: 6px 9px !important;
+                        font-size: 0.82rem !important;
                         height: auto !important;
                         background: #fff !important;
                         color: #111827 !important;
                         border: 1px solid #d1d5db !important;
+                        border-radius: 6px !important;
                     }
                     
                     .form-input::placeholder {
@@ -1064,8 +1149,12 @@
                     }
 
                     .form-section-title {
-                        font-size: 0.9rem !important;
-                        margin: 10px 0 8px !important;
+                        font-size: 0.78rem !important;
+                        margin: 6px 0 5px !important;
+                        font-weight: 800;
+                        text-transform: uppercase;
+                        color: #374151;
+                        letter-spacing: 0.5px;
                     }
 
                     /* Tooltip de Ociosidade */
@@ -1354,11 +1443,16 @@
                     <div class="summary-details">
                         <h4>Protocolo Elite: A Cura das Aves</h4>
                         <ul class="summary-features">
-                            <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Guia completo de tratamentos</li>
-                            <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Medicamentos corretos</li>
-                            <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Doses certas</li>
-                            <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Identificar a doença</li>
+                            <li><i class="fa-solid fa-hand" style="color:#ef4444;"></i> <strong style="color:#f1f5f9;">Pare de perder galinhas sem saber o porquê</strong></li>
+                            <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Trate ronqueira, peito seco e +10 doenças — passo a passo</li>
+                            <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Remédios profissionais usados em criatórios reais</li>
+                            <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Dosagens calculadas por peso e estágio da doença</li>
                         </ul>
+                        <div style="margin-top: 8px; padding: 6px 10px; background: rgba(34,197,94,0.12); border-radius: 8px; border: 1px solid rgba(34,197,94,0.3);">
+                            <span style="font-size: 0.7rem; color: #94a3b8; text-decoration: line-through;">R$ 149,90</span>
+                            <span style="font-size: 1.1rem; font-weight: 900; color: #22c55e; margin-left: 6px;">R$ 109,90 no PIX</span>
+                            <span style="font-size: 0.65rem; color: #86efac; display: block; margin-top: 1px;">🔒 Acesso imediato após pagamento</span>
+                        </div>
                     </div>
                 </div>
 
@@ -1402,21 +1496,19 @@
                         <div class="field-tooltip">Digite seu nome completo</div>
                     </div>
                     <div class="form-group">
+                        <input type="tel" id="payer-phone" class="form-input" placeholder="WHATSAPP (DDD + Número)" required
+                            data-tip="Para suporte e avisos importantes (DDD + Número).">
+                        <div class="field-tooltip">DDD + Número</div>
+                    </div>
+                    <div class="form-group">
                         <input type="email" id="payer-email" class="form-input" placeholder="EMAIL" required
                             data-tip="Seu melhor email onde receberá o acesso ao guia.">
                         <div class="field-tooltip">Onde você receberá o acesso</div>
                     </div>
-                    <div style="display: flex; gap: 0.75rem;">
-                        <div class="form-group" style="flex: 1.2;">
-                            <input type="text" id="payer-cpf" class="form-input" placeholder="CPF" required
-                                data-tip="Necessário para emitir a nota fiscal (apenas números).">
-                            <div class="field-tooltip">Apenas números do CPF</div>
-                        </div>
-                        <div class="form-group" style="flex: 1;">
-                            <input type="tel" id="payer-phone" class="form-input" placeholder="WHATSAPP" required
-                                data-tip="Para suporte e avisos importantes (DDD + Número).">
-                            <div class="field-tooltip">DDD + Número</div>
-                        </div>
+                    <div class="form-group">
+                        <input type="text" id="payer-cpf" class="form-input" placeholder="CPF (apenas números)" required
+                            data-tip="Necessário para emitir a nota fiscal (apenas números).">
+                        <div class="field-tooltip">Apenas números do CPF</div>
                     </div>
 
                     <!-- Card Details Area -->
@@ -1645,10 +1737,12 @@
 
     <div id="floating-cta" class="floating-cta-bar">
         <div class="floating-cta-content">
-            <button onclick="startCheckoutProcess('ebook-doencas')" class="floating-cta-btn">
-                SALVAR MINHAS GALINHAS AGORA
-            </button>
-            <span class="floating-cta-subtext">Não espere perder mais galinhas.</span>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                <button onclick="startCheckoutProcess('ebook-doencas')" class="floating-cta-btn">
+                    SALVAR MINHAS GALINHAS AGORA
+                </button>
+                <span class="floating-cta-subtext">R$ 109,90 no PIX &bull; Acesso imediato &bull; Garantia de 7 dias</span>
+            </div>
         </div>
     </div>
 
