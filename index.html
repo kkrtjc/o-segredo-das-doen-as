@@ -718,6 +718,196 @@
                     style="font-size: 1.1rem; color: #ff4d4d; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 10px; text-shadow: 0 2px 6px rgba(0,0,0,0.8);">
                     <i class="fa-solid fa-hand"></i> CHEGA de métodos caseiros que não funcionam.
                 </p>
+
+                <!-- Autoridade / Before and After Gallery -->
+                <style>
+                    .authority-gallery-container {
+                        width: 100%;
+                        margin-top: 1.5rem;
+                        margin-bottom: 0.5rem;
+                    }
+                    .authority-gallery-title {
+                        font-size: 1.2rem;
+                        color: #ffffff;
+                        text-align: center;
+                        margin-bottom: 1rem;
+                        font-weight: 800;
+                        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+                    }
+                    .authority-gallery-track {
+                        display: grid;
+                        grid-template-columns: repeat(4, 1fr);
+                        gap: 8px; /* Espaço bem menor entre elas */
+                    }
+                    .authority-gallery-item {
+                        background: #0f172a;
+                        border: 1px solid rgba(255, 255, 255, 0.08);
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+                        transition: transform 0.2s ease, box-shadow 0.2s ease;
+                    }
+                    .authority-gallery-item:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 8px 16px rgba(0,0,0,0.7);
+                    }
+                    .authority-gallery-item img {
+                        width: 100%;
+                        aspect-ratio: 3 / 2; /* Um pouco mais largo que 4:3, afastando a foto para não cortar dos lados */
+                        object-fit: cover; 
+                        object-position: center; 
+                        background: #020617;
+                        display: block;
+                    }
+                    .image-wrapper {
+                        position: relative;
+                        width: 100%;
+                        overflow: hidden;
+                        border-bottom: 2px solid #22c55e;
+                    }
+                    .antes-depois-bar {
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        width: 100%;
+                        display: flex;
+                        justify-content: space-between;
+                        pointer-events: none;
+                    }
+                    .badge-antes, .badge-depois {
+                        width: 50%;
+                        text-align: center;
+                        font-family: inherit;
+                        font-size: 0.75rem;
+                        font-weight: 900;
+                        color: #ffffff;
+                        padding: 4px 0;
+                        text-shadow: 0 1px 3px rgba(0,0,0,1);
+                        letter-spacing: 0.5px;
+                        z-index: 10;
+                    }
+                    .badge-antes {
+                        background: rgba(180, 30, 30, 0.95);
+                    }
+                    .badge-depois {
+                        background: rgba(22, 130, 55, 0.95);
+                        border-left: 2px solid #111;
+                    }
+                    .authority-gallery-label {
+                        padding: 6px 4px;
+                        text-align: center;
+                        font-size: 0.65rem;
+                        font-weight: 800;
+                        color: #f8fafc;
+                        text-transform: uppercase;
+                        letter-spacing: 0.3px;
+                        line-height: 1.2;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 3px;
+                    }
+                    .authority-gallery-label i {
+                        color: #22c55e;
+                        font-size: 0.8rem;
+                    }
+                    .mobile-scroll-hint {
+                        display: none;
+                    }
+
+                    /* MOBILE LAYOUT (Slider Compacto) */
+                    @media (max-width: 650px) {
+                        .authority-gallery-track {
+                            display: flex;
+                            overflow-x: auto;
+                            scroll-snap-type: x mandatory;
+                            gap: 10px;
+                            margin: 0 -1.5rem;
+                            padding: 0 1.5rem 10px 1.5rem;
+                            -ms-overflow-style: none;
+                            scrollbar-width: none;
+                        }
+                        .authority-gallery-track::-webkit-scrollbar {
+                            display: none;
+                        }
+                        .authority-gallery-item {
+                            width: 85%; /* Container imponente no celular: Ocupa quase a tela inteira com as bordas aparecendo */
+                            flex-shrink: 0;
+                            scroll-snap-align: center;
+                        }
+                        .mobile-scroll-hint {
+                            display: block;
+                            text-align: center;
+                            margin-top: 2px;
+                            margin-bottom: 15px;
+                            font-size: 0.7rem;
+                            color: rgba(255,255,255,0.6);
+                            font-weight: 600;
+                        }
+                        .authority-gallery-title {
+                            font-size: 1.15rem;
+                        }
+                    }
+                </style>
+                
+                <div class="authority-gallery-container">
+                    <h3 class="authority-gallery-title">O que você vai alcançar com o nosso conteúdo</h3>
+                    
+                    <div class="authority-gallery-track">
+                        <!-- Card 1 -->
+                        <div class="authority-gallery-item">
+                            <div class="image-wrapper">
+                                <img src="autoridade/coriza.png" alt="Coriza Infecciosa" loading="lazy">
+                                <div class="antes-depois-bar">
+                                    <span class="badge-antes">ANTES</span>
+                                    <span class="badge-depois">DEPOIS</span>
+                                </div>
+                            </div>
+                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Coriza Infecciosa</div>
+                        </div>
+                        
+                        <!-- Card 2 -->
+                        <div class="authority-gallery-item">
+                            <div class="image-wrapper">
+                                <img src="autoridade/coccidiose.jpg" alt="Coccidiose" loading="lazy">
+                                <div class="antes-depois-bar">
+                                    <span class="badge-antes">ANTES</span>
+                                    <span class="badge-depois">DEPOIS</span>
+                                </div>
+                            </div>
+                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Coccidiose / Peito Seco</div>
+                        </div>
+                        
+                        <!-- Card 3 -->
+                        <div class="authority-gallery-item">
+                            <div class="image-wrapper">
+                                <img src="autoridade/bouba.png" alt="Bouba Aviária" loading="lazy">
+                                <div class="antes-depois-bar">
+                                    <span class="badge-antes">ANTES</span>
+                                    <span class="badge-depois">DEPOIS</span>
+                                </div>
+                            </div>
+                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Bouba Aviária / Gogo</div>
+                        </div>
+                        
+                        <!-- Card 4 -->
+                        <div class="authority-gallery-item">
+                            <div class="image-wrapper">
+                                <img src="autoridade/vermes.jpg" alt="Vermes" loading="lazy">
+                                <div class="antes-depois-bar">
+                                    <span class="badge-antes">ANTES</span>
+                                    <span class="badge-depois">DEPOIS</span>
+                                </div>
+                            </div>
+                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Verminose</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mobile-scroll-hint">
+                        <i class="fa-solid fa-arrows-left-right fa-fade"></i> Arraste para o lado para ver os resultados
+                    </div>
+                </div>
             </div>
 
             <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
@@ -1017,17 +1207,7 @@
         <div class="modal-content">
             <div id="checkout-main-view" style="position: relative;">
 
-                <!-- Bloco de oferta e garantia no topo do checkout -->
-                <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 1px solid #fbbf24; border-radius: 10px; padding: 10px 40px 10px 15px; margin-bottom: 12px; text-align: left;">
-                    <p style="margin: 0; font-size: 0.75rem; color: #cbd5e1; line-height: 1.4;">
-                        <i class="fa-solid fa-shield-halved" style="color: #22c55e;"></i> <strong style="color: #fff;">Sem risco:</strong> 7 dias de garantia — não gostou, devolvemos 100% do seu dinheiro sem perguntas.
-                    </p>
-                </div>
 
-                <div class="modal-header" style="margin-bottom: 8px;">
-                    <h3 class="modal-title" style="margin-bottom: 2px; font-size: 1.1rem;">Finalize Sua Compra</h3>
-                    <p style="font-size: 0.82rem; color: #15803d; font-weight: 700; margin-bottom: 0;">Acesso imediato ao ebook após o pagamento!</p>
-                </div>
 
 
                 <!-- CSS Otimizado para Checkout Compacto e Tooltips -->
@@ -1116,11 +1296,11 @@
 
                     .form-input {
                         padding: 6px 9px !important;
-                        font-size: 0.82rem !important;
+                        font-size: 0.73rem !important; /* Fonte menor e refinada para os campos */
                         height: auto !important;
-                        background: #fff !important;
+                        background: #fdfbf7 !important; /* Creme super claro terra para campos */
                         color: #111827 !important;
-                        border: 1px solid #d1d5db !important;
+                        border: 1px solid #d5c8ad !important; /* Borda cor da terra um pouco mais escura */
                         border-radius: 6px !important;
                     }
                     
@@ -1129,13 +1309,13 @@
                     }
                     
                     .radio-item {
-                        background: #fff !important;
-                        border: 1px solid #d1d5db !important;
+                        background: #fdfbf7 !important; 
+                        border: 1px solid #d5c8ad !important;
                         color: #1f2937 !important;
                     }
                     
                     .radio-item.selected {
-                        background: #f8fafc !important;
+                        background: #ebdcc2 !important; /* Fundo selecionado no mesmo tema */
                         border-color: #0f172a !important;
                         box-shadow: 0 0 0 1px #0f172a inset !important;
                     }
@@ -1415,168 +1595,253 @@
 
                     /* Mobile Optimization for Bump Card */
                     @media (max-width: 480px) {
-                        .order-bump-title {
-                            font-size: 0.85rem !important;
-                        }
-                        .order-bump-description {
-                            font-size: 0.75rem !important;
-                        }
-                        .order-bump-price {
-                            font-size: 1rem !important;
-                        }
+                        .order-bump-title { font-size: 0.85rem !important; }
+                        .order-bump-description { font-size: 0.75rem !important; }
+                        .order-bump-price { font-size: 1rem !important; }
                     }
+
+                    /* === CHECKOUT 2-STEP === */
+                    .checkout-step-indicator { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 14px; }
+                    .step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 900; background: #e2e8f0; color: #94a3b8; transition: all 0.3s; }
+                    .step-dot.active { background: #22c55e; color: #fff; box-shadow: 0 0 12px rgba(34,197,94,0.35); }
+                    .step-dot.completed { background: #22c55e; color: #fff; }
+                    .step-line { width: 50px; height: 3px; background: #e2e8f0; margin: 0 6px; border-radius: 2px; transition: all 0.3s; }
+                    .step-line.active { background: #22c55e; }
+
+                    /* Urgency Banner */
+                    @keyframes urgencyPulse { 0%,100%{ opacity:1; } 50%{ opacity:0.88; } }
+                    .checkout-urgency { background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; text-align: center; animation: urgencyPulse 3s infinite; }
+
+                    /* Trust Badges */
+                    .checkout-trust-row { display: flex; gap: 10px; margin: 10px 0; }
+                    .checkout-trust-badge { flex: 1; border-radius: 8px; padding: 7px 4px; text-align: center; }
+
+                    /* Mini Testimonial */
+                    .checkout-mini-review { display: flex; align-items: center; gap: 10px; background: #e0d2b7; border: 1px solid #c7b695; border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; }
+                    .checkout-mini-avatars { display: flex; flex-shrink: 0; }
+                    .checkout-mini-avatars img { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; margin-right: -7px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+
+                    /* Step transition */
+                    #checkout-step-1, #checkout-step-2 { animation: fadeIn 0.3s ease; }
                 </style>
 
-                <!-- 1. Resumo do Pedido (Compacto) -->
-                <div class="checkout-summary">
-                    <div class="summary-img-wrap">
-                        <img src="capadasdoencas.jpg" alt="Capa" class="summary-img" loading="eager" decoding="sync">
-                    </div>
-                    <div class="summary-details">
-                        <h4>Protocolo Elite: A Cura das Aves</h4>
-                        <ul class="summary-features">
-                            <li><i class="fa-solid fa-hand" style="color:#ef4444;"></i> <strong style="color:#f1f5f9;">Pare de perder galinhas sem saber o porquê</strong></li>
-                            <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Trate ronqueira, peito seco e +10 doenças — passo a passo</li>
-                            <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Remédios profissionais usados em criatórios reais</li>
-                            <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Dosagens calculadas por peso e estágio da doença</li>
-                        </ul>
-                        <div style="margin-top: 8px; padding: 6px 10px; background: rgba(34,197,94,0.12); border-radius: 8px; border: 1px solid rgba(34,197,94,0.3);">
-                            <span style="font-size: 0.7rem; color: #94a3b8; text-decoration: line-through;">R$ 149,90</span>
-                            <span style="font-size: 1.1rem; font-weight: 900; color: #22c55e; margin-left: 6px;">R$ 109,90 no PIX</span>
-                            <span style="font-size: 0.65rem; color: #86efac; display: block; margin-top: 1px;">🔒 Acesso imediato após pagamento</span>
-                        </div>
-                    </div>
-                </div>
 
                 <form id="payment-form">
-                    <div class="radio-group-top" style="margin-bottom: 10px;">
-                        <label class="form-label" style="display: block; margin-bottom: 5px;">ESCOLHA A FORMA DE
-                            PAGAMENTO</label>
-                        <div class="payment-methods-grid">
-                            <div class="radio-item selected" onclick="selectPaymentMethod('pix')">
-                                <input type="radio" name="paymentMethod" id="method-pix" value="pix" checked>
-                                <div class="radio-label">
-                                    <span class="radio-title">PIX</span>
-                                    <span class="radio-desc">Acesso imediato</span>
+                    <!-- ========== STEP 1: Dados Básicos ========== -->
+                    <div id="checkout-step-1">
+                        <p style="text-align: center; margin-bottom: 15px; font-size: 0.82rem; color: #475569; font-weight: 600; line-height: 1.4;">
+                            Preencha as informações abaixo para continuar, leva menos de 1 minuto.
+                        </p>
+                        <div class="checkout-step-indicator">
+                            <div class="step-dot active">1</div>
+                            <div class="step-line"></div>
+                            <div class="step-dot">2</div>
+                        </div>
+                        <div class="form-section-title" style="text-transform: none; font-size: 0.9rem !important;">Como podemos te chamar criador ?</div>
+                        <div class="form-group">
+                            <input type="text" id="payer-name" class="form-input" placeholder="NOME COMPLETO" required
+                                data-tip="Digite seu nome e sobrenome completo para o certificado.">
+                            <div class="field-tooltip">Digite seu nome completo</div>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="payer-email" class="form-input" placeholder="EMAIL" required
+                                data-tip="Seu melhor email onde receberá o acesso ao guia.">
+                            <div class="field-tooltip">Onde você receberá o acesso</div>
+                        </div>
+                        <button type="button" onclick="goToStep2()" class="btn-primary" style="width: 100%; padding: 14px; font-size: 1.1rem; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            CONTINUAR <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <p style="text-align: center; margin-top: 6px; font-size: 0.68rem; color: #64748b;">
+                            <i class="fa-solid fa-lock" style="color: #22c55e;"></i> Seus dados estão protegidos
+                        </p>
+                    </div>
+
+                    <!-- ========== STEP 2: Pagamento ========== -->
+                    <div id="checkout-step-2" style="display: none;">
+                        <div class="checkout-step-indicator">
+                            <div class="step-dot completed"><i class="fa-solid fa-check" style="font-size: 0.6rem;"></i></div>
+                            <div class="step-line active"></div>
+                            <div class="step-dot active">2</div>
+                        </div>
+
+                        <!-- Urgency Banner -->
+                        <div class="checkout-urgency" id="checkout-urgency-banner">
+                            <p style="margin: 0; font-size: 0.78rem; color: #fecaca; font-weight: 700; letter-spacing: 0.3px;">
+                                🔥 Sua vaga está reservada <span id="checkout-payer-firstname" style="text-transform: capitalize; color: #fff;"></span>, por <span id="checkout-reservation-timer" style="color: #fff; font-weight: 900; font-size: 0.95rem; font-family: monospace;">10:00</span> — oferta por tempo limitado
+                            </p>
+                        </div>
+
+                        <!-- Bloco de oferta e garantia no topo do checkout -->
+                        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 1px solid #fbbf24; border-radius: 10px; padding: 10px 40px 10px 15px; margin-bottom: 12px; text-align: left;">
+                            <p style="margin: 0; font-size: 0.75rem; color: #cbd5e1; line-height: 1.4;">
+                                <i class="fa-solid fa-shield-halved" style="color: #22c55e;"></i> <strong style="color: #fff;">Sem risco:</strong> 7 dias de garantia — não gostou, devolvemos 100% do seu dinheiro sem perguntas.
+                            </p>
+                        </div>
+
+                        <div class="modal-header" style="margin-bottom: 8px;">
+                            <h3 class="modal-title" style="margin-bottom: 2px; font-size: 1.1rem;">Finalize Sua Compra</h3>
+                            <p style="font-size: 0.82rem; color: #15803d; font-weight: 700; margin-bottom: 0;">Acesso imediato ao ebook após o pagamento!</p>
+                        </div>
+
+                        <!-- 1. Resumo do Pedido (Compacto) -->
+                        <div class="checkout-summary">
+                            <div class="summary-img-wrap">
+                                <img src="capadasdoencas.jpg" alt="Capa" class="summary-img" loading="eager" decoding="sync">
+                            </div>
+                            <div class="summary-details">
+                                <h4>Protocolo Elite: A Cura das Aves</h4>
+                                <ul class="summary-features">
+                                    <li><i class="fa-solid fa-hand" style="color:#ef4444;"></i> <strong style="color:#f1f5f9;">Pare de perder galinhas sem saber o porquê</strong></li>
+                                    <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Trate ronqueira, peito seco e +10 doenças — passo a passo</li>
+                                    <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Remédios profissionais usados em criatórios reais</li>
+                                    <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Dosagens calculadas por peso e estágio da doença</li>
+                                </ul>
+                                <div style="margin-top: 8px; padding: 6px 10px; background: rgba(34,197,94,0.12); border-radius: 8px; border: 1px solid rgba(34,197,94,0.3);">
+                                    <span style="font-size: 0.7rem; color: #94a3b8; text-decoration: line-through;">R$ 149,90</span>
+                                    <span style="font-size: 1.1rem; font-weight: 900; color: #22c55e; margin-left: 6px;">R$ 109,90 no PIX</span>
+                                    <span style="font-size: 0.65rem; color: #86efac; display: block; margin-top: 1px;">🔒 Acesso imediato após pagamento</span>
+                                    <span style="font-size: 0.7rem; color: #fbbf24; font-weight: 800; display: block; margin-top: 3px;"><i class="fa-solid fa-gift"></i> Tabela de vacinação GRATUITA inclusa.</span>
                                 </div>
-                                <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png"
-                                    style="height: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));" alt="Pix">
                             </div>
+                        </div>
 
-                            <div class="radio-item" onclick="selectPaymentMethod('card')">
-                                <input type="radio" name="paymentMethod" id="method-card" value="card">
-                                <div class="radio-label">
-                                    <span class="radio-title">CARTÃO</span>
-                                    <span class="radio-desc">Até 4x</span>
+                        <!-- Trust Badges -->
+                        <div class="checkout-trust-row">
+                            <div class="checkout-trust-badge" style="background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.2);">
+                                <i class="fa-solid fa-shield-halved" style="color: #22c55e; font-size: 1.1rem; display: block; margin-bottom: 2px;"></i>
+                                <span style="font-size: 0.6rem; font-weight: 800; color: #166534; text-transform: uppercase;">Compra Segura</span>
+                            </div>
+                            <div class="checkout-trust-badge" style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);">
+                                <i class="fa-solid fa-lock" style="color: #3b82f6; font-size: 1.1rem; display: block; margin-bottom: 2px;"></i>
+                                <span style="font-size: 0.6rem; font-weight: 800; color: #1e40af; text-transform: uppercase;">Certificado SSL</span>
+                            </div>
+                        </div>
+
+
+                        <div class="radio-group-top" style="margin-bottom: 10px;">
+                            <label class="form-label" style="display: block; margin-bottom: 5px;">ESCOLHA A FORMA DE PAGAMENTO</label>
+                            <div class="payment-methods-grid">
+                                <div class="radio-item selected" onclick="selectPaymentMethod('pix')">
+                                    <input type="radio" name="paymentMethod" id="method-pix" value="pix" checked>
+                                    <div class="radio-label">
+                                        <span class="radio-title">PIX</span>
+                                        <span class="radio-desc">Acesso imediato</span>
+                                    </div>
+                                    <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png" style="height: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));" alt="Pix">
                                 </div>
-                                <div class="payment-flags" style="display: flex; gap: 5px; align-items: center;">
-                                    <img src="https://logospng.org/download/visa/logo-visa-256.png"
-                                        style="height: 18px;" alt="Visa">
-                                    <img src="https://logospng.org/download/mastercard/logo-mastercard-256.png"
-                                        style="height: 18px;" alt="Mastercard">
-                                    <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png"
-                                        style="height: 18px;" alt="Pix">
+                                <div class="radio-item" onclick="selectPaymentMethod('card')">
+                                    <input type="radio" name="paymentMethod" id="method-card" value="card">
+                                    <div class="radio-label">
+                                        <span class="radio-title">CARTÃO</span>
+                                        <span class="radio-desc">Até 4x</span>
+                                    </div>
+                                    <div class="payment-flags" style="display: flex; gap: 5px; align-items: center;">
+                                        <img src="https://logospng.org/download/visa/logo-visa-256.png" style="height: 18px;" alt="Visa">
+                                        <img src="https://logospng.org/download/mastercard/logo-mastercard-256.png" style="height: 18px;" alt="Mastercard">
+                                        <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png" style="height: 18px;" alt="Pix">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="form-section-title">SEUS DADOS DE ACESSO</div>
-                    <div class="form-group">
-                        <input type="text" id="payer-name" class="form-input" placeholder="NOME COMPLETO" required
-                            data-tip="Digite seu nome e sobrenome completo para o certificado.">
-                        <div class="field-tooltip">Digite seu nome completo</div>
-                    </div>
-                    <div class="form-group">
-                        <input type="tel" id="payer-phone" class="form-input" placeholder="WHATSAPP (DDD + Número)" required
-                            data-tip="Para suporte e avisos importantes (DDD + Número).">
-                        <div class="field-tooltip">DDD + Número</div>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" id="payer-email" class="form-input" placeholder="EMAIL" required
-                            data-tip="Seu melhor email onde receberá o acesso ao guia.">
-                        <div class="field-tooltip">Onde você receberá o acesso</div>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="payer-cpf" class="form-input" placeholder="CPF (apenas números)" required
-                            data-tip="Necessário para emitir a nota fiscal (apenas números).">
-                        <div class="field-tooltip">Apenas números do CPF</div>
-                    </div>
-
-                    <!-- Card Details Area -->
-                    <div id="card-area"
-                        style="display: none; margin-top: 0.5rem; border: 1px solid #e2e8f0; padding: 1rem; border-radius: 0.5rem; background: #f8fafc;">
+                        <div class="form-section-title">COMPLETE SEUS DADOS</div>
                         <div class="form-group">
-                            <input type="text" id="card-number" class="form-input" placeholder="NÚMERO DO CARTÃO"
-                                data-tip="Os 16 números na frente do cartão.">
-                            <div class="field-tooltip">Digite os números do cartão</div>
+                            <input type="tel" id="payer-phone" class="form-input" placeholder="WHATSAPP (DDD + Número)" required
+                                data-tip="Para suporte e avisos importantes (DDD + Número).">
+                            <div class="field-tooltip">DDD + Número</div>
                         </div>
-                        <div style="display: flex; gap: 1rem;">
-                            <div class="form-group" style="flex: 1.5;">
-                                <input type="text" id="card-expiration" class="form-input" placeholder="VALIDADE"
-                                    data-tip="Mês e Ano de vencimento (Ex: 12/28).">
-                                <div class="field-tooltip">MM/AA</div>
+                        <div class="form-group">
+                            <input type="text" id="payer-cpf" class="form-input" placeholder="CPF (apenas números)" required
+                                data-tip="Necessário para emitir a nota fiscal (apenas números).">
+                            <div class="field-tooltip">Apenas números do CPF</div>
+                        </div>
+
+                        <!-- Card Details Area -->
+                        <div id="card-area" style="display: none; margin-top: 0.5rem; border: 1px solid #e2e8f0; padding: 1rem; border-radius: 0.5rem; background: #f8fafc;">
+                            <div class="form-group">
+                                <input type="text" id="card-number" class="form-input" placeholder="NÚMERO DO CARTÃO" data-tip="Os 16 números na frente do cartão.">
+                                <div class="field-tooltip">Digite os números do cartão</div>
                             </div>
-                            <div class="form-group" style="flex: 1;">
-                                <input type="text" id="card-cvv" class="form-input" placeholder="CVV"
-                                    data-tip="3 dígitos no verso do cartão.">
-                                <div class="field-tooltip">3 dígitos no verso</div>
+                            <div style="display: flex; gap: 1rem;">
+                                <div class="form-group" style="flex: 1.5;">
+                                    <input type="text" id="card-expiration" class="form-input" placeholder="VALIDADE" data-tip="Mês e Ano de vencimento (Ex: 12/28).">
+                                    <div class="field-tooltip">MM/AA</div>
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <input type="text" id="card-cvv" class="form-input" placeholder="CVV" data-tip="3 dígitos no verso do cartão.">
+                                    <div class="field-tooltip">3 dígitos no verso</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="card-holder" class="form-input" placeholder="NOME NO CARTÃO" data-tip="Nome exatamente como impresso no cartão.">
+                                <div class="field-tooltip">Igual impresso no cartão</div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="card-cpf" class="form-input" placeholder="CPF DO TITULAR" data-tip="CPF do dono do cartão (apenas números).">
+                                <div class="field-tooltip">CPF do Dono do Cartão</div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="card-cep" class="form-input" placeholder="CEP" data-tip="CEP do endereço de cobrança.">
+                                <div class="field-tooltip">CEP de cobrança</div>
+                            </div>
+                            <div class="form-group">
+                                <select id="installments-select" class="form-input"></select>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <input type="text" id="card-holder" class="form-input" placeholder="NOME NO CARTÃO"
-                                data-tip="Nome exatamente como impresso no cartão.">
-                            <div class="field-tooltip">Igual impresso no cartão</div>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="card-cpf" class="form-input" placeholder="CPF DO TITULAR"
-                                data-tip="CPF do dono do cartão (apenas números).">
-                            <div class="field-tooltip">CPF do Dono do Cartão</div>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="card-cep" class="form-input" placeholder="CEP"
-                                data-tip="CEP do endereço de cobrança.">
-                            <div class="field-tooltip">CEP de cobrança</div>
-                        </div>
-                        <div class="form-group">
-                            <select id="installments-select" class="form-input"></select>
-                        </div>
-                    </div>
 
-                    <!-- Order Bump Area -->
-                    <div id="order-bump-area"></div>
+                        <!-- Order Bump Area -->
+                        <div id="order-bump-area"></div>
 
-                    <div style="text-align: center; margin-top: 1rem;">
-                        <div class="price-summary-box"
-                            style="margin-bottom: 1rem; background: var(--slate-50); border: 1px dashed var(--slate-400); padding: 0.75rem; border-radius: 0.5rem;">
-                            <div
-                                style="display: flex; justify-content: space-between; font-weight: 700; color: var(--slate-900);">
-                                <span>Total a pagar:</span>
-                                <span class="checkout-total-display">R$ --,--</span>
+                        <div style="text-align: center; margin-top: 1rem;">
+                            <div class="price-summary-box" style="margin-bottom: 1rem; background: var(--slate-50); border: 1px dashed var(--slate-400); padding: 0.75rem; border-radius: 0.5rem;">
+                                <div style="display: flex; justify-content: space-between; font-weight: 700; color: var(--slate-900);">
+                                    <span>Total a pagar:</span>
+                                    <span class="checkout-total-display">R$ --,--</span>
+                                </div>
+                                <div id="pix-bonus-status" style="margin-top: 4px; display: none;"></div>
                             </div>
-                            <div id="pix-bonus-status" style="margin-top: 4px; display: none;"></div>
+
+                            <button type="button" id="btn-pay-pix" class="btn-primary" style="width: 100%; padding: 0.75rem; font-size: 1.125rem;">Gerar PIX</button>
+                            <button type="button" id="btn-pay-card" class="btn-primary" style="display: none; width: 100%; padding: 0.75rem; font-size: 1.125rem;">Finalizar Pagamento</button>
+
+                            <!-- Social Proof - Below Payment Button -->
+                            <div style="margin-top: 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 10px 12px;">
+                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                    <div class="checkout-mini-avatars" style="display: flex; flex-shrink: 0;">
+                                        <img src="carrosel/ricardo.jpg" alt="Aluno" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; margin-right: -7px; box-shadow: 0 1px 3px rgba(0,0,0,0.12);">
+                                        <img src="carrosel/maria.jpg" alt="Aluna" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; margin-right: -7px; box-shadow: 0 1px 3px rgba(0,0,0,0.12);">
+                                        <img src="carrosel/pedro.jpg" alt="Aluno" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; margin-right: -7px; box-shadow: 0 1px 3px rgba(0,0,0,0.12);">
+                                        <img src="carrosel/juliana.jpg" alt="Aluna" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; box-shadow: 0 1px 3px rgba(0,0,0,0.12);">
+                                    </div>
+                                    <div>
+                                        <div style="display: flex; align-items: center; gap: 4px;">
+                                            <span style="color: #f59e0b; font-size: 0.7rem; letter-spacing: -1px;">★★★★★</span>
+                                            <span style="font-size: 0.78rem; font-weight: 900; color: #166534;">4.9/5</span>
+                                            <span style="font-size: 0.62rem; color: #15803d; font-weight: 600;">(1.647 avaliações)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 5px;">
+                                    <p style="margin: 0; font-size: 0.73rem; color: #166534; font-style: italic; line-height: 1.35; padding-left: 8px; border-left: 2px solid #86efac;">"Material que salvou minha criação inteira" <strong style="font-style: normal;">— Ricardo L.</strong></p>
+                                    <p style="margin: 0; font-size: 0.73rem; color: #166534; font-style: italic; line-height: 1.35; padding-left: 8px; border-left: 2px solid #86efac;">"Gastava fortuna em remédio. Descobri que tava errando no básico." <strong style="font-style: normal;">— Marcos P.</strong></p>
+                                </div>
+                                <div style="margin-top: 10px; text-align: center;">
+                                    <p style="font-family: 'Caveat', 'Comic Sans MS', cursive, sans-serif; font-size: 0.9rem; color: #14532d; margin: 0; transform: rotate(-1deg); opacity: 0.85; line-height: 1.3;">Venha se tornar um criador de verdade como eles, e pare de perder galinhas por não saber tratar.</p>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
+                                <img src="https://logospng.org/download/visa/logo-visa-256.png" style="height: 24px;" alt="Visa">
+                                <img src="https://logospng.org/download/mastercard/logo-mastercard-256.png" style="height: 24px;" alt="Mastercard">
+                                <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png" style="height: 20px;" alt="Pix">
+                                <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-icone-1024.png" style="height: 24px;" alt="Mercado Pago">
+                            </div>
+                            <p style="font-size: 0.7rem; color: #166534; margin-top: 0.75rem; font-weight: 600;"><i class="fa-solid fa-lock"></i> Pagamento 100% Seguro</p>
                         </div>
 
-                        <button type="button" id="btn-pay-pix" class="btn-primary"
-                            style="width: 100%; padding: 0.75rem; font-size: 1.125rem;">Gerar PIX</button>
-                        <button type="button" id="btn-pay-card" class="btn-primary"
-                            style="display: none; width: 100%; padding: 0.75rem; font-size: 1.125rem;">Finalizar
-                            Pagamento</button>
-
-
-                        <div
-                            style="margin-top: 1rem; display: flex; justify-content: center; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
-                            <img src="https://logospng.org/download/visa/logo-visa-256.png" style="height: 24px;"
-                                alt="Visa">
-                            <img src="https://logospng.org/download/mastercard/logo-mastercard-256.png"
-                                style="height: 24px;" alt="Mastercard">
-                            <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png" style="height: 20px;"
-                                alt="Pix">
-                            <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-icone-1024.png"
-                                style="height: 24px;" alt="Mercado Pago">
-                        </div>
-                        <p style="font-size: 0.7rem; color: #166534; margin-top: 0.75rem; font-weight: 600;"><i
-                                class="fa-solid fa-lock"></i> Pagamento 100% Seguro</p>
+                        <button type="button" onclick="backToStep1()" style="width: 100%; margin-top: 8px; background: none; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; color: #64748b; font-size: 0.82rem; cursor: pointer; font-weight: 600;">
+                            <i class="fa-solid fa-arrow-left"></i> Voltar para etapa anterior
+                        </button>
                     </div>
                 </form>
             </div>

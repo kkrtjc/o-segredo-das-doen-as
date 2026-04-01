@@ -327,6 +327,15 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         window.activePixPoll = null;
     }
 
+    // RESET TO STEP 1
+    const step1El = document.getElementById('checkout-step-1');
+    const step2El = document.getElementById('checkout-step-2');
+    if (step1El) step1El.style.display = '';
+    if (step2El) step2El.style.display = 'none';
+
+    // START RESERVATION TIMER
+    startReservationTimer();
+
     // RESET PIX BUTTON AND UPSELL STATE
     const btnPix = document.getElementById('btn-pay-pix');
     if (btnPix) {
@@ -818,9 +827,68 @@ function closeCheckout() {
         btnPix.disabled = false;
         btnPix.style.opacity = '1';
     }
-    midCheckoutUpsellPending = true;
 }
 
+// --- CHECKOUT 2-STEP NAVIGATION ---
+function goToStep2() {
+    const nameInput = document.getElementById('payer-name');
+    if (!nameInput || !nameInput.value.trim()) {
+        nameInput.classList.add('input-error');
+        nameInput.focus();
+        nameInput.placeholder = '⚠️ DIGITE SEU NOME';
+        setTimeout(() => { nameInput.classList.remove('input-error'); nameInput.placeholder = 'NOME COMPLETO'; }, 3000);
+        return;
+    }
+    nameInput.classList.remove('input-error');
+
+    // Injetar primeiro nome no banner de urgência
+    const firstName = nameInput.value.trim().split(' ')[0];
+    const nameDisplay = document.getElementById('checkout-payer-firstname');
+    if (nameDisplay) nameDisplay.textContent = firstName.toLowerCase();
+
+    const step1 = document.getElementById('checkout-step-1');
+    const step2 = document.getElementById('checkout-step-2');
+    if (step1) step1.style.display = 'none';
+    if (step2) { step2.style.display = ''; step2.style.animation = 'fadeIn 0.3s ease'; }
+
+    // Scroll modal to top
+    const modalContent = document.querySelector('#checkout-modal .modal-content');
+    if (modalContent) modalContent.scrollTop = 0;
+}
+
+function backToStep1() {
+    const step1 = document.getElementById('checkout-step-1');
+    const step2 = document.getElementById('checkout-step-2');
+    if (step2) step2.style.display = 'none';
+    if (step1) { step1.style.display = ''; step1.style.animation = 'fadeIn 0.3s ease'; }
+
+    const modalContent = document.querySelector('#checkout-modal .modal-content');
+    if (modalContent) modalContent.scrollTop = 0;
+}
+
+// --- RESERVATION TIMER (auto-restart) ---
+let reservationTimerInterval = null;
+function startReservationTimer() {
+    if (reservationTimerInterval) clearInterval(reservationTimerInterval);
+    let seconds = 600; // 10 minutes
+    const display = document.getElementById('checkout-reservation-timer');
+    if (!display) return;
+
+    function updateDisplay() {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        display.textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    updateDisplay();
+    reservationTimerInterval = setInterval(() => {
+        seconds--;
+        if (seconds < 0) {
+            seconds = 600; // restart
+        }
+        updateDisplay();
+    }, 1000);
+}
 
 // Alias for white checkout compatibility
 function selectPaymentMethod(method) {

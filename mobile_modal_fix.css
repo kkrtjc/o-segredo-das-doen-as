@@ -21,38 +21,46 @@ body.modal-open {
     align-items: flex-end !important; /* Anchor to bottom on mobile */
     justify-content: center !important;
     overflow-y: auto !important; /* Allow scroll if content overflows */
+    overflow-x: hidden !important; /* TRAVA O BALANÇO LATERAL DA TELA INTEIRA */
+    padding: 20px 0 !important; /* Dá uma folga em cima e embaixo */
+    touch-action: pan-y !important; /* Diz ao celular que SÓ é permitido deslizar pra cima ou pra baixo, não pros lados */
 }
 
 /* Modal Content: Stability and centered scaling */
 .modal-content {
-    width: 100% !important;
+    width: 92% !important; /* Sobra nas laterais garantida */
     max-width: 450px !important;
     /* Let the content set its own height naturally */
-    max-height: 92dvh !important;
+    max-height: 90dvh !important; /* Reduzido de 92dvh para mais margem */
     overflow-y: auto !important;
     overflow-x: hidden !important;
     position: relative !important;
     margin: auto !important; /* Center vertically when there's space */
     border-radius: 20px !important;
-    background: #ffffff !important;
+    background: #e6dac3 !important; /* Fundo terra agradável, não escuro */
     color: var(--slate-900) !important;
     box-shadow: 0 0 40px rgba(0,0,0,0.6) !important;
     border: none !important;
-    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch !important;
+    box-sizing: border-box !important;
+    padding: 20px !important; /* Garante que os números e o X não peguem na borda e cortem */
+    touch-action: pan-y !important; /* TRAVA o interior do modal brutalmente contra arrastes laterais */
 }
 
 /* Mobile specific overrides */
 @media (max-width: 768px) {
     .modal-overlay {
-        align-items: flex-end !important; /* Sheet slides up from bottom */
+        align-items: center !important; /* Modal flutuante no centro ao invés de grudado no rodapé */
+        padding: 10px 0 !important;
     }
 
     .modal-content {
-        width: 100% !important;
+        width: 92% !important; /* Mantém a sobra lateral nas margens */
         max-width: 100% !important;
-        max-height: 95dvh !important;
-        border-radius: 25px 25px 0 0 !important;
-        margin: 0 !important; /* Stick to the bottom */
+        max-height: 88dvh !important;
+        border-radius: 20px !important;
+        margin: auto !important; /* Centro */
+        padding: 18px !important; /* Proteção interna pro botão de fechar e dados */
     }
 
     /* CRITICAL: Fix Huge Icons / Logos */
@@ -122,9 +130,9 @@ body.modal-open {
     input[type="text"], 
     input[type="tel"], 
     input[type="email"] {
-        height: 48px !important; /* Touch-friendly */
-        font-size: 16px !important; /* CRITICAL: Prevent iOS auto-zoom shift */
-        padding: 10px 12px !important;
+        height: 44px !important; /* Mais delicado */
+        font-size: 14px !important; /* Redução solicitada para texto dos campos */
+        padding: 8px 12px !important;
         box-sizing: border-box !important;
     }
 }
