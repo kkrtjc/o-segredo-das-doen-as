@@ -43,7 +43,7 @@ body.modal-open {
     border: none !important;
     -webkit-overflow-scrolling: touch !important;
     box-sizing: border-box !important;
-    padding: 20px !important; /* Garante que os números e o X não peguem na borda e cortem */
+    padding: 35px 20px 20px 20px !important; /* Mais margem no topo para o botão (X) ficar isolado */
     touch-action: pan-y !important; /* TRAVA o interior do modal brutalmente contra arrastes laterais */
 }
 
@@ -60,7 +60,7 @@ body.modal-open {
         max-height: 88dvh !important;
         border-radius: 20px !important;
         margin: auto !important; /* Centro */
-        padding: 18px !important; /* Proteção interna pro botão de fechar e dados */
+        padding: 40px 18px 18px 18px !important; /* Margem gorda no topo para que o bendito X não sobreponha a Etapa 1 e 2 */
     }
 
     /* CRITICAL: Fix Huge Icons / Logos */
