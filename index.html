@@ -753,11 +753,16 @@
                     }
                     .authority-gallery-item img {
                         width: 100%;
-                        aspect-ratio: 3 / 2; /* Um pouco mais largo que 4:3, afastando a foto para não cortar dos lados */
+                        height: 250px; /* Altura exata travada para que todas fiquem alinhadas sem depender da largura */
                         object-fit: cover; 
                         object-position: center; 
                         background: #020617;
                         display: block;
+                    }
+                    .authority-gallery-item.wide-card img {
+                        object-fit: contain;
+                        transform: scale(1.15); /* Zoom leve pedido pelo usuario */
+                        transform-origin: center center;
                     }
                     .image-wrapper {
                         position: relative;
@@ -832,9 +837,18 @@
                             display: none;
                         }
                         .authority-gallery-item {
-                            width: 85%; /* Container imponente no celular: Ocupa quase a tela inteira com as bordas aparecendo */
+                            width: 82%; /* Largura padrão */
                             flex-shrink: 0;
                             scroll-snap-align: center;
+                        }
+                        .authority-gallery-item.wide-card {
+                            width: 96%; /* Laterais aumentadas SOMENTE para estas duas, sem desalinhar a altura */
+                        }
+                        .authority-gallery-item.wide-card img {
+                            object-fit: contain !important; /* Salva a imagem matematicamente de cortes laterais forçando um zoom out na moldura alta */
+                            background: #020617; /* Fundo invisível estético */
+                            transform: scale(1.15); /* Pequeno zoom interno sem cortar as laterais */
+                            transform-origin: center center; /* Faz o zoom nascer certinho do meio da foto */
                         }
                         .mobile-scroll-hint {
                             display: block;
@@ -858,7 +872,7 @@
                         <!-- Card 1 -->
                         <div class="authority-gallery-item">
                             <div class="image-wrapper">
-                                <img src="autoridade/coriza.png" alt="Coriza Infecciosa" loading="lazy">
+                                <img src="autoridade/coriza.webp" alt="Coriza Infecciosa" loading="lazy">
                                 <div class="antes-depois-bar">
                                     <span class="badge-antes">ANTES</span>
                                     <span class="badge-depois">DEPOIS</span>
@@ -868,9 +882,9 @@
                         </div>
                         
                         <!-- Card 2 -->
-                        <div class="authority-gallery-item">
+                        <div class="authority-gallery-item wide-card">
                             <div class="image-wrapper">
-                                <img src="autoridade/coccidiose.jpg" alt="Coccidiose" loading="lazy">
+                                <img src="autoridade/coccidiose.webp" alt="Coccidiose" loading="lazy">
                                 <div class="antes-depois-bar">
                                     <span class="badge-antes">ANTES</span>
                                     <span class="badge-depois">DEPOIS</span>
@@ -882,7 +896,7 @@
                         <!-- Card 3 -->
                         <div class="authority-gallery-item">
                             <div class="image-wrapper">
-                                <img src="autoridade/bouba.png" alt="Bouba Aviária" loading="lazy">
+                                <img src="autoridade/bouba.webp" alt="Bouba Aviária" loading="lazy">
                                 <div class="antes-depois-bar">
                                     <span class="badge-antes">ANTES</span>
                                     <span class="badge-depois">DEPOIS</span>
@@ -892,9 +906,9 @@
                         </div>
                         
                         <!-- Card 4 -->
-                        <div class="authority-gallery-item">
+                        <div class="authority-gallery-item wide-card">
                             <div class="image-wrapper">
-                                <img src="autoridade/vermes.jpg" alt="Vermes" loading="lazy">
+                                <img src="autoridade/vermes.webp" alt="Vermes" loading="lazy">
                                 <div class="antes-depois-bar">
                                     <span class="badge-antes">ANTES</span>
                                     <span class="badge-depois">DEPOIS</span>
@@ -973,12 +987,12 @@
                         style="display: block; font-size: 0.85rem; color: var(--slate-400); font-weight: 600; text-transform: uppercase; margin-bottom: 5px; opacity: 0.8;">POR
                         APENAS</span>
                     <span style="display: block; font-size: 1.5rem; color: var(--white); font-weight: 900;">R$ <span
-                            id="display-price-value">109,90</span> no pix</span>
-                    <span
+                            id="display-price-value" class="dyn-price-main">79,90</span> no pix</span>
+                    <span class="dyn-discount-badge"
                         style="font-size: 0.75rem; color: #10b981; font-weight: 800; display: block; margin-top: 3px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 15px; display: inline-block;">🔥
-                        27% DE DESCONTO NO PIX</span>
+                        <span class="dyn-discount-percent">46</span>% DE DESCONTO NO PIX</span>
                     <span style="font-size: 0.9rem; color: var(--slate-300); display: block; margin-top: 5px;">ou em até
-                        <strong style="color: #fff;">4x de R$ 34,90 sem juros</strong> no cartão</span>
+                        <strong class="dyn-installments" style="color: #fff;">4x de R$ 19,97 sem juros</strong> no cartão</span>
                     <span
                         style="font-size: 0.85rem; color: var(--brand-red); font-weight: 900; display: block; margin-top: 0.5rem; text-transform: uppercase;">QUANTO
                         VALE UMA GALINHA PRA VOCE?</span>
@@ -1678,7 +1692,7 @@
                             </p>
                         </div>
 
-                        <div class="modal-header" style="margin-bottom: 8px;">
+                        <div class="modal-header" style="margin-bottom: 4px;">
                             <h3 class="modal-title" style="margin-bottom: 2px; font-size: 1.1rem;">Finalize Sua Compra</h3>
                             <p style="font-size: 0.82rem; color: #15803d; font-weight: 700; margin-bottom: 0;">Acesso imediato ao ebook após o pagamento!</p>
                         </div>
@@ -1696,9 +1710,9 @@
                                     <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Remédios profissionais usados em criatórios reais</li>
                                     <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Dosagens calculadas por peso e estágio da doença</li>
                                 </ul>
-                                <div style="margin-top: 8px; padding: 6px 10px; background: rgba(34,197,94,0.12); border-radius: 8px; border: 1px solid rgba(34,197,94,0.3);">
-                                    <span style="font-size: 0.7rem; color: #94a3b8; text-decoration: line-through;">R$ 149,90</span>
-                                    <span style="font-size: 1.1rem; font-weight: 900; color: #22c55e; margin-left: 6px;">R$ 109,90 no PIX</span>
+                                <div style="margin-top: 4px; padding: 4px 8px; background: rgba(34,197,94,0.12); border-radius: 8px; border: 1px solid rgba(34,197,94,0.3);">
+                                    <span class="dyn-checkout-original" style="font-size: 0.7rem; color: #94a3b8; text-decoration: line-through;">R$ 149,90</span>
+                                    <span class="dyn-checkout-pix" style="font-size: 1.1rem; font-weight: 900; color: #22c55e; margin-left: 6px;">R$ 79,90 no PIX</span>
                                     <span style="font-size: 0.65rem; color: #86efac; display: block; margin-top: 1px;">🔒 Acesso imediato após pagamento</span>
                                     <span style="font-size: 0.7rem; color: #fbbf24; font-weight: 800; display: block; margin-top: 3px;"><i class="fa-solid fa-gift"></i> Tabela de vacinação GRATUITA inclusa.</span>
                                 </div>
@@ -1718,7 +1732,7 @@
                         </div>
 
 
-                        <div class="radio-group-top" style="margin-bottom: 10px;">
+                        <div class="radio-group-top" style="margin-bottom: 6px;">
                             <label class="form-label" style="display: block; margin-bottom: 5px;">ESCOLHA A FORMA DE PAGAMENTO</label>
                             <div class="payment-methods-grid">
                                 <div class="radio-item selected" onclick="selectPaymentMethod('pix')">
@@ -1756,8 +1770,7 @@
                             <div class="field-tooltip">Apenas números do CPF</div>
                         </div>
 
-                        <!-- Card Details Area -->
-                        <div id="card-area" style="display: none; margin-top: 0.5rem; border: 1px solid #e2e8f0; padding: 1rem; border-radius: 0.5rem; background: #f8fafc;">
+                        <div id="card-area" style="display: none; margin-top: 0.5rem; border: 1px solid #e2e8f0; padding: 0.75rem; border-radius: 0.5rem; background: #f8fafc;">
                             <div class="form-group">
                                 <input type="text" id="card-number" class="form-input" placeholder="NÚMERO DO CARTÃO" data-tip="Os 16 números na frente do cartão.">
                                 <div class="field-tooltip">Digite os números do cartão</div>
@@ -1998,7 +2011,7 @@
                 <button onclick="startCheckoutProcess('ebook-doencas')" class="floating-cta-btn">
                     SALVAR MINHAS GALINHAS AGORA
                 </button>
-                <span class="floating-cta-subtext">R$ 109,90 no PIX &bull; Acesso imediato &bull; Garantia de 7 dias</span>
+                <span class="floating-cta-subtext"><span class="dyn-cta-pix">R$ 79,90 no PIX</span> &bull; Acesso imediato &bull; Garantia de 7 dias</span>
             </div>
         </div>
     </div>
