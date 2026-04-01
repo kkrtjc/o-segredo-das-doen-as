@@ -1218,7 +1218,7 @@
 
     <!-- Checkout Modal (Restored White Design) -->
     <div id="checkout-modal" class="modal-overlay">
-        <div class="modal-content">
+        <div class="modal-content" style="background-color: #fdfbf7 !important; width: 94%; max-width: 375px !important; margin: 0 auto; padding: 15px !important;">
             <div id="checkout-main-view" style="position: relative;">
 
 
@@ -1309,12 +1309,12 @@
                     }
 
                     .form-input {
-                        padding: 6px 9px !important;
-                        font-size: 0.73rem !important; /* Fonte menor e refinada para os campos */
+                        padding: 4px 8px !important; /* Reduzindo altura vertical */
+                        font-size: 0.73rem !important;
                         height: auto !important;
-                        background: #fdfbf7 !important; /* Creme super claro terra para campos */
+                        background: #ffffff !important; /* Fundo branco e não mais bege */
                         color: #111827 !important;
-                        border: 1px solid #d5c8ad !important; /* Borda cor da terra um pouco mais escura */
+                        border: 1px solid #cbd5e1 !important; /* Borda slate */
                         border-radius: 6px !important;
                     }
                     
@@ -1323,13 +1323,17 @@
                     }
                     
                     .radio-item {
-                        background: #fdfbf7 !important; 
-                        border: 1px solid #d5c8ad !important;
+                        background: #ffffff !important; 
+                        border: 1px solid #cbd5e1 !important;
                         color: #1f2937 !important;
+                        padding: 6px 10px !important; /* Reduzindo tamanho do card */
+                        height: 48px !important; /* Fixando um tamanho menor */
+                        display: flex !important;
+                        align-items: center !important;
                     }
                     
                     .radio-item.selected {
-                        background: #ebdcc2 !important; /* Fundo selecionado no mesmo tema */
+                        background: #f1f5f9 !important; /* Fundo selecionado slate */
                         border-color: #0f172a !important;
                         box-shadow: 0 0 0 1px #0f172a inset !important;
                     }
@@ -1641,47 +1645,16 @@
 
 
                 <form id="payment-form">
-                    <!-- ========== STEP 1: Dados Básicos ========== -->
-                    <div id="checkout-step-1">
-                        <p style="text-align: center; margin-bottom: 15px; font-size: 0.82rem; color: #475569; font-weight: 600; line-height: 1.4;">
-                            Preencha as informações abaixo para continuar, leva menos de 1 minuto.
-                        </p>
-                        <div class="checkout-step-indicator">
-                            <div class="step-dot active">1</div>
-                            <div class="step-line"></div>
-                            <div class="step-dot">2</div>
-                        </div>
-                        <div class="form-section-title" style="text-transform: none; font-size: 0.9rem !important;">Como podemos te chamar criador ?</div>
-                        <div class="form-group">
-                            <input type="text" id="payer-name" class="form-input" placeholder="NOME COMPLETO" required
-                                data-tip="Digite seu nome e sobrenome completo para o certificado.">
-                            <div class="field-tooltip">Digite seu nome completo</div>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" id="payer-email" class="form-input" placeholder="EMAIL" required
-                                data-tip="Seu melhor email onde receberá o acesso ao guia.">
-                            <div class="field-tooltip">Onde você receberá o acesso</div>
-                        </div>
-                        <button type="button" onclick="goToStep2()" class="btn-primary" style="width: 100%; padding: 14px; font-size: 1.1rem; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                            CONTINUAR <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                        <p style="text-align: center; margin-top: 6px; font-size: 0.68rem; color: #64748b;">
-                            <i class="fa-solid fa-lock" style="color: #22c55e;"></i> Seus dados estão protegidos
-                        </p>
-                    </div>
+                    <!-- ========== CHECKOUT ÚNICO ========== -->
+                    <div id="checkout-single-step">
 
-                    <!-- ========== STEP 2: Pagamento ========== -->
-                    <div id="checkout-step-2" style="display: none;">
-                        <div class="checkout-step-indicator">
-                            <div class="step-dot completed"><i class="fa-solid fa-check" style="font-size: 0.6rem;"></i></div>
-                            <div class="step-line active"></div>
-                            <div class="step-dot active">2</div>
-                        </div>
+
+
 
                         <!-- Urgency Banner -->
                         <div class="checkout-urgency" id="checkout-urgency-banner">
                             <p style="margin: 0; font-size: 0.78rem; color: #fecaca; font-weight: 700; letter-spacing: 0.3px;">
-                                🔥 Sua vaga está reservada <span id="checkout-payer-firstname" style="text-transform: capitalize; color: #fff;"></span>, por <span id="checkout-reservation-timer" style="color: #fff; font-weight: 900; font-size: 0.95rem; font-family: monospace;">10:00</span> — oferta por tempo limitado
+                                🔥 Reservamos uma vaga pra você <span id="checkout-payer-firstname" style="text-transform: capitalize; color: #fff;"></span> por <span id="checkout-reservation-timer" style="color: #fff; font-weight: 900; font-size: 0.95rem; font-family: monospace;">10:00</span> — oferta por tempo limitado
                             </p>
                         </div>
 
@@ -1720,13 +1693,13 @@
                         </div>
 
                         <!-- Trust Badges -->
-                        <div class="checkout-trust-row">
-                            <div class="checkout-trust-badge" style="background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.2);">
-                                <i class="fa-solid fa-shield-halved" style="color: #22c55e; font-size: 1.1rem; display: block; margin-bottom: 2px;"></i>
+                        <div class="checkout-trust-row" style="margin: 5px 0;">
+                            <div class="checkout-trust-badge" style="background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.2); display: flex; align-items: center; justify-content: center; gap: 5px; padding: 4px;">
+                                <i class="fa-solid fa-shield-halved" style="color: #22c55e; font-size: 0.9rem;"></i>
                                 <span style="font-size: 0.6rem; font-weight: 800; color: #166534; text-transform: uppercase;">Compra Segura</span>
                             </div>
-                            <div class="checkout-trust-badge" style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);">
-                                <i class="fa-solid fa-lock" style="color: #3b82f6; font-size: 1.1rem; display: block; margin-bottom: 2px;"></i>
+                            <div class="checkout-trust-badge" style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); display: flex; align-items: center; justify-content: center; gap: 5px; padding: 4px;">
+                                <i class="fa-solid fa-lock" style="color: #3b82f6; font-size: 0.9rem;"></i>
                                 <span style="font-size: 0.6rem; font-weight: 800; color: #1e40af; text-transform: uppercase;">Certificado SSL</span>
                             </div>
                         </div>
@@ -1758,17 +1731,32 @@
                             </div>
                         </div>
 
-                        <div class="form-section-title">COMPLETE SEUS DADOS</div>
-                        <div class="form-group">
+                        <div class="form-section-title" style="text-transform: none; font-size: 0.9rem !important; margin-top: 15px;">Complete seus dados:</div>
+                        <div class="form-group" style="margin-bottom: 4px !important;">
+                            <input type="text" id="payer-name" class="form-input" placeholder="NOME COMPLETO" required
+                                data-tip="Digite seu nome e sobrenome completo para o certificado."
+                                oninput="document.getElementById('checkout-payer-firstname').textContent = this.value.trim().split(' ')[0].toLowerCase()">
+                            <div class="field-tooltip">Digite seu nome completo</div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 4px !important;">
+                            <input type="email" id="payer-email" class="form-input" placeholder="EMAIL" required inputmode="email"
+                                data-tip="Seu melhor email onde receberá o acesso ao guia.">
+                            <div class="field-tooltip">Onde você receberá o acesso</div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 4px !important;">
                             <input type="tel" id="payer-phone" class="form-input" placeholder="WHATSAPP (DDD + Número)" required
-                                data-tip="Para suporte e avisos importantes (DDD + Número).">
+                                data-tip="Para suporte e avisos importantes (DDD + Número)." inputmode="numeric" pattern="[0-9]*">
                             <div class="field-tooltip">DDD + Número</div>
                         </div>
-                        <div class="form-group">
-                            <input type="text" id="payer-cpf" class="form-input" placeholder="CPF (apenas números)" required
-                                data-tip="Necessário para emitir a nota fiscal (apenas números).">
+                        <div class="form-group" style="margin-bottom: 12px !important;">
+                            <input type="tel" id="payer-cpf" class="form-input" placeholder="CPF (apenas números)" required
+                                data-tip="Necessário para emitir a nota fiscal (apenas números)." inputmode="numeric" pattern="[0-9]*">
                             <div class="field-tooltip">Apenas números do CPF</div>
                         </div>
+                        
+                        <p style="text-align: center; margin-top: 6px; font-size: 0.68rem; color: #64748b; margin-bottom: 15px;">
+                            <i class="fa-solid fa-lock" style="color: #22c55e;"></i> Seus dados estão protegidos
+                        </p>
 
                         <div id="card-area" style="display: none; margin-top: 0.5rem; border: 1px solid #e2e8f0; padding: 0.75rem; border-radius: 0.5rem; background: #f8fafc;">
                             <div class="form-group">
@@ -1790,11 +1778,11 @@
                                 <div class="field-tooltip">Igual impresso no cartão</div>
                             </div>
                             <div class="form-group">
-                                <input type="text" id="card-cpf" class="form-input" placeholder="CPF DO TITULAR" data-tip="CPF do dono do cartão (apenas números).">
+                                <input type="tel" id="card-cpf" class="form-input" placeholder="CPF DO TITULAR" data-tip="CPF do dono do cartão (apenas números)." inputmode="numeric" pattern="[0-9]*">
                                 <div class="field-tooltip">CPF do Dono do Cartão</div>
                             </div>
                             <div class="form-group">
-                                <input type="text" id="card-cep" class="form-input" placeholder="CEP" data-tip="CEP do endereço de cobrança.">
+                                <input type="tel" id="card-cep" class="form-input" placeholder="CEP" data-tip="CEP do endereço de cobrança." inputmode="numeric" pattern="[0-9]*">
                                 <div class="field-tooltip">CEP de cobrança</div>
                             </div>
                             <div class="form-group">
@@ -1838,9 +1826,6 @@
                                     <p style="margin: 0; font-size: 0.73rem; color: #166534; font-style: italic; line-height: 1.35; padding-left: 8px; border-left: 2px solid #86efac;">"Material que salvou minha criação inteira" <strong style="font-style: normal;">— Ricardo L.</strong></p>
                                     <p style="margin: 0; font-size: 0.73rem; color: #166534; font-style: italic; line-height: 1.35; padding-left: 8px; border-left: 2px solid #86efac;">"Gastava fortuna em remédio. Descobri que tava errando no básico." <strong style="font-style: normal;">— Marcos P.</strong></p>
                                 </div>
-                                <div style="margin-top: 10px; text-align: center;">
-                                    <p style="font-family: 'Caveat', 'Comic Sans MS', cursive, sans-serif; font-size: 0.9rem; color: #14532d; margin: 0; transform: rotate(-1deg); opacity: 0.85; line-height: 1.3;">Venha se tornar um criador de verdade como eles, e pare de perder galinhas por não saber tratar.</p>
-                                </div>
                             </div>
 
                             <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
@@ -1852,9 +1837,6 @@
                             <p style="font-size: 0.7rem; color: #166534; margin-top: 0.75rem; font-weight: 600;"><i class="fa-solid fa-lock"></i> Pagamento 100% Seguro</p>
                         </div>
 
-                        <button type="button" onclick="backToStep1()" style="width: 100%; margin-top: 8px; background: none; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; color: #64748b; font-size: 0.82rem; cursor: pointer; font-weight: 600;">
-                            <i class="fa-solid fa-arrow-left"></i> Voltar para etapa anterior
-                        </button>
                     </div>
                 </form>
             </div>

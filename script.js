@@ -350,12 +350,6 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         window.activePixPoll = null;
     }
 
-    // RESET TO STEP 1
-    const step1El = document.getElementById('checkout-step-1');
-    const step2El = document.getElementById('checkout-step-2');
-    if (step1El) step1El.style.display = '';
-    if (step2El) step2El.style.display = 'none';
-
     // START RESERVATION TIMER
     startReservationTimer();
 
@@ -501,7 +495,7 @@ function renderOrderBumps(bumps) {
     `;
 
     const gridLayout = `
-        <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div class="order-bump-grid-view" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
             ${filteredBumps.map(bump => {
                 const isSelected = cart.bumps.includes(bump.id);
                 let imgSrc = bump.image;
@@ -518,46 +512,37 @@ function renderOrderBumps(bumps) {
                     : '💸 <span style="color: #fca5a5;"><strong>O maior prejuízo na criação</strong></span> está na ração comercial. <span style="color: #4ade80;"><strong>Aprenda a produzir sua própria ração balanceada</strong></span> e economize até 65% na alimentação.';
 
                 return `
-                    <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')">
+                    <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="margin-bottom: 0; min-height: 130px; padding: 0;">
                         
-                        <!-- Background Image with Darker Overlay -->
-                        ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.65;">` : ''}
+                        <!-- Background Image -->
+                        ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: ${isManejo ? 'center 20%' : 'center'}; z-index: 0; opacity: 0.85;">` : ''}
                         
-                        <!-- Gradient Overlay for Contrast -->
-                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, #0f172a 25%, rgba(15, 23, 42, 0.4) 100%); z-index: 1;"></div>
+                        <!-- Gradient Overlay -->
+                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(15, 23, 42, 0.1) 0%, rgba(15, 23, 42, 0.95) 100%); z-index: 1;"></div>
 
                         <!-- Content -->
-                        <div style="position: relative; z-index: 2; display: flex; align-items: center; padding: 8px 10px; width: 100%; gap: 8px;">
+                        <div style="position: relative; z-index: 2; display: flex; flex-direction: column; padding: 8px; width: 100%; height: 100%; justify-content: flex-end;">
                             
-                            <!-- Checkbox and Social Proof -->
-                            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                                <div class="bump-check-wrapper" style="width: 20px; height: 20px; border-radius: 6px; border: 2px solid ${isSelected ? '#10b981' : '#fbbf24'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#10b981' : 'transparent'}; transition: all 0.3s;">
-                                    ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.7rem;"></i>' : ''}
+                            <div style="position: absolute; top: 6px; right: 6px;" class="bump-check-wrapper-container">
+                                <div class="bump-check-wrapper" style="width: 18px; height: 18px; border-radius: 4px; border: 2px solid ${isSelected ? '#10b981' : '#fbbf24'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#10b981' : 'transparent'};">
+                                    ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.6rem;"></i>' : ''}
                                 </div>
-                                <input type="checkbox" id="bump-chk-${bump.id}" ${isSelected ? 'checked' : ''} style="display: none;">
                             </div>
+                            <input type="checkbox" id="bump-chk-${bump.id}" ${isSelected ? 'checked' : ''} style="display: none;">
+                            
+                            <strong class="order-bump-title" style="display: block; color: #fff; font-size: 0.72rem; line-height: 1.1; margin-bottom: 3px; font-weight: 800; padding-right: 18px;">
+                                ${title}
+                            </strong>
+                            
+                            <p class="order-bump-description" style="color: #cbd5e1; font-size: 0.62rem; line-height: 1.25; margin: 0; font-weight: 500;">
+                                ${desc}
+                            </p>
 
-                            <div style="flex: 1;">
-                                <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px; flex-wrap: wrap;">
-                                    <span class="order-bump-tag" style="background: #ef4444; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 0.55rem; font-weight: 900; text-transform: uppercase;">
-                                        ${isManejo ? '80% dos alunos levaram o manual dos pintinhos e já diminuíram as perdas.' : '95% dos alunos levaram a tabela de ração e estão economizando todo mês.'}
-                                    </span>
-                                </div>
-                                
-                                <strong class="order-bump-title" style="display: block; color: #fff; font-size: 0.85rem; line-height: 1.1; margin-bottom: 2px; font-weight: 800;">
-                                    ${title}
-                                </strong>
-                                
-                                <p class="order-bump-description" style="color: #cbd5e1; font-size: 0.7rem; line-height: 1.2; margin: 0; font-weight: 500;">
-                                    ${desc}
-                                </p>
-
-                                <div style="margin-top: 4px; display: flex; align-items: center; gap: 6px;">
-                                    <span class="order-bump-old-price" style="text-decoration: line-through; color: #94a3b8; font-size: 0.7rem;">${isManejo ? 'R$ 99,90' : 'R$ 59,90'}</span>
-                                    <span class="order-bump-price" style="color: #fbbf24; font-weight: 900; font-size: 1rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">
-                                        + ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}
-                                    </span>
-                                </div>
+                            <div style="margin-top: 4px; display: flex; align-items: baseline; gap: 4px;">
+                                <span class="order-bump-old-price" style="text-decoration: line-through; color: #94a3b8; font-size: 0.55rem;">${isManejo ? 'R$ 99' : 'R$ 59'}</span>
+                                <span class="order-bump-price" style="color: #fbbf24; font-weight: 900; font-size: 0.85rem;">
+                                    + ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}
+                                </span>
                             </div>
                         </div>
                     </div>`;
@@ -837,42 +822,7 @@ function closeCheckout() {
     }
 }
 
-// --- CHECKOUT 2-STEP NAVIGATION ---
-function goToStep2() {
-    const nameInput = document.getElementById('payer-name');
-    if (!nameInput || !nameInput.value.trim()) {
-        nameInput.classList.add('input-error');
-        nameInput.focus();
-        nameInput.placeholder = '⚠️ DIGITE SEU NOME';
-        setTimeout(() => { nameInput.classList.remove('input-error'); nameInput.placeholder = 'NOME COMPLETO'; }, 3000);
-        return;
-    }
-    nameInput.classList.remove('input-error');
-
-    // Injetar primeiro nome no banner de urgência
-    const firstName = nameInput.value.trim().split(' ')[0];
-    const nameDisplay = document.getElementById('checkout-payer-firstname');
-    if (nameDisplay) nameDisplay.textContent = firstName.toLowerCase();
-
-    const step1 = document.getElementById('checkout-step-1');
-    const step2 = document.getElementById('checkout-step-2');
-    if (step1) step1.style.display = 'none';
-    if (step2) { step2.style.display = ''; step2.style.animation = 'fadeIn 0.3s ease'; }
-
-    // Scroll modal to top
-    const modalContent = document.querySelector('#checkout-modal .modal-content');
-    if (modalContent) modalContent.scrollTop = 0;
-}
-
-function backToStep1() {
-    const step1 = document.getElementById('checkout-step-1');
-    const step2 = document.getElementById('checkout-step-2');
-    if (step2) step2.style.display = 'none';
-    if (step1) { step1.style.display = ''; step1.style.animation = 'fadeIn 0.3s ease'; }
-
-    const modalContent = document.querySelector('#checkout-modal .modal-content');
-    if (modalContent) modalContent.scrollTop = 0;
-}
+// --- CHECKOUT SINGLE STEP FUNNELS (Previous steps were merged) ---
 
 // --- RESERVATION TIMER (auto-restart) ---
 let reservationTimerInterval = null;
@@ -1871,7 +1821,22 @@ function initHelpBubbles() {
 // Global Listener for Input Effects
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.form-input').forEach(input => {
+        let idleTimer;
+        
+        input.addEventListener('focus', () => {
+            if (!input.value) {
+                idleTimer = setTimeout(() => {
+                    const tooltip = input.parentNode.querySelector('.field-tooltip');
+                    if (tooltip && !input.value) tooltip.classList.add('active');
+                }, 2000);
+            }
+        });
+
         input.addEventListener('input', () => {
+            clearTimeout(idleTimer);
+            const tooltip = input.parentNode.querySelector('.field-tooltip');
+            if (tooltip) tooltip.classList.remove('active');
+
             if (input.classList.contains('input-error') || input.classList.contains('is-invalid')) {
                 input.classList.remove('input-error', 'is-invalid');
             }
@@ -1892,6 +1857,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         input.addEventListener('blur', () => {
+            clearTimeout(idleTimer);
+            const tooltip = input.parentNode.querySelector('.field-tooltip');
+            if (tooltip) tooltip.classList.remove('active');
+
             const type = input.id.includes('email') ? 'email' :
                          (input.id.includes('phone') ? 'phone' :
                          (input.id.includes('cpf') ? 'cpf' :
