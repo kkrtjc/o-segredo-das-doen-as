@@ -408,8 +408,8 @@
         </div>
 
         <div class="whatsapp-section">
-            <a href="https://wa.me/5538999832950?text=Oi,%20acabei%20de%20comprar%20e%20gostaria%20de%20receber%20o%20material%20por%20aqui%20também."
-                target="_blank" class="btn-whatsapp" id="whatsapp-btn">
+            <a href="https://api.whatsapp.com/send?phone=5538999832950&text=Oi%2C%20acabei%20de%20comprar%20e%20gostaria%20de%20receber%20o%20material%20por%20aqui%20tamb%C3%A9m."
+                class="btn-whatsapp" id="whatsapp-btn">
                 <i class="fa-brands fa-whatsapp"></i>
                 Receber também no WhatsApp
             </a>
@@ -486,7 +486,7 @@
                         e.preventDefault();
                         const phone = "5538999832950";
                         const text = "Olá! Comprei os guias e gostaria de receber o acesso por aqui também.";
-                        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+                        window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
                     };
                 }
 

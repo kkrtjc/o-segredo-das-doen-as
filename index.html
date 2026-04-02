@@ -1651,58 +1651,37 @@
 
 
 
-                        <!-- Urgency Banner -->
-                        <div class="checkout-urgency" id="checkout-urgency-banner">
-                            <p style="margin: 0; font-size: 0.78rem; color: #fecaca; font-weight: 700; letter-spacing: 0.3px;">
-                                🔥 Reservamos uma vaga pra você <span id="checkout-payer-firstname" style="text-transform: capitalize; color: #fff;"></span> por <span id="checkout-reservation-timer" style="color: #fff; font-weight: 900; font-size: 0.95rem; font-family: monospace;">10:00</span> — oferta por tempo limitado
-                            </p>
-                        </div>
-
                         <!-- Bloco de oferta e garantia no topo do checkout -->
-                        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 1px solid #fbbf24; border-radius: 10px; padding: 10px 40px 10px 15px; margin-bottom: 12px; text-align: left;">
+                        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 1px solid #fbbf24; border-radius: 10px; padding: 8px 14px; margin-bottom: 10px; text-align: left;">
                             <p style="margin: 0; font-size: 0.75rem; color: #cbd5e1; line-height: 1.4;">
-                                <i class="fa-solid fa-shield-halved" style="color: #22c55e;"></i> <strong style="color: #fff;">Sem risco:</strong> 7 dias de garantia — não gostou, devolvemos 100% do seu dinheiro sem perguntas.
+                                <i class="fa-solid fa-shield-halved" style="color: #22c55e;"></i> <strong style="color: #fff;">Sem risco:</strong> 7 dias de garantia — não gostou, devolvemos 100% do seu dinheiro.
                             </p>
                         </div>
 
                         <div class="modal-header" style="margin-bottom: 4px;">
-                            <h3 class="modal-title" style="margin-bottom: 2px; font-size: 1.1rem;">Finalize Sua Compra</h3>
-                            <p style="font-size: 0.82rem; color: #15803d; font-weight: 700; margin-bottom: 0;">Acesso imediato ao ebook após o pagamento!</p>
+                            <h3 class="modal-title" style="margin-bottom: 2px; font-size: 1.05rem;">Finalize Sua Compra</h3>
                         </div>
 
-                        <!-- 1. Resumo do Pedido (Compacto) -->
-                        <div class="checkout-summary">
-                            <div class="summary-img-wrap">
-                                <img src="capadasdoencas.jpg" alt="Capa" class="summary-img" loading="eager" decoding="sync">
-                            </div>
-                            <div class="summary-details">
-                                <h4>Protocolo Elite: A Cura das Aves</h4>
-                                <ul class="summary-features">
-                                    <li><i class="fa-solid fa-hand" style="color:#ef4444;"></i> <strong style="color:#f1f5f9;">Pare de perder galinhas sem saber o porquê</strong></li>
-                                    <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Trate ronqueira, peito seco e +10 doenças — passo a passo</li>
-                                    <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Remédios profissionais usados em criatórios reais</li>
-                                    <li><i class="fa-solid fa-check" style="color:#10b981;"></i> Dosagens calculadas por peso e estágio da doença</li>
-                                </ul>
-                                <div style="margin-top: 4px; padding: 4px 8px; background: rgba(34,197,94,0.12); border-radius: 8px; border: 1px solid rgba(34,197,94,0.3);">
-                                    <span class="dyn-checkout-original" style="font-size: 0.7rem; color: #94a3b8; text-decoration: line-through;">R$ 149,90</span>
-                                    <span class="dyn-checkout-pix" style="font-size: 1.1rem; font-weight: 900; color: #22c55e; margin-left: 6px;">R$ 79,90 no PIX</span>
-                                    <span style="font-size: 0.65rem; color: #86efac; display: block; margin-top: 1px;">🔒 Acesso imediato após pagamento</span>
-                                    <span style="font-size: 0.7rem; color: #fbbf24; font-weight: 800; display: block; margin-top: 3px;"><i class="fa-solid fa-gift"></i> Tabela de vacinação GRATUITA inclusa.</span>
+                        <!-- Resumo do Pedido - COMPACTO e IMPACTANTE -->
+                        <div style="display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #0c1220 0%, #1a2332 100%); border: 1px solid rgba(251,191,36,0.3); border-radius: 10px; padding: 10px; margin-bottom: 8px;">
+                            <img src="capadasdoencas.jpg" alt="Capa" style="width: 55px; height: 72px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0;" loading="eager">
+                            <div style="flex: 1; min-width: 0;">
+                                <p style="margin: 0 0 3px 0; font-size: 0.82rem; font-weight: 900; color: #f1f5f9;">Protocolo Elite: A Cura das Aves</p>
+                                <p style="margin: 0 0 2px 0; font-size: 0.7rem; color: #ef4444; font-weight: 700;"><i class="fa-solid fa-skull-crossbones" style="margin-right: 3px;"></i> Sua galinha não vai esperar — trate antes que seja tarde</p>
+                                <p style="margin: 0 0 5px 0; font-size: 0.65rem; color: #94a3b8; line-height: 1.3;">O tratamento das principais doenças que mais matam galinhas no Brasil, na palma da sua mão.</p>
+                                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                                    <span class="dyn-checkout-original" style="font-size: 0.68rem; color: #64748b; text-decoration: line-through;">R$ 149,90</span>
+                                    <span class="dyn-checkout-pix" style="font-size: 1rem; font-weight: 900; color: #22c55e;">R$ 79,90 no PIX</span>
                                 </div>
+                                <span style="font-size: 0.62rem; color: #fbbf24; font-weight: 700; display: block; margin-top: 2px;"><i class="fa-solid fa-gift"></i> + Tabela de vacinação GRÁTIS</span>
                             </div>
                         </div>
+                        <!-- Hidden spans for JS compatibility -->
+                        <span id="checkout-urgency-banner" style="display:none;"></span>
+                        <span id="checkout-payer-firstname" style="display:none;"></span>
+                        <span id="checkout-reservation-timer" style="display:none;"></span>
 
-                        <!-- Trust Badges -->
-                        <div class="checkout-trust-row" style="margin: 5px 0;">
-                            <div class="checkout-trust-badge" style="background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.2); display: flex; align-items: center; justify-content: center; gap: 5px; padding: 4px;">
-                                <i class="fa-solid fa-shield-halved" style="color: #22c55e; font-size: 0.9rem;"></i>
-                                <span style="font-size: 0.6rem; font-weight: 800; color: #166534; text-transform: uppercase;">Compra Segura</span>
-                            </div>
-                            <div class="checkout-trust-badge" style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); display: flex; align-items: center; justify-content: center; gap: 5px; padding: 4px;">
-                                <i class="fa-solid fa-lock" style="color: #3b82f6; font-size: 0.9rem;"></i>
-                                <span style="font-size: 0.6rem; font-weight: 800; color: #1e40af; text-transform: uppercase;">Certificado SSL</span>
-                            </div>
-                        </div>
+
 
 
                         <div class="radio-group-top" style="margin-bottom: 6px;">
@@ -1732,6 +1711,7 @@
                         </div>
 
                         <div class="form-section-title" style="text-transform: none; font-size: 0.9rem !important; margin-top: 15px;">Complete seus dados:</div>
+                        <div id="pix-fields">
                         <div class="form-group" style="margin-bottom: 4px !important;">
                             <input type="text" id="payer-name" class="form-input" placeholder="NOME COMPLETO" required
                                 data-tip="Digite seu nome e sobrenome completo para o certificado."
@@ -1753,40 +1733,50 @@
                                 data-tip="Necessário para emitir a nota fiscal (apenas números)." inputmode="numeric" pattern="[0-9]*">
                             <div class="field-tooltip">Apenas números do CPF</div>
                         </div>
+                        </div>
                         
                         <p style="text-align: center; margin-top: 6px; font-size: 0.68rem; color: #64748b; margin-bottom: 15px;">
-                            <i class="fa-solid fa-lock" style="color: #22c55e;"></i> Seus dados estão protegidos
+                            <i class="fa-solid fa-lock" style="color: #22c55e;"></i> Seus dados estão protegidos com criptografia de ponta.
                         </p>
 
                         <div id="card-area" style="display: none; margin-top: 0.5rem; border: 1px solid #e2e8f0; padding: 0.75rem; border-radius: 0.5rem; background: #f8fafc;">
-                            <div class="form-group">
-                                <input type="text" id="card-number" class="form-input" placeholder="NÚMERO DO CARTÃO" data-tip="Os 16 números na frente do cartão.">
-                                <div class="field-tooltip">Digite os números do cartão</div>
-                            </div>
-                            <div style="display: flex; gap: 1rem;">
-                                <div class="form-group" style="flex: 1.5;">
-                                    <input type="text" id="card-expiration" class="form-input" placeholder="VALIDADE" data-tip="Mês e Ano de vencimento (Ex: 12/28).">
-                                    <div class="field-tooltip">MM/AA</div>
-                                </div>
-                                <div class="form-group" style="flex: 1;">
-                                    <input type="text" id="card-cvv" class="form-input" placeholder="CVV" data-tip="3 dígitos no verso do cartão.">
-                                    <div class="field-tooltip">3 dígitos no verso</div>
-                                </div>
-                            </div>
-                            <div class="form-group">
+                            <div class="form-group" style="margin-bottom: 4px !important;">
                                 <input type="text" id="card-holder" class="form-input" placeholder="NOME NO CARTÃO" data-tip="Nome exatamente como impresso no cartão.">
                                 <div class="field-tooltip">Igual impresso no cartão</div>
                             </div>
-                            <div class="form-group">
-                                <input type="tel" id="card-cpf" class="form-input" placeholder="CPF DO TITULAR" data-tip="CPF do dono do cartão (apenas números)." inputmode="numeric" pattern="[0-9]*">
-                                <div class="field-tooltip">CPF do Dono do Cartão</div>
+                            <div class="form-group" style="margin-bottom: 4px !important;">
+                                <input type="email" id="card-email" class="form-input" placeholder="EMAIL" required inputmode="email"
+                                    data-tip="Seu melhor email onde receberá o acesso.">
+                                <div class="field-tooltip">Onde você receberá o acesso</div>
                             </div>
-                            <div class="form-group">
-                                <input type="tel" id="card-cep" class="form-input" placeholder="CEP" data-tip="CEP do endereço de cobrança." inputmode="numeric" pattern="[0-9]*">
-                                <div class="field-tooltip">CEP de cobrança</div>
+                            <div style="display: flex; gap: 0.5rem; margin-bottom: 4px !important;">
+                                <div class="form-group" style="flex: 1; margin-bottom: 0 !important;">
+                                    <input type="tel" id="card-phone" class="form-input" placeholder="WHATSAPP" inputmode="numeric" pattern="[0-9]*"
+                                        data-tip="DDD + Número para suporte.">
+                                </div>
+                                <div class="form-group" style="flex: 1; margin-bottom: 0 !important;">
+                                    <input type="tel" id="card-cpf" class="form-input" placeholder="CPF DO TITULAR" data-tip="CPF do dono do cartão." inputmode="numeric" pattern="[0-9]*">
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <select id="installments-select" class="form-input"></select>
+                            <div class="form-group" style="margin-bottom: 4px !important;">
+                                <input type="text" id="card-number" class="form-input" placeholder="NÚMERO DO CARTÃO" data-tip="Os 16 números na frente do cartão.">
+                                <div class="field-tooltip">Digite os números do cartão</div>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem; margin-bottom: 4px !important;">
+                                <div class="form-group" style="flex: 1.5; margin-bottom: 0 !important;">
+                                    <input type="text" id="card-expiration" class="form-input" placeholder="VALIDADE (MM/AA)" data-tip="Mês e Ano de vencimento.">
+                                </div>
+                                <div class="form-group" style="flex: 1; margin-bottom: 0 !important;">
+                                    <input type="text" id="card-cvv" class="form-input" placeholder="CVV" data-tip="3 dígitos no verso.">
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <div class="form-group" style="flex: 1; margin-bottom: 0 !important;">
+                                    <input type="tel" id="card-cep" class="form-input" placeholder="CEP" data-tip="CEP de cobrança." inputmode="numeric" pattern="[0-9]*">
+                                </div>
+                                <div class="form-group" style="flex: 1.5; margin-bottom: 0 !important;">
+                                    <select id="installments-select" class="form-input"></select>
+                                </div>
                             </div>
                         </div>
 
@@ -1829,12 +1819,36 @@
                             </div>
 
                             <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
-                                <img src="https://logospng.org/download/visa/logo-visa-256.png" style="height: 24px;" alt="Visa">
-                                <img src="https://logospng.org/download/mastercard/logo-mastercard-256.png" style="height: 24px;" alt="Mastercard">
-                                <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png" style="height: 20px;" alt="Pix">
-                                <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-icone-1024.png" style="height: 24px;" alt="Mercado Pago">
+                                <img src="https://logospng.org/download/visa/logo-visa-256.png" style="height: 22px;" alt="Visa">
+                                <img src="https://logospng.org/download/mastercard/logo-mastercard-256.png" style="height: 22px;" alt="Mastercard">
+                                <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png" style="height: 18px;" alt="Pix">
+                                <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-icone-1024.png" style="height: 22px;" alt="Mercado Pago">
                             </div>
-                            <p style="font-size: 0.7rem; color: #166534; margin-top: 0.75rem; font-weight: 600;"><i class="fa-solid fa-lock"></i> Pagamento 100% Seguro</p>
+                            <div style="display: flex; justify-content: center; gap: 12px; margin-top: 8px; align-items: center;">
+                                <span style="font-size: 0.6rem; color: #166534; font-weight: 700;"><i class="fa-solid fa-lock"></i> Compra Segura</span>
+                                <span style="font-size: 0.6rem; color: #166534;">|</span>
+                                <span style="font-size: 0.6rem; color: #166534; font-weight: 700;"><i class="fa-solid fa-shield-halved"></i> SSL 256-bit</span>
+                                <span style="font-size: 0.6rem; color: #166534;">|</span>
+                                <span style="font-size: 0.6rem; color: #166534; font-weight: 700;"><i class="fa-solid fa-check-double"></i> Garantia 7 dias</span>
+                            </div>
+                            <div style="margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
+                                <div style="text-align: right; border-right: 1px solid #e2e8f0; padding-right: 15px;">
+                                    <p style="font-size: 0.6rem; color: #64748b; margin: 0; font-weight: 700;">GALOS MURA BRASIL OFICIAL</p>
+                                    <p style="font-size: 0.58rem; color: #94a3b8; margin: 2px 0 0 0;">CNPJ: 63.665.824/0001-09</p>
+                                </div>
+                                <a href="https://api.whatsapp.com/send?phone=5538999832950&text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20com%20minha%20compra" id="checkout-wpp-bubble"
+                                    style="display: flex; align-items: center; gap: 8px; background: #25d366; color: #fff; padding: 6px 12px; border-radius: 50px; text-decoration: none; box-shadow: 0 4px 10px rgba(37,211,102,0.3); font-size: 0.65rem; font-weight: 700; transition: transform 0.2s, box-shadow 0.2s;"
+                                    onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 15px rgba(37,211,102,0.4)'"
+                                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 10px rgba(37,211,102,0.3)'">
+                                    <i class="fa-brands fa-whatsapp" style="font-size: 1.1rem;"></i>
+                                    <span style="line-height: 1.2;">Precisa de ajuda?<br><span style="font-weight: 500; font-size: 0.55rem; opacity: 0.9;">Fale com um atendente</span></span>
+                                </a>
+                            </div>
+                            <div style="display: flex; justify-content: center; gap: 16px; margin-top: 8px;">
+                                <a href="https://www.instagram.com/galosmurabrasill/" target="_blank" style="color: #94a3b8; font-size: 0.95rem; transition: color 0.2s;" onmouseover="this.style.color='#E1306C'" onmouseout="this.style.color='#94a3b8'"><i class="fa-brands fa-instagram"></i></a>
+                                <a href="https://www.facebook.com/profile.php?id=61578338141942" target="_blank" style="color: #94a3b8; font-size: 0.95rem; transition: color 0.2s;" onmouseover="this.style.color='#1877F2'" onmouseout="this.style.color='#94a3b8'"><i class="fa-brands fa-facebook"></i></a>
+                                <a href="https://www.tiktok.com/@galosmurabrasil" target="_blank" style="color: #94a3b8; font-size: 0.95rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'"><i class="fa-brands fa-tiktok"></i></a>
+                            </div>
                         </div>
 
                     </div>
@@ -1952,24 +1966,26 @@
 
             <button onclick="attemptCloseCheckout()"
                 style="position: absolute; top: 0.5rem; right: 0.5rem; border: none; background: rgba(0,0,0,0.25); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; font-size: 1.5rem; z-index: 10;">&times;</button>
+
+
         </div>
     </div>
 
     <!-- Official Footer -->
-    <footer style="background: var(--zinc-950); padding: 4rem 0; border-top: 1px solid var(--slate-800); text-align: center;">
+    <footer style="background: var(--zinc-950); padding: 3rem 0; border-top: 1px solid var(--slate-800); text-align: center;">
         <div class="container">
-            <div style="margin-bottom: 1.5rem;">
-                <img src="logo.png" alt="Logo" style="height: 90px; border-radius: 12px;">
-                <h4 style="color: var(--slate-900); font-weight: 800; margin-top: 0.5rem;">PROTOCOLO ELITE</h4>
+            <div style="margin-bottom: 1.2rem;">
+                <img src="logo.png" alt="Logo" style="height: 70px; border-radius: 12px;">
+            </div>
+            <div style="display: flex; justify-content: center; gap: 22px; margin-bottom: 1.2rem;">
+                <a href="https://www.instagram.com/galosmurabrasill/" target="_blank" style="color: #6b7280; font-size: 1.3rem; transition: color 0.2s;" onmouseover="this.style.color='#E1306C'" onmouseout="this.style.color='#6b7280'"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.facebook.com/profile.php?id=61578338141942" target="_blank" style="color: #6b7280; font-size: 1.3rem; transition: color 0.2s;" onmouseover="this.style.color='#1877F2'" onmouseout="this.style.color='#6b7280'"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://www.tiktok.com/@galosmurabrasil" target="_blank" style="color: #6b7280; font-size: 1.3rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#6b7280'"><i class="fa-brands fa-tiktok"></i></a>
             </div>
             <div style="font-size: 0.8rem; color: var(--slate-400); line-height: 1.6;">
                 <p>GALOS MURA BRASIL OFICIAL</p>
                 <p>CNPJ: 63.665.824/0001-09</p>
-                <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 1.5rem;">
-                    <a href="#" style="color: #6b7280; text-decoration: underline;">Termos de Uso</a>
-                    <a href="#" style="color: #6b7280; text-decoration: underline;">Política de Privacidade</a>
-                </div>
-                <p style="margin-top: 1.5rem; font-size: 0.75rem; opacity: 0.8;">
+                <p style="margin-top: 1rem; font-size: 0.7rem; opacity: 0.7;">
                     Este site não é afiliado ao Facebook ou a qualquer entidade do Facebook. <br>
                     Depois que você sair do Facebook, a responsabilidade não é deles e sim do nosso site.
                 </p>

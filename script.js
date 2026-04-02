@@ -888,12 +888,18 @@ function switchMethod(method) {
         if (cardArea) { cardArea.style.display = 'none'; }
         if (btnPix) btnPix.style.display = 'block';
         if (btnCard) btnCard.style.display = 'none';
+        // Mostrar campos PIX
+        const pixFields = document.getElementById('pix-fields');
+        if (pixFields) pixFields.style.display = 'block';
 
     } else if (method === 'card') {
         if (pixArea) { pixArea.style.display = 'none'; }
         if (cardArea) { cardArea.style.display = 'block'; }
         if (btnPix) btnPix.style.display = 'none';
         if (btnCard) btnCard.style.display = 'block';
+        // Esconder campos PIX (cartão tem os próprios)
+        const pixFields = document.getElementById('pix-fields');
+        if (pixFields) pixFields.style.display = 'none';
     }
 
     // RECALCULATE TOTAL WHEN SWITCHING
@@ -911,8 +917,12 @@ async function handlePayment(method) {
 
     // FIX: Define commonData here to avoid undefined error
     const commonData = {
-        email: document.getElementById('payer-email').value,
-        phone: document.getElementById('payer-phone').value ? document.getElementById('payer-phone').value.replace(/\D/g, '') : ''
+        email: method === 'card' 
+            ? (document.getElementById('card-email')?.value || document.getElementById('payer-email')?.value || '')
+            : (document.getElementById('payer-email')?.value || ''),
+        phone: method === 'card'
+            ? (document.getElementById('card-phone')?.value || document.getElementById('payer-phone')?.value || '').replace(/\D/g, '')
+            : (document.getElementById('payer-phone')?.value || '').replace(/\D/g, '')
     };
 
     if (method === 'pix') {
@@ -926,7 +936,7 @@ async function handlePayment(method) {
         customer = {
             ...commonData,
             name: document.getElementById('card-holder').value,
-            cpf: (document.getElementById('payer-cpf')?.value || '').replace(/\D/g, ''),
+            cpf: (document.getElementById('card-cpf')?.value || '').replace(/\D/g, ''),
             cep: (document.getElementById('card-cep')?.value || '').replace(/\D/g, '')
         };
     }
@@ -1284,9 +1294,9 @@ function validateCheckoutInputs(method) {
     console.log('🔍 [VALIDATE] Inicando validação para:', method);
     
     const name = document.getElementById(method === 'pix' ? 'payer-name' : 'card-holder');
-    const email = document.getElementById('payer-email');
-    const phone = document.getElementById('payer-phone');
-    const cpf = document.getElementById('payer-cpf');
+    const email = document.getElementById(method === 'pix' ? 'payer-email' : 'card-email');
+    const phone = document.getElementById(method === 'pix' ? 'payer-phone' : 'card-phone');
+    const cpf = document.getElementById(method === 'pix' ? 'payer-cpf' : 'card-cpf');
 
     if (!validateField(name, 'text')) { 
         showToast('Nome incompleto', 'Por favor, informe seu nome completo para emissão da nota.'); 
@@ -1332,9 +1342,9 @@ function interceptPaymentButton(callback) {
 }
 
 async function captureAbandonedLead(extra = {}) {
-    const name = document.getElementById('payer-name')?.value?.trim();
-    const email = document.getElementById('payer-email')?.value?.trim();
-    const phone = document.getElementById('payer-phone')?.value?.trim();
+    const name = document.getElementById('payer-name')?.value?.trim() || document.getElementById('card-holder')?.value?.trim();
+    const email = document.getElementById('payer-email')?.value?.trim() || document.getElementById('card-email')?.value?.trim();
+    const phone = document.getElementById('payer-phone')?.value?.trim() || document.getElementById('card-phone')?.value?.trim();
     const productId = (cart && cart.id) || (cart && cart.mainProduct && cart.mainProduct.id) || 'unknown';
 
     // Só captura se tiver pelo menos o telefone ou e-mail preenchido
