@@ -446,7 +446,7 @@
                 });
 
                 // Compute sales and revenue from history arrays
-                const validHistory = globalHistory.filter(h => h && h.total > 0);
+                const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0) : [];
                 validHistory.forEach(sale => {
                     const saleDate = (sale.date || '').split('T')[0];
                     if(datesToKeep.includes(saleDate)) {
@@ -471,8 +471,8 @@
                 const res = await fetch('/api/abandons', { headers: { 'x-admin-password': currentPass } });
                 const data = await res.json();
                 
-                if(!data || data.length === 0) {
-                    list.innerHTML = '<div class="empty-state">Nenhum abandono capturado ainda.</div>';
+                if(!Array.isArray(data) || data.length === 0) {
+                    list.innerHTML = `<div class="empty-state">${Array.isArray(data) ? 'Nenhum abandono capturado ainda.' : 'Acesso Negado ou dados inválidos'}</div>`;
                     return;
                 }
 
@@ -480,10 +480,9 @@
 
                 let html = '';
                 data.forEach(item => {
-                    const d = item.data || {};
-                    const nome = d.name || 'Desconhecido';
-                    const email = d.email || 'Sem email';
-                    const phone = d.phone || 'Sem celular';
+                    const nome = item.name || 'Desconhecido';
+                    const email = item.email || 'Sem email';
+                    const phone = item.phone || 'Sem celular';
                     const dataObj = new Date(item.date || Date.now());
                     const dStr = dataObj.toLocaleDateString() + ' às ' + dataObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                     const cleanPhone = parsePhone(phone);
@@ -502,7 +501,7 @@
                 });
                 list.innerHTML = html;
             } catch(e) {
-                list.innerHTML = '<div class="empty-state" style="color:var(--ios-red);">Erro ao carregar dados.</div>';
+                list.innerHTML = `<div class="empty-state" style="color:var(--ios-red);">Erro: ${e.message}</div>`;
             }
         }
 
@@ -514,8 +513,13 @@
                 const res = await fetch('/api/history', { headers: { 'x-admin-password': currentPass } });
                 const data = await res.json();
                 
+                if(!Array.isArray(data)) {
+                    list.innerHTML = '<div class="empty-state">Erro: Dados inválidos recebidos.</div>';
+                    return;
+                }
+                
                 // Filly only with actual data generated
-                const sales = data.filter(h => h && h.customer);
+                const sales = data.filter(h => h && h.name);
                 
                 if(sales.length === 0) {
                     list.innerHTML = '<div class="empty-state">Nenhuma venda/PIX gerado.</div>';
@@ -526,7 +530,6 @@
 
                 let html = '';
                 sales.forEach(sale => {
-                    const c = sale.customer || {};
                     const isPix = sale.method === 'pix';
                     const methodStr = isPix ? 'PIX' : 'Cartão';
                     const methodColor = isPix ? 'var(--ios-green)' : 'var(--ios-blue)';
@@ -536,16 +539,16 @@
 
                     html += `
                     <div class="list-item">
-                        <div class="list-item-title">${c.name || 'Sem Nome'} <span style="font-size: 11px; background: ${methodColor}; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${methodStr}</span></div>
-                        <div class="list-item-sub">${c.email} • ${c.cpf}</div>
+                        <div class="list-item-title">${sale.name || 'Sem Nome'} <span style="font-size: 11px; background: ${methodColor}; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${methodStr}</span></div>
+                        <div class="list-item-sub">${sale.email || ''} • ${sale.cpf || 'Sem CPF'}</div>
                         <div class="list-item-right" style="color:var(--ios-text);">${formatBRL(sale.total)}</div>
                         <div class="list-item-sub" style="margin-top: 4px; font-size:11px;">Data: ${dStr}</div>
-                        <div class="list-item-sub" style="font-size:11px; color: var(--ios-blue);">Produtos: ${sale.items?.map(i => i.title).join(', ') || 'N/A'}</div>
+                        <div class="list-item-sub" style="font-size:11px; color: var(--ios-blue);">Produtos: ${sale.items?.join(', ') || 'N/A'}</div>
                     </div>`;
                 });
                 list.innerHTML = html;
             } catch(e) {
-                list.innerHTML = '<div class="empty-state" style="color:var(--ios-red);">Erro ao carregar dados.</div>';
+                list.innerHTML = `<div class="empty-state" style="color:var(--ios-red);">Erro: ${e.message}</div>`;
             }
         }
 
