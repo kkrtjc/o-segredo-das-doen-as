@@ -407,60 +407,64 @@
         }
 
         function renderDashboardStats() {
-            if(!globalAnalytics || !globalHistory) return;
-            
-            const filter = document.getElementById('period-filter').value;
-            let agg = { visits: 0, checkouts: 0, sales: 0, abandons: 0, revenue: 0 };
-
-            if(filter === 'all') {
-                agg.visits = globalAnalytics.totals?.uniqueVisits || 0;
-                agg.checkouts = globalAnalytics.totals?.checkoutOpens || 0;
-                agg.sales = globalAnalytics.approvedCount || 0;
-                agg.abandons = globalAnalytics.totals?.checkoutAbandons || 0;
-                agg.revenue = globalAnalytics.totalRevenue || 0;
-            } else {
-                const datesToKeep = [];
-                const now = new Date();
+            try {
+                if(!globalAnalytics || !globalHistory) return;
                 
-                if (filter === 'today') {
-                    datesToKeep.push(now.toISOString().split('T')[0]);
-                } else if (filter === 'yesterday') {
-                    const y = new Date(now);
-                    y.setDate(now.getDate() - 1);
-                    datesToKeep.push(y.toISOString().split('T')[0]);
-                } else if (filter === '7days') {
-                    for(let i=0; i<7; i++) {
-                        const d = new Date(now);
-                        d.setDate(now.getDate() - i);
-                        datesToKeep.push(d.toISOString().split('T')[0]);
+                const filter = document.getElementById('period-filter').value;
+                let agg = { visits: 0, checkouts: 0, sales: 0, abandons: 0, revenue: 0 };
+
+                if(filter === 'all') {
+                    agg.visits = globalAnalytics.totals?.uniqueVisits || 0;
+                    agg.checkouts = globalAnalytics.totals?.checkoutOpens || 0;
+                    agg.sales = globalAnalytics.approvedCount || 0;
+                    agg.abandons = globalAnalytics.totals?.checkoutAbandons || 0;
+                    agg.revenue = globalAnalytics.totalRevenue || 0;
+                } else {
+                    const datesToKeep = [];
+                    const now = new Date();
+                    
+                    if (filter === 'today') {
+                        datesToKeep.push(now.toISOString().split('T')[0]);
+                    } else if (filter === 'yesterday') {
+                        const y = new Date(now);
+                        y.setDate(now.getDate() - 1);
+                        datesToKeep.push(y.toISOString().split('T')[0]);
+                    } else if (filter === '7days') {
+                        for(let i=0; i<7; i++) {
+                            const d = new Date(now);
+                            d.setDate(now.getDate() - i);
+                            datesToKeep.push(d.toISOString().split('T')[0]);
+                        }
                     }
+
+                    const daily = globalAnalytics.daily || {};
+                    datesToKeep.forEach(dStr => {
+                        if (daily[dStr]) {
+                            agg.visits += daily[dStr].uniqueVisits || daily[dStr].pageViews || 0;
+                            agg.checkouts += daily[dStr].checkoutOpens || daily[dStr].checkoutStarts || 0;
+                            agg.abandons += daily[dStr].checkoutAbandons || 0;
+                        }
+                    });
+
+                    // Compute sales and revenue from history arrays
+                    const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0) : [];
+                    validHistory.forEach(sale => {
+                        const saleDate = (sale.date || '').split('T')[0];
+                        if(datesToKeep.includes(saleDate)) {
+                            agg.sales++;
+                            agg.revenue += (Number(sale.total) || 0);
+                        }
+                    });
                 }
 
-                const daily = globalAnalytics.daily || {};
-                datesToKeep.forEach(dStr => {
-                    if (daily[dStr]) {
-                        agg.visits += daily[dStr].uniqueVisits || daily[dStr].pageViews || 0;
-                        agg.checkouts += daily[dStr].checkoutOpens || daily[dStr].checkoutStarts || 0;
-                        agg.abandons += daily[dStr].checkoutAbandons || 0;
-                    }
-                });
-
-                // Compute sales and revenue from history arrays
-                const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0) : [];
-                validHistory.forEach(sale => {
-                    const saleDate = (sale.date || '').split('T')[0];
-                    if(datesToKeep.includes(saleDate)) {
-                        agg.sales++;
-                        agg.revenue += (Number(sale.total) || 0);
-                    }
-                });
+                document.getElementById('val-visits').textContent = agg.visits;
+                document.getElementById('val-checkouts').textContent = agg.checkouts;
+                document.getElementById('val-sales').textContent = agg.sales;
+                document.getElementById('val-abandons').textContent = agg.abandons;
+                document.getElementById('val-revenue').textContent = formatBRL(agg.revenue);
+            } catch(e) {
+                console.error("Render stats error:", e);
             }
-
-            document.getElementById('val-visits').textContent = agg.visits;
-            document.getElementById('val-checkouts').textContent = agg.checkouts;
-            document.getElementById('val-sales').textContent = agg.sales;
-            document.getElementById('val-abandons').textContent = agg.abandons;
-            document.getElementById('val-revenue').textContent = formatBRL(agg.revenue);
         }
 
         // TAB 2: ABANDONS
