@@ -561,49 +561,73 @@
             const list = document.getElementById('products-list');
             list.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i></div>';
             try {
-                const res = await fetch('https://teste-m1kq.onrender.com/api/config'); // This one has no password usually
+                const res = await fetch('https://teste-m1kq.onrender.com/api/config');
                 configDataCache = await res.json();
                 
                 const products = configDataCache.products || {};
-                const keys = Object.keys(products);
+                const bumps = configDataCache.orderBumps || {};
                 
-                if(keys.length === 0) {
+                const pKeys = Object.keys(products);
+                const bKeys = Object.keys(bumps);
+                
+                if(pKeys.length === 0 && bKeys.length === 0) {
                     list.innerHTML = '<div class="empty-state">Nenhum produto cadastrado.</div>';
                     return;
                 }
 
                 let html = '';
-                keys.forEach(k => {
-                    const p = products[k];
+                
+                pKeys.forEach(id => {
+                    const p = products[id];
                     html += `
                     <div class="list-item">
-                        <div class="list-item-title">${p.title || k}</div>
-                        <div class="list-item-sub" style="margin-bottom: 5px;">ID: ${k}</div>
-                        <div class="product-edit-row">
-                            <div class="price-input-wrapper">
-                                <span>R$</span>
-                                <input type="number" step="0.01" class="price-input" id="price_${k}" value="${p.price}">
-                            </div>
-                            <button class="save-btn" onclick="saveProductPrice('${k}')">Atualizar</button>
+                        <div class="list-item-title">${p.title}</div>
+                        <div class="list-item-sub">ID: ${id} <span style="background:var(--ios-blue);color:#fff;padding:2px 6px;border-radius:4px;font-size:10px;margin-left:5px;">Produto</span></div>
+                        <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 13px; color: var(--ios-text);">Preço (R$):</span>
+                            <input type="number" step="0.01" id="price-${id}" value="${p.price}" style="flex:1; padding: 6px; border-radius: 6px; border: 1px solid var(--ios-border); background: var(--ios-bg);">
+                            <button class="btn-small" onclick="updateLocalPrice('product', '${id}')">Salvar</button>
                         </div>
                     </div>`;
                 });
+
+                bKeys.forEach(id => {
+                    const p = bumps[id];
+                    html += `
+                    <div class="list-item">
+                        <div class="list-item-title">${p.title}</div>
+                        <div class="list-item-sub">ID: ${id} <span style="background:var(--ios-green);color:#fff;padding:2px 6px;border-radius:4px;font-size:10px;margin-left:5px;">Order Bump</span></div>
+                        <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 13px; color: var(--ios-text);">Preço (R$):</span>
+                            <input type="number" step="0.01" id="price-${id}" value="${p.price}" style="flex:1; padding: 6px; border-radius: 6px; border: 1px solid var(--ios-border); background: var(--ios-bg);">
+                            <button class="btn-small" onclick="updateLocalPrice('bump', '${id}')">Salvar</button>
+                        </div>
+                    </div>`;
+                });
+                
                 list.innerHTML = html;
             } catch(e) {
-                list.innerHTML = '<div class="empty-state" style="color:var(--ios-red);">Erro ao carregar produtos.</div>';
+                list.innerHTML = `<div class="empty-state" style="color:var(--ios-red);">Erro: ${e.message}</div>`;
             }
         }
 
-        async function saveProductPrice(id) {
-            const ip = document.getElementById('price_' + id);
-            const newVal = parseFloat(ip.value);
+        function updateLocalPrice(type, id) {
+            const el = document.getElementById(`price-${id}`);
+            if(!el) return;
+            const newVal = parseFloat(el.value);
             if(isNaN(newVal)) return alert("Preço inválido");
+            
+            if (type === 'product') {
+                configDataCache.products[id].price = newVal;
+            } else {
+                configDataCache.orderBumps[id].price = newVal;
+            }
+            saveProducts();
+        }
 
+        async function saveProducts() {
             if(!configDataCache) return;
             
-            // modify local logic
-            configDataCache.products[id].price = newVal;
-
             try {
                 const res = await fetch('https://teste-m1kq.onrender.com/api/config/update', {
                     method: 'POST',
