@@ -164,7 +164,15 @@
         
         <!-- TAB 1: METRICS -->
         <div id="tab-dashboard" class="tab-content active">
-            <h2 class="section-title">Hoje</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; margin-top: 5px;">
+                <h2 class="section-title" style="margin: 0;">Visão Geral</h2>
+                <select id="period-filter" style="padding: 6px; border-radius: 6px; border: 1px solid var(--ios-border); background: var(--ios-bg); font-size: 13px;" onchange="renderDashboardStats()">
+                    <option value="today">Hoje</option>
+                    <option value="yesterday">Ontem</option>
+                    <option value="7days">Últimos 7 Dias</option>
+                    <option value="all" selected>Tudo</option>
+                </select>
+            </div>
             <div class="metrics-grid">
                 <div class="metric-card">
                     <i class="fa-solid fa-users"></i>
@@ -278,7 +286,9 @@
     <script>
         let currentPass = localStorage.getItem('mura_admin_pass') || '';
         let currentTab = 'dashboard';
-        let configDataCache = null; // para editar produtos sem perder outros dados do db
+        let configDataCache = null; // para editar produtos
+        let globalAnalytics = null;
+        let globalHistory = null;
 
         // Init
         window.addEventListener('DOMContentLoaded', () => {
@@ -383,21 +393,74 @@
         // TAB 1: METRICS
         async function loadDashboard() {
             try {
-                const res = await fetch('/api/analytics', { headers: { 'x-admin-password': currentPass } });
-                const data = await res.json();
+                const [resA, resH] = await Promise.all([
+                    fetch('/api/analytics', { headers: { 'x-admin-password': currentPass } }),
+                    fetch('/api/history', { headers: { 'x-admin-password': currentPass } })
+                ]);
+                globalAnalytics = await resA.json();
+                globalHistory = await resH.json();
                 
-                let uniqueVisits = data.totals?.uniqueVisits || 0;
-                let chkOpens = data.totals?.checkoutAbandons || data.totals?.checkoutOpens || 0; // Se abandons estiver mapedo
-                
-                document.getElementById('val-visits').textContent = uniqueVisits;
-                document.getElementById('val-checkouts').textContent = chkOpens;
-                document.getElementById('val-sales').textContent = data.approvedCount || 0;
-                document.getElementById('val-abandons').textContent = (data.totals?.checkoutAbandons || 0);
-                document.getElementById('val-revenue').textContent = formatBRL(data.totalRevenue || 0);
-
+                renderDashboardStats();
             } catch(e) {
                 console.error("Dashboard error", e);
             }
+        }
+
+        function renderDashboardStats() {
+            if(!globalAnalytics || !globalHistory) return;
+            
+            const filter = document.getElementById('period-filter').value;
+            let agg = { visits: 0, checkouts: 0, sales: 0, abandons: 0, revenue: 0 };
+
+            if(filter === 'all') {
+                agg.visits = globalAnalytics.totals?.uniqueVisits || 0;
+                agg.checkouts = globalAnalytics.totals?.checkoutOpens || 0;
+                agg.sales = globalAnalytics.approvedCount || 0;
+                agg.abandons = globalAnalytics.totals?.checkoutAbandons || 0;
+                agg.revenue = globalAnalytics.totalRevenue || 0;
+            } else {
+                const datesToKeep = [];
+                const now = new Date();
+                
+                if (filter === 'today') {
+                    datesToKeep.push(now.toISOString().split('T')[0]);
+                } else if (filter === 'yesterday') {
+                    const y = new Date(now);
+                    y.setDate(now.getDate() - 1);
+                    datesToKeep.push(y.toISOString().split('T')[0]);
+                } else if (filter === '7days') {
+                    for(let i=0; i<7; i++) {
+                        const d = new Date(now);
+                        d.setDate(now.getDate() - i);
+                        datesToKeep.push(d.toISOString().split('T')[0]);
+                    }
+                }
+
+                const daily = globalAnalytics.daily || {};
+                datesToKeep.forEach(dStr => {
+                    if (daily[dStr]) {
+                        agg.visits += daily[dStr].uniqueVisits || daily[dStr].pageViews || 0;
+                        agg.checkouts += daily[dStr].checkoutOpens || daily[dStr].checkoutStarts || 0;
+                        agg.abandons += daily[dStr].checkoutAbandons || 0;
+                    }
+                });
+
+                // Compute sales and revenue from history arrays
+                const validHistory = globalHistory.filter(h => h && h.total > 0);
+                validHistory.forEach(sale => {
+                    const saleDate = (sale.date || '').split('T')[0];
+                    if(datesToKeep.includes(saleDate)) {
+                        agg.sales++;
+                        agg.revenue += (Number(sale.total) || 0);
+                    }
+                });
+            }
+
+            document.getElementById('val-visits').textContent = agg.visits;
+            document.getElementById('val-checkouts').textContent = agg.checkouts;
+            document.getElementById('val-sales').textContent = agg.sales;
+            document.getElementById('val-abandons').textContent = agg.abandons;
+            document.getElementById('val-revenue').textContent = formatBRL(agg.revenue);
         }
 
         // TAB 2: ABANDONS
