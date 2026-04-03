@@ -423,17 +423,24 @@
                     const datesToKeep = [];
                     const now = new Date();
                     
+                    const getLocalDate = (d) => {
+                        const year = d.getFullYear();
+                        const month = String(d.getMonth() + 1).padStart(2, '0');
+                        const day = String(d.getDate()).padStart(2, '0');
+                        return `${year}-${month}-${day}`;
+                    };
+                    
                     if (filter === 'today') {
-                        datesToKeep.push(now.toISOString().split('T')[0]);
+                        datesToKeep.push(getLocalDate(now));
                     } else if (filter === 'yesterday') {
                         const y = new Date(now);
                         y.setDate(now.getDate() - 1);
-                        datesToKeep.push(y.toISOString().split('T')[0]);
+                        datesToKeep.push(getLocalDate(y));
                     } else if (filter === '7days') {
                         for(let i=0; i<7; i++) {
                             const d = new Date(now);
                             d.setDate(now.getDate() - i);
-                            datesToKeep.push(d.toISOString().split('T')[0]);
+                            datesToKeep.push(getLocalDate(d));
                         }
                     }
 
@@ -449,8 +456,11 @@
                     // Compute sales and revenue from history arrays
                     const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0) : [];
                     validHistory.forEach(sale => {
-                        const saleDate = (sale.date || '').split('T')[0];
-                        if(datesToKeep.includes(saleDate)) {
+                        // Converte a data da venda para data local antes de comparar
+                        const saleDateObj = new Date(sale.date || Date.now());
+                        const saleLocalDate = getLocalDate(saleDateObj);
+                        
+                        if(datesToKeep.includes(saleLocalDate)) {
                             agg.sales++;
                             agg.revenue += (Number(sale.total) || 0);
                         }
