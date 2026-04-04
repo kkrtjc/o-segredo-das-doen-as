@@ -22,13 +22,13 @@ body.modal-open {
     justify-content: center !important;
     overflow-y: auto !important; /* Allow scroll if content overflows */
     overflow-x: hidden !important; /* TRAVA O BALANÇO LATERAL DA TELA INTEIRA */
-    padding: 20px 0 !important; /* Dá uma folga em cima e embaixo */
+    padding: 30px 10px !important; /* Mais respiro em cima e nos lados */
     touch-action: pan-y !important; /* Diz ao celular que SÓ é permitido deslizar pra cima ou pra baixo, não pros lados */
 }
 
 /* Modal Content: Stability and centered scaling */
 .modal-content {
-    width: 92% !important; /* Sobra nas laterais garantida */
+    width: 88% !important; /* Mais margem lateral solicitada (de 92% para 88%) */
     max-width: 450px !important;
     /* Let the content set its own height naturally */
     max-height: 90dvh !important; /* Reduzido de 92dvh para mais margem */
@@ -47,15 +47,35 @@ body.modal-open {
     touch-action: pan-y !important; /* TRAVA o interior do modal brutalmente contra arrastes laterais */
 }
 
+/* Elegant Scrollbar for the Checkout Modal */
+.modal-overlay::-webkit-scrollbar,
+.modal-content::-webkit-scrollbar {
+    width: 4px !important;
+    height: 4px !important;
+}
+.modal-overlay::-webkit-scrollbar-track,
+.modal-content::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+.modal-overlay::-webkit-scrollbar-thumb,
+.modal-content::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.15) !important;
+    border-radius: 10px !important;
+}
+.modal-overlay::-webkit-scrollbar-thumb:hover,
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
 /* Mobile specific overrides */
 @media (max-width: 768px) {
     .modal-overlay {
         align-items: center !important; /* Modal flutuante no centro ao invés de grudado no rodapé */
-        padding: 10px 0 !important;
+        padding: 35px 8px !important; /* Folga maior no topo para não cortar no iPhone/Android */
     }
 
     .modal-content {
-        width: 92% !important; /* Mantém a sobra lateral nas margens */
+        width: 88% !important; /* Redução de largura para mais respiro lateral */
         max-width: 100% !important;
         max-height: 88dvh !important;
         border-radius: 20px !important;
@@ -82,11 +102,11 @@ body.modal-open {
         object-fit: contain !important;
     }
 
-    /* QR Code Responsivo e Grande */
+    /* QR Code Responsivo e elegante (Menor para não ocupar tudo) */
     #qr-code-img {
-        max-height: 80vw !important; /* Aproveita largura da tela */
+        max-height: 55vw !important; /* Reduzido de 80vw para caber melhor na tela */
         width: 100% !important;
-        max-width: 340px !important;
+        max-width: 240px !important; /* Mais compacto e premium */
         height: auto !important;
         margin: 0 auto !important;
         display: block !important;
