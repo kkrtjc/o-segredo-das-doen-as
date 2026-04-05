@@ -231,9 +231,12 @@ function initMobileFixes() {
     window.addEventListener('resize', updateVh);
     updateVh();
 
-    document.addEventListener('touchmove', (e) => {
+        document.addEventListener('touchmove', (e) => {
+        // Se estiver rolando dentro do checkout, nunca previna!
+        if (e.target.closest('#checkout-page')) return;
+        
         if (document.body.classList.contains('modal-open')) {
-            const modal = document.querySelector('.modal-overlay');
+            const modal = document.querySelector('.modal-overlay.active');
             if (modal && !modal.contains(e.target)) {
                 e.preventDefault();
             }
@@ -244,7 +247,7 @@ function initMobileFixes() {
 // --- 2. CHECKOUT & API LOGIC ---
 
 // mp is initialized in index.html to avoid duplicate declaration errors
-const checkoutModal = document.getElementById('checkout-modal');
+const checkoutModal = document.getElementById('checkout-page');
 
 // --- TRACKING ENGINE ---
 async function trackEvent(type, isMobileManual = null, ctaId = null, details = null) {
@@ -258,7 +261,7 @@ async function trackEvent(type, isMobileManual = null, ctaId = null, details = n
         try {
             const resp = await fetch(`${API_URL}/api/track`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body, signal: AbortSignal.timeout(5000)
+                body
             });
             if (resp.ok) return;
         } catch (e) {
@@ -356,7 +359,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     // RESET PIX BUTTON AND UPSELL STATE
     const btnPix = document.getElementById('btn-pay-pix');
     if (btnPix) {
-        btnPix.innerText = 'Gerar PIX';
+        btnPix.innerText = 'Finalizar meu acesso.';
         btnPix.disabled = false;
         btnPix.style.opacity = '1';
     }
@@ -375,10 +378,10 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             title: 'Protocolo Elite: A Cura das Aves',
             price: 79.90,
             originalPrice: 149.90,
-            cover: 'capadasdoencas.jpg',
+            cover: 'capadasdoencas.webp',
             fullBumps: [
-                { id: 'ebook-manejo', title: 'Manual de Pintinhos', price: 49.90, priceCard: 49.90, image: 'capadospintinhos.jpg', description: 'Crie pintinhos fortes e saudáveis.' },
-                { id: 'bump-6361', title: 'Tabela de Ração', price: 19.90, priceCard: 19.90, image: 'tabela_racao_bump.jpg', description: 'Alimentaçao correta em todas as fases da sua criaçao. Economize na raçao e acelere o crescimento das suas aves com o balanceamento ideal.', tag: 'OFERTA ÚNICA' }
+                { id: 'ebook-manejo', title: 'Manual de Pintinhos', price: 49.90, priceCard: 49.90, image: 'capadospintinhos.webp', description: 'Crie pintinhos fortes e saudáveis.' },
+                { id: 'bump-6361', title: 'Tabela de Ração', price: 19.90, priceCard: 19.90, image: 'tabela_racao_bump.webp', description: 'Alimentaçao correta em todas as fases da sua criaçao. Economize na raçao e acelere o crescimento das suas aves com o balanceamento ideal.', tag: 'OFERTA ÚNICA' }
             ]
         },
         'combo-elite': {
@@ -387,7 +390,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             originalPrice: 169.80,
             cover: 'combo',
             fullBumps: [
-                { id: 'bump-6361', title: 'Tabela de Ração', price: 14.90, priceCard: 19.90, image: 'tabela_racao_bump.jpg', description: 'Alimentação correta em todas as fases da sua criação.', tag: 'OFERTA ÚNICA' }
+                { id: 'bump-6361', title: 'Tabela de Ração', price: 14.90, priceCard: 19.90, image: 'tabela_racao_bump.webp', description: 'Alimentação correta em todas as fases da sua criação.', tag: 'OFERTA ÚNICA' }
             ]
         }
     };
@@ -431,8 +434,8 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             if (productData.cover === 'combo') {
                 iconContainer.innerHTML = `
                     <div style="display: flex; gap: 5px; align-items: center;">
-                        <img src="capadospintinhos.jpg" alt="Manejo" style="width: 30px; height: 40px; object-fit: cover; border-radius: 4px;">
-                        <img src="capadasdoencas.jpg" alt="Doenças" style="width: 30px; height: 40px; object-fit: cover; border-radius: 4px;">
+                        <img src="capadospintinhos.webp" alt="Manejo" style="width: 30px; height: 40px; object-fit: cover; border-radius: 4px;">
+                        <img src="capadasdoencas.webp" alt="Doenças" style="width: 30px; height: 40px; object-fit: cover; border-radius: 4px;">
                     </div>`;
             } else {
                 iconContainer.innerHTML = `<img src="${productData.cover}" style="width: 50px; height: 65px; object-fit: cover; border-radius: 6px;">`;
@@ -452,7 +455,10 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         const delay = (productData && productData.fullBumps) ? 10 : 250;
         setTimeout(() => {
             if (secureOverlay) secureOverlay.classList.remove('active');
+            checkoutModal.style.display = 'block';
             checkoutModal.classList.add('active');
+            checkoutModal.scrollTop = 0;
+            // document.body.style.overflow = 'hidden'; // Fixed iOS Safari bug
             document.body.classList.add('modal-open');
         }, delay);
 
@@ -494,63 +500,65 @@ function renderOrderBumps(bumps) {
         </div>
     `;
 
-    const gridLayout = `
-        <div class="order-bump-grid-view" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            ${filteredBumps.map(bump => {
-                const isSelected = cart.bumps.includes(bump.id);
-                let imgSrc = bump.image;
-                if (!imgSrc) {
-                    if (bump.id === 'ebook-doencas' || bump.id === 'bump-doencas') imgSrc = 'capadasdoencas.jpg';
-                    else if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') imgSrc = 'capadospintinhos.jpg';
-                    else if (bump.id === 'bump-6361') imgSrc = 'tabela_racao_bump.jpg';
-                }
+    const bumpHtml = filteredBumps.map(bump => {
+        const isSelected = cart.bumps.includes(bump.id);
+        let imgSrc = bump.image || '';
+        if (!imgSrc || imgSrc.trim() === '') {
+            if (bump.id === 'ebook-doencas' || bump.id === 'bump-doencas') imgSrc = 'capadasdoencas.webp';
+            else if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') imgSrc = 'capadospintinhos.webp';
+            else if (bump.id === 'bump-6361') imgSrc = 'tabela_racao_bump.webp';
+            else if (bump.title?.includes('Pintinhos') || bump.title?.includes('Manejo')) imgSrc = 'capadospintinhos.webp';
+            else if (bump.title?.includes('Ração') || bump.title?.includes('Racao') || bump.title?.includes('Tabela')) imgSrc = 'tabela_racao_bump.webp';
+        }
 
-                const isManejo = (bump.id === 'ebook-manejo' || bump.title?.includes('Pintinhos'));
-                const title = isManejo ? 'MANUAL DE PINTINHOS' : bump.title;
-                const desc = isManejo 
-                    ? '🐣 <span style="color: #fca5a5;"><strong>90% das mortes</strong></span> em pintinhos é por manejo errado. <span style="color: #4ade80;"><strong>Garanta 95% de sobrevivência</strong></span> nos pintinhos com o manual de elite.' 
-                    : '💸 <span style="color: #fca5a5;"><strong>O maior prejuízo na criação</strong></span> está na ração comercial. <span style="color: #4ade80;"><strong>Aprenda a produzir sua própria ração balanceada</strong></span> e economize até 65% na alimentação.';
+        const isManejo = (bump.id === 'ebook-manejo' || bump.title?.includes('Pintinhos'));
+        const title = isManejo ? 'MANUAL DE PINTINHOS' : bump.title;
+        const desc = isManejo 
+            ? '🐣 <span style="color: #fca5a5;"><strong>90% das mortes</strong></span> em pintinhos é por manejo errado. <span style="color: #4ade80;"><strong>Garanta 95% de sobrevivência</strong></span> nos pintinhos com o manual de elite.' 
+            : '💸 <span style="color: #fca5a5;"><strong>O maior prejuízo na criação</strong></span> está na ração comercial. <span style="color: #4ade80;"><strong>Aprenda a produzir sua própria ração balanceada</strong></span> e economize até 65% na alimentação.';
 
-                return `
-                    <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="margin-bottom: 0; min-height: 130px; padding: 0;">
-                        
-                        <!-- Background Image -->
-                        ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: ${isManejo ? 'center 20%' : 'center'}; z-index: 0; opacity: 0.85;">` : ''}
-                        
-                        <!-- Gradient Overlay -->
-                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(15, 23, 42, 0.1) 0%, rgba(15, 23, 42, 0.95) 100%); z-index: 1;"></div>
+        return `
+            <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="margin-bottom: 0; min-height: 140px; padding: 0; position: relative; overflow: hidden; border-radius: 10px; cursor: pointer;">
+                
+                <!-- Background Image -->
+                ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: ${isManejo ? 'center 20%' : 'center'}; z-index: 0;">` : ''}
+                
+                <!-- Gradient Overlay -->
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.85) 60%); z-index: 1;"></div>
 
-                        <!-- Content -->
-                        <div style="position: relative; z-index: 2; display: flex; flex-direction: column; padding: 8px; width: 100%; height: 100%; justify-content: flex-end;">
-                            
-                            <div style="position: absolute; top: 6px; right: 6px;" class="bump-check-wrapper-container">
-                                <div class="bump-check-wrapper" style="width: 18px; height: 18px; border-radius: 4px; border: 2px solid ${isSelected ? '#10b981' : '#fbbf24'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#10b981' : 'transparent'};">
-                                    ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.6rem;"></i>' : ''}
-                                </div>
-                            </div>
-                            <input type="checkbox" id="bump-chk-${bump.id}" ${isSelected ? 'checked' : ''} style="display: none;">
-                            
-                            <strong class="order-bump-title" style="display: block; color: #fff; font-size: 0.72rem; line-height: 1.1; margin-bottom: 3px; font-weight: 800; padding-right: 18px;">
-                                ${title}
-                            </strong>
-                            
-                            <p class="order-bump-description" style="color: #cbd5e1; font-size: 0.62rem; line-height: 1.25; margin: 0; font-weight: 500;">
-                                ${desc}
-                            </p>
-
-                            <div style="margin-top: 4px; display: flex; align-items: baseline; gap: 4px;">
-                                <span class="order-bump-old-price" style="text-decoration: line-through; color: #94a3b8; font-size: 0.55rem;">${isManejo ? 'R$ 99' : 'R$ 59'}</span>
-                                <span class="order-bump-price" style="color: #fbbf24; font-weight: 900; font-size: 0.85rem;">
-                                    + ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}
-                                </span>
-                            </div>
+                <!-- Content -->
+                <div style="position: relative; z-index: 2; display: flex; flex-direction: column; padding: 8px; width: 100%; height: 100%; justify-content: flex-end; min-height: 140px;">
+                    
+                    <div style="position: absolute; top: 6px; right: 6px;" class="bump-check-wrapper-container">
+                        <div class="bump-check-wrapper" style="width: 18px; height: 18px; border-radius: 4px; border: 2px solid ${isSelected ? '#10b981' : '#fbbf24'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#10b981' : 'rgba(0,0,0,0.4)'};">
+                            ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.6rem;"></i>' : ''}
                         </div>
-                    </div>`;
-            }).join('')}
+                    </div>
+                    <input type="checkbox" id="bump-chk-${bump.id}" ${isSelected ? 'checked' : ''} style="display: none;">
+                    
+                    <strong class="order-bump-title">
+                        ${title}
+                    </strong>
+                    
+                    <p class="order-bump-description">
+                        ${desc}
+                    </p>
+
+                    <div style="margin-top: 4px; display: flex; align-items: baseline; gap: 6px; position: relative; z-index: 5;">
+                        <span class="order-bump-old-price">${isManejo ? 'R$ 99' : 'R$ 59'}</span>
+                        <span class="order-bump-price">
+                            + ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}
+                        </span>
+                    </div>
+                </div>
+            </div>`;
+    }).join('');
+
+    area.innerHTML = bumpHeader + `
+        <div class="order-bump-grid-view">
+            ${bumpHtml}
         </div>
     `;
-
-    area.innerHTML = bumpHeader + gridLayout;
 }
 
 function toggleBump(bumpId) {
@@ -631,27 +639,34 @@ function updateTotal() {
 
     const finalDisplayPrice = currentPaymentMethod === 'pix' ? total : cardTotal;
 
-    // Adiciona badge de desconto se PIX estiver selecionado e houver desconto
-    if (currentPaymentMethod === 'pix' && cardTotal > total) {
-        document.querySelectorAll('.checkout-total-display').forEach(el => {
-            if (el.parentElement) {
-                const discountBadge = document.createElement('span');
-                discountBadge.className = 'pix-discount-badge';
-                discountBadge.style.cssText = 'display: inline-block; margin-left: 8px; font-size: 0.6rem; color: #10b981; font-weight: 900; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 20px; text-transform: uppercase; vertical-align: middle;';
-                discountBadge.innerHTML = `🔥 46% DE DESCONTO NO PIX`;
-                el.parentElement.appendChild(discountBadge);
-            }
-        });
+    // Atualiza Resumo Dinâmico do Pedido (Minimalista)
+    let eliteHtml = currentPaymentMethod === 'pix' 
+        ? `<div style="display: flex; justify-content: space-between; font-weight: 500;"><span>Protocolo Elite</span><span style="text-align: right;"><span style="text-decoration: line-through; color: #9ca3af; font-size: 0.75rem; margin-right: 4px;">R$ 149,90</span> por ${formatBRL(basePrice)}<br><span style="font-size: 0.65rem; color: #10b981; font-weight: 700;">com 46% de desconto</span></span></div>`
+        : `<div style="display: flex; justify-content: space-between;"><span>Protocolo Elite</span><span>${formatBRL(cardPrice)}</span></div>`;
+        
+    let summaryHtml = eliteHtml;
+    
+    cart.bumps.forEach(id => {
+        let bump = cart.mainProduct.fullBumps?.find(b => b.id === id);
+        if (!bump && window.siteConfig) bump = window.siteConfig.products[id];
+        
+        let bumpTitle = bump?.title || 'Oferta Adicional';
+        if (id === 'ebook-doencas' || id === 'bump-doencas') bumpTitle = 'Guia de Doenças';
+        if (id === 'bump-6361') bumpTitle = 'Tabela de Ração';
+        if (id === 'ebook-manejo' || id.includes('manejo')) bumpTitle = 'Manual de Pintinhos';
+        
+        const priceForMethod = currentPaymentMethod === 'pix' ? (bump?.price || 0) : (bump?.priceCard || bump?.price || 0);
+        summaryHtml += `<div style="display: flex; justify-content: space-between; color: #16a34a; font-weight: 500;"><span>+ ${bumpTitle}</span><span>${formatBRL(priceForMethod)}</span></div>`;
+    });
+
+    const summaryEl = document.getElementById('checkout-order-summary');
+    if (summaryEl) {
+        summaryEl.innerHTML = summaryHtml;
     }
 
     document.querySelectorAll('.checkout-total-display').forEach(el => {
         el.innerText = formatBRL(finalDisplayPrice);
     });
-
-    const topPriceDisplay = document.getElementById('checkout-product-price-display');
-    if (topPriceDisplay) {
-        topPriceDisplay.innerText = formatBRL(finalDisplayPrice);
-    }
 
     updateInstallments(finalDisplayPrice);
 }
@@ -796,9 +811,13 @@ function showSkeletons(container, count = 3) {
 
 // --- GLOBALS ---
 function closeCheckout() {
-    const checkoutModal = document.getElementById('checkout-modal');
-    if (checkoutModal) checkoutModal.classList.remove('active');
-    document.body.style.overflow = '';
+    const checkoutModal = document.getElementById('checkout-page');
+    if (checkoutModal) {
+        checkoutModal.classList.remove('active');
+        checkoutModal.style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    // document.body.style.overflow = ''; // Fixed iOS Safari bug
     document.body.classList.remove('modal-open');
     sessionStorage.removeItem('mura_modal_open');
     document.documentElement.style.overflow = '';
@@ -816,7 +835,7 @@ function closeCheckout() {
     // RESET STATES ON CLOSE
     const btnPix = document.getElementById('btn-pay-pix');
     if (btnPix) {
-        btnPix.innerText = 'Gerar PIX';
+        btnPix.innerText = 'Finalizar meu acesso.';
         btnPix.disabled = false;
         btnPix.style.opacity = '1';
     }
@@ -995,6 +1014,11 @@ async function handlePayment(method) {
         const pixResult = document.getElementById('pix-result');
         pixResult.classList.remove('hidden');
         
+        // Scroll to top so QR code is visible immediately
+        const ckPage = document.getElementById('checkout-page');
+        if (ckPage) ckPage.scrollTop = 0;
+        pixResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
         // Show loader and hide content until ready
         document.getElementById('qr-loader').classList.remove('hidden');
         document.getElementById('qr-code-img').style.opacity = '0';
@@ -1016,8 +1040,7 @@ async function handlePayment(method) {
             const res = await fetch(`${API_URL}/api/checkout/pix`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ items, customer }),
-                signal: AbortSignal.timeout(20000) 
+                body: JSON.stringify({ items, customer })
             });
 
             const data = await res.json();
@@ -1386,7 +1409,7 @@ document.querySelector('.close-modal')?.addEventListener('click', async () => {
     }
 
     checkoutModal.classList.remove('active');
-    document.body.style.overflow = '';
+    // document.body.style.overflow = ''; // Fixed iOS Safari bug
     document.documentElement.style.overflow = '';
 
     // RESET BUTTONS STATE (Critical Fix)
@@ -1500,15 +1523,29 @@ function showPixResult(data, items) {
     const qrLoader = document.getElementById('qr-loader');
     const receiverInfo = document.getElementById('pix-receiver-info');
     const copyBtn = document.getElementById('btn-copy-pix');
+    
+    const nameInput = document.getElementById('payer-name');
+    if (nameInput && nameInput.value) {
+        const firstName = nameInput.value.trim().split(' ')[0];
+        const greetingEl = document.getElementById('pix-greeting');
+        if (greetingEl && firstName.length > 1) {
+            const formattedName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+            greetingEl.innerText = `Quase lá, ${formattedName}!`;
+        }
+    }
 
     qrImg.src = `data:image/png;base64,${data.qr_code_base64}`;
     document.getElementById('pix-copy-paste').value = data.qr_code;
 
+    // Fallback: Exibir UI imediatamente (evita ficar preso no "Conectando" se a imagem falhar)
+    qrLoader.classList.add('hidden');
+    qrImg.style.opacity = '1';
+    if (receiverInfo) receiverInfo.classList.remove('hidden');
+    if (copyBtn) copyBtn.style.display = 'block';
+
     qrImg.onload = () => {
-        qrLoader.classList.add('hidden');
-        qrImg.style.opacity = '1';
-        if (receiverInfo) receiverInfo.classList.remove('hidden');
-        if (copyBtn) copyBtn.style.display = 'block';
+        // Imagem carregou com sucesso
+        qrImg.style.display = 'block';
     };
 
     if (copyBtn) {
@@ -1620,13 +1657,13 @@ function showPixResult(data, items) {
 
 // --- 5. FLOATING TOASTS LOGIC ---
 const toastData = [
-    { name: 'Ricardo S.', city: 'PR', text: 'Comprei e não me arrependo, conteúdo excelente!', avatar: 'carrosel/ricardo.jpg' },
-    { name: 'Ana Costa', city: 'GO', text: 'Meus pintinhos pararam de morrer.', avatar: 'carrosel/ana.jpg' },
-    { name: 'João O.', city: 'BA', text: 'O suporte foi muito atencioso.', avatar: 'carrosel/joao_new.jpg' },
-    { name: 'Carlos M.', city: 'MG', text: 'Material super completo, valeu a pena.', avatar: 'carrosel/carlos.jpg' },
-    { name: 'Fernanda L.', city: 'SP', text: 'Recuperei meu galo favorito com o guia!', avatar: 'carrosel/fernanda.jpg' },
+    { name: 'Ricardo S.', city: 'PR', text: 'Comprei e não me arrependo, conteúdo excelente!', avatar: 'carrosel/ricardo.webp' },
+    { name: 'Ana Costa', city: 'GO', text: 'Meus pintinhos pararam de morrer.', avatar: 'carrosel/ana.webp' },
+    { name: 'João O.', city: 'BA', text: 'O suporte foi muito atencioso.', avatar: 'carrosel/joao_new.webp' },
+    { name: 'Carlos M.', city: 'MG', text: 'Material super completo, valeu a pena.', avatar: 'carrosel/carlos.webp' },
+    { name: 'Fernanda L.', city: 'SP', text: 'Recuperei meu galo favorito com o guia!', avatar: 'carrosel/fernanda.webp' },
     { name: 'Roberto J.', city: 'RS', text: 'Entrega imediata, já estou estudando.', avatar: 'https://ui-avatars.com/api/?name=Roberto+J&background=random' },
-    { name: 'Maria S.', city: 'SC', text: 'Muito bem explicado, parabéns.', avatar: 'carrosel/maria.jpg' }
+    { name: 'Maria S.', city: 'SC', text: 'Muito bem explicado, parabéns.', avatar: 'carrosel/maria.webp' }
 ];
 
 let toastInterval = null;

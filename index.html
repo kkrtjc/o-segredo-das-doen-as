@@ -2,24 +2,58 @@
 <html lang="pt-BR">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-430QD56D2K"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-      gtag('config', 'G-430QD56D2K');
+        gtag('config', 'G-430QD56D2K');
     </script>
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WVBJNXCQ');</script>
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-WVBJNXCQ');</script>
     <!-- End Google Tag Manager -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Meta Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1346740157465853');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=1346740157465853&ev=PageView&noscript=1" />
+    </noscript>
+    <!-- End Meta Pixel Code -->
+    <!-- TikTok Pixel Code -->
+    <script>
+        !function (w, d, t) {
+            w.TiktokAnalyticsObject = t; var ttq = w[t] = w[t] || []; ttq.methods = ["page", "track", "identify", "instances", "load", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie"], ttq.setAndDefer = function (t, e) { t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }; for (var i = 0; i < ttq.methods.length; i++)ttq.setAndDefer(ttq, ttq.methods[i]); ttq.instance = function (t) { for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++)ttq.setAndDefer(e, ttq.methods[n]); return e }, ttq.load = function (e, n) { var i = "https://analytics.tiktok.com/i18n/pixel/events.js"; ttq._i = ttq._i || {}, ttq._i[e] = [], ttq._i[e]._u = i, ttq._t = ttq._t || {}, ttq._t[e] = +new Date, ttq._o = ttq._o || {}, ttq._o[e] = n || {}; var o = d.createElement("script"); o.type = "text/javascript", o.async = !0, o.src = i + "?sdkid=" + e + "&lib=" + t; var a = d.getElementsByTagName("script")[0]; a.parentNode.insertBefore(o, a) };
+            ttq.load('D4VFSO3C77U98L8KBEF0');
+            ttq.page();
+        }(window, document, 'ttq');
+    </script>
+    <!-- End TikTok Pixel Code -->
     <title>PROTOCOLO ELITE: A Cura das Aves | O Segredo das Galinhas</title>
 
     <!-- Performance Optimizations -->
@@ -48,15 +82,18 @@
         .guarantee-section,
         .urgency-bar,
         .authority-section,
-        .vsl-square-section + section {
+        .vsl-square-section+section {
             content-visibility: auto;
             contain-intrinsic-size: 0 400px;
         }
 
         /* GPU-composited hover — avoids layout recalculation */
-        .btn-primary, .floating-cta-btn, .card {
+        .btn-primary,
+        .floating-cta-btn,
+        .card {
             will-change: transform;
         }
+
         /* Promoção de Elite Interstitial Re-style */
         .elite-promo-modal {
             display: none;
@@ -377,12 +414,17 @@
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
         }
     </style>
+
+    <style>
+    </style>
 </head>
+
+
 
 <body>
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WVBJNXCQ"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WVBJNXCQ" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
     <!-- Header -->
@@ -409,6 +451,7 @@
             align-items: center;
             position: relative;
         }
+
         /* Gradient masks for fading edges */
         .testimonial-marquee-wrapper::before,
         .testimonial-marquee-wrapper::after {
@@ -420,10 +463,12 @@
             z-index: 2;
             pointer-events: none;
         }
+
         .testimonial-marquee-wrapper::before {
             left: 0;
             background: linear-gradient(to right, var(--zinc-950) 0%, transparent 100%);
         }
+
         .testimonial-marquee-wrapper::after {
             right: 0;
             background: linear-gradient(to left, var(--zinc-950) 0%, transparent 100%);
@@ -438,15 +483,23 @@
             will-change: transform;
             transform: translate3d(0, 0, 0);
         }
+
         @keyframes marquee {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-50%, 0, 0); }
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(-50%, 0, 0);
+            }
         }
+
         @media (prefers-reduced-motion: reduce) {
             .testimonial-track-original {
                 animation-duration: 120s;
             }
         }
+
         /* Fix for flickering and black spots in iOS low power mode */
         .testimonial-track-original {
             background-color: var(--zinc-950);
@@ -456,182 +509,290 @@
             perspective: 1000px;
             -webkit-perspective: 1000px;
         }
+
         .testimonial-card-single {
             flex-shrink: 0;
-            width: auto; /* Allow auto width for a single row */
+            width: auto;
+            /* Allow auto width for a single row */
             max-width: none;
-            background: transparent; /* Cleaner single line look */
-            border: none; /* Removing borders to look like a fluid strip */
-            padding: 0 15px; /* Space between textual items */
+            background: transparent;
+            /* Cleaner single line look */
+            border: none;
+            /* Removing borders to look like a fluid strip */
+            padding: 0 15px;
+            /* Space between textual items */
             box-sizing: border-box;
             display: flex;
-            flex-direction: row; /* FORCE items in a single line */
+            flex-direction: row;
+            /* FORCE items in a single line */
             align-items: center;
-            white-space: nowrap; /* Prevent ANY line breaks */
-            pointer-events: auto; /* Mantém a seleção de texto/cliques apenas nos cards se necessário, mas track previne drag */
+            white-space: nowrap;
+            /* Prevent ANY line breaks */
+            pointer-events: auto;
+            /* Mantém a seleção de texto/cliques apenas nos cards se necessário, mas track previne drag */
             gap: 15px;
         }
     </style>
-    <section class="bg-white" style="padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); background: var(--zinc-950); overflow: hidden;">
+    <section class="bg-white"
+        style="padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); background: var(--zinc-950); overflow: hidden;">
         <div class="testimonial-marquee-wrapper">
-            <div class="testimonial-track-original" id="testimonials-track" style="color: var(--slate-100); font-family: var(--font-sans);">
+            <div class="testimonial-track-original" id="testimonials-track"
+                style="color: var(--slate-100); font-family: var(--font-sans);">
                 <!-- Set 1: Pre-rendered for instant visibility -->
                 <div class="testimonial-card-single" style="background: var(--zinc-950);">
-                    <div style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
-                        <img src="carrosel/ricardo.webp" alt="Ricardo Lima" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/ricardo.webp" alt="Ricardo Lima"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <div style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
                         <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Ricardo Lima</strong>
-                        <span style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Londrina - PR</span>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Londrina
+                            - PR</span>
                     </div>
                     <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
                     </div>
-                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Gastava uma fortuna em remédio e as galinhas continuavam morrendo. Descobri que tava errando no básico."</span>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Gastava uma
+                        fortuna em remédio e as galinhas continuavam morrendo. Descobri que tava errando no
+                        básico."</span>
                 </div>
                 <div class="testimonial-card-single" style="background: var(--zinc-950);">
-                    <div style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
-                        <img src="carrosel/pedro.webp" alt="Marcos Paulo" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/pedro.webp" alt="Marcos Paulo"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <div style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
                         <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Marcos Paulo</strong>
-                        <span style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Goiânia - GO</span>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Goiânia
+                            - GO</span>
                     </div>
                     <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
                     </div>
-                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Excelente material! Consegui curar 3 galos que já estavam no bico do corvo."</span>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Excelente
+                        material! Consegui curar 3 galos que já estavam no bico do corvo."</span>
                 </div>
                 <div class="testimonial-card-single" style="background: var(--zinc-950);">
-                    <div style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
-                        <img src="carrosel/isabella.jpg" alt="Isabella Lima" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/isabella.webp" alt="Isabella Lima"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <div style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
                         <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Isabella Lima</strong>
-                        <span style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Florianópolis - SC</span>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Florianópolis
+                            - SC</span>
                     </div>
                     <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
                     </div>
-                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Tinha galo com a perna torta, achei que ia morrer. O tratamento salvou e hoje ele tá perfeito."</span>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Tinha galo com
+                        a perna torta, achei que ia morrer. O tratamento salvou e hoje ele tá perfeito."</span>
                 </div>
                 <div class="testimonial-card-single" style="background: var(--zinc-950);">
-                    <div style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
-                        <img src="carrosel/juliana.jpg" alt="Juliana Freitas" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/juliana.webp" alt="Juliana Freitas"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <div style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
                         <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Juliana Freitas</strong>
-                        <span style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Rio Verde - GO</span>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Rio
+                            Verde - GO</span>
                     </div>
                     <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
                     </div>
-                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Perdi 15 aves em um mês antes de comprar. Depois que aprendi o manejo certo, zerou a mortalidade."</span>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Perdi 15 aves
+                        em um mês antes de comprar. Depois que aprendi o manejo certo, zerou a mortalidade."</span>
                 </div>
                 <div class="testimonial-card-single" style="background: var(--zinc-950);">
-                    <div style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
-                        <img src="carrosel/carlos.jpg" alt="Fernando Costa" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/carlos.webp" alt="Fernando Costa"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <div style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
                         <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Fernando Costa</strong>
-                        <span style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Uberlândia - MG</span>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Uberlândia
+                            - MG</span>
                     </div>
                     <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
                     </div>
-                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"A tabela de ração mudou meu criatório. As aves crescem mais rápido e saudáveis agora."</span>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"A tabela de
+                        ração mudou meu criatório. As aves crescem mais rápido e saudáveis agora."</span>
                 </div>
                 <div class="testimonial-card-single" style="background: var(--zinc-950);">
-                    <div style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
-                        <img src="carrosel/lucas.jpeg" alt="Roberto Assis" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/lucas.webp" alt="Roberto Assis"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <div style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
                         <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Roberto Assis</strong>
-                        <span style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Feira de Santana - BA</span>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Feira
+                            de Santana - BA</span>
                     </div>
                     <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
                     </div>
-                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Recomendo muito a todos os criadores. Informação de primeira linha sem enrolação."</span>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Recomendo
+                        muito a todos os criadores. Informação de primeira linha sem enrolação."</span>
                 </div>
                 <!-- Set 2: Clones for infinite animation -->
                 <div class="testimonial-card-single" style="background: var(--zinc-950);">
-                    <div style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
-                        <img src="carrosel/ricardo.webp" alt="Ricardo Lima" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/ricardo.webp" alt="Ricardo Lima" loading="lazy"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <div style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
                         <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Ricardo Lima</strong>
-                        <span style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Londrina - PR</span>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Londrina
+                            - PR</span>
                     </div>
                     <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
                     </div>
-                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Gastava uma fortuna em remédio e as galinhas continuavam morrendo. Descobri que tava errando no básico."</span>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Gastava uma
+                        fortuna em remédio e as galinhas continuavam morrendo. Descobri que tava errando no
+                        básico."</span>
                 </div>
                 <div class="testimonial-card-single" style="background: var(--zinc-950);">
-                    <div style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
-                        <img src="carrosel/pedro.webp" alt="Marcos Paulo" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/pedro.webp" alt="Marcos Paulo" loading="lazy"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <div style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
                         <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Marcos Paulo</strong>
-                        <span style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Goiânia - GO</span>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Goiânia
+                            - GO</span>
                     </div>
                     <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
                     </div>
-                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Excelente material! Consegui curar 3 galos que já estavam no bico do corvo."</span>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Excelente
+                        material! Consegui curar 3 galos que já estavam no bico do corvo."</span>
                 </div>
                 <div class="testimonial-card-single" style="background: var(--zinc-950);">
-                    <div style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
-                        <img src="carrosel/isabella.jpg" alt="Isabella Lima" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/isabella.webp" alt="Isabella Lima" loading="lazy"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <div style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
                         <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Isabella Lima</strong>
-                        <span style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Florianópolis - SC</span>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Florianópolis
+                            - SC</span>
                     </div>
                     <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
                     </div>
-                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Tinha galo com a perna torta, achei que ia morrer. O tratamento salvou e hoje ele tá perfeito."</span>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Tinha galo com
+                        a perna torta, achei que ia morrer. O tratamento salvou e hoje ele tá perfeito."</span>
                 </div>
                 <div class="testimonial-card-single" style="background: var(--zinc-950);">
-                    <div style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
-                        <img src="carrosel/juliana.jpg" alt="Juliana Freitas" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/juliana.webp" alt="Juliana Freitas" loading="lazy"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <div style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
                         <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Juliana Freitas</strong>
-                        <span style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Rio Verde - GO</span>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Rio
+                            Verde - GO</span>
                     </div>
                     <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
                     </div>
-                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Perdi 15 aves em um mês antes de comprar. Depois que aprendi o manejo certo, zerou a mortalidade."</span>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Perdi 15 aves
+                        em um mês antes de comprar. Depois que aprendi o manejo certo, zerou a mortalidade."</span>
                 </div>
                 <div class="testimonial-card-single" style="background: var(--zinc-950);">
-                    <div style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
-                        <img src="carrosel/carlos.jpg" alt="Fernando Costa" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/carlos.webp" alt="Fernando Costa" loading="lazy"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <div style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
                         <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Fernando Costa</strong>
-                        <span style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Uberlândia - MG</span>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Uberlândia
+                            - MG</span>
                     </div>
                     <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
                     </div>
-                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"A tabela de ração mudou meu criatório. As aves crescem mais rápido e saudáveis agora."</span>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"A tabela de
+                        ração mudou meu criatório. As aves crescem mais rápido e saudáveis agora."</span>
                 </div>
                 <div class="testimonial-card-single" style="background: var(--zinc-950);">
-                    <div style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
-                        <img src="carrosel/lucas.jpeg" alt="Roberto Assis" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/lucas.webp" alt="Roberto Assis" loading="lazy"
+                            style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <div style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
                         <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Roberto Assis</strong>
-                        <span style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Feira de Santana - BA</span>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Feira
+                            de Santana - BA</span>
                     </div>
                     <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
                     </div>
-                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Recomendo muito a todos os criadores. Informação de primeira linha sem enrolação."</span>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Recomendo
+                        muito a todos os criadores. Informação de primeira linha sem enrolação."</span>
                 </div>
             </div>
         </div>
@@ -647,11 +808,11 @@
                     <div class="avatar-stack" style="display: flex; margin-right: 15px;">
                         <div
                             style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #ddd; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                            <img src="carrosel/carlos.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="carrosel/carlos.webp" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         <div
                             style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #ccc; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                            <img src="carrosel/maria.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="carrosel/maria.webp" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                         <div
                             style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #bbb; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
@@ -663,7 +824,7 @@
                         </div>
                         <div
                             style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #999; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                            <img src="carrosel/lucas.jpeg" style="width: 100%; height: 100%; object-fit: cover;">
+                            <img src="carrosel/lucas.webp" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
                     </div>
                     <span
@@ -726,46 +887,56 @@
                         margin-top: 1.5rem;
                         margin-bottom: 0.5rem;
                     }
+
                     .authority-gallery-title {
                         font-size: 1.2rem;
                         color: #ffffff;
                         text-align: center;
                         margin-bottom: 1rem;
                         font-weight: 800;
-                        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+                        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
                     }
+
                     .authority-gallery-track {
                         display: grid;
                         grid-template-columns: repeat(3, 1fr);
-                        gap: 8px; /* Espaço bem menor entre elas */
+                        gap: 8px;
+                        /* Espaço bem menor entre elas */
                     }
+
                     .authority-gallery-item {
                         background: #0f172a;
                         border: 1px solid rgba(255, 255, 255, 0.08);
                         border-radius: 8px;
                         overflow: hidden;
-                        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+                        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
                         transition: transform 0.2s ease, box-shadow 0.2s ease;
                     }
+
                     .authority-gallery-item:hover {
                         transform: translateY(-2px);
-                        box-shadow: 0 8px 16px rgba(0,0,0,0.7);
+                        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
                     }
+
                     .authority-gallery-item img {
                         width: 100%;
-                        aspect-ratio: 1/1; /* Garante que todas sao quadradas */
+                        aspect-ratio: 1/1;
+                        /* Garante que todas sao quadradas */
                         height: auto;
-                        object-fit: contain; /* Encaixa perfeitamente pois as imagens ja foram processadas */
-                        object-position: center; 
+                        object-fit: contain;
+                        /* Encaixa perfeitamente pois as imagens ja foram processadas */
+                        object-position: center;
                         background: #020617;
                         display: block;
                     }
+
                     .image-wrapper {
                         position: relative;
                         width: 100%;
                         overflow: hidden;
                         border-bottom: 2px solid #22c55e;
                     }
+
                     .antes-depois-bar {
                         position: absolute;
                         bottom: 0;
@@ -775,7 +946,9 @@
                         justify-content: space-between;
                         pointer-events: none;
                     }
-                    .badge-antes, .badge-depois {
+
+                    .badge-antes,
+                    .badge-depois {
                         width: 50%;
                         text-align: center;
                         font-family: inherit;
@@ -783,17 +956,20 @@
                         font-weight: 900;
                         color: #ffffff;
                         padding: 4px 0;
-                        text-shadow: 0 1px 3px rgba(0,0,0,1);
+                        text-shadow: 0 1px 3px rgba(0, 0, 0, 1);
                         letter-spacing: 0.5px;
                         z-index: 10;
                     }
+
                     .badge-antes {
                         background: rgba(180, 30, 30, 0.95);
                     }
+
                     .badge-depois {
                         background: rgba(22, 130, 55, 0.95);
                         border-left: 2px solid #111;
                     }
+
                     .authority-gallery-label {
                         padding: 6px 4px;
                         text-align: center;
@@ -809,10 +985,12 @@
                         justify-content: center;
                         gap: 3px;
                     }
+
                     .authority-gallery-label i {
                         color: #22c55e;
                         font-size: 0.8rem;
                     }
+
                     .mobile-scroll-hint {
                         display: none;
                     }
@@ -829,32 +1007,37 @@
                             -ms-overflow-style: none;
                             scrollbar-width: none;
                         }
+
                         .authority-gallery-track::-webkit-scrollbar {
                             display: none;
                         }
+
                         .authority-gallery-item {
-                            width: 82%; /* Largura padrão */
+                            width: 82%;
+                            /* Largura padrão */
                             flex-shrink: 0;
                             scroll-snap-align: center;
                         }
+
                         .mobile-scroll-hint {
                             display: block;
                             text-align: center;
                             margin-top: 2px;
                             margin-bottom: 15px;
                             font-size: 0.7rem;
-                            color: rgba(255,255,255,0.6);
+                            color: rgba(255, 255, 255, 0.6);
                             font-weight: 600;
                         }
+
                         .authority-gallery-title {
                             font-size: 1.15rem;
                         }
                     }
                 </style>
-                
+
                 <div class="authority-gallery-container">
                     <h3 class="authority-gallery-title">Resultados dos tratamentos com o protocolo de elite</h3>
-                    
+
                     <div class="authority-gallery-track">
                         <!-- Card 1 -->
                         <div class="authority-gallery-item">
@@ -865,9 +1048,10 @@
                                     <span class="badge-depois">DEPOIS</span>
                                 </div>
                             </div>
-                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Coriza Infecciosa</div>
+                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Coriza
+                                Infecciosa</div>
                         </div>
-                        
+
                         <!-- Card 2 -->
                         <div class="authority-gallery-item">
                             <div class="image-wrapper">
@@ -877,21 +1061,24 @@
                                     <span class="badge-depois">DEPOIS</span>
                                 </div>
                             </div>
-                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Ronqueira / Gogo</div>
+                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Ronqueira /
+                                Gogo</div>
                         </div>
-                        
+
                         <!-- Card 3 -->
                         <div class="authority-gallery-item">
                             <div class="image-wrapper">
-                                <img src="autoridade/proc_bronquite aviaria.webp" alt="Bronquite Aviária" loading="lazy">
+                                <img src="autoridade/proc_bronquite aviaria.webp" alt="Bronquite Aviária"
+                                    loading="lazy">
                                 <div class="antes-depois-bar">
                                     <span class="badge-antes">ANTES</span>
                                     <span class="badge-depois">DEPOIS</span>
                                 </div>
                             </div>
-                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Bronquite Aviária</div>
+                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Bronquite
+                                Aviária</div>
                         </div>
-                        
+
                         <!-- Card 4 -->
                         <div class="authority-gallery-item">
                             <div class="image-wrapper">
@@ -901,19 +1088,22 @@
                                     <span class="badge-depois">DEPOIS</span>
                                 </div>
                             </div>
-                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Coccidiose</div>
+                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Coccidiose
+                            </div>
                         </div>
 
                         <!-- Card 5 -->
                         <div class="authority-gallery-item">
                             <div class="image-wrapper">
-                                <img src="autoridade/proc_Magreza extrema-peito seco.webp" alt="Magreza Extrema / Peito Seco" loading="lazy">
+                                <img src="autoridade/proc_Magreza extrema-peito seco.webp"
+                                    alt="Magreza Extrema / Peito Seco" loading="lazy">
                                 <div class="antes-depois-bar">
                                     <span class="badge-antes">ANTES</span>
                                     <span class="badge-depois">DEPOIS</span>
                                 </div>
                             </div>
-                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Peito Seco / Magreza</div>
+                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Peito Seco /
+                                Magreza</div>
                         </div>
 
                         <!-- Card 6 -->
@@ -925,10 +1115,11 @@
                                     <span class="badge-depois">DEPOIS</span>
                                 </div>
                             </div>
-                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Verminose</div>
+                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Verminose
+                            </div>
                         </div>
                     </div>
-                    
+
                     <div class="mobile-scroll-hint">
                         <i class="fa-solid fa-arrows-left-right fa-fade"></i> Arraste para o lado para ver os resultados
                     </div>
@@ -952,14 +1143,15 @@
         <div class="container">
             <div class="square-video-container">
                 <div class="square-video-wrapper">
-                    <video playsinline controls poster="video_cover_vsl.jpg">
+                    <video playsinline controls poster='video_cover_vsl.webp'>
                         <source src="venda_vsl.mp4" type="video/mp4">
                         Seu navegador não suporta vídeos.
                     </video>
                 </div>
             </div>
             <div style="text-align: center; margin-top: 1.5rem;">
-                <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary btn-large">SALVAR MINHAS GALINHAS</button>
+                <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary btn-large">SALVAR MINHAS
+                    GALINHAS</button>
             </div>
         </div>
     </section>
@@ -1003,7 +1195,8 @@
                         style="font-size: 0.75rem; color: #10b981; font-weight: 800; display: block; margin-top: 3px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 15px; display: inline-block;">🔥
                         <span class="dyn-discount-percent">46</span>% DE DESCONTO NO PIX</span>
                     <span style="font-size: 0.9rem; color: var(--slate-300); display: block; margin-top: 5px;">ou em até
-                        <strong class="dyn-installments" style="color: #fff;">4x de R$ 19,97 sem juros</strong> no cartão</span>
+                        <strong class="dyn-installments" style="color: #fff;">4x de R$ 19,97 sem juros</strong> no
+                        cartão</span>
                     <span
                         style="font-size: 0.85rem; color: var(--brand-red); font-weight: 900; display: block; margin-top: 0.5rem; text-transform: uppercase;">QUANTO
                         VALE UMA GALINHA PRA VOCE?</span>
@@ -1017,7 +1210,8 @@
     </section>
 
     <!-- Social Proof Bar -->
-    <div class="social-proof-bar" style="background: var(--slate-900) !important; border-top: 1px solid var(--slate-800); border-bottom: 1px solid var(--slate-800);">
+    <div class="social-proof-bar"
+        style="background: var(--slate-900) !important; border-top: 1px solid var(--slate-800); border-bottom: 1px solid var(--slate-800);">
         <div class="container">
             <div class="stat-grid">
                 <div class="stat-item">
@@ -1028,14 +1222,16 @@
                     </div>
                 </div>
                 <div class="stat-item">
-                    <i class="fa-solid fa-graduation-cap" style="background: rgba(225,29,72,0.1); color: var(--brand-red);"></i>
+                    <i class="fa-solid fa-graduation-cap"
+                        style="background: rgba(225,29,72,0.1); color: var(--brand-red);"></i>
                     <div class="stat-text">
                         <strong style="color: var(--white);">+1.600 Alunos</strong>
                         <span style="color: var(--slate-400);">que já salvaram suas galinhas</span>
                     </div>
                 </div>
                 <div class="stat-item">
-                    <i class="fa-solid fa-circle-check" style="background: rgba(225,29,72,0.1); color: var(--brand-red);"></i>
+                    <i class="fa-solid fa-circle-check"
+                        style="background: rgba(225,29,72,0.1); color: var(--brand-red);"></i>
                     <div class="stat-text">
                         <strong style="color: var(--white);">Método Comprovado</strong>
                         <span style="color: var(--slate-400);">resultados reais e garantidos</span>
@@ -1051,7 +1247,7 @@
     <!-- Authority Section -->
     <section class="bg-white" style="padding: 4rem 0; border-top: 1px solid var(--slate-800);">
         <div class="container authority-grid">
-            <img src="comparacao_pintinhos.jpg" alt="Comparação Pintinhos" class="authority-img">
+            <img src="comparacao_pintinhos.webp" alt="Comparação Pintinhos" class="authority-img">
             <div class="authority-content">
                 <h3>Quem Sou eu ?</h3>
                 <p>
@@ -1108,11 +1304,18 @@
     <!-- Guarantee -->
     <section class="guarantee-section" style="background: var(--zinc-950); padding: 5rem 0;">
         <div class="container text-center">
-            <i class="fa-solid fa-shield-halved shield-icon" style="color: var(--brand-red); font-size: 4rem; margin-bottom: 1.5rem;"></i>
-            <h3 style="font-size: 2.25rem; font-weight: 900; color: var(--white); margin-bottom: 1.5rem; letter-spacing: -0.5px;">Garantia Incondicional de 7 Dias</h3>
-            <p style="color: var(--slate-400); font-size: 1.125rem; max-width: 42rem; margin: 0 auto; line-height: 1.6;">Se por qualquer motivo você não ficar satisfeito com o ebook nos primeiros 7 dias, devolvemos 100% do seu
+            <i class="fa-solid fa-shield-halved shield-icon"
+                style="color: var(--brand-red); font-size: 4rem; margin-bottom: 1.5rem;"></i>
+            <h3
+                style="font-size: 2.25rem; font-weight: 900; color: var(--white); margin-bottom: 1.5rem; letter-spacing: -0.5px;">
+                Garantia Incondicional de 7 Dias</h3>
+            <p
+                style="color: var(--slate-400); font-size: 1.125rem; max-width: 42rem; margin: 0 auto; line-height: 1.6;">
+                Se por qualquer motivo você não ficar satisfeito com o ebook nos primeiros 7 dias, devolvemos 100% do
+                seu
                 dinheiro. Sem perguntas. Sem complicações.</p>
-            <p style="font-size: 0.875rem; color: var(--slate-500); margin-top: 1.5rem; opacity: 0.8;">Isso significa que você pode
+            <p style="font-size: 0.875rem; color: var(--slate-500); margin-top: 1.5rem; opacity: 0.8;">Isso significa
+                que você pode
                 testar o ebook completamente sem risco. Se não gostar, recupera seu dinheiro.</p>
         </div>
     </section>
@@ -1122,45 +1325,88 @@
         <div class="container urgency-content">
             <div class="urgency-pill"><i class="fa-solid fa-triangle-exclamation"></i> Oferta Por Tempo Limitado</div>
             <p style="font-size: 1.5rem; font-weight: 700;">⏰ Economize R$ 40 hoje — preço sobe em breve!</p>
-            <p style="font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; font-family: monospace;" id="urgency-countdown">23:59:59</p>
+            <p style="font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; font-family: monospace;"
+                id="urgency-countdown">23:59:59</p>
         </div>
     </section>
     <script>
-    (function(){
-        var key = 'urgency_end';
-        var end = localStorage.getItem(key);
-        if (!end || Date.now() > parseInt(end)) {
-            end = Date.now() + 24 * 60 * 60 * 1000;
-            localStorage.setItem(key, end);
-        }
-        function tick() {
-            var diff = Math.max(0, parseInt(end) - Date.now());
-            var h = Math.floor(diff / 3600000);
-            var m = Math.floor((diff % 3600000) / 60000);
-            var s = Math.floor((diff % 60000) / 1000);
-            var el = document.getElementById('urgency-countdown');
-            if (el) el.textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-            if (diff > 0) setTimeout(tick, 1000);
-        }
-        document.addEventListener('DOMContentLoaded', tick);
-    })();
+        (function () {
+            var key = 'urgency_end';
+            var end = localStorage.getItem(key);
+            if (!end || Date.now() > parseInt(end)) {
+                end = Date.now() + 24 * 60 * 60 * 1000;
+                localStorage.setItem(key, end);
+            }
+            function tick() {
+                var diff = Math.max(0, parseInt(end) - Date.now());
+                var h = Math.floor(diff / 3600000);
+                var m = Math.floor((diff % 3600000) / 60000);
+                var s = Math.floor((diff % 60000) / 1000);
+                var el = document.getElementById('urgency-countdown');
+                if (el) el.textContent = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+                if (diff > 0) setTimeout(tick, 1000);
+            }
+            document.addEventListener('DOMContentLoaded', tick);
+        })();
     </script>
 
     <!-- FAQ Section -->
     <section class="bg-white" style="padding: 4rem 0; border-top: 1px solid var(--slate-800);">
         <div class="container" style="max-width: 42rem;">
-            <h3 style="text-align: center; font-size: 1.875rem; font-weight: 900; color: var(--white); margin-bottom: 2.5rem; letter-spacing: -0.5px;">
+            <h3
+                style="text-align: center; font-size: 1.875rem; font-weight: 900; color: var(--white); margin-bottom: 2.5rem; letter-spacing: -0.5px;">
                 <i class="fa-solid fa-circle-question" style="color: var(--brand-red);"></i> Perguntas Frequentes
             </h3>
 
             <style>
-                .faq-item { border: 1px solid var(--slate-800); border-radius: 12px; margin-bottom: 10px; overflow: hidden; background: rgba(30,41,59,0.3); transition: 0.3s; }
-                .faq-item:hover { border-color: var(--slate-600); }
-                .faq-q { padding: 14px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 0.95rem; color: var(--white); }
-                .faq-q i { font-size: 0.75rem; color: var(--slate-400); transition: transform 0.3s; }
-                .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; padding: 0 18px; color: var(--slate-400); font-size: 0.9rem; line-height: 1.6; }
-                .faq-item.open .faq-a { max-height: 300px; padding: 0 18px 14px; }
-                .faq-item.open .faq-q i { transform: rotate(180deg); }
+                .faq-item {
+                    border: 1px solid var(--slate-800);
+                    border-radius: 12px;
+                    margin-bottom: 10px;
+                    overflow: hidden;
+                    background: rgba(30, 41, 59, 0.3);
+                    transition: 0.3s;
+                }
+
+                .faq-item:hover {
+                    border-color: var(--slate-600);
+                }
+
+                .faq-q {
+                    padding: 14px 18px;
+                    cursor: pointer;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-weight: 700;
+                    font-size: 0.95rem;
+                    color: var(--white);
+                }
+
+                .faq-q i {
+                    font-size: 0.75rem;
+                    color: var(--slate-400);
+                    transition: transform 0.3s;
+                }
+
+                .faq-a {
+                    max-height: 0;
+                    overflow: hidden;
+                    transition: max-height 0.4s ease, padding 0.3s ease;
+                    padding: 0 18px;
+                    color: var(--slate-400);
+                    font-size: 0.9rem;
+                    line-height: 1.6;
+                }
+
+                .faq-item.open .faq-a {
+                    max-height: 300px;
+                    padding: 0 18px 14px;
+                }
+
+                .faq-item.open .faq-q i {
+                    transform: rotate(180deg);
+                }
             </style>
 
             <div class="faq-item">
@@ -1168,7 +1414,8 @@
                     Recebo o ebook na hora?
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
-                <div class="faq-a">Sim! Após a confirmação do pagamento (PIX é instantâneo), você recebe o acesso direto no seu e-mail em poucos segundos.</div>
+                <div class="faq-a">Sim! Após a confirmação do pagamento (PIX é instantâneo), você recebe o acesso direto
+                    no seu e-mail em poucos segundos.</div>
             </div>
 
             <div class="faq-item">
@@ -1176,7 +1423,8 @@
                     Funciona para qualquer tipo de galinha?
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
-                <div class="faq-a">Sim. O protocolo cobre doenças que afetam galinhas caipiras, de granja, ornamentais, e outras aves domésticas. Os tratamentos são universais.</div>
+                <div class="faq-a">Sim. O protocolo cobre doenças que afetam galinhas caipiras, de granja, ornamentais,
+                    e outras aves domésticas. Os tratamentos são universais.</div>
             </div>
 
             <div class="faq-item">
@@ -1184,7 +1432,8 @@
                     Preciso ter experiência para usar?
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
-                <div class="faq-a">Não. O guia foi feito para criadores iniciantes e avançados. Tudo é explicado passo a passo, com linguagem simples e direta.</div>
+                <div class="faq-a">Não. O guia foi feito para criadores iniciantes e avançados. Tudo é explicado passo a
+                    passo, com linguagem simples e direta.</div>
             </div>
 
             <div class="faq-item">
@@ -1192,7 +1441,8 @@
                     E se eu não gostar?
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
-                <div class="faq-a">Você tem 7 dias de garantia incondicional. Se por qualquer motivo não ficar satisfeito, devolvemos 100% do seu dinheiro sem perguntas.</div>
+                <div class="faq-a">Você tem 7 dias de garantia incondicional. Se por qualquer motivo não ficar
+                    satisfeito, devolvemos 100% do seu dinheiro sem perguntas.</div>
             </div>
 
             <div class="faq-item">
@@ -1200,7 +1450,8 @@
                     O pagamento é seguro?
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
-                <div class="faq-a">Totalmente. O pagamento é processado pelo Mercado Pago, uma das maiores plataformas de pagamento do Brasil, com criptografia de ponta.</div>
+                <div class="faq-a">Totalmente. O pagamento é processado pelo Mercado Pago, uma das maiores plataformas
+                    de pagamento do Brasil, com criptografia de ponta.</div>
             </div>
 
             <div class="faq-item">
@@ -1208,7 +1459,8 @@
                     Onde encontro os remédios indicados?
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
-                <div class="faq-a">Todos os medicamentos indicados são encontrados facilmente em agro-petárias ou lojas online. O guia indica nomes comerciais e genéricos.</div>
+                <div class="faq-a">Todos os medicamentos indicados são encontrados facilmente em agro-petárias ou lojas
+                    online. O guia indica nomes comerciais e genéricos.</div>
             </div>
         </div>
     </section>
@@ -1218,7 +1470,8 @@
         <div class="container text-center">
             <h3 style="font-size: 1.875rem; font-weight: 700; color: var(--white); margin-bottom: 1rem;">Pronto Para
                 Começar?</h3>
-            <p style="font-size: 1.125rem; color: var(--slate-300); margin-bottom: 2rem;">Acesse o ebook agora e comece a
+            <p style="font-size: 1.125rem; color: var(--slate-300); margin-bottom: 2rem;">Acesse o ebook agora e comece
+                a
                 economizar com suas aves ainda hoje.</p>
             <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary btn-large">SALVAR MINHAS GALINHAS
                 AGORA</button>
@@ -1227,771 +1480,1288 @@
         </div>
     </section>
 
-    <!-- Checkout Modal (Restored White Design) -->
-    <div id="checkout-modal" class="modal-overlay">
-        <div class="modal-content" style="background-color: #fdfbf7 !important; width: 88%; max-width: 375px !important; margin: 0 auto; padding: 15px !important;">
-            <div id="checkout-main-view" style="position: relative;">
+
+    <!-- ============================================ -->
+    <!-- CHECKOUT INLINE (Substituiu o modal antigo) -->
+    <!-- ============================================ -->
+    <div id="checkout-page" style="display: none;">
+        <style>
+            /* === CHECKOUT PAGE - FULLSCREEN OVERLAY === */
+            #checkout-page {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #f5f5f0;
+                color: #1f2937;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                line-height: 1.5;
+                z-index: 10000;
+                overflow-y: auto;
+                overflow-x: hidden;
+                overscroll-behavior-y: contain;
+                padding-bottom: 50px;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            #checkout-page * {
+                box-sizing: border-box;
+            }
+
+            /* Header do Checkout */
+            .ck-header {
+                background: #0f172a;
+                padding: 12px 0;
+                position: sticky;
+                top: 0;
+                z-index: 200;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+
+            .ck-header-container {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 0 16px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .ck-logo {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 700;
+                font-size: 16px;
+                letter-spacing: -0.5px;
+                color: #fff;
+            }
+
+            .ck-logo-elite {
+                color: #fbbf24;
+            }
+
+            .ck-security-badge {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                color: #22c55e;
+                font-weight: 600;
+                font-size: 12px;
+            }
+
+            .ck-back-btn {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                color: #94a3b8;
+                font-size: 13px;
+                cursor: pointer;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 6px 12px;
+                border-radius: 6px;
+                font-family: inherit;
+                transition: all 0.3s ease;
+            }
+
+            .ck-back-btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: #fff;
+            }
+
+            /* Timer de Urgencia */
+            .ck-urgency-banner {
+                text-align: center;
+                padding: 10px 16px;
+                background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d);
+                animation: ckPulse 3s infinite;
+            }
+
+            .ck-timer-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                color: #fff;
+                font-size: 14px;
+                font-weight: 700;
+            }
+
+            @keyframes ckPulse {
+
+                0%,
+                100% {
+                    opacity: 1;
+                }
+
+                50% {
+                    opacity: 0.85;
+                }
+            }
+
+            /* Main Container */
+            .ck-main {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 16px;
+            }
+
+            /* Grid Layout */
+            .ck-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            @media (min-width: 768px) {
+                .ck-grid {
+                    grid-template-columns: 7fr 5fr;
+                    gap: 24px;
+                }
+            }
+
+            /* Secoes */
+            .ck-section {
+                background-color: #ffffff;
+                border-radius: 12px;
+                padding: 12px;
+                border: 1px solid #e5e7eb;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            }
+
+            @media (min-width: 768px) {
+                .ck-section {
+                    padding: 24px;
+                }
+            }
+
+            .ck-section-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 16px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid #f3f4f6;
+            }
+
+            .ck-section-number {
+                background: linear-gradient(135deg, #dc2626, #991b1b);
+                color: #ffffff;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                font-size: 14px;
+                flex-shrink: 0;
+            }
+
+            .ck-section-title {
+                font-size: 16px;
+                font-weight: 700;
+                color: #1f2937;
+                margin: 0;
+            }
+
+            @media (min-width: 768px) {
+                .ck-section-title {
+                    font-size: 18px;
+                }
+            }
+
+            /* Formulario */
+            #checkout-page .ck-form-group {
+                margin-bottom: 8px;
+            }
+
+            #checkout-page .ck-form-group label {
+                display: block;
+                font-size: 12px;
+                font-weight: 700;
+                color: #374151;
+                margin-bottom: 4px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            #checkout-page .form-input,
+            #checkout-page .ck-input {
+                width: 100% !important;
+                padding: 12px 14px !important;
+                border: 1.5px solid #d1d5db !important;
+                border-radius: 8px !important;
+                font-size: 16px !important;
+                font-family: inherit !important;
+                background: #ffffff !important;
+                color: #1f2937 !important;
+                height: auto !important;
+                -webkit-appearance: none !important;
+                -moz-appearance: none !important;
+                appearance: none !important;
+            }
+
+            #checkout-page .form-input:focus,
+            #checkout-page .ck-input:focus {
+                outline: none;
+                border-color: #dc2626 !important;
+                box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+            }
+
+            #checkout-page .form-input::placeholder,
+            #checkout-page .ck-input::placeholder {
+                color: #9ca3af !important;
+                font-size: 14px !important;
+            }
+
+            #checkout-page .ck-form-row {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 10px;
+            }
+
+            @media (min-width: 768px) {
+                #checkout-page .ck-form-row {
+                    grid-template-columns: 1fr 1fr !important;
+                }
+            }
+
+            #checkout-page .order-bump-grid-view {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+            }
+
+            @media (min-width: 480px) {
+                #checkout-page .order-bump-grid-view {
+                    display: grid !important;
+                    grid-template-columns: 1fr 1fr !important;
+                    gap: 8px !important;
+                }
+            }
+
+            /* Abas de Pagamento */
+            #checkout-page .radio-item {
+                flex: 1;
+                padding: 14px 10px !important;
+                font-weight: 700;
+                text-align: center;
+                background: #ffffff !important;
+                border: 2px solid #e5e7eb !important;
+                cursor: pointer;
+                color: #9ca3af !important;
+                font-size: 14px;
+                transition: all 0.2s ease;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center;
+                gap: 8px;
+                border-radius: 10px !important;
+                height: auto !important;
+            }
+
+            #checkout-page .radio-item.selected {
+                color: #dc2626 !important;
+                border-color: #dc2626 !important;
+                background: #fef2f2 !important;
+            }
+
+            #checkout-page .radio-title {
+                color: inherit !important;
+                font-weight: 800;
+                font-size: 15px;
+            }
+
+            #checkout-page .radio-desc {
+                font-size: 11px;
+                color: #6b7280 !important;
+            }
+
+            /* Order Bump - CLEAN MOBILE DESIGN */
+            #checkout-page #order-bump-area {
+                margin-top: 16px;
+            }
+
+            #checkout-page .order-bump-container {
+                position: relative;
+                overflow: hidden;
+                border: 2px solid #fbbf24 !important;
+                border-radius: 12px;
+                cursor: pointer;
+                min-height: auto !important;
+                margin-bottom: 10px;
+                background: #fffbeb !important;
+                box-shadow: none !important;
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: stretch !important;
+                padding: 0 !important;
+            }
+
+            #checkout-page .order-bump-container.selected {
+                border-color: #22c55e !important;
+                background: #000 !important; /* Base black under image */
+                box-shadow: 0 0 15px rgba(34, 197, 94, 0.4) !important;
+                border-width: 3px !important;
+            }
+
+            #checkout-page .order-bump-container:not(.selected) {
+                animation: none !important;
+            }
+
+            /* MOSTRAR imagens dos bumps no mobile com layout otimizado */
+            #checkout-page .order-bump-container img {
+                display: block !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+                z-index: 0 !important;
+                pointer-events: none !important;
+            }
+
+            /* MOSTRAR gradient overlay dos bumps para legibilidade */
+            #checkout-page .order-bump-container div[style*="linear-gradient"] {
+                display: block !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                z-index: 1 !important;
+                background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 90%) !important;
+                pointer-events: none !important;
+            }
+
+            /* Forcar layout limpo dos bumps */
+            #checkout-page .order-bump-container>div[style*="z-index: 2"] {
+                position: relative !important;
+                z-index: 1 !important;
+                padding: 12px !important;
+                width: 100% !important;
+                height: auto !important;
+                justify-content: flex-start !important;
+                background: transparent !important;
+            }
+
+            /* CORES E TIPOGRAFIA DOS ORDER BUMPS - FORCA ALTO CONTRASTE */
+            #checkout-page .order-bump-container .order-bump-title,
+            #checkout-page .order-bump-title {
+                color: #fbbf24 !important; /* Gold */
+                font-size: 0.95rem !important;
+                font-weight: 900 !important;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.9) !important;
+                line-height: 1.1 !important;
+                margin-bottom: 4px !important;
+                display: block !important;
+            }
+
+            #checkout-page .order-bump-container .order-bump-description,
+            #checkout-page .order-bump-description,
+            #checkout-page .order-bump-description span,
+            #checkout-page .order-bump-description strong {
+                color: #ffffff !important; /* White */
+                font-size: 0.75rem !important;
+                line-height: 1.3 !important;
+                text-shadow: 0 1px 3px rgba(0,0,0,0.9) !important;
+            }
+
+            #checkout-page .order-bump-container .order-bump-price,
+            #checkout-page .order-bump-price {
+                color: #fbbf24 !important; /* Gold */
+                font-size: 1.1rem !important;
+                font-weight: 900 !important;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.9) !important;
+            }
+
+            #checkout-page .order-bump-container .order-bump-old-price {
+                color: #d1d5db !important;
+                text-decoration: line-through !important;
+                font-size: 0.7rem !important;
+                opacity: 0.8 !important;
+            }
+
+            #checkout-page .bump-check-wrapper {
+                border-color: #fbbf24 !important;
+            }
+
+            #checkout-page .order-bump-container.selected .bump-check-wrapper {
+                background: #22c55e !important;
+                border-color: #22c55e !important;
+            }
+
+            /* GRID dos bumps - lado a lado no checkout puro */
+            #checkout-page .order-bump-grid-view {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+            }
+
+            @media (min-width: 480px) {
+                #checkout-page .order-bump-grid-view {
+                    display: grid !important;
+                    grid-template-columns: 1fr 1fr !important;
+                    gap: 8px !important;
+                }
+            }
+
+            /* Botao Principal */
+            .ck-btn-checkout {
+                width: 100%;
+                padding: 16px;
+                border-radius: 12px;
+                background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+                color: #ffffff;
+                font-weight: 800;
+                font-size: 16px;
+                border: none;
+                cursor: pointer;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                transition: all 0.2s ease;
+                box-shadow: 0 4px 15px rgba(22, 197, 94, 0.3);
+                margin-bottom: 12px;
+                font-family: inherit;
+            }
+
+            .ck-btn-checkout:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 6px 20px rgba(22, 197, 94, 0.4);
+            }
+
+            .ck-btn-checkout:active {
+                transform: translateY(0);
+            }
+
+            /* Resumo do Pedido (Sidebar) */
+            .ck-order-summary {
+                position: static;
+            }
+
+            @media (min-width: 768px) {
+                .ck-order-summary {
+                    position: sticky;
+                    top: 70px;
+                }
+            }
+
+            .ck-product-card {
+                display: flex;
+                gap: 12px;
+                margin-bottom: 16px;
+                padding-bottom: 16px;
+                border-bottom: 1px solid #f3f4f6;
+            }
+
+            .ck-product-image {
+                width: 65px;
+                height: 82px;
+                border-radius: 8px;
+                border: 1px solid #e5e7eb;
+                flex-shrink: 0;
+                overflow: hidden;
+            }
+
+            .ck-product-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .ck-product-info h3 {
+                font-size: 13px;
+                font-weight: 700;
+                margin: 0 0 2px 0;
+                line-height: 1.3;
+                color: #1f2937;
+            }
+
+            .ck-product-info p {
+                font-size: 11px;
+                color: #6b7280;
+                margin: 0 0 6px 0;
+            }
+
+            .ck-price-original {
+                text-decoration: line-through;
+                color: #9ca3af;
+                font-size: 12px;
+            }
+
+            .ck-price-current {
+                color: #dc2626;
+                font-weight: 800;
+                font-size: 16px;
+            }
+
+            /* Resumo de Precos */
+            .ck-price-breakdown {
+                font-size: 13px;
+                border-top: 1px solid #f3f4f6;
+                padding-top: 12px;
+            }
+
+            .ck-price-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+                color: #6b7280;
+            }
+
+            .ck-price-row.discount {
+                color: #16a34a;
+                font-weight: 600;
+            }
+
+            .ck-price-row.total {
+                font-size: 18px;
+                font-weight: 800;
+                color: #1f2937;
+                border-top: 2px solid #f3f4f6;
+                padding-top: 10px;
+                margin-top: 8px;
+            }
+
+            /* Garantia */
+            .ck-guarantee-box {
+                background: #f0fdf4;
+                border: 1px solid #bbf7d0;
+                border-radius: 10px;
+                padding: 12px;
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                margin-top: 20px;
+            }
+
+            .ck-guarantee-icon {
+                font-size: 24px;
+                flex-shrink: 0;
+            }
+
+            .ck-guarantee-content p:first-child {
+                font-size: 12px;
+                font-weight: 800;
+                color: #166534;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin: 0 0 2px 0;
+            }
+
+            .ck-guarantee-content p:last-child {
+                font-size: 11px;
+                color: #15803d;
+                margin: 0;
+                line-height: 1.4;
+            }
+
+            /* Prova Social */
+            .ck-social-proof {
+                margin-top: 20px;
+            }
+
+            .ck-proof-label {
+                font-size: 11px;
+                font-weight: 700;
+                color: #9ca3af;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+
+            .ck-testimonial-box {
+                background: #f9fafb;
+                padding: 12px;
+                border-radius: 8px;
+                font-size: 12px;
+                color: #4b5563;
+                font-style: italic;
+                margin-bottom: 8px;
+                border-left: 3px solid #22c55e;
+                line-height: 1.4;
+            }
+
+            .ck-testimonial-author {
+                margin-top: 6px;
+                font-weight: 700;
+                color: #1f2937;
+                font-style: normal;
+                font-size: 11px;
+            }
+
+            .ck-stars {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 2px;
+                margin-top: 10px;
+                font-size: 14px;
+            }
+
+            .ck-star {
+                color: #fbbf24;
+            }
+
+            .ck-rating-text {
+                color: #6b7280;
+                font-weight: 700;
+                margin-left: 6px;
+                font-size: 12px;
+            }
+
+            /* Footer Checkout */
+            .ck-footer {
+                background: #0f172a;
+                padding: 20px 16px;
+                text-align: center;
+                margin-top: 20px;
+            }
+
+            .ck-footer p {
+                font-size: 12px;
+                color: #64748b;
+                margin: 0 0 4px 0;
+            }
+
+            /* Error styles */
+            #checkout-page .form-input.input-error,
+            #checkout-page .form-input.is-invalid {
+                border-color: #ef4444 !important;
+                background-color: #fef2f2 !important;
+            }
+
+            #checkout-page .form-input.input-success,
+            #checkout-page .form-input.is-valid {
+                border-color: #22c55e !important;
+                background-color: #f0fdf4 !important;
+            }
+
+            #checkout-page .error-message {
+                color: #ef4444;
+                font-size: 0.7rem;
+                font-weight: 700;
+                margin-top: 3px;
+                display: block;
+            }
+
+            /* PIX Result inside checkout page */
+            #checkout-page #pix-result {
+                max-width: 500px;
+                margin: 1rem auto;
+                padding: 1.5rem 1rem;
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+
+            #checkout-page #payment-pending-view {
+                max-width: 500px;
+                margin: 1rem auto;
+                padding: 1.5rem 1rem;
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+
+            #checkout-page .hidden {
+                display: none !important;
+            }
+
+            /* Card area */
+            #checkout-page #card-area {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                padding: 12px;
+                border-radius: 10px;
+                margin-top: 12px;
+            }
+
+            /* WhatsApp link */
+            #checkout-page .ck-wpp-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: #25d366;
+                color: #fff;
+                padding: 8px 14px;
+                border-radius: 50px;
+                text-decoration: none;
+                font-size: 0.75rem;
+                font-weight: 700;
+            }
+
+            /* Tooltip */
+            #checkout-page .field-tooltip {
+                display: none;
+            }
+
+            #checkout-page .form-group {
+                position: relative;
+                margin-bottom: 12px;
+            }
+
+            /* Price summary */
+            #checkout-page .price-summary-box {
+                background: #f9fafb !important;
+                border: 1px dashed #d1d5db !important;
+                padding: 12px;
+                border-radius: 10px;
+                margin-bottom: 12px;
+            }
+
+            #checkout-page .price-summary-box span {
+                color: #1f2937 !important;
+            }
+
+            #checkout-page .pix-discount-badge {
+                color: #16a34a !important;
+                background: rgba(22, 163, 74, 0.1) !important;
+            }
+
+            /* Mobile scroll fix */
+            @media (max-width: 767px) {
+                #checkout-page {
+                    padding-bottom: 0;
+                }
+
+                .ck-main {
+                    padding: 12px;
+                }
+
+                .ck-section {
+                    padding: 14px;
+                    border-radius: 10px;
+                }
+            }
+
+            /* MOBILE CHECKOUT LINEAR FULL-WIDTH OVERRIDES */
+            @media (max-width: 768px) {
+                #checkout-page .ck-form-row {
+                    grid-template-columns: 1fr !important;
+                }
+
+                /* FORCE ORDER BUMPS TO BE SIDE-BY-SIDE ON MOBILE */
+                #checkout-page .order-bump-grid-view {
+                    display: grid !important;
+                    grid-template-columns: 1fr 1fr !important;
+                    gap: 10px !important;
+                }
+
+                #checkout-page .order-bump-grid-view .order-bump-title {
+                    font-size: 0.7rem !important;
+                    line-height: 1.1 !important;
+                }
+
+                #checkout-page .order-bump-grid-view .order-bump-description {
+                    font-size: 0.55rem !important;
+                    line-height: 1.2 !important;
+                    margin: 4px 0 !important;
+                }
+
+                #checkout-page .order-bump-grid-view .order-bump-price {
+                    font-size: 0.7rem !important;
+                }
+
+                #checkout-page .order-bump-grid-view .order-bump-old-price {
+                    font-size: 0.55rem !important;
+                }
+
+                /* PROVA SOCIAL VERTICAL E CENTRALIZADA */
+                .ck-social-proof-mobile-stack {
+                    flex-direction: column !important;
+                    text-align: center !important;
+                    padding: 20px 15px !important;
+                    gap: 12px !important;
+                }
+
+                .ck-social-proof-mobile-stack .avatar-stack {
+                    margin-right: 0 !important;
+                    justify-content: center !important;
+                    width: 100% !important;
+                }
+
+                .ck-social-proof-mobile-stack div[style*="padding-left: 15px"] {
+                    padding-left: 0 !important;
+                    margin-top: 5px !important;
+                }
+
+                /* AJUSTE GERAL DE SECOES */
+                .ck-section {
+                    padding: 12px !important;
+                }
+            }
+        </style>
+
+        <!-- Checkout Header -->
+        <div class="ck-header">
+            <div class="ck-header-container">
+                <button class="ck-back-btn" onclick="attemptCloseCheckout()">
+                    &#8592; Voltar
+                </button>
+                <div class="ck-logo">
+                    <span style="font-size: 24px;">&#x1F414;</span>
+                    <span>PROTOCOLO <span class="ck-logo-elite">ELITE</span></span>
+                </div>
+                <div class="ck-security-badge">
+                    <span>&#x1F512;</span>
+                    <span>Ambiente 100% Seguro</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="ck-main">
+            <!-- Timer de Urgencia -->
+            <div class="ck-urgency-banner" style="display: flex; flex-direction: column; align-items: center;">
+                <div class="ck-timer-badge">
+                    <span>&#x23F0;</span>
+                    <span>Oferta expira em: <span id="ck-timer">14:59</span></span>
+                </div>
+                <div style="font-size: 0.75rem; color: #ffffff; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; text-align: center; line-height: 1.2;">
+                    <i class="fa-solid fa-mobile-screen-button"></i> Receba o acesso na palma da sua mão imediatamente após o pagamento.
+                </div>
+            </div>
+
+            <!-- CHECKOUT MAIN VIEW -->
 
 
+            <div id="checkout-main-view">
+                <div style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;">
 
-
-                <!-- CSS Otimizado para Checkout Compacto e Tooltips -->
-                <style>
-                    .checkout-summary {
-                        display: flex;
-                        background: #0f172a;
-                        border: 1px solid #1e293b;
-                        border-radius: 10px;
-                        margin-bottom: 10px;
-                        align-items: stretch;
-                        overflow: hidden;
-                        min-height: 0;
-                        position: relative;
-                    }
-
-                    .summary-img-wrap {
-                        position: relative;
-                        flex-shrink: 0;
-                        width: 85px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        overflow: hidden;
-                        padding: 8px 0 8px 8px;
-                    }
-
-                    .summary-img {
-                        width: 80px;
-                        height: auto;
-                        max-height: 120px;
-                        object-fit: cover;
-                        border-radius: 6px;
-                        border: 1px solid rgba(255,255,255,0.15);
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-                        display: block;
-                    }
-
-                    .summary-details {
-                        padding: 8px 10px 8px 6px;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: center;
-                        flex: 1;
-                    }
-
-                    .summary-details h4 {
-                        font-size: 0.8rem;
-                        color: #f8fafc;
-                        margin: 0 0 4px 0;
-                        font-weight: 800;
-                    }
-
-                    .summary-features {
-                        list-style: none;
-                        padding: 0;
-                        margin: 0;
-                        font-size: 0.72rem;
-                        color: #94a3b8;
-                    }
-
-                    .summary-features li {
-                        display: flex;
-                        align-items: center;
-                        gap: 4px;
-                        margin-bottom: 1px;
-                    }
-
-                    .summary-features i {
-                        color: #059669;
-                        font-size: 0.65rem;
-                    }
-
-                    /* Compactação do Form */
-                    .form-group {
-                        margin-bottom: 3px !important;
-                    }
-
-                    .form-label {
-                        text-transform: uppercase;
-                        font-size: 0.7rem !important;
-                        font-weight: 800 !important;
-                        color: #374151 !important;
-                        margin-bottom: 1px !important;
-                    }
-
-                    .form-input {
-                        padding: 4px 8px !important; /* Reduzindo altura vertical */
-                        font-size: 0.73rem !important;
-                        height: auto !important;
-                        background: #ffffff !important; /* Fundo branco e não mais bege */
-                        color: #111827 !important;
-                        border: 1px solid #cbd5e1 !important; /* Borda slate */
-                        border-radius: 6px !important;
-                    }
-                    
-                    .form-input::placeholder {
-                        color: #9ca3af !important;
-                    }
-                    
-                    .radio-item {
-                        background: #ffffff !important; 
-                        border: 1px solid #cbd5e1 !important;
-                        color: #1f2937 !important;
-                        padding: 6px 10px !important; /* Reduzindo tamanho do card */
-                        height: 48px !important; /* Fixando um tamanho menor */
-                        display: flex !important;
-                        align-items: center !important;
-                    }
-                    
-                    .radio-item.selected {
-                        background: #f1f5f9 !important; /* Fundo selecionado slate */
-                        border-color: #0f172a !important;
-                        box-shadow: 0 0 0 1px #0f172a inset !important;
-                    }
-
-                    .form-section-title {
-                        font-size: 0.78rem !important;
-                        margin: 6px 0 5px !important;
-                        font-weight: 800;
-                        text-transform: uppercase;
-                        color: #374151;
-                        letter-spacing: 0.5px;
-                    }
-
-                    /* Tooltip de Ociosidade */
-                    .field-tooltip {
-                        position: absolute;
-                        background: #1f2937;
-                        color: #fff;
-                        padding: 6px 10px;
-                        border-radius: 6px;
-                        font-size: 0.75rem;
-                        bottom: 100%;
-                        right: 0;
-                        margin-bottom: 5px;
-                        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-                        opacity: 0;
-                        transform: translateY(5px);
-                        transition: all 0.3s ease;
-                        pointer-events: none;
-                        z-index: 10;
-                        white-space: nowrap;
-                    }
-
-                    .field-tooltip.active {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-
-                    .field-tooltip::after {
-                        content: '';
-                        position: absolute;
-                        top: 100%;
-                        right: 15px;
-                        border-width: 5px;
-                        border-style: solid;
-                        border-color: #1f2937 transparent transparent transparent;
-                    }
-
-                    .form-group {
-                        position: relative;
-                    }
-
-                    /* Para posicionar o tooltip */
-
-                    /* Validation Styles */
-                    .form-input.input-error, .form-input.is-invalid {
-                        border-color: #ef4444 !important;
-                        background-color: #fef2f2 !important;
-                        box-shadow: 0 0 0 1px #ef4444 inset !important;
-                    }
-
-                    .form-input.input-success, .form-input.is-valid {
-                        border-color: #22c55e !important;
-                        background-color: #f0fdf4 !important;
-                    }
-
-                    .error-message {
-                        color: #ef4444;
-                        font-size: 0.7rem;
-                        font-weight: 700;
-                        margin-top: 2px;
-                        margin-bottom: 4px;
-                        display: block;
-                        animation: fadeIn 0.3s ease;
-                    }
-
-                    /* Help Bubbles */
-                    .mura-help-bubble {
-                        position: absolute;
-                        background: #1e293b;
-                        color: #fff;
-                        padding: 8px 12px;
-                        border-radius: 8px;
-                        font-size: 0.75rem;
-                        bottom: 100%;
-                        left: 50%;
-                        transform: translateX(-50%) translateY(-10px);
-                        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-                        z-index: 100;
-                        width: max-content;
-                        max-width: 200px;
-                        pointer-events: none;
-                        animation: bubbleFadeIn 0.3s ease forwards;
-                    }
-
-                    .mura-help-bubble::after {
-                        content: '';
-                        position: absolute;
-                        top: 100%;
-                        left: 50%;
-                        margin-left: -6px;
-                        border-width: 6px;
-                        border-style: solid;
-                        border-color: #1e293b transparent transparent transparent;
-                    }
-
-                    @keyframes bubbleFadeIn {
-                        from { opacity: 0; transform: translateX(-50%) translateY(0); }
-                        to { opacity: 1; transform: translateX(-50%) translateY(-10px); }
-                    }
-
-                    @keyframes fadeIn {
-                        from { opacity: 0; transform: translateY(10px); }
-                        to { opacity: 1; transform: translateY(0); }
-                    }
-
-                    /* Toast Notification System */
-                    #toast-container {
-                        position: fixed;
-                        top: 20px;
-                        right: 20px;
-                        z-index: 1000002;
-                        display: flex;
-                        flex-direction: column;
-                        gap: 10px;
-                        pointer-events: none;
-                    }
-
-                    .toast-card {
-                        background: #fff;
-                        color: #1f2937;
-                        padding: 12px 16px;
-                        border-radius: 12px;
-                        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-                        display: flex;
-                        align-items: center;
-                        gap: 12px;
-                        min-width: 280px;
-                        max-width: 350px;
-                        border-left: 4px solid #e11d48;
-                        animation: toastSlideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-                        pointer-events: auto;
-                        transition: opacity 0.5s ease;
-                    }
-
-                    .toast-content h4 {
-                        margin: 0;
-                        font-size: 0.9rem;
-                        font-weight: 800;
-                        color: #111827;
-                    }
-
-                    .toast-content p {
-                        margin: 2px 0 0;
-                        font-size: 0.8rem;
-                        color: #4b5563;
-                        line-height: 1.3;
-                    }
-
-                    .toast-stars {
-                        color: #f59e0b;
-                        font-size: 0.7rem;
-                        margin: 2px 0;
-                    }
-
-                    .toast-avatar {
-                        width: 40px;
-                        height: 40px;
-                        border-radius: 50%;
-                        object-fit: cover;
-                    }
-
-                    @keyframes toastSlideIn {
-                        from { transform: translateX(120%); opacity: 0; }
-                        to { transform: translateX(0); opacity: 1; }
-                    }
-
-                    @media (max-width: 768px) {
-                        #toast-container {
-                            top: 10px;
-                            right: 10px;
-                            left: 10px;
-                            align-items: center;
-                        }
-                        .toast-card {
-                            width: 100%;
-                            min-width: 0;
-                        }
-                    }
-
-                    @keyframes fadeIn {
-                        from { opacity: 0; transform: translateY(10px); }
-                        to { opacity: 1; transform: translateY(0); }
-                    }
-
-                    /* --- Optimized Order Bump Styles --- */
-                    #order-bump-area {
-                        margin-top: 1.5rem;
-                        padding: 0;
-                        border-radius: 12px;
-                        overflow: hidden;
-                    }
-
-                    .order-bump-container {
-                        position: relative;
-                        overflow: hidden;
-                        border: 2px solid #d97706;
-                        border-radius: 12px;
-                        cursor: pointer;
-                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                        min-height: 120px;
-                        display: flex;
-                        margin-bottom: 10px;
-                        background: #0f172a;
-                        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-                    }
-
-                    .order-bump-container.selected {
-                        border-color: #10b981;
-                        background: rgba(16, 185, 129, 0.05);
-                        box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
-                    }
-
-                    .order-bump-container::before {
-                        content: '';
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        right: 0;
-                        bottom: 0;
-                        border: 2px solid transparent;
-                        border-radius: 10px;
-                        z-index: 5;
-                        pointer-events: none;
-                        transition: all 0.3s;
-                    }
-
-                    .order-bump-container:not(.selected) {
-                        animation: goldenGlow 3s infinite;
-                    }
-
-                    @keyframes goldenGlow {
-                        0% { box-shadow: 0 0 5px rgba(217, 119, 6, 0.3); border-color: #d97706; }
-                        50% { box-shadow: 0 0 15px rgba(217, 119, 6, 0.6); border-color: #fbbf24; }
-                        100% { box-shadow: 0 0 5px rgba(217, 119, 6, 0.3); border-color: #d97706; }
-                    }
-
-                    .order-bump-badge-pulse {
-                        animation: badgePulse 2s infinite;
-                    }
-
-                    @keyframes badgePulse {
-                        0% { transform: scale(1); }
-                        50% { transform: scale(1.1); }
-                        100% { transform: scale(1); }
-                    }
-
-                    .order-bump-free-tag {
-                        background: #10b981;
-                        color: #fff;
-                        padding: 2px 8px;
-                        border-radius: 4px;
-                        font-size: 0.7rem;
-                        font-weight: 900;
-                        text-transform: uppercase;
-                        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
-                        display: inline-block;
-                        margin-left: 5px;
-                    }
-
-                    .order-bump-old-price {
-                        text-decoration: line-through;
-                        color: rgba(255,255,255,0.4);
-                        font-size: 0.7rem;
-                        margin-right: 5px;
-                    }
-
-                    /* Mobile Optimization for Bump Card */
-                    @media (max-width: 480px) {
-                        .order-bump-title { font-size: 0.85rem !important; }
-                        .order-bump-description { font-size: 0.75rem !important; }
-                        .order-bump-price { font-size: 1rem !important; }
-                    }
-
-                    /* === CHECKOUT 2-STEP === */
-                    .checkout-step-indicator { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 14px; }
-                    .step-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 900; background: #e2e8f0; color: #94a3b8; transition: all 0.3s; }
-                    .step-dot.active { background: #22c55e; color: #fff; box-shadow: 0 0 12px rgba(34,197,94,0.35); }
-                    .step-dot.completed { background: #22c55e; color: #fff; }
-                    .step-line { width: 50px; height: 3px; background: #e2e8f0; margin: 0 6px; border-radius: 2px; transition: all 0.3s; }
-                    .step-line.active { background: #22c55e; }
-
-                    /* Urgency Banner */
-                    @keyframes urgencyPulse { 0%,100%{ opacity:1; } 50%{ opacity:0.88; } }
-                    .checkout-urgency { background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; text-align: center; animation: urgencyPulse 3s infinite; }
-
-                    /* Trust Badges */
-                    .checkout-trust-row { display: flex; gap: 10px; margin: 10px 0; }
-                    .checkout-trust-badge { flex: 1; border-radius: 8px; padding: 7px 4px; text-align: center; }
-
-                    /* Mini Testimonial */
-                    .checkout-mini-review { display: flex; align-items: center; gap: 10px; background: #e0d2b7; border: 1px solid #c7b695; border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; }
-                    .checkout-mini-avatars { display: flex; flex-shrink: 0; }
-                    .checkout-mini-avatars img { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; margin-right: -7px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
-
-                    /* Step transition */
-                    #checkout-step-1, #checkout-step-2 { animation: fadeIn 0.3s ease; }
-                </style>
-
-
-                <form id="payment-form">
-                    <!-- ========== CHECKOUT ÚNICO ========== -->
-                    <div id="checkout-single-step">
-
-
-
-
-                        <!-- Bloco de oferta e garantia no topo do checkout -->
-                        <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 1px solid #fbbf24; border-radius: 10px; padding: 8px 14px; margin-bottom: 10px; text-align: left;">
-                            <p style="margin: 0; font-size: 0.75rem; color: #cbd5e1; line-height: 1.4;">
-                                <i class="fa-solid fa-shield-halved" style="color: #22c55e;"></i> <strong style="color: #fff;">Sem risco:</strong> 7 dias de garantia — não gostou, devolvemos 100% do seu dinheiro.
-                            </p>
-                        </div>
-
-                        <div class="modal-header" style="margin-bottom: 4px;">
-                            <h3 class="modal-title" style="margin-bottom: 2px; font-size: 1.05rem;">Finalize Sua Compra</h3>
-                        </div>
-
-                        <!-- Resumo do Pedido - COMPACTO e IMPACTANTE -->
-                        <div style="display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #0c1220 0%, #1a2332 100%); border: 1px solid rgba(251,191,36,0.3); border-radius: 10px; padding: 10px; margin-bottom: 8px;">
-                            <img src="capadasdoencas.webp" alt="Capa" style="width: 55px; height: 72px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0;" loading="eager">
-                            <div style="flex: 1; min-width: 0;">
-                                <p style="margin: 0 0 3px 0; font-size: 0.82rem; font-weight: 900; color: #f1f5f9;">Protocolo Elite: A Cura das Aves</p>
-                                <p style="margin: 0 0 2px 0; font-size: 0.7rem; color: #ef4444; font-weight: 700;"><i class="fa-solid fa-skull-crossbones" style="margin-right: 3px;"></i> Sua galinha não vai esperar — trate antes que seja tarde</p>
-                                <p style="margin: 0 0 5px 0; font-size: 0.65rem; color: #94a3b8; line-height: 1.3;">O tratamento das principais doenças que mais matam galinhas no Brasil, na palma da sua mão.<br><br><span style="font-weight: 700;">Por apenas</span></p>
-                                <div style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 2px;">
-                                    <span class="dyn-checkout-original" style="font-size: 0.68rem; color: #64748b; text-decoration: line-through;">R$ 149,90</span>
-                                    <span class="dyn-checkout-pix" style="font-size: 1.1rem; font-weight: 900; color: #22c55e; line-height: 1;">R$ 79,90 no PIX</span>
+                    <!-- 1. Header do Produto e Garantia -->
+                    <div class="ck-section">
+                        <div class="ck-product-card">
+                            <div class="ck-product-image" id="ck-product-cover">
+                                <img src="capadasdoencas.webp" alt="Capa">
+                            </div>
+                            <div class="ck-product-info">
+                                <h3 id="checkout-product-name">Protocolo Elite: A Cura das Aves</h3>
+                                <p style="font-size: 0.85rem; color: #4b5563; margin-bottom: 4px;">Acesso Vitalicio +
+                                    Atualizacoes<br><span style="color: #16a34a; font-weight: 700;">+ Tabela de
+                                        vacinacao gratuita inclusa</span></p>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <span class="ck-price-original dyn-checkout-original">R$ 149,90</span>
+                                    <span class="ck-price-current dyn-checkout-pix"
+                                        id="checkout-product-price-display">R$ 79,90</span>
+                                    <span
+                                        style="background: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; display: inline-block;">-46%
+                                        OFF</span>
                                 </div>
-                                <span style="font-size: 0.62rem; color: #ef4444; font-weight: 700; display: block; margin-top: 2px;">por tempo limitado</span>
                             </div>
                         </div>
-                        <!-- Hidden spans for JS compatibility -->
-                        <span id="checkout-urgency-banner" style="display:none;"></span>
-                        <span id="checkout-payer-firstname" style="display:none;"></span>
-                        <span id="checkout-reservation-timer" style="display:none;"></span>
+
+                        <!-- Prova Social Premium (Estilo Hero) -->
+                        <div class="ck-social-proof-mobile-stack" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; margin-top: 15px; margin-bottom: 5px; padding: 15px; background: #fff; border: 1px solid #f1f5f9; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); text-align: center;">
+                            <div class="avatar-stack" style="display: flex; flex-shrink: 0; justify-content: center;">
+                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #ddd; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                    <img src="carrosel/carlos.webp" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #ccc; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                    <img src="carrosel/maria.webp" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #bbb; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                    <img src="carrosel/joao_new.webp" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #aaa; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                    <img src="carrosel/ana.webp" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #999; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                    <img src="carrosel/lucas.webp" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                            </div>
+                            <div style="font-size: 0.8rem; color: #475569; line-height: 1.4; max-width: 320px;">
+                                <strong style="color: #0f172a; display: block; margin-bottom: 4px; font-size: 0.9rem;">Mais de 1600 alunos ja estao salvando suas aves.</strong>
+                                Chegou a sua vez, nao perca essa oportunidade por tempo limitado.
+                            </div>
+                        </div>
+                            <!-- Garantia -->
+                            <div class="ck-guarantee-box">
+                                <div class="ck-guarantee-icon">&#x2705;</div>
+                                <div class="ck-guarantee-content">
+                                    <p>Garantia Blindada</p>
+                                    <p>7 dias para testar. Se nao gostar, devolvemos 100% do valor.</p>
+                                </div>
+                            </div>
+
+                            <!-- Prova -->
+                        </div>
+                    </div>
+
+                    <!-- 3. Ofertas Exclusivas -->
+                    <div class="ck-section">
+                        <!-- Title shifted directly to script.js -->
+                        <div id="order-bump-area"></div>
+                    </div>
+
+                    <form id="payment-form">
+                        <!-- 4. Dados Pessoais -->
+                        <!-- Dados Pessoais -->
+                        <div class="ck-section">
+                            <div class="ck-section-header">
+                                <div class="ck-section-number">1</div>
+                                <h2 class="ck-section-title">Dados Pessoais</h2>
+                            </div>
 
 
+                            <div id="pix-fields">
+                                <div class="ck-form-group form-group">
+                                    <label for="payer-name">Nome Completo</label>
+                                    <input type="text" id="payer-name" class="form-input ck-input"
+                                        placeholder="Como no seu documento" required
+                                        data-tip="Digite seu nome e sobrenome completo."
+                                        oninput="if(document.getElementById('checkout-payer-firstname')) document.getElementById('checkout-payer-firstname').textContent = this.value.trim().split(' ')[0].toLowerCase()">
+                                    <div class="field-tooltip">Digite seu nome completo</div>
+                                </div>
 
+                                <div class="ck-form-row">
+                                    <div class="ck-form-group form-group">
+                                        <label for="payer-email">E-mail (Onde recebera o acesso)</label>
+                                        <input type="email" id="payer-email" class="form-input ck-input"
+                                            placeholder="seu@email.com" required inputmode="email"
+                                            data-tip="Seu melhor email onde recebera o acesso ao guia.">
+                                        <div class="field-tooltip">Onde voce recebera o acesso</div>
+                                    </div>
+                                    <div class="ck-form-group form-group">
+                                        <label for="payer-phone">WhatsApp</label>
+                                        <input type="tel" id="payer-phone" class="form-input ck-input"
+                                            placeholder="(00) 00000-0000" required inputmode="numeric" pattern="[0-9]*"
+                                            data-tip="Para suporte e avisos importantes (DDD + Numero).">
+                                        <div class="field-tooltip">DDD + Numero</div>
+                                    </div>
+                                </div>
 
-                        <div class="radio-group-top" style="margin-bottom: 6px;">
-                            <label class="form-label" style="display: block; margin-bottom: 5px;">ESCOLHA A FORMA DE PAGAMENTO</label>
-                            <div class="payment-methods-grid">
+                                <div class="ck-form-group form-group">
+                                    <label for="payer-cpf">CPF</label>
+                                    <input type="tel" id="payer-cpf" class="form-input ck-input"
+                                        placeholder="000.000.000-00" required inputmode="numeric" pattern="[0-9]*"
+                                        data-tip="Necessario para emitir a nota fiscal (apenas numeros).">
+                                    <div class="field-tooltip">Apenas numeros do CPF</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pagamento -->
+
+                        <!-- 5. Forma de Pagamento e Botoes -->
+                        <!-- Pagamento -->
+                        <div class="ck-section" style="margin-top: 24px;">
+                            <div class="ck-section-header">
+                                <div class="ck-section-number">2</div>
+                                <h2 class="ck-section-title">Forma de Pagamento</h2>
+                            </div>
+
+                            <!-- Metodos -->
+                            <div class="payment-methods-grid" style="display: flex; gap: 12px; margin-bottom: 24px;">
                                 <div class="radio-item selected" onclick="selectPaymentMethod('pix')">
-                                    <input type="radio" name="paymentMethod" id="method-pix" value="pix" checked>
+                                    <input type="radio" name="paymentMethod" id="method-pix" value="pix" checked
+                                        style="display:none;">
                                     <div class="radio-label">
                                         <span class="radio-title">PIX</span>
                                         <span class="radio-desc">Acesso imediato</span>
                                     </div>
-                                    <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png" style="height: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));" alt="Pix">
+                                    <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png"
+                                        style="height: 24px;" alt="Pix">
                                 </div>
                                 <div class="radio-item" onclick="selectPaymentMethod('card')">
-                                    <input type="radio" name="paymentMethod" id="method-card" value="card">
+                                    <input type="radio" name="paymentMethod" id="method-card" value="card"
+                                        style="display:none;">
                                     <div class="radio-label">
-                                        <span class="radio-title">CARTÃO</span>
-                                        <span class="radio-desc">Até 4x</span>
+                                        <span class="radio-title">CARTAO</span>
+                                        <span class="radio-desc">Ate 4x s/ juros</span>
                                     </div>
-                                    <div class="payment-flags" style="display: flex; gap: 5px; align-items: center;">
-                                        <img src="https://logospng.org/download/visa/logo-visa-256.png" style="height: 18px;" alt="Visa">
-                                        <img src="https://logospng.org/download/mastercard/logo-mastercard-256.png" style="height: 18px;" alt="Mastercard">
-                                        <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png" style="height: 18px;" alt="Pix">
+                                    <div style="display: flex; gap: 5px; align-items: center;">
+                                        <img src="https://logospng.org/download/visa/logo-visa-256.png"
+                                            style="height: 18px;" alt="Visa">
+                                        <img src="https://logospng.org/download/mastercard/logo-mastercard-256.png"
+                                            style="height: 18px;" alt="Mastercard">
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="form-section-title" style="text-transform: none; font-size: 0.9rem !important; margin-top: 15px;">Complete seus dados:</div>
-                        <div id="pix-fields">
-                        <div class="form-group" style="margin-bottom: 4px !important;">
-                            <input type="text" id="payer-name" class="form-input" placeholder="NOME COMPLETO" required
-                                data-tip="Digite seu nome e sobrenome completo para o certificado."
-                                oninput="document.getElementById('checkout-payer-firstname').textContent = this.value.trim().split(' ')[0].toLowerCase()">
-                            <div class="field-tooltip">Digite seu nome completo</div>
-                        </div>
-                        <div class="form-group" style="margin-bottom: 4px !important;">
-                            <input type="email" id="payer-email" class="form-input" placeholder="EMAIL" required inputmode="email"
-                                data-tip="Seu melhor email onde receberá o acesso ao guia.">
-                            <div class="field-tooltip">Onde você receberá o acesso</div>
-                        </div>
-                        <div class="form-group" style="margin-bottom: 4px !important;">
-                            <input type="tel" id="payer-phone" class="form-input" placeholder="WHATSAPP (DDD + Número)" required
-                                data-tip="Para suporte e avisos importantes (DDD + Número)." inputmode="numeric" pattern="[0-9]*">
-                            <div class="field-tooltip">DDD + Número</div>
-                        </div>
-                        <div class="form-group" style="margin-bottom: 12px !important;">
-                            <input type="tel" id="payer-cpf" class="form-input" placeholder="CPF (apenas números)" required
-                                data-tip="Necessário para emitir a nota fiscal (apenas números)." inputmode="numeric" pattern="[0-9]*">
-                            <div class="field-tooltip">Apenas números do CPF</div>
-                        </div>
-                        </div>
-                        
-                        <p style="text-align: center; margin-top: 6px; font-size: 0.68rem; color: #64748b; margin-bottom: 15px;">
-                            <i class="fa-solid fa-lock" style="color: #22c55e;"></i> Seus dados estão protegidos com criptografia de ponta.
-                        </p>
-
-                        <div id="card-area" style="display: none; margin-top: 0.5rem; border: 1px solid #e2e8f0; padding: 0.75rem; border-radius: 0.5rem; background: #f8fafc;">
-                            <div class="form-group" style="margin-bottom: 4px !important;">
-                                <input type="text" id="card-holder" class="form-input" placeholder="NOME NO CARTÃO" data-tip="Nome exatamente como impresso no cartão.">
-                                <div class="field-tooltip">Igual impresso no cartão</div>
-                            </div>
-                            <div class="form-group" style="margin-bottom: 4px !important;">
-                                <input type="email" id="card-email" class="form-input" placeholder="EMAIL" required inputmode="email"
-                                    data-tip="Seu melhor email onde receberá o acesso.">
-                                <div class="field-tooltip">Onde você receberá o acesso</div>
-                            </div>
-                            <div style="display: flex; gap: 0.5rem; margin-bottom: 4px !important;">
-                                <div class="form-group" style="flex: 1; margin-bottom: 0 !important;">
-                                    <input type="tel" id="card-phone" class="form-input" placeholder="WHATSAPP" inputmode="numeric" pattern="[0-9]*"
-                                        data-tip="DDD + Número para suporte.">
+                            <!-- Card Area -->
+                            <!-- Card Area -->
+                            <div id="card-area" style="display: none;">
+                                <div class="ck-form-group form-group">
+                                    <label>Nome no Cartao</label>
+                                    <input type="text" id="card-holder" class="form-input ck-input"
+                                        placeholder="Como impresso no cartao"
+                                        data-tip="Nome exatamente como impresso no cartao.">
+                                    <div class="field-tooltip">Igual impresso no cartao</div>
                                 </div>
-                                <div class="form-group" style="flex: 1; margin-bottom: 0 !important;">
-                                    <input type="tel" id="card-cpf" class="form-input" placeholder="CPF DO TITULAR" data-tip="CPF do dono do cartão." inputmode="numeric" pattern="[0-9]*">
+                                <div class="ck-form-group form-group">
+                                    <label>E-mail</label>
+                                    <input type="email" id="card-email" class="form-input ck-input"
+                                        placeholder="seu@email.com" required inputmode="email">
                                 </div>
-                            </div>
-                            <div class="form-group" style="margin-bottom: 4px !important;">
-                                <input type="text" id="card-number" class="form-input" placeholder="NÚMERO DO CARTÃO" data-tip="Os 16 números na frente do cartão.">
-                                <div class="field-tooltip">Digite os números do cartão</div>
-                            </div>
-                            <div style="display: flex; gap: 0.5rem; margin-bottom: 4px !important;">
-                                <div class="form-group" style="flex: 1.5; margin-bottom: 0 !important;">
-                                    <input type="text" id="card-expiration" class="form-input" placeholder="VALIDADE (MM/AA)" data-tip="Mês e Ano de vencimento.">
-                                </div>
-                                <div class="form-group" style="flex: 1; margin-bottom: 0 !important;">
-                                    <input type="text" id="card-cvv" class="form-input" placeholder="CVV" data-tip="3 dígitos no verso.">
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <div class="form-group" style="flex: 1; margin-bottom: 0 !important;">
-                                    <input type="tel" id="card-cep" class="form-input" placeholder="CEP" data-tip="CEP de cobrança." inputmode="numeric" pattern="[0-9]*">
-                                </div>
-                                <div class="form-group" style="flex: 1.5; margin-bottom: 0 !important;">
-                                    <select id="installments-select" class="form-input"></select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Order Bump Area -->
-                        <div id="order-bump-area"></div>
-
-                        <div style="text-align: center; margin-top: 1rem;">
-                            <div class="price-summary-box" style="margin-bottom: 1rem; background: var(--slate-50); border: 1px dashed var(--slate-400); padding: 0.75rem; border-radius: 0.5rem;">
-                                <div style="display: flex; justify-content: space-between; font-weight: 700; color: var(--slate-900);">
-                                    <span>Total a pagar:</span>
-                                    <span class="checkout-total-display">R$ --,--</span>
-                                </div>
-                                <div id="pix-bonus-status" style="margin-top: 4px; display: none;"></div>
-                            </div>
-
-                            <button type="button" id="btn-pay-pix" class="btn-primary" style="width: 100%; padding: 0.75rem; font-size: 1.125rem;">Gerar PIX</button>
-                            <button type="button" id="btn-pay-card" class="btn-primary" style="display: none; width: 100%; padding: 0.75rem; font-size: 1.125rem;">Finalizar Pagamento</button>
-
-                            <!-- Social Proof - Below Payment Button -->
-                            <div style="margin-top: 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 10px 12px;">
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                    <div class="checkout-mini-avatars" style="display: flex; flex-shrink: 0;">
-                                        <img src="carrosel/ricardo.webp" alt="Aluno" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; margin-right: -7px; box-shadow: 0 1px 3px rgba(0,0,0,0.12);">
-                                        <img src="carrosel/maria.jpg" alt="Aluna" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; margin-right: -7px; box-shadow: 0 1px 3px rgba(0,0,0,0.12);">
-                                        <img src="carrosel/pedro.webp" alt="Aluno" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; margin-right: -7px; box-shadow: 0 1px 3px rgba(0,0,0,0.12);">
-                                        <img src="carrosel/juliana.jpg" alt="Aluna" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; box-shadow: 0 1px 3px rgba(0,0,0,0.12);">
+                                <div class="ck-form-row">
+                                    <div class="ck-form-group form-group">
+                                        <label>WhatsApp</label>
+                                        <input type="tel" id="card-phone" class="form-input ck-input"
+                                            placeholder="(00) 00000-0000" inputmode="numeric" pattern="[0-9]*">
                                     </div>
-                                    <div>
-                                        <div style="display: flex; align-items: center; gap: 4px;">
-                                            <span style="color: #f59e0b; font-size: 0.7rem; letter-spacing: -1px;">★★★★★</span>
-                                            <span style="font-size: 0.78rem; font-weight: 900; color: #166534;">4.9/5</span>
-                                            <span style="font-size: 0.62rem; color: #15803d; font-weight: 600;">(1.647 avaliações)</span>
+                                    <div class="ck-form-group form-group">
+                                        <label>CPF do Titular</label>
+                                        <input type="tel" id="card-cpf" class="form-input ck-input"
+                                            placeholder="000.000.000-00" inputmode="numeric" pattern="[0-9]*">
+                                    </div>
+                                </div>
+                                <div class="ck-form-group form-group">
+                                    <label>Numero do Cartao</label>
+                                    <input type="text" id="card-number" class="form-input ck-input"
+                                        placeholder="0000 0000 0000 0000">
+                                    <div class="field-tooltip">Digite os numeros do cartao</div>
+                                </div>
+                                <div class="ck-form-row">
+                                    <div class="ck-form-group form-group">
+                                        <label>Validade</label>
+                                        <input type="text" id="card-expiration" class="form-input ck-input"
+                                            placeholder="MM/AA">
+                                    </div>
+                                    <div class="ck-form-group form-group">
+                                        <label>CVV</label>
+                                        <input type="text" id="card-cvv" class="form-input ck-input" placeholder="123">
+                                    </div>
+                                </div>
+                                <div class="ck-form-row">
+                                    <div class="ck-form-group form-group">
+                                        <label>CEP</label>
+                                        <input type="tel" id="card-cep" class="form-input ck-input"
+                                            placeholder="00000-000" inputmode="numeric" pattern="[0-9]*">
+                                    </div>
+                                    <div class="ck-form-group form-group">
+                                        <label>Parcelas</label>
+                                        <select id="installments-select" class="form-input ck-input"></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Order -->
+
+                            <div style="margin-top: 24px;">
+                                <!-- Total -->
+                                <div style="text-align: center; margin-top: 1.5rem;">
+                                    <div class="price-summary-box">
+                                        <div id="checkout-order-summary" style="display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 8px; text-align: left; font-size: 0.85rem; color: #4b5563;">
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; font-weight: 700;">
+                                            <span>Total a pagar:</span>
+                                            <span class="checkout-total-display">R$ --,--</span>
+                                        </div>
+                                        <div id="pix-bonus-status" style="margin-top: 4px; display: none;"></div>
+                                    </div>
+
+                                    <button type="button" id="btn-pay-pix" class="ck-btn-checkout">Finalizar meu
+                                        acesso.</button>
+                                    <button type="button" id="btn-pay-card" class="ck-btn-checkout"
+                                        style="display: none;">FINALIZAR PAGAMENTO</button>
+
+                                    <!-- WhatsApp Support Balloon -->
+                                    <div style="margin-top: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 16px; border-radius: 50px; cursor: pointer; transition: all 0.2s ease; background: transparent; border: 1px solid #e5e7eb;" onclick="window.open('https://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20para%20finalizar%20minha%20compra.', '_blank')" onmouseover="this.style.background='#f0fdf4'; this.style.borderColor='#bbf7d0'" onmouseout="this.style.background='transparent'; this.style.borderColor='#e5e7eb'">
+                                        <i class="fa-brands fa-whatsapp" style="color: #22c55e; font-size: 1.5rem;"></i>
+                                        <div style="text-align: left; line-height: 1.2;">
+                                            <span style="display: block; font-size: 0.7rem; color: #64748b;">Precisa de ajuda com a compra?</span>
+                                            <span style="display: block; font-size: 0.75rem; color: #0f172a; font-weight: 700;">Chame um de nossos atendentes</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div style="display: flex; flex-direction: column; gap: 5px;">
-                                    <p style="margin: 0; font-size: 0.73rem; color: #166534; font-style: italic; line-height: 1.35; padding-left: 8px; border-left: 2px solid #86efac;">"Material que salvou minha criação inteira" <strong style="font-style: normal;">— Ricardo L.</strong></p>
-                                    <p style="margin: 0; font-size: 0.73rem; color: #166534; font-style: italic; line-height: 1.35; padding-left: 8px; border-left: 2px solid #86efac;">"Gastava fortuna em remédio. Descobri que tava errando no básico." <strong style="font-style: normal;">— Marcos P.</strong></p>
+
+                            </div>
+                    </form>
+
+            <!-- 6. Prova Social -->
+                    <div style="padding-top: 5px;">
+                        <!-- Prova Social -->
+                        <div class="ck-social-proof">
+                            <p class="ck-proof-label" style="text-align: center; font-weight: 800; color: #1e293b; font-size: 0.95rem; margin-bottom: 12px; text-transform: uppercase;">O que dizem os alunos</p>
+                            
+                            <div class="ck-testimonial-box" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; margin-bottom: 15px;">
+                                <img src="carrosel/pedro.webp" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; flex-shrink: 0;" alt="Marcos">
+                                <div>
+                                    <div style="color: #fbbf24; font-size: 0.65rem; margin-bottom: 2px;">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p style="margin: 0 0 6px 0; font-size: 0.85rem; color: #334155; line-height: 1.4;">"O material é excelente! Consegui curar 3 galos que já estavam no bico do corvo. Vale cada centavo."</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; color: #0f172a; border-top: none; padding-top: 0; text-align: left;">Marcos Paulo <span style="font-weight: 400; color: #64748b; font-size: 0.75rem; border-left: 1px solid #cbd5e1; padding-left: 6px; margin-left: 6px;">Goiânia - GO</span></p>
+                                </div>
+                            </div>
+                            
+                            <div class="ck-testimonial-box" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; margin-bottom: 15px;">
+                                <img src="carrosel/fernanda.webp" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; flex-shrink: 0;" alt="Ricardo">
+                                <div>
+                                    <div style="color: #fbbf24; font-size: 0.65rem; margin-bottom: 2px;">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p style="margin: 0 0 6px 0; font-size: 0.85rem; color: #334155; line-height: 1.4;">"Gastava uma fortuna em remédio e as galinhas continuavam morrendo. Descobri que tava errando no básico do manejo."</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; color: #0f172a; border-top: none; padding-top: 0; text-align: left;">Silvia Lima <span style="font-weight: 400; color: #64748b; font-size: 0.75rem; border-left: 1px solid #cbd5e1; padding-left: 6px; margin-left: 6px;">Londrina - PR</span></p>
                                 </div>
                             </div>
 
-                            <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
-                                <img src="https://logospng.org/download/visa/logo-visa-256.png" style="height: 22px;" alt="Visa">
-                                <img src="https://logospng.org/download/mastercard/logo-mastercard-256.png" style="height: 22px;" alt="Mastercard">
-                                <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png" style="height: 18px;" alt="Pix">
-                                <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-icone-1024.png" style="height: 22px;" alt="Mercado Pago">
-                            </div>
-                            <div style="display: flex; justify-content: center; gap: 12px; margin-top: 8px; align-items: center;">
-                                <span style="font-size: 0.6rem; color: #166534; font-weight: 700;"><i class="fa-solid fa-lock"></i> Compra Segura</span>
-                                <span style="font-size: 0.6rem; color: #166534;">|</span>
-                                <span style="font-size: 0.6rem; color: #166534; font-weight: 700;"><i class="fa-solid fa-shield-halved"></i> SSL 256-bit</span>
-                                <span style="font-size: 0.6rem; color: #166534;">|</span>
-                                <span style="font-size: 0.6rem; color: #166534; font-weight: 700;"><i class="fa-solid fa-check-double"></i> Garantia 7 dias</span>
-                            </div>
-                            <div style="margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;">
-                                <div style="text-align: right; border-right: 1px solid #e2e8f0; padding-right: 15px;">
-                                    <p style="font-size: 0.6rem; color: #64748b; margin: 0; font-weight: 700;">GALOS MURA BRASIL OFICIAL</p>
-                                    <p style="font-size: 0.58rem; color: #94a3b8; margin: 2px 0 0 0;">CNPJ: 63.665.824/0001-09</p>
+                            <div class="ck-testimonial-box" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; margin-bottom: 15px;">
+                                <img src="carrosel/ricardo.webp" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; flex-shrink: 0;" alt="João">
+                                <div>
+                                    <div style="color: #fbbf24; font-size: 0.65rem; margin-bottom: 2px;">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p style="margin: 0 0 6px 0; font-size: 0.85rem; color: #334155; line-height: 1.4;">"Entrega muito rápida. Paguei no PIX e em menos de 1 minuto o acesso chegou certinho no meu WhatsApp, recomendo!"</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; color: #0f172a; border-top: none; padding-top: 0; text-align: left;">João Batista <span style="font-weight: 400; color: #64748b; font-size: 0.75rem; border-left: 1px solid #cbd5e1; padding-left: 6px; margin-left: 6px;">Campinas - SP</span></p>
                                 </div>
-                                <a href="https://api.whatsapp.com/send?phone=5538999832950&text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20com%20minha%20compra" id="checkout-wpp-bubble"
-                                    style="display: flex; align-items: center; gap: 8px; background: #25d366; color: #fff; padding: 6px 12px; border-radius: 50px; text-decoration: none; box-shadow: 0 4px 10px rgba(37,211,102,0.3); font-size: 0.65rem; font-weight: 700; transition: transform 0.2s, box-shadow 0.2s;"
-                                    onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 15px rgba(37,211,102,0.4)'"
-                                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 10px rgba(37,211,102,0.3)'">
-                                    <i class="fa-brands fa-whatsapp" style="font-size: 1.1rem;"></i>
-                                    <span style="line-height: 1.2;">Precisa de ajuda?<br><span style="font-weight: 500; font-size: 0.55rem; opacity: 0.9;">Fale com um atendente</span></span>
-                                </a>
                             </div>
-                            <div style="display: flex; justify-content: center; gap: 16px; margin-top: 8px;">
-                                <a href="https://www.instagram.com/galosmurabrasill/" target="_blank" style="color: #94a3b8; font-size: 0.95rem; transition: color 0.2s;" onmouseover="this.style.color='#E1306C'" onmouseout="this.style.color='#94a3b8'"><i class="fa-brands fa-instagram"></i></a>
-                                <a href="https://www.facebook.com/profile.php?id=61578338141942" target="_blank" style="color: #94a3b8; font-size: 0.95rem; transition: color 0.2s;" onmouseover="this.style.color='#1877F2'" onmouseout="this.style.color='#94a3b8'"><i class="fa-brands fa-facebook"></i></a>
-                                <a href="https://www.tiktok.com/@galosmurabrasil" target="_blank" style="color: #94a3b8; font-size: 0.95rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'"><i class="fa-brands fa-tiktok"></i></a>
+
+                            <div class="ck-stars" style="margin-top: 15px;">
+                                <span class="ck-star">&#9733;</span>
+                                <span class="ck-star">&#9733;</span>
+                                <span class="ck-star">&#9733;</span>
+                                <span class="ck-star">&#9733;</span>
+                                <span class="ck-star">&#9733;</span>
+                                <span class="ck-rating-text">4.9/5 (1.647 avaliações)</span>
                             </div>
                         </div>
-
                     </div>
-                </form>
+                </div>
             </div>
 
+            <!-- PIX Result (hidden) -->
             <div id="pix-result" class="hidden" style="text-align: center;">
-                <h3 class="modal-title">Quase lá!</h3>
-                <p style="font-size: 0.9rem; color: var(--gray-600); margin: 0.5rem 0;">Escaneie o QR Code ou copie
-                    o
-                    código abaixo.</p>
+                <h3 id="pix-greeting" style="font-size: 1.5rem; font-weight: 700; color: #1f2937;">Quase lá!</h3>
+                <p style="font-size: 0.9rem; color: #6b7280; margin: 0.5rem 0;">Escaneie o QR Code ou copie o código abaixo.</p>
 
                 <div class="qr-container" style="background: #fff; padding: 1rem; border-radius: 1.2rem; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 260px; margin: 1.5rem auto; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.05); min-height: 260px; position: relative;">
-                    <!-- Loader Spinner -->
                     <div id="qr-loader" class="hidden" style="position: absolute; display: flex; flex-direction: column; align-items: center; gap: 10px;">
                         <i class="fa-solid fa-shield-halved fa-beat" style="font-size: 2.5rem; color: #10b981;"></i>
                         <p style="font-size: 0.85rem; color: #0f172a; font-weight: 800; text-align: center;">CONECTANDO AO BANCO...<br><span style="font-size: 0.7rem; color: #64748b; font-weight: 600;">Gerando PIX com segurança</span></p>
                     </div>
-                    <img id="qr-code-img" src="" alt="QR Code PIX" style="width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 8px; image-rendering: pixelated;">
+                    <img id="qr-code-img" src="" alt="QR Code PIX" style="width: 100%; height: auto; display: none; margin: 0 auto; border-radius: 8px; image-rendering: pixelated;">
                 </div>
+                
                 <div id="pix-receiver-info" class="hidden">
                     <p style="text-align: center; margin: 0; font-size: 0.85rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Recebedor:</p>
                     <p style="text-align: center; margin: 2px 0 10px 0; font-size: 1.1rem; color: #0f172a; font-weight: 900; text-transform: uppercase;">JOAO PAULO SANTOS CAMARGO</p>
                 </div>
 
-                <button id="btn-copy-pix" class="btn-primary" style="width: 100%; margin-bottom: 1rem;">
+                <button id="btn-copy-pix" class="ck-btn-checkout" style="display: none; background: linear-gradient(135deg, #22c55e, #16a34a);">
                     <i class="fa-regular fa-copy"></i> COPIAR CÓDIGO PIX
                 </button>
                 <textarea id="pix-copy-paste" readonly style="opacity: 0; position: absolute; z-index: -1;"></textarea>
 
-                <div
-                    style="text-align: left; font-size: 0.85rem; color: var(--gray-600); line-height: 1.6; background: #f8fafc; padding: 1rem; border-radius: 0.5rem;">
+                <div style="text-align: left; font-size: 0.85rem; color: #6b7280; line-height: 1.6; background: #f8fafc; padding: 1rem; border-radius: 0.5rem; margin-top: 15px;">
                     <p>1. Abra o app do seu banco e escolha <strong>Pix</strong>.</p>
                     <p>2. Selecione <strong>Pix Copia e Cola</strong> ou <strong>Ler QR Code</strong>.</p>
                     <p>3. Cole o código ou escaneie a imagem acima.</p>
                 </div>
 
                 <div style="margin-top: 1.5rem; font-size: 0.85rem;">
-                    Dúvidas? <a href="https://wa.me/5538999832950" target="_blank"
-                        style="color: #25d366; font-weight: 700;"><i class="fa-brands fa-whatsapp"></i> Chame no
-                        WhatsApp</a>
+                    Dúvidas? <a href="https://wa.me/5538999832950" target="_blank" style="color: #25d366; font-weight: 700;"><i class="fa-brands fa-whatsapp"></i> Chame no WhatsApp</a>
                 </div>
 
-                <!-- Security Reinforcement (Ultra-Confiança) -->
-                <div class="pix-security-reinforcement"
-                    style="margin-top: 1.5rem; border-top: 1px dashed #cbd5e1; padding-top: 1.5rem;">
-                    <div
-                        style="display: flex; justify-content: center; gap: 15px; align-items: center; margin-bottom: 15px;">
+                <div style="margin-top: 1.5rem; border-top: 1px dashed #e5e7eb; padding-top: 1.5rem;">
+                    <div style="display: flex; justify-content: center; gap: 15px; align-items: center; margin-bottom: 15px;">
                         <i class="fa-solid fa-lock" style="color: #16a34a; font-size: 1.2rem;"></i>
-                        <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png" style="height: 24px;"
-                            alt="Pix">
-                        <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-icone-1024.png"
-                            style="height: 22px;" alt="Mercado Pago">
+                        <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png" style="height: 24px;" alt="Pix">
+                        <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-icone-1024.png" style="height: 22px;" alt="Mercado Pago">
                     </div>
 
-                    <div
-                        style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
-                        <p
-                            style="color: #166534; font-weight: 800; font-size: 0.9rem; margin-bottom: 4px; text-transform: uppercase;">
-                            <i class="fa-solid fa-shield-check"></i> 7 Dias de Garantia
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                        <p style="color: #166534; font-weight: 800; font-size: 0.9rem; margin: 0 0 4px 0; text-transform: uppercase;">
+                            <i class="fa-solid fa-shield-halved"></i> 7 Dias de Garantia
                         </p>
-                        <p style="color: #15803d; font-size: 0.8rem; line-height: 1.3;">
+                        <p style="color: #15803d; font-size: 0.8rem; line-height: 1.3; margin: 0;">
                             Se o protocolo não funcionar, nós devolvemos 100% do seu dinheiro sem burocracia.
                         </p>
                     </div>
 
-                    <div style="color: #64748b; font-size: 0.75rem; font-weight: 500;">
-                        <p>GALOS MURA BRASIL OFICIAL</p>
-                        <p>CNPJ: 63.665.824/0001-09</p>
-                    </div>
                 </div>
 
-                <button
-                    onclick="document.getElementById('pix-result').classList.add('hidden'); document.getElementById('checkout-main-view').classList.remove('hidden');"
-                    style="margin-top: 1rem; background: none; border: none; color: var(--gray-400); text-decoration: underline; cursor: pointer;">Voltar</button>
+                <button onclick="document.getElementById('pix-result').classList.add('hidden'); document.getElementById('checkout-main-view').classList.remove('hidden');" style="margin-top: 1rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-family: inherit;">Voltar</button>
             </div>
 
-            <!-- Payment Pending View (New) -->
+            <!-- Payment Pending View -->
             <div id="payment-pending-view" class="hidden" style="text-align: center; padding: 1rem 0;">
                 <div style="font-size: 4rem; color: #f59e0b; margin-bottom: 1rem;">
-                    <i class="fa-solid fa-shield-halved fa-beat-normal"></i>
+                    <i class="fa-solid fa-shield-halved"></i>
                 </div>
-                <h3 class="modal-title" style="color: #92400e;">Pagamento em Análise</h3>
-                <p style="font-size: 0.95rem; color: var(--gray-600); margin: 1rem 0; line-height: 1.5;">
+                <h3 style="color: #92400e; font-size: 1.3rem; font-weight: 700;">Pagamento em Análise</h3>
+                <p style="font-size: 0.95rem; color: #6b7280; margin: 1rem 0; line-height: 1.5;">
                     Sua transação está sendo processada com segurança pelo Mercado Pago. <br>
                     <strong>Não se preocupe, isso é um procedimento normal.</strong>
                 </p>
 
-                <div
-                    style="background: #fffbeb; border: 1px solid #fef3c7; padding: 1rem; border-radius: 0.75rem; text-align: left; margin-bottom: 1.5rem;">
+                <div style="background: #fffbeb; border: 1px solid #fef3c7; padding: 1rem; border-radius: 0.75rem; text-align: left; margin-bottom: 1.5rem;">
                     <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: #92400e;">
-                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-envelope"></i> O acesso será enviado
-                            para
-                            o seu e-mail assim que aprovado.</li>
-                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-clock"></i> Prazo de análise: de
-                            alguns
-                            minutos até 48h.</li>
-                        <li style="color: #b91c1c; font-weight: bold;"><i class="fa-solid fa-triangle-exclamation"></i> IMPORTANTE: Verifique sempre sua pasta de SPAM e Lixo Eletrônico. O e-mail costuma cair lá!
-                        </li>
+                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-envelope"></i> O acesso será enviado para o seu e-mail assim que aprovado.</li>
+                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-clock"></i> Prazo de análise: de alguns minutos até 48h.</li>
+                        <li style="color: #b91c1c; font-weight: bold;"><i class="fa-solid fa-triangle-exclamation"></i> IMPORTANTE: Verifique sempre sua pasta de SPAM.</li>
                     </ul>
                 </div>
 
-                <a href="https://wa.me/5538999832950?text=Olá,%20meu%20pagamento%20ficou%20em%20análise.%20Pode%20me%20ajudar?"
-                    target="_blank" class="btn-primary"
-                    style="width: 100%; background: #25d366; border-color: #25d366; text-decoration: none; display: inline-block;">
+                <a href="https://wa.me/5538999832950?text=Ol%C3%A1,%20meu%20pagamento%20ficou%20em%20an%C3%A1lise.%20Pode%20me%20ajudar?" target="_blank" class="ck-btn-checkout" style="display: inline-block; text-decoration: none; background: #25d366;">
                     <i class="fa-brands fa-whatsapp"></i> FALAR COM SUPORTE
                 </a>
 
-                <button onclick="closeCheckout()"
-                    style="margin-top: 1.5rem; background: none; border: none; color: var(--gray-400); text-decoration: underline; cursor: pointer; font-size: 0.85rem;">
+                <button onclick="closeCheckout()" style="margin-top: 1.5rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-size: 0.85rem; font-family: inherit; display: block; margin-left: auto; margin-right: auto;">
                     Entendi, fechar checkout
                 </button>
             </div>
 
+        </div> <!-- Fim de ck-main -->
 
-            <button onclick="attemptCloseCheckout()"
-                style="position: absolute; top: 0.5rem; right: 0.5rem; border: none; background: rgba(0,0,0,0.25); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; font-size: 1.5rem; z-index: 10;">&times;</button>
-
-
+        <!-- 7. Footer Geral do Checkout -->
+        <div class="ck-section" style="background-color: transparent; border: none; box-shadow: none; padding-top: 0; max-width: 600px; margin: 0 auto;">
+            <p style="text-align: center; font-size: 0.75rem; color: #6b7280; margin-bottom: 10px;">
+                <i class="fa-solid fa-lock" style="color: #22c55e;"></i> Seus dados estão protegidos com criptografia de ponta.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 10px;">
+                <img src="https://logospng.org/download/visa/logo-visa-256.png" style="height: 22px;" alt="Visa">
+                <img src="https://logospng.org/download/mastercard/logo-mastercard-256.png" style="height: 22px;" alt="Mastercard">
+                <img src="https://logospng.org/download/pix/logo-pix-icone-1024.png" style="height: 18px;" alt="Pix">
+                <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-icone-1024.png" style="height: 22px;" alt="Mercado Pago">
+            </div>
+            <div style="display: flex; justify-content: center; gap: 12px; align-items: center; margin-bottom: 12px;">
+                <span style="font-size: 0.7rem; color: #16a34a; font-weight: 700;"><i class="fa-solid fa-lock"></i> Compra Segura</span>
+                <span style="font-size: 0.7rem; color: #d1d5db;">|</span>
+                <span style="font-size: 0.7rem; color: #16a34a; font-weight: 700;"><i class="fa-solid fa-shield-halved"></i> SSL 256-bit</span>
+                <span style="font-size: 0.7rem; color: #d1d5db;">|</span>
+                <span style="font-size: 0.7rem; color: #16a34a; font-weight: 700;"><i class="fa-solid fa-check-double"></i> Garantia 7 dias</span>
+            </div>
         </div>
+
+        <div class="ck-footer" style="padding-bottom: 30px;">
+            <p>&copy; 2026 PROTOCOLO ELITE - Todos os direitos reservados.</p>
+            <p>CNPJ: 63.665.824/0001-09</p>
+        </div>
+
+        <!-- Hidden spans for JS compatibility -->
+        <span id="checkout-urgency-banner" style="display:none;"></span>
+        <span id="checkout-payer-firstname" style="display:none;"></span>
+        <span id="checkout-reservation-timer" style="display:none;"></span>
+        <span id="product-icon-container" style="display:none;"></span>
     </div>
 
+
     <!-- Official Footer -->
-    <footer style="background: var(--zinc-950); padding: 3rem 0; border-top: 1px solid var(--slate-800); text-align: center;">
+    <footer
+        style="background: var(--zinc-950); padding: 3rem 0; border-top: 1px solid var(--slate-800); text-align: center;">
         <div class="container">
             <div style="margin-bottom: 1.2rem;">
                 <img src="logo.webp" alt="Logo" style="height: 70px; border-radius: 12px;">
             </div>
             <div style="display: flex; justify-content: center; gap: 22px; margin-bottom: 1.2rem;">
-                <a href="https://www.instagram.com/galosmurabrasill/" target="_blank" style="color: #6b7280; font-size: 1.3rem; transition: color 0.2s;" onmouseover="this.style.color='#E1306C'" onmouseout="this.style.color='#6b7280'"><i class="fa-brands fa-instagram"></i></a>
-                <a href="https://www.facebook.com/profile.php?id=61578338141942" target="_blank" style="color: #6b7280; font-size: 1.3rem; transition: color 0.2s;" onmouseover="this.style.color='#1877F2'" onmouseout="this.style.color='#6b7280'"><i class="fa-brands fa-facebook"></i></a>
-                <a href="https://www.tiktok.com/@galosmurabrasil" target="_blank" style="color: #6b7280; font-size: 1.3rem; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#6b7280'"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="https://www.instagram.com/galosmurabrasill/" target="_blank"
+                    style="color: #6b7280; font-size: 1.3rem; transition: color 0.2s;"
+                    onmouseover="this.style.color='#E1306C'" onmouseout="this.style.color='#6b7280'"><i
+                        class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.facebook.com/profile.php?id=61578338141942" target="_blank"
+                    style="color: #6b7280; font-size: 1.3rem; transition: color 0.2s;"
+                    onmouseover="this.style.color='#1877F2'" onmouseout="this.style.color='#6b7280'"><i
+                        class="fa-brands fa-facebook"></i></a>
+                <a href="https://www.tiktok.com/@galosmurabrasil" target="_blank"
+                    style="color: #6b7280; font-size: 1.3rem; transition: color 0.2s;"
+                    onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#6b7280'"><i
+                        class="fa-brands fa-tiktok"></i></a>
             </div>
             <div style="font-size: 0.8rem; color: var(--slate-400); line-height: 1.6;">
                 <p>GALOS MURA BRASIL OFICIAL</p>
@@ -2010,9 +2780,9 @@
     <div id="secure-loading" style="display:none;"></div>
     <div id="toast-container" class="float-toast-container"></div>
     <div id="checkout-logo-overlay" style="display:none;"></div>
-    <div id="checkout-product-name" style="display:none;"></div>
-    <div id="checkout-product-price-display" style="display:none;"></div>
-    <div id="product-icon-container" style="display:none;"></div>
+
+
+
 
     <div id="floating-cta" class="floating-cta-bar">
         <div class="floating-cta-content">
@@ -2020,18 +2790,19 @@
                 <button onclick="startCheckoutProcess('ebook-doencas')" class="floating-cta-btn">
                     SALVAR MINHAS GALINHAS AGORA
                 </button>
-                <span class="floating-cta-subtext"><span class="dyn-cta-pix">R$ 79,90 no PIX</span> &bull; Acesso imediato &bull; Garantia de 7 dias</span>
+                <span class="floating-cta-subtext"><span class="dyn-cta-pix">R$ 79,90 no PIX</span> &bull; Acesso
+                    imediato &bull; Garantia de 7 dias</span>
             </div>
         </div>
     </div>
 
     <!-- Scroll Visibility Local Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const floatingCta = document.getElementById('floating-cta');
             if (!floatingCta) return;
 
-            window.addEventListener('scroll', function() {
+            window.addEventListener('scroll', function () {
                 // Show after 700px scroll
                 if (window.scrollY > 700) {
                     floatingCta.classList.add('visible');
@@ -2051,18 +2822,25 @@
 
     <!-- Checkout Exit Intent Modal -->
     <div id="checkout-exit-modal" class="modal-overlay" style="z-index: 1000003;">
-        <div class="modal-content" style="text-align: center; max-width: 320px; padding: 25px 20px; border: 2px solid #ef4444;">
+        <div class="modal-content"
+            style="text-align: center; max-width: 320px; padding: 25px 20px; border: 2px solid #ef4444;">
             <div style="font-size: 3rem; color: #ef4444; margin-bottom: 10px;">
                 <i class="fa-solid fa-triangle-exclamation fa-beat"></i>
             </div>
-            <h3 style="color: #ef4444; font-size: 1.3rem; margin-bottom: 15px; text-transform: uppercase; font-weight: 900;">Atenção</h3>
+            <h3
+                style="color: #ef4444; font-size: 1.3rem; margin-bottom: 15px; text-transform: uppercase; font-weight: 900;">
+                Atenção</h3>
             <p style="font-size: 0.95rem; color: #334155; margin-bottom: 20px; line-height: 1.4; font-weight: 600;">
-                Suas galinhas precisam da sua ajuda agora,<br>não deixe para amanhã, para sua galinha amanhã pode ser tarde demais
+                Suas galinhas precisam da sua ajuda agora,<br>não deixe para amanhã, para sua galinha amanhã pode ser
+                tarde demais
             </p>
-            <button onclick="document.getElementById('checkout-exit-modal').classList.remove('active')" class="btn-primary" style="width: 100%; margin-bottom: 10px; font-size: 1rem; padding: 12px; background: #22c55e;">
+            <button onclick="document.getElementById('checkout-exit-modal').classList.remove('active')"
+                class="btn-primary"
+                style="width: 100%; margin-bottom: 10px; font-size: 1rem; padding: 12px; background: #22c55e;">
                 FINALIZAR A COMPRA
             </button>
-            <button onclick="confirmCloseCheckout()" style="background: none; border: none; color: #94a3b8; text-decoration: underline; cursor: pointer; font-size: 0.85rem;">
+            <button onclick="confirmCloseCheckout()"
+                style="background: none; border: none; color: #94a3b8; text-decoration: underline; cursor: pointer; font-size: 0.85rem;">
                 Sair mesmo assim
             </button>
         </div>
@@ -2071,18 +2849,83 @@
     <script>
         function attemptCloseCheckout() {
             let exitModal = document.getElementById('checkout-exit-modal');
-            if(exitModal) exitModal.classList.add('active');
+            if (exitModal) exitModal.classList.add('active');
         }
         function confirmCloseCheckout() {
             let exitModal = document.getElementById('checkout-exit-modal');
-            if(exitModal) exitModal.classList.remove('active');
-            if(typeof closeCheckout === 'function') {
+            if (exitModal) exitModal.classList.remove('active');
+            if (typeof closeCheckout === 'function') {
                 closeCheckout();
             } else {
                 document.getElementById('checkout-modal').classList.remove('active');
             }
         }
     </script>
+
+    <script>
+        // === CHECKOUT PAGE TIMER ===
+        (function () {
+            var CK_TIMER_KEY = 'ck_timer_end';
+            var CK_TIMER_DURATION = 15 * 60; // 15 minutes in seconds
+            var ckTimerInterval = null;
+
+            function startCkTimer() {
+                var endTime = sessionStorage.getItem(CK_TIMER_KEY);
+                if (!endTime) {
+                    endTime = Date.now() + (CK_TIMER_DURATION * 1000);
+                    sessionStorage.setItem(CK_TIMER_KEY, endTime);
+                }
+                endTime = parseInt(endTime);
+
+                function updateCkTimer() {
+                    var now = Date.now();
+                    var remaining = Math.max(0, Math.floor((endTime - now) / 1000));
+                    var m = Math.floor(remaining / 60);
+                    var s = remaining % 60;
+                    var display = document.getElementById('ck-timer');
+                    if (display) {
+                        display.textContent = (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+                    }
+                    if (remaining <= 0) {
+                        // Reset timer
+                        endTime = Date.now() + (CK_TIMER_DURATION * 1000);
+                        sessionStorage.setItem(CK_TIMER_KEY, endTime);
+                    }
+                }
+
+                updateCkTimer();
+                if (ckTimerInterval) clearInterval(ckTimerInterval);
+                ckTimerInterval = setInterval(updateCkTimer, 1000);
+            }
+
+            // Start timer when checkout page becomes visible
+            var observer = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        var el = document.getElementById('checkout-page');
+                        if (el && el.classList.contains('active')) {
+                            startCkTimer();
+                        }
+                    }
+                });
+            });
+
+            var checkoutPage = document.getElementById('checkout-page');
+            if (checkoutPage) {
+                observer.observe(checkoutPage, { attributes: true });
+            }
+
+            // Also start if checkout is already shown
+            if (checkoutPage && checkoutPage.style.display !== 'none') {
+                startCkTimer();
+            }
+        })();
+    </script>
+
+
+
+
+
 </body>
 
 </html>

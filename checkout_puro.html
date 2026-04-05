@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Compra - Protocolo Elite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text {
+            display: none;
+        }
+
+        .logo-elite {
+            color: #b91c1c;
+        }
+
+        @media (min-width: 640px) {
+            .logo-text {
+                display: inline;
+            }
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #16a34a;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .lock-icon {
+            font-size: 16px;
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px 16px;
+        }
+
+        /* Timer de Urgência */
+        .urgency-banner {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .timer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #fee2e2;
+            color: #b91c1c;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Grid Layout */
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            margin-bottom: 48px;
+        }
+
+        @media (min-width: 1024px) {
+            .checkout-grid {
+                grid-template-columns: 7fr 5fr;
+            }
+        }
+
+        /* Seções */
+        section {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #f3f4f6;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .section-number {
+            background-color: #b91c1c;
+            color: #ffffff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        /* Formulário */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #b91c1c;
+            box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+        }
+
+        input::placeholder {
+            color: #9ca3af;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Abas de Pagamento */
+        .payment-tabs {
+            display: flex;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 24px;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px;
+            font-weight: 700;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #9ca3af;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-button.active {
+            color: #b91c1c;
+            border-bottom: 2px solid #b91c1c;
+            margin-bottom: -2px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .pix-info {
+            background-color: #ecf9ff;
+            border: 1px solid #a5f3fc;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .pix-icon {
+            font-size: 24px;
+            color: #0891b2;
+            flex-shrink: 0;
+        }
+
+        .pix-text h4 {
+            font-weight: 700;
+            color: #164e63;
+            margin-bottom: 4px;
+        }
+
+        .pix-text p {
+            font-size: 13px;
+            color: #155e75;
+        }
+
+        .benefits-list {
+            font-size: 13px;
+            color: #4b5563;
+            margin-left: 8px;
+        }
+
+        .benefits-list li {
+            margin-bottom: 8px;
+            list-style: none;
+        }
+
+        .benefits-list li:before {
+            content: "✓ ";
+            color: #16a34a;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        /* Order Bump */
+        .order-bump {
+            background-color: #fef3c7;
+            border: 2px dashed #fcd34d;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
+        .bump-checkbox {
+            width: 24px;
+            height: 24px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: #b91c1c;
+            flex-shrink: 0;
+        }
+
+        .bump-content h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .bump-content p {
+            font-size: 13px;
+            color: #4b5563;
+        }
+
+        .bump-badge {
+            display: inline-block;
+            background-color: #fbbf24;
+            color: #78350f;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        /* Botão Principal */
+        .btn-checkout {
+            width: 100%;
+            padding: 20px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(185, 28, 28, 0.2);
+            margin-bottom: 16px;
+        }
+
+        .btn-checkout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px rgba(185, 28, 28, 0.3);
+        }
+
+        .btn-checkout:active {
+            transform: translateY(0);
+        }
+
+        /* Trust Badges */
+        .trust-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px;
+            padding: 16px 0;
+        }
+
+        .trust-badge-item {
+            width: 32px;
+            height: 32px;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            filter: grayscale(100%);
+        }
+
+        .trust-badge-item:hover {
+            opacity: 1;
+            filter: grayscale(0%);
+        }
+
+        /* Resumo do Pedido (Sidebar) */
+        .order-summary {
+            position: sticky;
+            top: 100px;
+        }
+
+        .product-card {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .product-image {
+            width: 80px;
+            height: 100px;
+            background-color: #f3f4f6;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #9ca3af;
+            text-align: center;
+            padding: 8px;
+        }
+
+        .product-info h3 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .product-info p {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .price-original {
+            text-decoration: line-through;
+            color: #9ca3af;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .price-current {
+            color: #b91c1c;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        /* Resumo de Preços */
+        .price-breakdown {
+            space-y: 12px;
+            font-size: 13px;
+            border-top: 1px solid #f3f4f6;
+            padding-top: 16px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            color: #6b7280;
+        }
+
+        .price-row.discount {
+            color: #16a34a;
+            font-weight: 500;
+        }
+
+        .price-row.total {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+            border-top: 1px solid #f3f4f6;
+            padding-top: 12px;
+            margin-top: 12px;
+        }
+
+        /* Garantia */
+        .guarantee-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            margin-top: 32px;
+        }
+
+        .guarantee-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .guarantee-content p:first-child {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1f2937;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .guarantee-content p:last-child {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        /* Prova Social */
+        .social-proof {
+            margin-top: 32px;
+        }
+
+        .proof-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .testimonial-box {
+            background-color: #f9fafb;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #4b5563;
+            font-style: italic;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .testimonial-box:before {
+            content: '"';
+            position: absolute;
+            top: 4px;
+            left: 8px;
+            font-size: 32px;
+            color: #e5e7eb;
+            font-style: normal;
+        }
+
+        .testimonial-author {
+            margin-top: 8px;
+            font-weight: 700;
+            color: #1f2937;
+            font-style: normal;
+            font-size: 12px;
+        }
+
+        .stars {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .star {
+            color: #fbbf24;
+        }
+
+        .rating-text {
+            color: #6b7280;
+            font-weight: 700;
+            margin-left: 8px;
+            font-size: 13px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            padding: 32px 16px;
+            margin-top: 48px;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 16px;
+        }
+
+        footer a {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 12px;
+            margin: 0 16px;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #b91c1c;
+            text-decoration: underline;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .order-summary {
+                position: static;
+                top: auto;
+            }
+
+            .logo-text {
+                display: none;
+            }
+
+            .security-badge {
+                font-size: 12px;
+            }
+
+            .btn-checkout {
+                font-size: 16px;
+                padding: 16px;
+            }
+
+            section {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <span style="font-size: 24px;">🐔</span>
+                <span class="logo-text">PROTOCOLO <span class="logo-elite">ELITE</span></span>
+            </div>
+            <div class="security-badge">
+                <span class="lock-icon">🔒</span>
+                <span>Ambiente 100% Seguro</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Timer de Urgência -->
+        <div class="urgency-banner">
+            <div class="timer-badge">
+                <span>⏰</span>
+                <span>Oferta expira em: <span id="timer">14:59</span></span>
+            </div>
+        </div>
+
+        <!-- Grid Principal -->
+        <div class="checkout-grid">
+            
+            <!-- Coluna Esquerda: Formulário -->
+            <div>
+                
+                <!-- Dados Pessoais -->
+                <section>
+                    <div class="section-header">
+                        <div class="section-number">1</div>
+                        <h2 class="section-title">Dados Pessoais</h2>
+                    </div>
+                    
+                    <form id="checkoutForm">
+                        <div class="form-group">
+                            <label for="fullname">Nome Completo</label>
+                            <input type="text" id="fullname" placeholder="Como no seu documento" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">E-mail (Onde receberá o acesso)</label>
+                                <input type="email" id="email" placeholder="seu@email.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="whatsapp">WhatsApp</label>
+                                <input type="tel" id="whatsapp" placeholder="(00) 00000-0000" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cpf">CPF</label>
+                            <input type="text" id="cpf" placeholder="000.000.000-00" required>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Pagamento -->
+                <section style="margin-top: 24px;">
+                    <div class="section-header">
+                        <div class="section-number">2</div>
+                        <h2 class="section-title">Forma de Pagamento</h2>
+                    </div>
+
+                    <!-- Abas -->
+                    <div class="payment-tabs">
+                        <button class="tab-button active" onclick="switchTab('pix')">
+                            <span>💳</span> PIX
+                        </button>
+                        <button class="tab-button" onclick="switchTab('card')">
+                            <span>💳</span> Cartão
+                        </button>
+                    </div>
+
+                    <!-- Conteúdo PIX -->
+                    <div id="content-pix" class="tab-content active">
+                        <div class="pix-info">
+                            <div class="pix-icon">💳</div>
+                            <div class="pix-text">
+                                <h4>Aprovação Instantânea</h4>
+                                <p>Você receberá o acesso ao ebook no seu e-mail em menos de 1 minuto após o pagamento.</p>
+                            </div>
+                        </div>
+                        <ul class="benefits-list">
+                            <li>Sem taxas extras</li>
+                            <li>Pagamento seguro via Mercado Pago</li>
+                        </ul>
+                    </div>
+
+                    <!-- Conteúdo Cartão -->
+                    <div id="content-card" class="tab-content">
+                        <div class="form-group">
+                            <label for="cardnumber">Número do Cartão</label>
+                            <input type="text" id="cardnumber" placeholder="0000 0000 0000 0000">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cardname">Nome no Cartão</label>
+                            <input type="text" id="cardname" placeholder="Como impresso no cartão">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cardexpiry">Validade</label>
+                                <input type="text" id="cardexpiry" placeholder="MM/AA">
+                            </div>
+                            <div class="form-group">
+                                <label for="cardcvv">CVV</label>
+                                <input type="text" id="cardcvv" placeholder="123">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="installments">Parcelamento</label>
+                            <select id="installments">
+                                <option>1x de R$ 79,90 (Sem juros)</option>
+                                <option>2x de R$ 39,95 (Sem juros)</option>
+                                <option>3x de R$ 26,63 (Sem juros)</option>
+                                <option>4x de R$ 19,97 (Sem juros)</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Order Bump -->
+                <div class="order-bump">
+                    <input type="checkbox" class="bump-checkbox" id="bump-checkbox">
+                    <div class="bump-content">
+                        <div class="bump-badge">Oferta Exclusiva</div>
+                        <h3>Adicionar Guia de Rações Caseiras por apenas R$ 19,90?</h3>
+                        <p>Aprenda a fazer sua própria ração e economize até 50% nos custos mensais do seu plantel.</p>
+                    </div>
+                </div>
+
+                <!-- Botão Principal -->
+                <button class="btn-checkout" onclick="handleCheckout()">
+                    Finalizar Minha Inscrição Agora
+                </button>
+
+                <!-- Trust Badges -->
+                <div class="trust-badges">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect fill='%231434CB' width='48' height='48'/%3E%3Ctext x='24' y='28' font-size='20' fill='white' text-anchor='middle' font-weight='bold'%3EV%3C/text%3E%3C/svg%3E" alt="Visa" class="trust-badge-item" title="Visa">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect fill='%23EB001B' width='48' height='48'/%3E%3Ccircle cx='16' cy='24' r='8' fill='%23FF5F00'/%3E%3Ccircle cx='32' cy='24' r='8' fill='%23F79E1B'/%3E%3C/svg%3E" alt="Mastercard" class="trust-badge-item" title="Mastercard">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect fill='%2300A3E0' width='48' height='48'/%3E%3Ctext x='24' y='28' font-size='16' fill='white' text-anchor='middle' font-weight='bold'%3EMP%3C/text%3E%3C/svg%3E" alt="Mercado Pago" class="trust-badge-item" title="Mercado Pago">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect fill='%23008000' width='48' height='48'/%3E%3Ctext x='24' y='28' font-size='20' fill='white' text-anchor='middle' font-weight='bold'%3ESSL%3C/text%3E%3C/svg%3E" alt="SSL" class="trust-badge-item" title="SSL">
+                </div>
+            </div>
+
+            <!-- Coluna Direita: Resumo -->
+            <div>
+                <section class="order-summary">
+                    <h2 class="section-title" style="margin-bottom: 24px;">Resumo do Pedido</h2>
+
+                    <!-- Produto -->
+                    <div class="product-card">
+                        <div class="product-image">📚 EBOOK</div>
+                        <div class="product-info">
+                            <h3>PROTOCOLO ELITE: A Cura das Aves</h3>
+                            <p>Acesso Vitalício + Atualizações</p>
+                            <div class="product-price">
+                                <span class="price-original">R$ 119,90</span>
+                                <span class="price-current">R$ 79,90</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Breakdown de Preços -->
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Subtotal</span>
+                            <span>R$ 79,90</span>
+                        </div>
+                        <div class="price-row discount">
+                            <span>Desconto Aplicado</span>
+                            <span>- R$ 40,00</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Total</span>
+                            <span>R$ 79,90</span>
+                        </div>
+                    </div>
+
+                    <!-- Garantia -->
+                    <div class="guarantee-box">
+                        <div class="guarantee-icon">✅</div>
+                        <div class="guarantee-content">
+                            <p>Garantia Blindada</p>
+                            <p>7 dias para testar. Se não gostar, devolvemos 100% do valor.</p>
+                        </div>
+                    </div>
+
+                    <!-- Prova Social -->
+                    <div class="social-proof">
+                        <p class="proof-label">O que dizem os alunos</p>
+                        <div class="testimonial-box">
+                            O material é excelente! Consegui curar 3 galos que já estavam no bico do corvo. Vale cada centavo.
+                            <p class="testimonial-author">— Marcos Paulo, Goiânia - GO</p>
+                        </div>
+                        <div class="stars">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="rating-text">4.9/5 (1.647 avaliações)</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 PROTOCOLO ELITE - Todos os direitos reservados.</p>
+        <p>CNPJ: 63.665.824/0001-09 | Londrina - PR</p>
+        <div>
+            <a href="#">Termos de Uso</a>
+            <a href="#">Privacidade</a>
+            <a href="#">Contato</a>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Timer de Urgência
+        function startTimer(duration, display) {
+            let timer = duration;
+            setInterval(function () {
+                const minutes = Math.floor(timer / 60);
+                const seconds = timer % 60;
+                display.textContent = 
+                    (minutes < 10 ? "0" + minutes : minutes) + ":" +
+                    (seconds < 10 ? "0" + seconds : seconds);
+                if (--timer < 0) {
+                    timer = duration;
+                }
+            }, 1000);
+        }
+
+        window.addEventListener('load', function () {
+            const fifteenMinutes = 60 * 15;
+            const display = document.querySelector('#timer');
+            startTimer(fifteenMinutes, display);
+        });
+
+        // Alternar Abas de Pagamento
+        function switchTab(type) {
+            const tabPix = document.querySelector('button[onclick="switchTab(\'pix\')"]');
+            const tabCard = document.querySelector('button[onclick="switchTab(\'card\')"]');
+            const contentPix = document.getElementById('content-pix');
+            const contentCard = document.getElementById('content-card');
+
+            if (type === 'pix') {
+                tabPix.classList.add('active');
+                tabCard.classList.remove('active');
+                contentPix.classList.add('active');
+                contentCard.classList.remove('active');
+            } else {
+                tabCard.classList.add('active');
+                tabPix.classList.remove('active');
+                contentCard.classList.add('active');
+                contentPix.classList.remove('active');
+            }
+        }
+
+        // Função de Checkout
+        function handleCheckout() {
+            const form = document.getElementById('checkoutForm');
+            
+            // Validar formulário
+            if (!form.checkValidity()) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            // Coletar dados
+            const data = {
+                fullname: document.getElementById('fullname').value,
+                email: document.getElementById('email').value,
+                whatsapp: document.getElementById('whatsapp').value,
+                cpf: document.getElementById('cpf').value,
+                bump: document.getElementById('bump-checkbox').checked ? 'sim' : 'não'
+            };
+
+            // Log dos dados (você pode enviar para um servidor aqui)
+            console.log('Dados do checkout:', data);
+
+            // Aqui você integraria com sua plataforma de pagamento
+            // Exemplo: redirecionar para Mercado Pago, Kiwify, etc.
+            alert('Checkout iniciado! Aqui você integraria com sua plataforma de pagamento.');
+        }
+
+        // Formatar CPF
+        document.getElementById('cpf')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.slice(0, 11);
+            if (value.length > 8) {
+                value = value.slice(0, 3) + '.' + value.slice(3, 6) + '.' + value.slice(6, 9) + '-' + value.slice(9);
+            } else if (value.length > 5) {
+                value = value.slice(0, 3) + '.' + value.slice(3, 6) + '.' + value.slice(6);
+            } else if (value.length > 2) {
+                value = value.slice(0, 3) + '.' + value.slice(3);
+            }
+            e.target.value = value;
+        });
+
+        // Formatar Telefone
+        document.getElementById('whatsapp')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.slice(0, 11);
+            if (value.length > 6) {
+                value = '(' + value.slice(0, 2) + ') ' + value.slice(2, 7) + '-' + value.slice(7);
+            } else if (value.length > 2) {
+                value = '(' + value.slice(0, 2) + ') ' + value.slice(2);
+            }
+            e.target.value = value;
+        });
+
+        // Formatar Cartão
+        document.getElementById('cardnumber')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 16) value = value.slice(0, 16);
+            value = value.replace(/(\d{4})/g, '$1 ').trim();
+            e.target.value = value;
+        });
+
+        // Formatar Validade
+        document.getElementById('cardexpiry')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 4) value = value.slice(0, 4);
+            if (value.length > 2) {
+                value = value.slice(0, 2) + '/' + value.slice(2);
+            }
+            e.target.value = value;
+        });
+
+        // Apenas números no CVV
+        document.getElementById('cardcvv')?.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
+        });
+    </script>
+
+</body>
+</html>
