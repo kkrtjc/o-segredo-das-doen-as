@@ -1014,10 +1014,30 @@ async function handlePayment(method) {
         const pixResult = document.getElementById('pix-result');
         pixResult.classList.remove('hidden');
         
-        // Scroll to top so QR code is visible immediately
-        const ckPage = document.getElementById('checkout-page');
-        if (ckPage) ckPage.scrollTop = 0;
-        pixResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Set personalized name IMMEDIATELY (before QR loads)
+        const nameInput = document.getElementById('payer-name');
+        if (nameInput && nameInput.value) {
+            const firstName = nameInput.value.trim().split(' ')[0];
+            const greetingEl = document.getElementById('pix-greeting');
+            if (greetingEl && firstName.length > 1) {
+                const formattedName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+                greetingEl.innerText = `Quase lá, ${formattedName}!`;
+            }
+        }
+        
+        // Scroll to absolute top so "Quase lá" heading is visible
+        setTimeout(() => {
+            const ckPage = document.getElementById('checkout-page');
+            if (ckPage) {
+                ckPage.scrollTop = 0;
+                // Also reset parent containers (modal-overlay / modal-content)
+                const overlay = ckPage.closest('.modal-overlay');
+                if (overlay) overlay.scrollTop = 0;
+                const content = ckPage.closest('.modal-content');
+                if (content) content.scrollTop = 0;
+            }
+            window.scrollTo(0, 0);
+        }, 50);
         
         // Show loader and hide content until ready
         document.getElementById('qr-loader').classList.remove('hidden');
