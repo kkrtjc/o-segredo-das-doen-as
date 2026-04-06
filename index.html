@@ -2344,13 +2344,14 @@
                                 <p style="font-size: 0.85rem; color: #4b5563; margin-bottom: 4px;">Acesso Vitalicio +
                                     Atualizacoes<br><span style="color: #16a34a; font-weight: 700;">+ Tabela de
                                         vacinacao gratuita inclusa</span></p>
-                                <div style="display: flex; gap: 8px; align-items: center;">
-                                    <span class="ck-price-original dyn-checkout-original">R$ 149,90</span>
-                                    <span class="ck-price-current dyn-checkout-pix"
-                                        id="checkout-product-price-display">R$ 79,90</span>
-                                    <span
-                                        style="background: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; display: inline-block;">-46%
-                                        OFF</span>
+                                <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 5px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                    <div style="font-size: 0.8rem; color: #64748b; font-weight: 500;">De <span id="top-checkout-card-price" style="text-decoration: line-through;">R$ 149,90</span> por apenas:</div>
+                                    <div style="display: flex; align-items: baseline; gap: 6px;">
+                                        <span id="top-checkout-card-installment" style="font-size: 1.3rem; color: #16a34a; font-weight: 900; line-height: 1;">4x de R$ 37,47</span>
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: #0f172a; font-weight: 700; margin-top: 2px;">
+                                        Ou <span id="checkout-product-price-display" style="color: #22c55e; font-weight: 800;">R$ 79,90</span> com desconto no PIX
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2388,18 +2389,20 @@
                                 </div>
                             </div>
 
+                            <!-- WhatsApp Support Banner Junto da Garantia -->
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; margin-top: 15px; margin-bottom: 5px; cursor: pointer; transition: 0.2s;" onclick="window.open('https://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20para%20finalizar%20minha%20compra.', '_blank')">
+                                <i class="fa-brands fa-whatsapp fa-bounce" style="color: #22c55e; font-size: 1.6rem;"></i>
+                                <div style="text-align: left; line-height: 1.2;">
+                                    <span style="display: block; font-size: 0.8rem; color: #166534; font-weight: 800;">Atendimento Rápido</span>
+                                    <span style="display: block; font-size: 0.7rem; color: #15803d; font-weight: 500;">Dúvidas? Chame a gente no WhatsApp</span>
+                                </div>
+                            </div>
+
                             <!-- Prova -->
                         </div>
                     </div>
 
-                    <!-- 3. Ofertas Exclusivas -->
-                    <div class="ck-section">
-                        <!-- Title shifted directly to script.js -->
-                        <div id="order-bump-area"></div>
-                    </div>
-
                     <form id="payment-form">
-                        <!-- 4. Dados Pessoais -->
                         <!-- Dados Pessoais -->
                         <div class="ck-section">
                             <div class="ck-section-header">
@@ -2443,6 +2446,11 @@
                                     <div class="field-tooltip">Apenas numeros do CPF</div>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- 3. Ofertas Exclusivas / Order Bumps (Movido para cá) -->
+                        <div class="ck-section" style="margin-top: 24px;">
+                            <div id="order-bump-area"></div>
                         </div>
 
                         <!-- Pagamento -->
@@ -2560,14 +2568,7 @@
                                     <button type="button" id="btn-pay-card" class="ck-btn-checkout"
                                         style="display: none;">FINALIZAR PAGAMENTO</button>
 
-                                    <!-- WhatsApp Support Balloon -->
-                                    <div style="margin-top: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 16px; border-radius: 50px; cursor: pointer; transition: all 0.2s ease; background: transparent; border: 1px solid #e5e7eb;" onclick="window.open('https://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20para%20finalizar%20minha%20compra.', '_blank')" onmouseover="this.style.background='#f0fdf4'; this.style.borderColor='#bbf7d0'" onmouseout="this.style.background='transparent'; this.style.borderColor='#e5e7eb'">
-                                        <i class="fa-brands fa-whatsapp" style="color: #22c55e; font-size: 1.5rem;"></i>
-                                        <div style="text-align: left; line-height: 1.2;">
-                                            <span style="display: block; font-size: 0.7rem; color: #64748b;">Precisa de ajuda com a compra?</span>
-                                            <span style="display: block; font-size: 0.75rem; color: #0f172a; font-weight: 700;">Chame um de nossos atendentes</span>
-                                        </div>
-                                    </div>
+
                                 </div>
 
                             </div>

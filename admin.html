@@ -317,7 +317,7 @@
             
             // Tenta validar puxando analytics simples
             try {
-                const res = await fetch('https://teste-m1kq.onrender.com/api/history', { 
+                const res = await fetch('https://mura-api.joaopaulojaguar.workers.dev/api/history', { 
                     headers: { 'x-admin-password': currentPass }
                 });
                 if(res.ok) {
@@ -334,7 +334,7 @@
 
         async function validateFastLogin() {
             try {
-                const res = await fetch('https://teste-m1kq.onrender.com/api/history?limit=1', { 
+                const res = await fetch('https://mura-api.joaopaulojaguar.workers.dev/api/history?limit=1', { 
                     headers: { 'x-admin-password': currentPass }
                 });
                 if(res.ok) {
@@ -394,8 +394,8 @@
         async function loadDashboard() {
             try {
                 const [resA, resH] = await Promise.all([
-                    fetch('https://teste-m1kq.onrender.com/api/analytics', { headers: { 'x-admin-password': currentPass } }),
-                    fetch('https://teste-m1kq.onrender.com/api/history', { headers: { 'x-admin-password': currentPass } })
+                    fetch('https://mura-api.joaopaulojaguar.workers.dev/api/analytics', { headers: { 'x-admin-password': currentPass } }),
+                    fetch('https://mura-api.joaopaulojaguar.workers.dev/api/history', { headers: { 'x-admin-password': currentPass } })
                 ]);
                 globalAnalytics = await resA.json();
                 globalHistory = await resH.json();
@@ -482,7 +482,7 @@
             const list = document.getElementById('abandons-list');
             list.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i></div>';
             try {
-                const res = await fetch('https://teste-m1kq.onrender.com/api/abandons', { headers: { 'x-admin-password': currentPass } });
+                const res = await fetch('https://mura-api.joaopaulojaguar.workers.dev/api/abandons', { headers: { 'x-admin-password': currentPass } });
                 const data = await res.json();
                 
                 if(!Array.isArray(data) || data.length === 0) {
@@ -524,7 +524,7 @@
             const list = document.getElementById('pix-list');
             list.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i></div>';
             try {
-                const res = await fetch('https://teste-m1kq.onrender.com/api/history', { headers: { 'x-admin-password': currentPass } });
+                const res = await fetch('https://mura-api.joaopaulojaguar.workers.dev/api/history', { headers: { 'x-admin-password': currentPass } });
                 const data = await res.json();
                 
                 if(!Array.isArray(data)) {
@@ -571,7 +571,7 @@
             const list = document.getElementById('products-list');
             list.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i></div>';
             try {
-                const res = await fetch('https://teste-m1kq.onrender.com/api/config');
+                const res = await fetch('https://mura-api.joaopaulojaguar.workers.dev/api/config');
                 configDataCache = await res.json();
                 
                 const products = configDataCache.products || {};
@@ -639,7 +639,7 @@
             if(!configDataCache) return;
             
             try {
-                const res = await fetch('https://teste-m1kq.onrender.com/api/config/update', {
+                const res = await fetch('https://mura-api.joaopaulojaguar.workers.dev/api/config/update', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ password: currentPass, data: configDataCache })
@@ -661,7 +661,7 @@
         async function clearHistory() {
             if(!confirm("Tem certeza que deseja apagar todo o histórico de VENDAS (Back-end)? Apenas vendas serão afetadas.")) return;
             try {
-                const res = await fetch('https://teste-m1kq.onrender.com/api/history/clear', {
+                const res = await fetch('https://mura-api.joaopaulojaguar.workers.dev/api/history/clear', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ password: currentPass })

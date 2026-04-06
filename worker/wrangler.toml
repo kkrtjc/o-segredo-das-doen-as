@@ -1,0 +1,43 @@
+name = "mura-api"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# KV Namespaces
+[[kv_namespaces]]
+binding = "CONFIG"
+id = "5d48f1d6053a4894abcc664b58ffa3ce"
+
+[[kv_namespaces]]
+binding = "HISTORY"
+id = "f035775fb13c4fc2b1e749ac4ac40a2b"
+
+[[kv_namespaces]]
+binding = "ANALYTICS"
+id = "58bea267b19c454caba95033fc3cac37"
+
+[[kv_namespaces]]
+binding = "LEADS"
+id = "76d0b5534c2540c2817776da7b173e2b"
+
+[[kv_namespaces]]
+binding = "ABANDONS"
+id = "4e3344c03dc345d0b4fa1ebcbb4f1ec4"
+
+# R2 Bucket — DESCOMENTE DEPOIS de ativar R2 no painel Cloudflare e rodar:
+# npx wrangler r2 bucket create mura-ebooks
+# [[r2_buckets]]
+# binding = "EBOOKS"
+# bucket_name = "mura-ebooks"
+
+# Variaveis publicas
+[vars]
+BASE_URL = "https://mura-api.joaopaulojaguar.workers.dev"
+
+# Segredos — configurar via:
+# npx wrangler secret put MP_ACCESS_TOKEN
+# npx wrangler secret put ADMIN_PASSWORD
+# npx wrangler secret put JWT_SECRET
+# npx wrangler secret put GMAIL_CLIENT_ID
+# npx wrangler secret put GMAIL_CLIENT_SECRET
+# npx wrangler secret put GMAIL_REFRESH_TOKEN
