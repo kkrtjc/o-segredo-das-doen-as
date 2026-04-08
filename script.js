@@ -380,8 +380,8 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             originalPrice: 149.90,
             cover: 'capadasdoencas.webp',
             fullBumps: [
-                { id: 'ebook-manejo', title: 'Manual de Pintinhos', price: 49.90, priceCard: 49.90, image: 'capadospintinhos.webp', description: 'Crie pintinhos fortes e saudáveis.' },
-                { id: 'bump-6361', title: 'Tabela de Ração', price: 19.90, priceCard: 19.90, image: 'tabela_racao_bump.webp', description: 'Alimentaçao correta em todas as fases da sua criaçao. Economize na raçao e acelere o crescimento das suas aves com o balanceamento ideal.', tag: 'OFERTA ÚNICA' }
+                { id: 'ebook-manejo', title: 'Manual de Pintinhos', price: 49.90, priceCard: 49.90, image: 'capadospintinhos.webp', description: '90% das mortes ocorrem antes dos 20 dias. O manual ensina temperatura, ração e manejo correto para garantir a sobrevivência dos seus pintinhos.' },
+                { id: 'bump-6361', title: 'Tabela de Ração', price: 19.90, priceCard: 19.90, image: 'tabela_racao_bump.webp', description: 'Corte até R$ 80/mês no gasto com ração. Aprenda a montar sua própria ração balanceada e nutritiva sem depender de marca cara.', tag: 'OFERTA ÚNICA' }
             ]
         },
         'combo-elite': {
@@ -498,9 +498,9 @@ function renderOrderBumps(bumps) {
     area.style.marginTop = '0.5rem';
 
     const bumpHeader = `
-        <div style="text-align: center; margin-bottom: 4px;">
-            <p style="color: #d97706; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.8px; margin: 0;">
-                📢 OFERTAS EXCLUSIVAS PARA ESTE PEDIDO
+        <div style="text-align: center; margin-bottom: 6px; padding: 6px 10px; background: rgba(239,68,68,0.08); border-radius: 8px; border: 1px solid rgba(239,68,68,0.2);">
+            <p style="color: #ef4444; font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin: 0;">
+                ⚡ ADICIONE AGORA — ESSA OFERTA DESAPARECE AO FECHAR O CHECKOUT
             </p>
         </div>
     `;
@@ -517,10 +517,10 @@ function renderOrderBumps(bumps) {
         }
 
         const isManejo = (bump.id === 'ebook-manejo' || bump.title?.includes('Pintinhos'));
-        const title = isManejo ? 'MANUAL DE PINTINHOS' : bump.title;
+        const title = isManejo ? '🐣 SALVE SEUS PINTINHOS' : '💰 CORTE SUA CONTA DE RAÇÃO';
         const desc = isManejo 
-            ? '🐣 <span style="color: #fca5a5;"><strong>90% das mortes</strong></span> em pintinhos é por manejo errado. <span style="color: #4ade80;"><strong>Garanta 95% de sobrevivência</strong></span> nos pintinhos com o manual de elite.' 
-            : '💸 <span style="color: #fca5a5;"><strong>O maior prejuízo na criação</strong></span> está na ração comercial. <span style="color: #4ade80;"><strong>Aprenda a produzir sua própria ração balanceada</strong></span> e economize até 65% na alimentação.';
+            ? '<span style="color: #fca5a5;"><strong>8 em cada 10 pintinhos morrem antes dos 20 dias.</strong></span> Temperatura errada, ração imprópria, bico molhado. <span style="color: #4ade80;"><strong>O manual te ensina o passo a passo completo</strong></span> do nascimento à fase adulta.' 
+            : '<span style="color: #fca5a5;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até R$ 80/mês</strong> no seu plantel.';
 
         return `
             <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="margin-bottom: 0; min-height: 140px; padding: 0; position: relative; overflow: hidden; border-radius: 10px; cursor: pointer;">
@@ -550,7 +550,7 @@ function renderOrderBumps(bumps) {
                     </p>
 
                     <div style="margin-top: 4px; display: flex; align-items: baseline; gap: 6px; position: relative; z-index: 5;">
-                        <span class="order-bump-old-price">${isManejo ? 'R$ 99' : 'R$ 59'}</span>
+                        <span class="order-bump-old-price">${isManejo ? 'R$ 99,90' : 'R$ 49,90'}</span>
                         <span class="order-bump-price">
                             + ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}
                         </span>

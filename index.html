@@ -258,33 +258,29 @@
     <!-- UPSELL MODAL SIDE-PANEL -->
     <div id="upsell-modal-container" class="upsell-modal-container">
         <div class="upsell-content">
-            <h3 style="color: #ef4444; font-size: 1.05rem; text-transform: uppercase; margin-bottom: 2px;"><i
-                    class="fa-solid fa-triangle-exclamation"></i> PARE DE PERDER PINTINHOS</h3>
+            <!-- Tag vermelha de urgência -->
+            <div style="background: #dc2626; color: #fff; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; padding: 5px 12px; border-radius: 6px; display: inline-block; margin-bottom: 8px;">⚡ Oferta exclusiva — só enquanto você está aqui</div>
 
-            <p style="font-size: 0.8rem; color: var(--gray-600); margin-bottom: 8px; line-height: 1.3;">
-                <strong style="color: #111;">8 a cada 10 pintinhos morrem</strong> antes dos 20 dias por erro de manejo.
+            <h3 style="color: #111; font-size: 1.05rem; font-weight: 900; line-height: 1.3; margin-bottom: 6px;">Você sabe que <span style="color: #dc2626;">8 em cada 10 pintinhos morrem</span> antes dos 20 dias — e o erro costuma ser seu.</h3>
+
+            <p style="font-size: 0.8rem; color: #4b5563; margin-bottom: 10px; line-height: 1.4;">
+                Temperatura errada, ração inadequada, bico molhado — detalhes de manejo que o guia das doenças não cobre. <strong style="color: #111;">O Manual de Pintinhos preenche exatamente esse buraco.</strong>
             </p>
 
-            <div
-                style="display: flex; gap: 12px; background: #f9fafb; padding: 8px; border-radius: 10px; border: 1px solid #eee; margin-bottom: 8px;">
-                <img src="capadospintinhos.webp" style="width: 70px; height: auto; border-radius: 5px;">
+            <div style="display: flex; gap: 12px; background: #f0fdf4; padding: 10px; border-radius: 10px; border: 1px solid #86efac; margin-bottom: 10px; align-items: center;">
+                <img src="capadospintinhos.webp" style="width: 66px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">
                 <div>
-                    <h4 style="font-size: 0.95rem; margin: 0; color: #111;">Manejo de Pintinhos</h4>
-                    <p style="font-size: 0.8rem; color: var(--gray-500); margin: 2px 0;">De: <span
-                            style="text-decoration: line-through;">R$ 99,90</span></p>
-                    <div style="font-weight: 800; color: var(--success); font-size: 1rem;">Por: R$ 49,90</div>
+                    <p style="font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.3px; margin: 0 0 2px;">Manual de Manejo de Pintinhos</p>
+                    <p style="font-size: 0.78rem; color: #6b7280; margin: 0;">De: <span style="text-decoration: line-through;">R$ 99,90</span></p>
+                    <div style="font-weight: 900; color: #16a34a; font-size: 1.1rem; line-height: 1;">Por: R$ 49,90 <span style="font-size: 0.65rem; color: #6b7280; font-weight: 400;">adicionado ao pedido</span></div>
                 </div>
             </div>
 
-            <p style="font-size: 0.75rem; color: var(--gray-600); margin-bottom: 10px; line-height: 1.3;">
-                Aprenda o passo a passo do nascimento à fase adulta e blinde sua criação.
-            </p>
-
             <button onclick="acceptUpsell()" class="btn-upsell-yes">
-                <i class="fa-solid fa-check"></i> SIM, ADICIONAR AGORA
+                <i class="fa-solid fa-check"></i> SIM, QUERO PROTEGER MEUS PINTINHOS
             </button>
             <button onclick="declineUpsell()" class="btn-upsell-no">
-                Não, prefiro correr o risco
+                Não, prefiro arriscar perder meus pintinhos
             </button>
         </div>
     </div>
@@ -1852,41 +1848,61 @@
             #checkout-page .order-bump-container .order-bump-title,
             #checkout-page .order-bump-title {
                 color: #fbbf24 !important; /* Gold */
-                font-size: 0.95rem !important;
+                font-size: 1rem !important;
                 font-weight: 900 !important;
-                text-shadow: 0 2px 4px rgba(0,0,0,0.9) !important;
-                line-height: 1.1 !important;
-                margin-bottom: 4px !important;
+                text-shadow: 0 2px 6px rgba(0,0,0,1) !important;
+                line-height: 1.2 !important;
+                margin-bottom: 6px !important;
                 display: block !important;
+                letter-spacing: -0.2px !important;
             }
 
             #checkout-page .order-bump-container .order-bump-description,
-            #checkout-page .order-bump-description,
+            #checkout-page .order-bump-description {
+                color: #f1f5f9 !important;
+                font-size: 0.75rem !important;
+                line-height: 1.35 !important;
+                text-shadow: 0 1px 4px rgba(0,0,0,1) !important;
+            }
+
+            /* Permite cores inline (vermelho/verde) nas spans da descricao */
             #checkout-page .order-bump-description span,
             #checkout-page .order-bump-description strong {
-                color: #ffffff !important; /* White */
-                font-size: 0.75rem !important;
-                line-height: 1.3 !important;
-                text-shadow: 0 1px 3px rgba(0,0,0,0.9) !important;
+                text-shadow: 0 1px 4px rgba(0,0,0,0.9) !important;
             }
 
             #checkout-page .order-bump-container .order-bump-price,
             #checkout-page .order-bump-price {
-                color: #fbbf24 !important; /* Gold */
+                color: #4ade80 !important; /* Verde brilhante = ganho */
                 font-size: 1.1rem !important;
                 font-weight: 900 !important;
                 text-shadow: 0 2px 4px rgba(0,0,0,0.9) !important;
             }
 
             #checkout-page .order-bump-container .order-bump-old-price {
-                color: #d1d5db !important;
+                color: #fca5a5 !important; /* Rosa = prejuizo evitado */
                 text-decoration: line-through !important;
-                font-size: 0.7rem !important;
-                opacity: 0.8 !important;
+                font-size: 0.75rem !important;
+                opacity: 1 !important;
+                font-weight: 600 !important;
             }
 
             #checkout-page .bump-check-wrapper {
                 border-color: #fbbf24 !important;
+            }
+
+            #checkout-page .order-bump-container:not(.selected) {
+                box-shadow: 0 0 0 2px rgba(251,191,36,0.3);
+                animation: bumpPulse 2.5s ease-in-out infinite;
+            }
+
+            @keyframes bumpPulse {
+                0%, 100% { box-shadow: 0 0 0 2px rgba(251,191,36,0.2); }
+                50% { box-shadow: 0 0 0 3px rgba(251,191,36,0.6), 0 4px 16px rgba(0,0,0,0.4); }
+            }
+
+            #checkout-page .order-bump-container.selected {
+                animation: none !important;
             }
 
             #checkout-page .order-bump-container.selected .bump-check-wrapper {

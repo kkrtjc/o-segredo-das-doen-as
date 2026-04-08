@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Menu Puro HTML/CSS - Mura Elite</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-glass: rgba(30, 41, 59, 0.7);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-primary: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.2);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* 100% NATIVE HTML CONTROLS - INVISÍVEIS */
+        .state-control { display: none; }
+
+        /* CABEÇALHO MOBILE */
+        .mobile-header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 70px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+        }
+
+        .logo-area { font-size: 1.2rem; font-weight: bold; letter-spacing: 1px; }
+
+        /* BOTÃO HAMBÚRGUER (Label apontando para o checkbox) */
+        .menu-btn {
+            width: 44px; height: 44px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            color: #fff; font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* OVERLAY DE FUNDO */
+        .overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 105;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+        /* Fechar clicando no fundo */
+        .overlay-close-label {
+            display: block; width: 100%; height: 100%;
+        }
+
+        /* SIDEBAR (MENU LATERAL) */
+        .sidebar {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: 85%; max-width: 320px;
+            background: #1e293b;
+            z-index: 110;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 20px 0 30px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-glass);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* BOTÃO DE FECHAR DA SIDEBAR */
+        .close-btn {
+            width: 36px; height: 36px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #fff; font-size: 1.2rem;
+        }
+
+        /* BOTÕES DE ABA (LABELS APONTANDO PARA RADIOS) */
+        .tabs-container { padding: 24px 16px; display: flex; flex-direction: column; gap: 8px; }
+        
+        .tab-label {
+            display: flex; align-items: center; gap: 12px;
+            width: 100%; padding: 16px 20px;
+            border-radius: 12px;
+            color: var(--text-secondary); font-weight: 500;
+            cursor: pointer; transition: var(--transition);
+            border: 1px solid transparent;
+        }
+        .tab-icon {
+            width: 36px; height: 36px; border-radius: 8px;
+            background: var(--bg-glass);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* ÁREA DE CONTEÚDO PRINCIPAL */
+        .main-content {
+            padding: 100px 24px 40px;
+            max-width: 900px; margin: 0 auto;
+        }
+
+        .tab-pane {
+            display: none; /* Escondido por padrão */
+            animation: fadeSlideUp 0.4s ease forwards;
+        }
+        .glass-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            padding: 30px; border-radius: 20px;
+        }
+        .glass-card h2 { margin-bottom: 15px; }
+        .glass-card p { color: var(--text-secondary); line-height: 1.6; }
+
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* -------------------------------------------------------------
+           MÁGICA DO CSS NATIVO (O que faz as abas e o menu funcionarem!)
+           ------------------------------------------------------------- */
+        
+        /* 1. Toggle do Sidebar */
+        #ctrl-sidebar:checked ~ .overlay { opacity: 1; pointer-events: auto; }
+        #ctrl-sidebar:checked ~ .sidebar { transform: translateX(0); }
+        /* Bloqueia scroll do corpo quando menu abre */
+        body:has(#ctrl-sidebar:checked) { overflow: hidden; }
+
+        /* 2. Seleção Visual da Aba no Menu lateral */
+        #ctrl-tab1:checked ~ .sidebar .tab-label[for="ctrl-tab1"],
+        #ctrl-tab2:checked ~ .sidebar .tab-label[for="ctrl-tab2"],
+        #ctrl-tab3:checked ~ .sidebar .tab-label[for="ctrl-tab3"] {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--accent-primary);
+        }
+        #ctrl-tab1:checked ~ .sidebar .tab-label[for="ctrl-tab1"] .tab-icon,
+        #ctrl-tab2:checked ~ .sidebar .tab-label[for="ctrl-tab2"] .tab-icon,
+        #ctrl-tab3:checked ~ .sidebar .tab-label[for="ctrl-tab3"] .tab-icon {
+            background: var(--accent-primary); color: #fff;
+        }
+
+        /* 3. Troca de Conteúdo */
+        #ctrl-tab1:checked ~ .main-content #pane-tab1,
+        #ctrl-tab2:checked ~ .main-content #pane-tab2,
+        #ctrl-tab3:checked ~ .main-content #pane-tab3 {
+            display: block; /* Mostra o que foi clicado */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- OS CONTROLES HTML INVISÍVEIS QUE O IOS SUPORTA 100% NATIVO -->
+    <!-- Controle do estado do Menu Lateral -->
+    <input type="checkbox" id="ctrl-sidebar" class="state-control">
+    
+    <!-- Controles do estado das abas -->
+    <input type="radio" name="aba-grupo" id="ctrl-tab1" class="state-control" checked>
+    <input type="radio" name="aba-grupo" id="ctrl-tab2" class="state-control">
+    <input type="radio" name="aba-grupo" id="ctrl-tab3" class="state-control">
+
+
+    <!-- CABEÇALHO SUPERIOR (Fixo) -->
+    <header class="mobile-header">
+        <div class="logo-area">&#128218; Mura Elite</div>
+        <!-- Ao clicar nesta label, o checkbox #ctrl-sidebar inverte -->
+        <label for="ctrl-sidebar" class="menu-btn">&#9776;</label>
+    </header>
+
+    <!-- OVERLAY MÁSCARA ESCURA (quando aberto) -->
+    <div class="overlay">
+        <label for="ctrl-sidebar" class="overlay-close-label"></label>
+    </div>
+
+    <!-- O MENU DESLIZANTE -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3>Menu Principal</h3>
+            <!-- Botão fechar (X) -->
+            <label for="ctrl-sidebar" class="close-btn">&#10005;</label>
+        </div>
+        
+        <div class="tabs-container">
+            <!-- Abas (Clique ativa a Aba através do atributo "for") -->
+            <label for="ctrl-tab1" class="tab-label">
+                <div class="tab-icon">&#128640;</div> Início Rápid
+            </label>
+            <label for="ctrl-tab2" class="tab-label">
+                <div class="tab-icon">&#128187;</div> Estatísticas
+            </label>
+            <label for="ctrl-tab3" class="tab-label">
+                <div class="tab-icon">&#9881;&#65039;</div> Configurações
+            </label>
+        </div>
+        <div style="margin-top:auto; padding:24px; color:var(--text-secondary); font-size:0.8rem; text-align:center;">
+            Desenhado para falha zero no iOS
+        </div>
+    </aside>
+
+    <!-- TELA DE CONTEÚDO (Muda conforme o Radio Button Checked) -->
+    <main class="main-content">
+        
+        <section class="tab-pane" id="pane-tab1">
+            <div class="glass-card">
+                <h2>Cenário Principal</h2>
+                <p>Esta é a Aba 1. Perceba como tudo foi construído apenas usando links e botões puros do navegador, sem forçar funções complexas ou amarrar código para interceptar toques.</p>
+                <button style="margin-top:20px; padding:12px 24px; border-radius:8px; background:var(--accent-primary); color:#fff; border:none;">Prosseguir</button>
+            </div>
+        </section>
+
+        <section class="tab-pane" id="pane-tab2">
+            <div class="glass-card">
+                <h2 style="color:#38bdf8">Métricas e Dados</h2>
+                <p>Ao selecionar Aba 2, o navegador nativamente identificou a alteração do formulário interno escondido e renderizou em tempo real a aba correta usando regra estrita de CSS.</p>
+                <div style="margin-top:20px; background:rgba(255,255,255,0.05); padding:20px; border-radius:12px; font-size:2rem; color:#fff;">+25.000 visualizações</div>
+            </div>
+        </section>
+
+        <section class="tab-pane" id="pane-tab3">
+            <div class="glass-card">
+                <h2 style="color:#a78bfa">Configurações</h2>
+                <p>Nenhuma gambiarra com "prevent defaults", "timeout", "z-indexes sobrepostos" ou conflitos com o WKWebkit do iOS Safari. Isso é a estabilidade máxima de renderização.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Script minimalista APENAS para desmarcar o checkbox do menu ao clicar em uma aba,
+         para que o menu se feche sozinho ao mudar de aba no celular -->
+    <script>
+        var sidebarCtrl = document.getElementById('ctrl-sidebar');
+        var labels = document.querySelectorAll('.tab-label');
+        for(var i = 0; i < labels.length; i++) {
+            labels[i].addEventListener('click', function() {
+                // Remove o click do toggle pra ele fechar o painel lateral
+                sidebarCtrl.checked = false;
+            });
+        }
+    </script>
+</body>
+</html>
