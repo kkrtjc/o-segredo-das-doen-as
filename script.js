@@ -523,38 +523,45 @@ function renderOrderBumps(bumps) {
             ? '<span style="color: #fca5a5;"><strong>8 em cada 10 pintinhos morrem antes dos 20 dias.</strong></span> Temperatura errada, ração imprópria, bico molhado. <span style="color: #4ade80;"><strong>O manual te ensina o passo a passo completo</strong></span> do nascimento à fase adulta.' 
             : '<span style="color: #fca5a5;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até R$ 80/mês</strong> no seu plantel.';
 
+        const bumpLabel = isManejo ? 'MANUAL DE ELITE<br>DOS PINTINHOS' : 'TABELA DE RAÇÃO';
+
         return `
-            <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="margin-bottom: 0; min-height: 140px; padding: 0; position: relative; overflow: hidden; border-radius: 10px; cursor: pointer;">
-                
-                <!-- Background Image -->
-                ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: ${isManejo ? 'center 20%' : 'center'}; z-index: 0;">` : ''}
-                
-                <!-- Gradient Overlay -->
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.85) 60%); z-index: 1;"></div>
-
-                <!-- Content -->
-                <div style="position: relative; z-index: 2; display: flex; flex-direction: column; padding: 8px; width: 100%; height: 100%; justify-content: flex-end; min-height: 140px;">
+            <div style="display: flex; flex-direction: column; gap: 6px; align-items: center; text-align: center;">
+                <span style="font-size: 0.72rem; font-weight: 800; color: #f8fafc; text-transform: uppercase; letter-spacing: 1.2px; line-height: 1.1; min-height: 26px; display: flex; align-items: center; justify-content: center; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 0 2px 4px rgba(0,0,0,0.5);">
+                    ${bumpLabel}
+                </span>
+                <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="margin-bottom: 0; min-height: 140px; padding: 0; position: relative; overflow: hidden; border-radius: 10px; cursor: pointer; width: 100%;">
                     
-                    <div style="position: absolute; top: 6px; right: 6px;" class="bump-check-wrapper-container">
-                        <div class="bump-check-wrapper" style="width: 18px; height: 18px; border-radius: 4px; border: 2px solid ${isSelected ? '#10b981' : '#fbbf24'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#10b981' : 'rgba(0,0,0,0.4)'};">
-                            ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.6rem;"></i>' : ''}
+                    <!-- Background Image -->
+                    ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: ${isManejo ? 'center 20%' : 'center'}; z-index: 0;">` : ''}
+                    
+                    <!-- Gradient Overlay -->
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.85) 60%); z-index: 1;"></div>
+
+                    <!-- Content -->
+                    <div style="position: relative; z-index: 2; display: flex; flex-direction: column; padding: 8px; width: 100%; height: 100%; justify-content: flex-end; min-height: 140px;">
+                        
+                        <div style="position: absolute; top: 6px; right: 6px;" class="bump-check-wrapper-container">
+                            <div class="bump-check-wrapper" style="width: 18px; height: 18px; border-radius: 4px; border: 2px solid ${isSelected ? '#10b981' : '#fbbf24'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#10b981' : 'rgba(0,0,0,0.4)'};">
+                                ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.6rem;"></i>' : ''}
+                            </div>
                         </div>
-                    </div>
-                    <input type="checkbox" id="bump-chk-${bump.id}" ${isSelected ? 'checked' : ''} style="display: none;">
-                    
-                    <strong class="order-bump-title">
-                        ${title}
-                    </strong>
-                    
-                    <p class="order-bump-description">
-                        ${desc}
-                    </p>
+                        <input type="checkbox" id="bump-chk-${bump.id}" ${isSelected ? 'checked' : ''} style="display: none;">
+                        
+                        <strong class="order-bump-title">
+                            ${title}
+                        </strong>
+                        
+                        <p class="order-bump-description">
+                            ${desc}
+                        </p>
 
-                    <div style="margin-top: 4px; display: flex; align-items: baseline; gap: 6px; position: relative; z-index: 5;">
-                        <span class="order-bump-old-price">${isManejo ? 'R$ 99,90' : 'R$ 49,90'}</span>
-                        <span class="order-bump-price">
-                            + ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}
-                        </span>
+                        <div style="margin-top: 4px; display: flex; align-items: baseline; gap: 6px; position: relative; z-index: 5;">
+                            <span class="order-bump-old-price">${isManejo ? 'R$ 99,90' : 'R$ 49,90'}</span>
+                            <span class="order-bump-price">
+                                + ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>`;
