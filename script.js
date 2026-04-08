@@ -498,9 +498,10 @@ function renderOrderBumps(bumps) {
     area.style.marginTop = '0.5rem';
 
     const bumpHeader = `
-        <div style="text-align: center; margin-bottom: 6px; padding: 6px 10px; background: rgba(239,68,68,0.08); border-radius: 8px; border: 1px solid rgba(239,68,68,0.2);">
-            <p style="color: #ef4444; font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin: 0;">
-                ⚡ ADICIONE AGORA — ESSA OFERTA DESAPARECE AO FECHAR O CHECKOUT
+        <div style="text-align: center; margin-bottom: 6px; padding: 8px 10px; background: rgba(239,68,68,0.08); border-radius: 8px; border: 1px solid rgba(239,68,68,0.2);">
+            <p style="color: #ef4444; font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin: 0; line-height: 1.6;">
+                ⚡ ADICIONE AGORA ESSAS OFERTAS IMPERDÍVEIS!<br>
+                <span style="color: #fbbf24;">ELAS NÃO APARECEM EM OUTRO LUGAR — ESSA É SUA ÚNICA CHANCE.</span>
             </p>
         </div>
     `;
