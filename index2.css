@@ -598,15 +598,9 @@ header.sticky {
 
 .payment-methods-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 0.75rem;
     margin-top: 0.5rem;
-}
-
-@media (max-width: 480px) {
-    .payment-methods-grid {
-        grid-template-columns: 1fr;
-    }
 }
 
 .radio-item {
@@ -619,9 +613,6 @@ header.sticky {
     cursor: pointer;
     transition: 0.2s;
     background: var(--white);
-    min-width: 0;
-    overflow: hidden;
-    box-sizing: border-box;
 }
 
 .radio-item:hover {

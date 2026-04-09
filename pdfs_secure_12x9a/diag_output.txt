@@ -1,0 +1,80 @@
+Total merged paragraphs: 209
+
+SECTION [  0]: Apresentação Olá, amigo criador! Se você chegou até aqui, é provável que tenha enfrentado uma situação comum entre os ap
+SECTION [  1]: Tratamentos que se mostraram eficazes na prática, incluindo medicamentos injetáveis, via oral e comprimidos Minha missão
+SECTION [  2]: Capítulo 2 – Guias e Tabelas Rápidas
+SECTION [  3]: Capítulo 1 – Doenças em Galinhas e possíveis tratamentos A importância da prevenção Quando procurar um veterinário Tabel
+SECTION [  4]: Checklist de manejo diário
+SECTION [  5]: Calendário de vacinação
+SECTION [  6]: Protocolos de vermifugação Doenças Respiratórias Doenças Virais Sistêmicas Doenças Bacterianas Sistêmicas / Entéricas Do
+SECTION [  7]: CAPÍTULO 1 DOENÇAS EM GALINHAS E RESPECTIVOS TRATAMENTOS Doenças Respiratórias As doenças respiratória ssão comunsemgali
+SECTION [  8]: Sintomas: Espirros, tosse, dificuldade respiratória (respiração ruidosa), secreção nasal e ocular, inchaço da face. Em g
+SECTION [  9]: Prevenção: A vacinação é a principal medida preventiva, juntamente com rigorosas práticas de biosseguridade e manejo amb
+SECTION [ 10]: Tratamento (Baseado em Experiência Prática): Não existe tratamento específico para a Bronquite Infecciosa, pois é uma do
+SECTION [ 11]: Antibióticos: Para infecções bacterianas secundárias, pode-se usar Tilosina (ex: Tylan®) na dose de 15 mg/kg de peso viv
+SECTION [ 12]: Suporte: Oferecer eletrólitos e vitaminas na água de bebida (especialmente vitaminas A, D e E) para fortalecer a imunida
+SECTION [ 13]: Aviso: O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aq
+SECTION [ 14]: Sintomas: Dificuldade respiratória severa, tosse com eliminação de muco sanguinolento, estiramento do pescoço para respi
+SECTION [ 15]: Prevenção: A vacinação é a medida mais eficaz para prevenir a ILT. Medidas de biosseguridade, como controle de acesso, l
+SECTION [ 16]: Tratamento (Baseado em Experiência Prática): Não há tratamento antiviral específico para a Laringotraqueíte Infecciosa. 
+SECTION [ 17]: Antibióticos: Para prevenir ou tratar infecções bacterianas secundárias, pode-se usar Tilosina (ex: Tylan®) na dose de 1
+SECTION [ 18]: Suporte: Manter as aves em ambiente aquecido, com boa ventilação e baixa umidade. Oferecer eletrólitos e vitaminas na ág
+SECTION [ 19]: Aviso: O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aq
+SECTION [ 43]: Aviso: O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aq
+SECTION [ 71]: Aviso: O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aq
+SECTION [ 95]: Aviso: O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aq
+SECTION [125]: Aviso: O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aq
+SECTION [178]: CAPÍTULO 2
+
+
+=== FIRST 50 MERGED PARAGRAPHS ===
+[  0] Apresentação Olá, amigo criador! Se você chegou até aqui, é provável que tenha enfrentado uma situação comum entre os apaixonados por aves, ver suas g
+[  1] Tratamentos que se mostraram eficazes na prática, incluindo medicamentos injetáveis, via oral e comprimidos Minha missão com este e-book é ajudar você
+[  2] Capítulo 2 – Guias e Tabelas Rápidas
+[  3] Capítulo 1 – Doenças em Galinhas e possíveis tratamentos A importância da prevenção Quando procurar um veterinário Tabela de sintomas x doenças prováv
+[  4] Checklist de manejo diário
+[  5] Calendário de vacinação
+[  6] Protocolos de vermifugação Doenças Respiratórias Doenças Virais Sistêmicas Doenças Bacterianas Sistêmicas / Entéricas Doenças Parasitárias / Protozoár
+[  7] CAPÍTULO 1 DOENÇAS EM GALINHAS E RESPECTIVOS TRATAMENTOS Doenças Respiratórias As doenças respiratória ssão comunsemgalinhas e podemcausar grandes pre
+[  8] Sintomas: Espirros, tosse, dificuldade respiratória (respiração ruidosa), secreção nasal e ocular, inchaço da face. Em galinhas poedeiras, pode haver 
+[  9] Prevenção: A vacinação é a principal medida preventiva, juntamente com rigorosas práticas de biosseguridade e manejo ambiental adequado. Evitar o cont
+[ 10] Tratamento (Baseado em Experiência Prática): Não existe tratamento específico para a Bronquite Infecciosa, pois é uma doença viral. O tratamento é de 
+[ 11] Antibióticos: Para infecções bacterianas secundárias, pode-se usar Tilosina (ex: Tylan®) na dose de 15 mg/kg de peso vivo, via oral, por 3 a 5 dias. O
+[ 12] Suporte: Oferecer eletrólitos e vitaminas na água de bebida (especialmente vitaminas A, D e E) para fortalecer a imunidade e auxiliar na recuperação. 
+[ 13] Aviso: O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas e
+[ 14] Sintomas: Dificuldade respiratória severa, tosse com eliminação de muco sanguinolento, estiramento do pescoço para respirar (bombeamento), conjuntivit
+[ 15] Prevenção: A vacinação é a medida mais eficaz para prevenir a ILT. Medidas de biosseguridade, como controle de acesso, limpeza e desinfecção rigorosas
+[ 16] Tratamento (Baseado em Experiência Prática): Não há tratamento antiviral específico para a Laringotraqueíte Infecciosa. O foco é no tratamento de supo
+[ 17] Antibióticos: Para prevenir ou tratar infecções bacterianas secundárias, pode-se usar Tilosina (ex: Tylan®) na dose de 15 mg/kg de peso vivo, via oral
+[ 18] Suporte: Manter as aves em ambiente aquecido, com boa ventilação e baixa umidade. Oferecer eletrólitos e vitaminas na água de bebida para auxiliar na 
+[ 19] Aviso: O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas e
+[ 20] Sintomas: Espirros, tosse, secreção nasal, inchaço da cabeça e dos seios infraorbitários, conjuntivite. Em poedeiras, pode haver queda na produção de 
+[ 21] Prevenção: A vacinação é uma ferramenta importante no controle da aMPV. Boas práticas de biosseguridade, ventilação adequada e controle de poeira e am
+[ 22] Tratamento (Baseado em Experiência Prática): Não há tratamento antiviral específico para a Metapneumovirose Aviária. O tratamento é de suporte e visa 
+[ 23] Antibióticos: Pode-se usar Tilosina (ex: Tylan®) na dose de 15mg/kg de peso vivo, via oral, por 3 a 5 dias, ou Doxiciclina na dose de 15 mg/kg de peso
+[ 24] Suporte: Oferecer eletrólitos e vitaminas na água de bebida. Manter as aves em ambiente confortável, com boa ventilação e sem poeira.
+[ 25] Aviso: O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas e
+[ 26] Sintomas: Espirros, tosse, secreção nasal, dificuldade respiratória, inchaço dos seios da face, conjuntivite e lacrimejamento. Em casos crônicos, pode
+[ 27] Prevenção: A aquisição de aves de plantéis livres de micoplasma é a melhor forma de prevenção. A vacinação está disponível e é utilizada em áreas de a
+[ 28] Tratamento (Baseado em Experiência Prática): Antibióticos específicos para micoplasma podem ser eficazes na redução dos sintomas e da transmissão, mas
+[ 29] Antibióticos: Tilosina (ex: Tylan®) na dose de 15mg/kg de peso vivo, via oral, por 5 a 7 dias, ou Tiamulina na dose de 25 mg/kg de peso vivo, via oral
+[ 30] Suporte: Manter as aves em ambiente limpo, seco e bem ventilado. Oferecer vitaminas e eletrólitos na água de bebida.
+[ 31] Aviso: O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas e
+[ 32] Sintomas: Secreção nasal fétida, inchaço da face e dos seios infraorbitários, conjuntivite, lacrimejamento, espirros e dificuldade respiratória. Pode 
+[ 33] Prevenção: A vacinação é uma medida eficaz em áreas de risco. O isolamento de aves doentes, a quarentena de novas aves e a limpeza e desinfecção rigor
+[ 34] Tratamento (Baseado em Experiência Prática): Antibióticos são eficazes no tratamento da Coriza Infecciosa, especialmente se administrados no início da
+[ 35] Antibióticos: Pode-se usar Enrofloxacino(ex: Baytril®) na dose de 10 mg/kg de peso vivo por 5 a 7 dias via oral, ou Tilosina (ex: Tylan®) na dose de 1
+[ 36] Suporte: Isolar as aves doentes, manter ambiente limpo e aquecido. Oferecer vitaminas e eletrólitos na água de bebida.
+[ 37] Aviso: O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas e
+[ 38] Sintomas: Espirros, tosse, secreção nasal, dificuldade respiratória, inchaço da cabeça e dos seios da face. Pode haver queda na produção de ovos e les
+[ 39] Prevenção: Boas práticas de manejo, biosseguridade e controle de estresse são importantes. A vacinação pode ser considerada em plantéis com histórico 
+[ 40] Tratamento (Baseado em Experiência Prática): Antibióticos são eficazes no tratamento da ORT.
+[ 41] Antibióticos: Pode-se usar Enrofloxacina (ex: Baytril®) na dose de 10 mg/kg de peso vivo, via oral, por 5 dias, ou Doxiciclina na dose de 15 mg/kg de 
+[ 42] Suporte: Melhorar as condições ambientais, como ventilação e controle de poeira. Oferecer vitaminas e eletrólitos na água de bebida.
+[ 43] Aviso: O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas e
+[ 44] Sintomas: Os sintomas variam dependendo da cepa do vírus, mas podem incluir sinais respiratórios (espirros, tosse, dificuldade respiratória), digestiv
+[ 45] Prevenção: A vacinação é a medida mais importante e eficaz para prevenir a Doença de Newcastle. Rigorosas medidas de biosseguridade, como controle de 
+[ 46] Tratamento (Baseado em Experiência Prática): Não há tratamento específico para a Doença de Newcastle, pois é uma doença viral. O foco é no tratamento 
+[ 47] Suporte: Oferecer eletrólitos e vitaminas (principalmente complexo B e vitamina C) na água de bebida para fortalecer a imunidade. Manter as aves em am
+[ 48] Antibióticos: Para infecções bacterianas secundárias, pode-se usar Oxitetraciclina (ex: Terramicina®) na dose de 30 mg/kg de peso vivo, via oral, por 
+[ 49] Aviso: A Doença de Newcastle é grave e altamente contagiosa. O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um prof

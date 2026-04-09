@@ -2311,6 +2311,41 @@
                 .ck-section {
                     padding: 12px !important;
                 }
+
+                /* AJUSTE PAYMENT METHODS MOBILE - 3 CARDS LADO A LADO SEM OVERFLOW */
+                #checkout-page .payment-methods-grid {
+                    gap: 6px !important;
+                }
+                #checkout-page .radio-item {
+                    padding: 8px 4px !important;
+                    flex-direction: column !important;
+                    gap: 6px !important;
+                    justify-content: center !important;
+                }
+                #checkout-page .radio-label {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 100%;
+                }
+                #checkout-page .radio-title {
+                    font-size: 0.75rem !important;
+                    text-align: center;
+                    width: 100%;
+                    display: block;
+                }
+                #checkout-page .radio-desc {
+                    font-size: 0.55rem !important;
+                    text-align: center;
+                    width: 100%;
+                    display: block;
+                }
+                #checkout-page .radio-item img, 
+                #checkout-page .radio-item i {
+                    height: 20px !important;
+                    font-size: 20px !important;
+                    margin: 0 !important;
+                }
             }
         </style>
 
@@ -2484,7 +2519,7 @@
                             </div>
 
                             <!-- Metodos -->
-                            <div class="payment-methods-grid" style="gap: 10px; margin-bottom: 24px;">
+                            <div class="payment-methods-grid" style="display: flex; gap: 8px; margin-bottom: 24px;">
                                 <div class="radio-item selected" onclick="selectPaymentMethod('pix')">
                                     <input type="radio" name="paymentMethod" id="method-pix" value="pix" checked
                                         style="display:none;">

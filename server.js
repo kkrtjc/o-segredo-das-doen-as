@@ -857,6 +857,103 @@ app.post('/api/checkout/pix', async (req, res) => {
     }
 });
 
+app.post('/api/checkout/boleto', async (req, res) => {
+    const startTime = Date.now();
+    const { items, customer, deliveryMethod } = req.body;
+    console.log(`📄 [BOLETO] Nova solicitação Iniciada`);
+    console.log(`👤 Cliente: ${customer.name} (${customer.email})`);
+
+    const totalAmount = Number(items.reduce((acc, item) => acc + Number(item.price), 0).toFixed(2));
+    console.log(`💰 Total Calculado: ${totalAmount}`);
+
+    if (totalAmount <= 0) {
+        console.error(`❌ [BOLETO ERROR] Valor inválido calculado: ${totalAmount}`);
+        return res.status(400).json({ error: 'Erro no valor do pedido', message: 'O valor total deve ser maior que zero.' });
+    }
+
+    // CRITICAL: Ensure CPF is clean (only numbers, no formatting)
+    const cleanCPF = (customer.cpf || '').replace(/\D/g, '');
+
+    if (cleanCPF.length !== 11) {
+        console.error(`❌ [BOLETO ERROR] CPF inválido: ${customer.cpf} (limpo: ${cleanCPF})`);
+        return res.status(400).json({
+            error: 'CPF inválido',
+            message: 'O CPF deve conter exatamente 11 dígitos.'
+        });
+    }
+
+    const body = {
+        transaction_amount: totalAmount,
+        description: items.map(i => i.title).join(', '),
+        payment_method_id: 'bolbradesco',
+        external_reference: `ORDER-${Date.now()}`,
+        notification_url: `${process.env.BASE_URL || 'https://teste-m1kq.onrender.com'}/api/webhooks/mercadopago`,
+        statement_descriptor: 'GALOS MURA BRASIL',
+        payer: {
+            email: customer.email,
+            first_name: customer.name.split(' ')[0],
+            last_name: customer.name.split(' ').slice(1).join(' ') || 'User',
+            identification: { type: 'CPF', number: cleanCPF }
+        },
+        additional_info: {
+            items: items.map((item, idx) => ({
+                id: item.id || `item-${idx}`,
+                title: item.title,
+                description: item.description || item.title,
+                category_id: 'digital_goods',
+                quantity: 1,
+                unit_price: Number(item.price)
+            }))
+        },
+        metadata: {
+            delivery_method: deliveryMethod,
+            customer_name: customer.name,
+            customer_email: customer.email,
+            customer_phone: customer.phone
+        }
+    };
+
+    try {
+        console.time(`⏱️ [MP_BOLETO] ${customer.email}`);
+        const response = await payment.create({ body });
+        console.timeEnd(`⏱️ [MP_BOLETO] ${customer.email}`);
+
+        // DEEP DEBUG LOGGING
+        console.log(`✅ [BOLETO SUCCESS] Response for ${customer.email}:`, JSON.stringify({
+            id: response.id,
+            status: response.status
+        }));
+
+        let barcodeContent = 'Código de barras não disponível';
+        if (response.barcode && response.barcode.content) {
+            barcodeContent = response.barcode.content;
+        }
+
+        let extUrl = '';
+        if (response.transaction_details && response.transaction_details.external_resource_url) {
+            extUrl = response.transaction_details.external_resource_url;
+        }
+
+        res.json({
+            barcode: barcodeContent,
+            external_resource_url: extUrl,
+            id: response.id,
+            status: response.status
+        });
+    } catch (error) {
+        console.timeEnd(`⏱️ [MP_BOLETO] ${customer.email}`);
+
+        // LOG DE ERRO MELHORADO
+        console.error(formatErrorLog('BOLETO', customer, error));
+
+        res.status(500).json({
+            error: getFriendlyErrorMessage(error),
+            originalError: error.message,
+            code: error.response?.data?.cause?.[0]?.code || error.response?.data?.cause?.[0]?.id
+        });
+    }
+});
+
 app.post('/api/checkout/card', async (req, res) => {
     try {
         const { items, customer, token, installments, issuer_id, payment_method_id } = req.body;

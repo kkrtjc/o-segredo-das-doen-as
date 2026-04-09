@@ -2,670 +2,620 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Galo Mura Brasil - O Segredo das Doenças</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Galos Mura Brasil — O Segredo das Doenças</title>
     <style>
         :root {
-            --bg-color: #0b1120;
-            --surface-color: #1a2235;
-            --accent-gold: #fbbf24;
-            --accent-blue: #38bdf8;
-            --accent-green: #10b981;
-            --text-main: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --border-glass: rgba(255, 255, 255, 0.08);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg: #0a0f1e;
+            --surface: #141b2d;
+            --surface-hover: #1c2540;
+            --gold: #f59e0b;
+            --blue: #38bdf8;
+            --green: #10b981;
+            --red: #ef4444;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --glass: rgba(255,255,255,0.06);
+            --glass-border: rgba(255,255,255,0.08);
+            --radius: 14px;
+            --transition: all 0.3s cubic-bezier(.4,0,.2,1);
+        }
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        html{scroll-behavior:smooth}
+        body{
+            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+            background:var(--bg);color:var(--text);line-height:1.7;
+            padding-top:175px;-webkit-font-smoothing:antialiased;
+        }
+        @supports (font-variation-settings: normal) {
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+            body { font-family: 'Inter', -apple-system, sans-serif; }
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+        .header{
+            position:fixed;top:0;left:0;width:100%;z-index:1000;
+            background:rgba(10,15,30,0.92);
+            backdrop-filter:saturate(180%) blur(20px);
+            -webkit-backdrop-filter:saturate(180%) blur(20px);
+            border-bottom:1px solid var(--glass-border);
         }
+        .header-top{display:flex;align-items:center;gap:10px;padding:14px 20px 6px}
+        .logo{font-size:1.15rem;font-weight:700;color:var(--gold)}
+        .logo span{font-size:1.3rem;margin-right:4px}
+        .search-wrap{padding:6px 20px 8px}
+        #searchInput{
+            width:100%;padding:11px 16px 11px 40px;
+            border-radius:10px;border:1px solid var(--glass-border);
+            background:var(--glass);color:#fff;
+            font-size:0.95rem;font-family:inherit;outline:none;
+            transition:var(--transition);
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.415l-3.85-3.85zm-5.44.706a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E");
+            background-repeat:no-repeat;background-position:14px center;
+        }
+        #searchInput:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(56,189,248,0.15)}
+        #searchInput::placeholder{color:var(--text-dim)}
+        .search-status{display:none;padding:6px 20px;color:var(--gold);font-size:0.85rem;font-weight:500}
+        body.search-active .search-status{display:block}
+        .nav{display:flex;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:8px;padding:8px 20px 14px;scrollbar-width:none}
+        .nav::-webkit-scrollbar{display:none}
+        .tab{
+            padding:7px 16px;background:var(--glass);border-radius:20px;
+            color:var(--text-dim);font-size:0.85rem;font-weight:500;
+            white-space:nowrap;text-decoration:none;
+            border:1px solid var(--glass-border);transition:var(--transition);
+        }
+        .tab.active{background:rgba(56,189,248,0.12);color:var(--blue);border-color:rgba(56,189,248,0.35)}
+        .tab:active{transform:scale(0.95);opacity:0.8}
+        body.search-active .nav{opacity:0.4;pointer-events:none}
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            padding-top: 130px; /* Space for fixed header */
-        }
+        .container{max-width:820px;margin:0 auto;padding:0 16px 60px}
+        .section-content{display:none;animation:fadeUp 0.35s ease forwards}
+        .section-content.active-fallback,.section-content:target{display:block}
+        body.search-active .section-content{display:block!important}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        .section-title{font-size:1.4rem;font-weight:700;color:#fff;margin:30px 0 18px;padding-bottom:12px;border-bottom:1px solid var(--glass-border)}
 
-        /* --- NATIVE SWIPE HEADER --- */
-        .mobile-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(11, 17, 32, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            z-index: 1000;
-            border-bottom: 1px solid var(--border-glass);
-            padding: 0;
-            display: flex;
-            flex-direction: column;
+        .disease-card{
+            background:var(--surface);border-radius:var(--radius);margin-bottom:14px;
+            border:1px solid var(--glass-border);overflow:hidden;transition:var(--transition);
         }
+        .disease-card.hidden-by-search{display:none!important}
+        .disease-card[open]{border-color:rgba(245,158,11,0.35);box-shadow:0 8px 30px rgba(0,0,0,0.25)}
+        .disease-card summary{
+            padding:16px 20px;font-size:1.05rem;font-weight:600;color:var(--text);
+            cursor:pointer;list-style:none;display:flex;align-items:center;
+            justify-content:space-between;transition:var(--transition);
+        }
+        .disease-card summary:hover{background:var(--surface-hover)}
+        .disease-card summary::-webkit-details-marker{display:none}
+        .disease-card summary::after{content:'+';font-size:1.4rem;color:var(--blue);transition:transform 0.3s;flex-shrink:0;margin-left:12px}
+        .disease-card[open] summary::after{content:'\2212';color:var(--gold);transform:rotate(180deg)}
+        .disease-content{padding:4px 20px 20px;border-top:1px solid rgba(255,255,255,0.04)}
 
-        .header-logo {
-            padding: 15px 20px 5px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--accent-gold);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .field-block{margin-bottom:14px;padding:14px 16px;background:rgba(255,255,255,0.02);border-radius:10px;border-left:3px solid var(--glass-border)}
+        .field-label{display:block;font-weight:700;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px}
+        .symptom-label{color:var(--red)}
+        .prevention-label{color:var(--blue)}
+        .treatment-label{color:var(--green)}
+        .med-label{color:#a78bfa}
+        .support-label{color:#f97316}
+        .field-text{color:var(--text-dim);font-size:0.95rem;line-height:1.7}
+        .alert-box{background:rgba(239,68,68,0.08);border-left:4px solid var(--red);padding:14px 16px;border-radius:0 10px 10px 0;margin:14px 0;font-size:0.9rem;color:#fca5a5}
 
-        .mobile-scroll-nav {
-            display: flex;
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            gap: 10px;
-            padding: 10px 20px 15px;
-            scrollbar-width: none;
-        }
-        
-        .mobile-scroll-nav::-webkit-scrollbar { display: none; }
+        .checklist-item{padding:10px 16px;margin-bottom:6px;background:var(--glass);border-radius:8px;color:var(--text);font-size:0.95rem}
+        .time-header{color:var(--gold);font-size:1.1rem;margin:20px 0 10px}
 
-        .scroll-tab {
-            padding: 8px 18px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            font-weight: 500;
-            white-space: nowrap;
-            text-decoration: none;
-            border: 1px solid var(--border-glass);
-            transition: var(--transition);
-        }
+        p{color:var(--text-dim);margin-bottom:14px;font-size:0.95rem}
+        h2{color:var(--gold);margin-bottom:14px}
+        h3{color:var(--blue);margin-bottom:10px}
+        strong{color:var(--text)}
 
-        .scroll-tab.active {
-            background: rgba(56, 189, 248, 0.15);
-            color: var(--accent-blue);
-            border-color: rgba(56, 189, 248, 0.4);
-        }
-
-        .scroll-tab:active { transform: scale(0.95); opacity: 0.8; }
-
-        /* --- MAIN CONTENT --- */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 20px 40px;
-        }
-
-        /* --- SECTION CONTROLLERS (CSS ONLY TABS) --- */
-        .section-content {
-            display: none;
-            animation: fadeIn 0.4s ease forwards;
-        }
-        
-        .section-content:target, .section-content.active-fallback {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- TYPOGRAPHY & CARDS --- */
-        h1, h2, h3 { color: var(--accent-gold); margin-bottom: 15px; }
-        p { margin-bottom: 15px; color: var(--text-secondary); }
-        
-        .intro-text {
-            font-size: 1.1rem;
-            text-align: justify;
-            margin-bottom: 30px;
-            color: #cbd5e1;
-            padding: 20px;
-            background: rgba(255,255,255,0.02);
-            border-radius: 12px;
-            border-left: 4px solid var(--accent-gold);
-        }
-
-        /* --- NATIVE ACCORDION (DETAILS) --- */
-        details {
-            background: var(--surface-color);
-            border-radius: 12px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border-glass);
-            overflow: hidden;
-            transition: var(--transition);
-        }
-
-        details[open] {
-            border-color: rgba(251, 191, 36, 0.3);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-
-        summary {
-            padding: 18px 20px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #f1f5f9;
-            cursor: pointer;
-            list-style: none;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        summary::-webkit-details-marker { display: none; }
-        
-        summary::after {
-            content: '+';
-            font-size: 1.5rem;
-            color: var(--accent-blue);
-            transition: transform 0.3s;
-        }
-
-        details[open] summary::after {
-            content: '−';
-            color: var(--accent-gold);
-            transform: rotate(180deg);
-        }
-
-        .details-content {
-            padding: 0 20px 20px;
-            border-top: 1px solid rgba(255,255,255,0.03);
-            margin-top: 5px;
-            padding-top: 15px;
-        }
-
-        .med-tag {
-            display: inline-block;
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--accent-green);
-            padding: 2px 10px;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .alert-box {
-            background: rgba(239, 68, 68, 0.1);
-            border-left: 4px solid #ef4444;
-            padding: 15px;
-            border-radius: 0 8px 8px 0;
-            margin-top: 15px;
-            font-size: 0.9rem;
-            color: #fca5a5;
-        }
-        
-        .section-title {
-            margin-top: 40px;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            color: white;
-            border-bottom: 1px solid var(--border-glass);
-            padding-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* --- LISTS --- */
-        ul.checklist {
-            list-style: none;
-        }
-        ul.checklist li {
-            position: relative;
-            padding-left: 30px;
-            margin-bottom: 15px;
-        }
-        ul.checklist li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--accent-green);
-            font-weight: bold;
-        }
+        @media(max-width:600px){body{padding-top:185px}.disease-card summary{font-size:0.95rem;padding:14px 16px}.field-block{padding:12px 14px}}
+        @media(min-width:768px){body{padding-top:160px}}
+        @media print{.header{position:static}.section-content{display:block!important}.disease-card{break-inside:avoid;page-break-inside:avoid}}
     </style>
 </head>
 <body>
-
-    <header class="mobile-header">
-        <div class="header-logo">
-            <span>&#128019;</span> Galos Mura Brasil
+    <header class="header">
+        <div class="header-top">
+            <div class="logo"><span>🐓</span> Galos Mura Brasil</div>
         </div>
-        <nav class="mobile-scroll-nav">
-            <a href="#apresentacao" class="scroll-tab active" onclick="activateTab(this, 'apresentacao')">Início</a>
-            <a href="#respiratorias" class="scroll-tab" onclick="activateTab(this, 'respiratorias')">Respiratórias</a>
-            <a href="#virais" class="scroll-tab" onclick="activateTab(this, 'virais')">Virais Sistem.</a>
-            <a href="#bacterianas" class="scroll-tab" onclick="activateTab(this, 'bacterianas')">Bacterianas</a>
-            <a href="#parasitas" class="scroll-tab" onclick="activateTab(this, 'parasitas')">Parasitas</a>
-            <a href="#nutricionais" class="scroll-tab" onclick="activateTab(this, 'nutricionais')">Nutricionais</a>
-            <a href="#tabelas" class="scroll-tab" onclick="activateTab(this, 'tabelas')">Tabelas & Docs</a>
+        <div class="search-wrap">
+            <input type="text" id="searchInput" placeholder="Pesquisar sintomas, doenças ou remédios..." autocomplete="off" />
+        </div>
+        <div class="search-status" id="searchStatus"></div>
+        <nav class="nav" id="mainNav">
+            <a href="#inicio" class="tab active" onclick="activateTab(this,'inicio')">Inicio</a>
+<a href="#capitulo-1" class="tab" onclick="activateTab(this,'capitulo-1')">Cap. 1</a>
+<a href="#respiratorias" class="tab" onclick="activateTab(this,'respiratorias')">Respiratorias</a>
+<a href="#virais" class="tab" onclick="activateTab(this,'virais')">Virais</a>
+<a href="#bacterianas" class="tab" onclick="activateTab(this,'bacterianas')">Bacterianas</a>
+<a href="#parasitas" class="tab" onclick="activateTab(this,'parasitas')">Parasitarias</a>
+<a href="#nutricionais" class="tab" onclick="activateTab(this,'nutricionais')">Nutricionais</a>
+<a href="#capitulo-2" class="tab" onclick="activateTab(this,'capitulo-2')">Tabelas</a>
+<a href="#checklist" class="tab" onclick="activateTab(this,'checklist')">Checklist</a>
+<a href="#vacinacao" class="tab" onclick="activateTab(this,'vacinacao')">Vacinacao</a>
+<a href="#vermifugacao" class="tab" onclick="activateTab(this,'vermifugacao')">Vermifugacao</a>
+<a href="#conclusao" class="tab" onclick="activateTab(this,'conclusao')">Conclusao</a>
+
         </nav>
     </header>
+    <div class="container" id="contentContainer">
+        <div id="inicio" class="section-content active-fallback"><p>Apresentação Olá, amigo criador! Se você chegou até aqui, é provável que tenha enfrentado uma situação comum entre os apaixonados por aves, ver suas galinhas adoecerem e não saber exatamente como proceder. Eu entendo bem esse sentimento. Meu nome é João Paulo, e sou criador de galinhas há mais de 10 anos. Neste guia, compartilho com você o conhecimento prático que adquiri ao longo dos anos, cuidando de diversas aves e superando desafios que vão desde doenças até problemas de higiene É importante ressaltar: não sou médico veterinário, e este material não substitui o atendimento profissional. O que você encontrará aqui é fruto da minha experiência real como criador, refletindo o que realmente funcionou no dia a dia da criação. Por que estou fazendo isso? Para quem este guia é destinado? O que você encontrará neste e-book Principais doenças que afetam as galinhas com orientações para identificação rápida Causas e sintomas mais comuns, apresentados de forma clara e acessível</p><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Tratamentos que se mostraram eficazes na prática, incluindo medicamentos injetáveis, via oral e comprimidos Minha missão com este e-book é ajudar você a evitar erros comuns, proteger suas aves e garantir uma criação saudável, de forma clara e objetiva, sem complicações linguísticas. Neste guia, você encontrará informações diretas e práticas, testadas no cotidiano. Se você ama suas galinhas tanto quanto eu, este guia se tornará um recurso essencial em sua jornada como criador. Desejo a você uma boa leitura e muito sucesso em sua criação! Para aqueles que estão iniciando agora e desejam aprimorar os cuidados com as galinhas Para criadores que já enfrentaram perdas devido a doenças e buscam evitar recorrências. Para todos que acreditam que a prevenção e o conhecimento são as melhores ferramentas na criação Conclusão e Recomendações Capítulo 2 – Guias e Tabelas Rápidas Capítulo 1 – Doenças em Galinhas e possíveis tratamentos A importância da prevenção Quando procurar um veterinário Tabela de sintomas x doenças prováveis Checklist de manejo diário Calendário de vacinação Protocolos de vermifugação</span></div></div>
+<div id="capitulo-1" class="section-content"><h2 class="section-title">📖 Capítulo 1 — Doenças e Tratamentos</h2><p>DOENÇAS EM GALINHAS E RESPECTIVOS TRATAMENTOS</p></div>
+<div id="respiratorias" class="section-content"><h2 class="section-title">🫁 Doenças Respiratórias</h2><p>As doenças respiratória ssão comunsemgalinhas e podemcausar grandes prejuízos à produção e à saúde do plantel. A identificação precoce dos sintomas e a aplicação de medidas preventivas são cruciais para o controle</p>
+            <details class="disease-card">
+                <summary>Bronquite Infecciosa (IBV)</summary>
+                <div class="disease-content">
+                    <p>A Bronquite Infecciosa é uma doença viral aguda e altamente contagiosa que afeta o sistema respiratório das galinhas, podendo também impactar o sistema reprodutor e renal. É uma das doenças mais comuns e economicamente importantes na avicultura.</p><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Espirros, tosse, dificuldade respiratória (respiração ruidosa), secreção nasal e ocular, inchaço da face. Em galinhas poedeiras, pode haver queda na produção de ovos, ovos com casca mole ou deformada, e perda de pigmentação da casca.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A vacinação é a principal medida preventiva, juntamente com rigorosas práticas de biosseguridade e manejo ambiental adequado. Evitar o contato com aves silvestres e outras criações é fundamental .</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Não existe tratamento específico para a Bronquite Infecciosa, pois é uma doença viral. O tratamento é de suporte, visando aliviar os sintomas e prevenir infecções bacterianas secundárias.</span></div><div class="field-block"><span class="field-label med-label">💉 Antibióticos</span><span class="field-text">Para infecções bacterianas secundárias, pode-se usar Tilosina (ex: Tylan®) na dose de 15 mg/kg de peso vivo, via oral, por 3 a 5 dias. Outra opção é a Enrofloxacino(ex: Chimetril®) na dose de 10 mg/kg de peso vivo, via oral, por 5 a 7 dias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Oferecer eletrólitos e vitaminas na água de bebida (especialmente vitaminas A, D e E) para fortalecer a imunidade e auxiliar na recuperação. Manter as aves em ambiente aquecido, seco e bem ventilado.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador.</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Laringotraqueíte Infecciosa (ILT)</summary>
+                <div class="disease-content">
+                    <div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Dificuldade respiratória severa, tosse com eliminação de muco sanguinolento, estiramento do pescoço para respirar (bombeamento), conjuntivite e inchaço da face. Aves podem apresentar prostração e perda de apetite.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A vacinação é a medida mais eficaz para prevenir a ILT. Medidas de biosseguridade, como controle de acesso, limpeza e desinfecção rigorosas, são essenciais para evitar a introdução e disseminação do vírus.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Não há tratamento antiviral específico para a Laringotraqueíte Infecciosa. O foco é no tratamento de suporte e no controle de infecções bacterianas secundárias.</span></div><div class="field-block"><span class="field-label med-label">💉 Antibióticos</span><span class="field-text">Para prevenir ou tratar infecções bacterianas secundárias, pode-se usar Tilosina (ex: Tylan®) na dose de 15 mg/kg de peso vivo, via oral, por 3 a 5 dias, ou Oxitetraciclina na dose de 30 mg/kg de peso vivo, via oral, por 5 a 7 dias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Manter as aves em ambiente aquecido, com boa ventilação e baixa umidade. Oferecer eletrólitos e vitaminas na água de bebida para auxiliar na recuperação.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador. A Laringotraqueíte Infecciosa é uma doença respiratória viral aguda e altamente contagiosa, caracterizada por inflamação severa da traqueia e laringe. Pode causar alta mortalidade, especialmente em aves jovens.</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Metapneumovirose Aviária (aMPV)</summary>
+                <div class="disease-content">
+                    <div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Espirros, tosse, secreção nasal, inchaço da cabeça e dos seios infraorbitários, conjuntivite. Em poedeiras, pode haver queda na produção de ovos e ovos com casca fina ou deformada.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A vacinação é uma ferramenta importante no controle da aMPV. Boas práticas de biosseguridade, ventilação adequada e controle de poeira e amônia no ambiente são cruciais para reduzir a incidência da doença.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Não há tratamento antiviral específico para a Metapneumovirose Aviária. O tratamento é de suporte e visa controlar infecções bacterianas secundárias.</span></div><div class="field-block"><span class="field-label med-label">💉 Antibióticos</span><span class="field-text">Pode-se usar Tilosina (ex: Tylan®) na dose de 15mg/kg de peso vivo, via oral, por 3 a 5 dias, ou Doxiciclina na dose de 15 mg/kg de peso vivo, via oral, por 5 a 7 dias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Oferecer eletrólitos e vitaminas na água de bebida. Manter as aves em ambiente confortável, com boa ventilação e sem poeira.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador. A Metapneumovirose Aviária, também conhecida como Síndrome da Cabeça Inchada, é uma doença respiratória causada por um metapneumovírus. Afeta principalmente aves jovens e poedeiras, causando problemas respiratórios e reprodutivos</div><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Espirros, tosse, secreção nasal, dificuldade respiratória, inchaço dos seios da face, conjuntivite e lacrimejamento. Em casos crônicos, pode haver emagrecimento e queda na produção de ovos.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A aquisição de aves de plantéis livres de micoplasma é a melhor forma de prevenção. A vacinação está disponível e é utilizada em áreas de alta incidência. Boas práticas de biosseguridade e manejo, como controle de poeira e ventilação, são importantes.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Antibióticos específicos para micoplasma podem ser eficazes na redução dos sintomas e da transmissão, mas raramente eliminam a infecção.</span></div><div class="field-block"><span class="field-label med-label">💉 Antibióticos</span><span class="field-text">Tilosina (ex: Tylan®) na dose de 15mg/kg de peso vivo, via oral, por 5 a 7 dias, ou Tiamulina na dose de 25 mg/kg de peso vivo, via oral, por 3 a 5 dias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Manter as aves em ambiente limpo, seco e bem ventilado. Oferecer vitaminas e eletrólitos na água de bebida.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador.</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Micoplasmose Respiratória (DRC – Mycoplasma gallisepticum</summary>
+                <div class="disease-content">
+                    <p>A Micoplasmose Respiratória, ou Doença Respiratória Crônica (DRC), é causada pela bactéria Mycoplasma gallisepticum. É uma doença crônica que afeta o sistema respiratório, causando perdas significativas na produção de ovos e carne.</p><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Secreção nasal fétida, inchaço da face e dos seios infraorbitários, conjuntivite, lacrimejamento, espirros e dificuldade respiratória. Pode haver queda na produção de ovos e perda de peso.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A vacinação é uma medida eficaz em áreas de risco. O isolamento de aves doentes, a quarentena de novas aves e a limpeza e desinfecção rigorosas do galinheiro são essenciais para prevenir a disseminação.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Antibióticos são eficazes no tratamento da Coriza Infecciosa, especialmente se administrados no início da doença</span></div><div class="field-block"><span class="field-label med-label">💉 Antibióticos</span><span class="field-text">Pode-se usar Enrofloxacino(ex: Baytril®) na dose de 10 mg/kg de peso vivo por 5 a 7 dias via oral, ou Tilosina (ex: Tylan®) na dose de 15mg/kg de peso vivo, via oral, por 3 a 5 dias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Isolar as aves doentes, manter ambiente limpo e aquecido. Oferecer vitaminas e eletrólitos na água de bebida.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador.</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Coriza Infecciosa</summary>
+                <div class="disease-content">
+                    <p>A Coriza Infecciosa é uma doença bacteriana aguda do trato respiratório superior, causada pela bactéria Avibacterium paragallinarum. É altamente contagiosa e afeta principalmente galinhas jovens e adultas</p><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Espirros, tosse, secreção nasal, dificuldade respiratória, inchaço da cabeça e dos seios da face. Pode haver queda na produção de ovos e lesões nas articulações.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">Boas práticas de manejo, biosseguridade e controle de estresse são importantes. A vacinação pode ser considerada em plantéis com histórico da doença. Evitar a superlotação e garantir boa ventilação são cruciais.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Antibióticos são eficazes no tratamento da ORT.</span></div><div class="field-block"><span class="field-label med-label">💉 Antibióticos</span><span class="field-text">Pode-se usar Enrofloxacina (ex: Baytril®) na dose de 10 mg/kg de peso vivo, via oral, por 5 dias, ou Doxiciclina na dose de 15 mg/kg de peso vivo, via oral, por 5 a 7 dias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Melhorar as condições ambientais, como ventilação e controle de poeira. Oferecer vitaminas e eletrólitos na água de bebida.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador.</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Ornithobacterium rhinotracheale (ORT)</summary>
+                <div class="disease-content">
+                    <p>A infecção por Ornithobacterium rhinotracheale (ORT) é uma doença bacteriana respiratória que afeta galinhas e outras aves, causando problemas respiratórios e, em alguns casos, mortalidade. É frequentemente associada a outras infecções respiratórias.</p>
+                </div>
+            </details></div>
+<div id="virais" class="section-content"><h2 class="section-title">🦠 Doenças Virais Sistêmicas</h2><p>As doenças virais sistêmicas afetam múltiplos órgãos e sistemas do corpo das galinhas, podendo causar alta mortalidade e grandes perdas econômicas. A prevenção é a chave, pois a maioria não possui tratamento específico.</p><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Os sintomas variam dependendo da cepa do vírus, mas podem incluir sinais respiratórios (espirros, tosse, dificuldade respiratória), digestivos (diarreia aquosa e esverdeada, anorexia) e nervosos (tremores, paralisia, torcicolo). Em poedeiras, há queda abrupta na produção de ovos.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A vacinação é a medida mais importante e eficaz para prevenir a Doença de Newcastle. Rigorosas medidas de biosseguridade, como controle de tráfego de pessoas e veículos, desinfecção e isolamento de novas aves, são essenciais.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Não há tratamento específico para a Doença de Newcastle, pois é uma doença viral. O foco é no tratamento de suporte e no controle de infecções secundárias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Oferecer eletrólitos e vitaminas (principalmente complexo B e vitamina C) na água de bebida para fortalecer a imunidade. Manter as aves em ambiente aquecido, tranquilo e isolado.</span></div><div class="field-block"><span class="field-label med-label">💉 Antibióticos</span><span class="field-text">Para infecções bacterianas secundárias, pode-se usar Oxitetraciclina (ex: Terramicina®) na dose de 30 mg/kg de peso vivo, via oral, por 5 a 7 dias.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> A Doença de Newcastle é grave e altamente contagiosa. O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador.</div>
+            <details class="disease-card">
+                <summary>Doença de Newcastle (ND)</summary>
+                <div class="disease-content">
+                    <p>A Doença de Newcastle é uma doença viral altamente contagiosa e grave que afeta aves de todas as idades. É uma das doenças mais devastadoras na avicultura, com alta morbidade e mortalidade.</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Doença de Marek</summary>
+                <div class="disease-content">
+                    <p>A Doença de Marek é uma doença viral linfoproliferativa que causa tumores em diversos órgãos e nervos das galinhas. É uma doença comum e pode causar paralisia e alta mortalidade, especialmente em aves jovens.</p><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Paralisia progressiva das asas e pernas, dificuldade de locomoção, asas caídas, tumores visíveis na pele, músculos e órgãos internos. Aves podem apresentar emagrecimento e cegueira.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A vacinação de pintos de um dia de vida é a principal e mais eficaz forma de prevenção da Doença de Marek. Medidas de biosseguridade, como limpeza e desinfecção, também são importantes para reduzir a carga viral no ambiente.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Não existe tratamento para a Doença de Marek. Uma vez infectada, a ave não tem cura. O foco principal é na prevenção através da vacinação de pintinhos de um dia de vida.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Em aves que manifestam a doença, o tratamento é paliativo, visando oferecer conforto e suporte nutricional. Manter a ave isolada em ambiente tranquilo, com fácil acesso a água e alimento.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> A Doença de Marek é incurável. A prevenção é a única medida eficaz. O uso de medicamentos não reverte a doença. O uso é por conta e risco do criador.</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Doença de Gumboro (IBDV / Bursite Infecciosa)</summary>
+                <div class="disease-content">
+                    <p>A Doença de Gumboro, ou Bursite Infecciosa, é uma doença viral altamente contagiosa que afeta o sistema imunológico das galinhas jovens, tornando-as mais suscetíveis a outras infecções. O vírus ataca a bolsa de Fabricius, órgão responsável pela produção de células de defesa</p><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Depressão, prostração, penas arrepiadas, diarreia aquosa, desidratação e tremores. Aves infectadas podem apresentar hemorragias musculares e na bolsa de Fabricius.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A vacinação é a principal medida preventiva contra a Doença de Gumboro. Medidas sanitárias rigorosas, como limpeza e desinfecção das instalações, e um bom manejo são cruciais para o controle da doença.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Não há tratamento específico para a Doença de Gumboro, pois é uma doença viral. O tratamento é de suporte, visando reduzir o estresse e prevenir infecções secundárias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Oferecer eletrólitos e vitaminas (principalmente vitaminas A, D, E e complexo B) na água de bebida para fortalecer a imunidade e auxiliar na recuperação. Manter as aves em ambiente aquecido, tranquilo e isolado.</span></div><div class="field-block"><span class="field-label med-label">💉 Antibióticos</span><span class="field-text">Para infecções bacterianas secundárias, pode-se usar Oxitetraciclina (ex: Terramicina®) na dose de 30 mg/kg de peso vivo, via oral, por 5 a 7 dias.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> A Doença de Gumboro compromete a imunidade. O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador.</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Influenza Aviária (IA)</summary>
+                <div class="disease-content">
+                    <div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Os sintomas variam, mas podem incluir depressão severa, perda de apetite, queda drástica na produção de ovos, edema e cianose (coloração azulada) da crista e barbelas, hemorragias, sinais respiratórios e nervosos. A mortalidade pode ser muito alta .</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A biosseguridade rigorosa é a medida mais importante para prevenir a Influenza Aviária. Isso inclui controle de acesso, desinfecção, evitar contato com aves silvestres e notificação imediata de casos suspeitos às autoridades sanitárias. A vacinação é restrita e controlada.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Não há tratamento específico para a</span></div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Influenza Aviária, pois é uma doença viral. O foco é na contenção e prevenção da</summary>
+                <div class="disease-content">
+                    <p>disseminação.</p><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Em casos de baixa patogenicidade, o tratamento é de suporte, visando aliviar os sintomas e prevenir infecções secundárias. Oferecer eletrólitos e vitaminas na água de bebida.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> A Influenza Aviária é uma doença de notificação obrigatória e de grande impacto na saúde pública e animal. Em caso de suspeita, as autoridades sanitárias devem ser imediatamente comunicadas. O uso de medicamentos não reverte a doença. O uso é por conta e risco do criador. A Influenza Aviária, ou gripe aviária, é uma doença viral altamente contagiosa que pode variar de leve a grave, dependendo da cepa do vírus. As cepas de alta patogenicidade podem causar mortalidade massiva e são de grande preocupação para a saúde pública e a economia [65, 66]</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Varíola Aviária (Bouba Aviária)</summary>
+                <div class="disease-content">
+                    <p>A doença pode se apresentar em duas formas: Forma Cutânea (seca): Caracterizada por lesões nodulares (verrugas) na pele, principalmente na crista, barbelas, pálpebras e pernas. As lesões secam e formam crostas . Forma Difitérica (úmida): Lesões (placas caseosas) nas mucosas da boca, laringe e esôfago, causando dificuldade para comer e respirar.</p><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A vacinação é a medida mais eficaz para prevenir a Varíola Aviária. O controle de mosquitos, que são vetores da doença, e a biosseguridade geral do galinheiro também são importantes.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Não há tratamento antiviral específico para a Varíola Aviária. O tratamento é de suporte, visando aliviar os sintomas e prevenir infecções bacterianas secundárias.</span></div><div class="field-block"><span class="field-label treatment-label">🩹 Lesões Cutâneas</span><span class="field-text">As lesões (crostas) podem ser limpas com solução antisséptica suave (ex: iodo diluído ou clorexidina) pode e usar tambem o medicamento Thuya Avicola conforme a bula, em seguida, aplicar pomadas cicatrizantes ou repelentes (ex: pomada à base de óxido de zinco ou violeta genciana) para evitar infecções secundárias e afastar moscas.</span></div><div class="field-block"><span class="field-label treatment-label">🩹 Lesões Difteríticas</span><span class="field-text">Remover cuidadosamente as membranas e aplicar antissépticos locais.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Oferecer vitaminas (principalmente A e C) e eletrólitos na água de bebida para fortalecer a imunidade. Manter as aves em ambiente limpo e sem estresse.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador. A Varíola Aviária, ou Bouba Aviária, é uma doença viral de evolução lenta que causa lesões na pele e/ou nas mucosas das aves. É mais comum em aves jovens e pode afetar a produção de ovos e o ganho de peso.</div>
+                </div>
+            </details></div>
+<div id="bacterianas" class="section-content"><h2 class="section-title">🧫 Doenças Bacterianas</h2><p>As doenças bacterianas podem afetar diversos sistemas do corpo das galinhas, incluindo o digestório, e são frequentemente tratáveis com antibióticos, desde que diagnosticadas e tratadas precocemente</p><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Os sintomas variam com a idade e o tipo de Salmonella. Em pintos, pode haver diarreia esbranquiçada, prostração, asas caídas e alta mortalidade. Em aves adultas, depressão, desidratação, diarreia, penas arrepiadas e queda na produção de ovos. S. Enteritidis é de preocupação para a saúde humana.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A biosseguridade rigorosa é fundamental, incluindo controle de roedores e insetos, limpeza e desinfecção, e aquisição de aves de plantéis livres de Salmonella. A vacinação está disponível e é obrigatória para aves de postura comercial em algumas regiões.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Antibióticos podem ser utilizados para reduzir a mortalidade e os sintomas, mas nem sempre eliminam a bactéria, podendo a ave se tornar portadora.</span></div><div class="field-block"><span class="field-label med-label">💉 Antibióticos</span><span class="field-text">Pode-se usar Enrofloxacina (ex: Baytril®) na dose de 10 mg/kg de peso vivo, via oral, por 5 a 7 dias, ou Sulfametoxazol + Trimetoprim (ex: Bactrim® veterinário) na dose de 30 mg/kg de peso vivo, via oral, por 5 a 7 dias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Oferecer eletrólitos e vitaminas na água de bebida para auxiliar na recuperação. Manter as aves em ambiente limpo e seco.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> A Salmonelose é uma doença de importância para a saúde pública. O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador.</div>
+            <details class="disease-card">
+                <summary>Salmonelose (Pullorum, Tifo Aviário, Enteritidis</summary>
+                <div class="disease-content">
+                    <p>A Salmonelose é um grupo de doenças causadas por bactérias do gênero Salmonella. As mais importantes na avicultura são a Pulorose (S. Pullorum), o Tifo Aviário (S. Gallinarum) e a Paratifo (S. Enteritidis), que podem causar alta mortalidade em pintos e queda na produção em aves adultas.</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Cólera Aviária (Pasteurelose)</summary>
+                <div class="disease-content">
+                    <div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Na forma aguda, as aves podem morrer subitamente sem apresentar sintomas. Na forma crônica, os sintomas incluem depressão, perda de apetite, diarreia verde-amarelada, inchaço e cianose (coloração azulada) da crista e barbelas, inchaço das articulações e secreção nasal.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A vacinação é uma medida eficaz em áreas de risco. Boas práticas de biosseguridade, controle de roedores e aves silvestres, e manejo adequado para evitar estresse são cruciais. Aves doentes devem ser isoladas.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Antibióticos são eficazes no tratamento da Cólera Aviária, especialmente se administrados no início da doença.</span></div><div class="field-block"><span class="field-label med-label">💉 Antibióticos</span><span class="field-text">Pode-se usar Oxitetraciclina (ex: Terramicina®) na dose de 30 mg/kg de peso vivo, via oral, por 5 a 7 dias, ou Sulfametoxazol + Trimetoprim (ex: Bactrim® veterinário) na dose de 30 mg/kg de peso vivo, via oral, por 5 a 7 dias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Isolar as aves doentes, manter ambiente limpo e aquecido. Oferecer vitaminas e eletrólitos na água de bebida.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador. A Cólera Aviária, ou Pasteurelose, é uma doença bacteriana aguda ou crônica causada pela bactéria Pasteurella multocida. É uma doença grave que pode causar alta mortalidade em aves de todas as idades.</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Colibacilose (E. coli</summary>
+                <div class="disease-content">
+                    <div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Os sintomas variam amplamente, incluindo sinais respiratórios (espirros, tosse), diarreia, inflamação do saco vitelino em pintos, peritonite, salpingite (inflamação do oviduto) em poedeiras, e septicemia (infecção generalizada) que pode levar à morte.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">Boas práticas de manejo e biosseguridade são fundamentais, como limpeza e desinfecção, ventilação adequada, controle de poeira e amônia, e prevenção da contaminação fecal dos ovos. A vacinação pode ser utilizada em alguns casos.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Antibióticos são eficazes no tratamento da Colibacilose.</span></div><div class="field-block"><span class="field-label med-label">💉 Antibióticos</span><span class="field-text">Pode-se usar Enrofloxacina (ex: Baytril®) na dose de 10 mg/kg de peso vivo, via oral, por 5 a 7 dias, ou Gentamicina na dose de 5 mg/kg de peso vivo, via intramuscular, por 3 dias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Melhorar as condições de higiene e ventilação do ambiente. Oferecer eletrólitos e vitaminas na água de bebida.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador. A Colibacilose é um conjunto de doenças causadas por diferentes cepas patogênicas da bactéria Escherichia coli. Pode afetar diversos sistemas do corpo das galinhas, causando problemas respiratórios, digestivos, reprodutivos e sistêmicos.</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Enterite Necrótica (Clostridium perfringens)</summary>
+                <div class="disease-content">
+                    <p>A Enterite Necrótica é uma doença intestinal aguda causada pela bactéria Clostridium perfringens. Causa lesões graves na mucosa intestinal, levando a má absorção de nutrientes, diarreia e alta mortalidade</p><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Depressão, penas arrepiadas, diarreia, desidratação, perda de apetite e morte súbita. As aves podem apresentar lesões necróticas no intestino.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">O controle da Enterite Necrótica envolve boas práticas de manejo, como higiene rigorosa, controle da qualidade da ração e da água, e evitar fatores de estresse. O uso de probióticos e prebióticos pode ajudar a manter a saúde intestinal.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Antibióticos específicos para Clostridium são eficazes no tratamento da Enterite Necrótica.</span></div><div class="field-block"><span class="field-label med-label">💉 Antibióticos</span><span class="field-text">Pode-se usar Amoxicilina na dose de 20 mg/kg de peso vivo, via oral, por 5 dias, ou Bacitracina (na água de bebida) conforme indicação do fabricante .</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Oferecer eletrólitos e vitaminas na água de bebida. Melhorar a qualidade da ração e da água.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador.</div>
+                </div>
+            </details></div>
+<div id="parasitas" class="section-content"><h2 class="section-title">🪱 Doenças Parasitárias</h2><p>Parasitas internos e externos podem comprometer seriamente a saúde e a produtividade das galinhas, causando desde desconforto até doenças graves e morte. O controle e a prevenção são contínuos.</p>
+            <details class="disease-card">
+                <summary>Coccidiose (Eimeria spp.)</summary>
+                <div class="disease-content">
+                    <div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Diarreia (às vezes com sangue), penas arrepiadas, prostração, perda de peso, desidratação, má absorção de alimentos (fezes com sementes inteiras) e aumento da mortalidade.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A higiene rigorosa do galinheiro, o controle da umidade da cama e a rotação de piquetes são importantes. O uso de coccidiostáticos na ração (em aves de corte) ou a vacinação (em poedeiras e reprodutoras) são medidas preventivas eficazes.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Medicamentos anticoccidianos são eficazes no tratamento da Coccidiose.</span></div><div class="field-block"><span class="field-label med-label">💉 Anticoccidianos</span><span class="field-text">Pode-se usar Toltrazuril (ex: Baycox®) na dose de 7 mg/kg de peso vivo, via oral, em dose única, repetindo após 5 dias se necessário. Outra opção é o Amprolium (ex: Amprol®) na dose de 125 mg/litro de água de bebida, por 5 a 7 dias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Oferecer eletrólitos e vitaminas (principalmente vitamina K para auxiliar na coagulação em casos de diarreia sanguinolenta) na água de bebida. Manter a cama seca e limpa.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador. A Coccidiose é uma doença parasitária comum e amplamente distribuída, causada por protozoários do gênero Eimeria. Afeta o intestino das galinhas, causando lesões na mucosa e prejudicando a absorção de nutrientes.</div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Oferecer vitaminas e eletrólitos na água de bebida. Manter a higiene do galinheiro para reduzir a reinfestação.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Medicamentos vermífugos (anti- helmínticos) são eficazes no tratamento das verminoses.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">Higiene do galinheiro, rotação de piquetes e controle de hospedeiros intermediários (como minhocas e insetos) são importantes. A vermifugação regular do plantel é a principal medida preventiva.</span></div><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Perda de peso, emagrecimento, diarreia, penas arrepiadas, anemia, diminuição da produção de ovos e, em infestações severas, obstrução intestinal e morte. Os vermes podem ser visíveis nas fezes.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> É crucial respeitar o período de carência dos vermífugos para o consumo de ovos e carne. O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador.</div><div class="field-block"><span class="field-label med-label">💉 Vermífugos</span><span class="field-text">Pode-se usar Levamisol (ex: Ripercol®) na dose de 20-25 mg/kg de peso vivo, via oral, em dose única. Outra opção é o Fenbendazol (ex: Panacur®) na dose de 10-20 mg/kg de peso vivo, via oral, por 3 a 5 dias.</span></div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Verminoses (Ascaridia, Heterakis, Capillaria, Tênias )</summary>
+                <div class="disease-content">
+                    <p>As verminoses são infestações por vermes parasitas no trato gastrointestinal das galinhas. Diferentes tipos de vermes podem causar problemas, como Ascaridia galli (lombriga), Heterakis gallinarum (cecal) e Capillaria spp. (capilares), além de tênias.</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Histomoníase (Doença da Cabeça Negra)</summary>
+                <div class="disease-content">
+                    <p>A Histomoníase, ou Doença da Cabeça Negra, é causada pelo protozoário Histomonas meleagridis, que afeta principalmente o ceco e o fígado das aves. É transmitida principalmente pelo verme cecal Heterakis gallinarum.</p><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Depressão, prostração, penas arrepiadas, diarreia amarelada ou esverdeada, emagrecimento e, em casos avançados, cianose (coloração azulada) da cabeça (daí o nome popular). A mortalidade pode ser alta.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">O controle do verme cecal (Heterakis gallinarum) é fundamental para prevenir a Histomoníase, pois ele atua como vetor. Higiene rigorosa, rotação de piquetes e evitar a criação conjunta de galinhas com perus (que são mais suscetíveis) são importantes.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">O tratamento da Histomoníase pode ser desafiador, e a prevenção é a melhor estratégia.</span></div><div class="field-block"><span class="field-label med-label">💉 Medicamentos</span><span class="field-text">Embora não haja um tratamento 100% eficaz, alguns criadores relatam sucesso com Metronidazol na dose de 35 mg/kg de peso vivo, via oral, por 5 a 7 dias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Isolar as aves doentes, manter ambiente limpo e seco. Oferecer vitaminas e eletrólitos na água de bebida.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O Metronidazol é um medicamento que deve ser usado com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador.</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Tricomoníase (Trichomonas gallinae</summary>
+                <div class="disease-content">
+                    <p>A Tricomoníase é uma doença causada pelo protozoário Trichomonas gallinae, que afeta o trato digestório superior (boca, faringe, esôfago e papo) das aves. É mais comum em pombos, mas pode afetar galinhas.</p><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Lesões caseosas (placas amareladas) na boca e garganta, dificuldade para engolir, salivação excessiva, emagrecimento e prostração. Em casos graves, as lesões podem obstruir a garganta, levando à morte .</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">Higiene dos bebedouros e comedouros, controle de pombos e outras aves silvestres que podem ser portadoras, e quarentena de novas aves são importantes. Evitar o compartilhamento de água e comida com aves selvagens.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Medicamentos específicos para tricomoníase são eficazes no tratamento.</span></div><div class="field-block"><span class="field-label med-label">💉 Medicamentos</span><span class="field-text">Pode-se usar Metronidazol na dose de 25-50 mg/kg de peso vivo, via oral, por 5 a 7 dias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Manter as aves isoladas, oferecer alimentos macios e água de fácil acesso. Oferecer vitaminas e eletrólitos na água de bebida.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O Metronidazol é um medicamento que deve ser usado com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador.</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Criptosporidiose</summary>
+                <div class="disease-content">
+                    <div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Os sintomas variam dependendo do local da infecção. Na forma respiratória, pode haver tosse, espirros e dificuldade respiratória. Na forma intestinal, diarreia aquosa, desidratação e perda de peso.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A higiene rigorosa do ambiente, o controle da umidade e a qualidade da água são cruciais, pois o protozoário é resistente no ambiente. A quarentena de novas aves e o manejo adequado para reduzir o estresse também são importantes.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Não há tratamento específico e totalmente eficaz para a Criptosporidiose. O tratamento é de suporte.</span></div><div class="field-block"><span class="field-label med-label">💉 Medicamentos</span><span class="field-text">Alguns criadores utilizam Toltrazuril (ex: Baycox®) na dose de 7 mg/kg de peso vivo, via oral, em dose única, repetindo após 5 dias se necessário, para tentar reduzir a carga parasitária.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Oferecer eletrólitos e vitaminas na água de bebida para auxiliar na recuperação e fortalecer a imunidade. Manter a higiene rigorosa do ambiente e garantir água de qualidade.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador. A Criptosporidiose é uma doença parasitária causada pelo protozoário Cryptosporidium spp., que afeta o trato respiratório e/ou intestinal das galinhas, especialmente as jovens. Pode causar problemas respiratórios e diarreia.</div>
+                </div>
+            </details></div>
+<div id="nutricionais" class="section-content"><h2 class="section-title">🥗 Condições Nutricionais</h2><p>Introdução Clareza para identificar sintomas e entender como cada doença age no organismo das aves Direção para aplicar medidas corretas de prevenção, manejo e tratamento. Praticidade, com protocolos que podem ser aplicados mesmo por criadores iniciantes. Quanto mais informações você observar em suas aves (como comportamento, fezes, respiração, postura de ovos), mais precisa será sua avaliação com base no que encontrará aqui Este e-book tem caráter educativo e informativo. Ele não substitui a orientação de um médico veterinário. Sempre que possível, consulte um profissional especializado. Criar galinhas é muito mais do que apenas ter aves no quintal. É um compromisso com o bem-estar, a saúde e a produtividade de um plantel que pode garantir alimento, renda e satisfação pessoal. Quem já perdeu aves por doenças sabe a frustração de não entender os sinais, de não saber o que fazer no momento certo e de ver prejuízos aumentarem por falta de informação clara e prática. Este guia nasceu da minha experiência prática de mais de 10 anos como criador de galinhas, convivendo diariamente com os desafios do manejo e principalmente, das doenças que podem atingir nossas aves. Não sou veterinário, todo o conteúdo aqui apresentado é fruto de vivência, observação e aprendizado contínuo com outros criadores, somado a referências e recomendações já utilizadas na prática de campo ⚠ Aviso importante O objetivo deste material é oferecer a você:</p><p>Além das doenças infecciosas e parasitárias, as galinhas podem sofrer com problemas relacionados à nutrição e ao manejo, que afetam diretamente sua saúde e produtividade. A identificação e correção desses problemas são essenciais.</p>
+            <details class="disease-card">
+                <summary>Deficiência de Cálcio / Problemas de Casca</summary>
+                <div class="disease-content">
+                    <div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Ovos com casca fina, mole, áspera, quebradiça ou ausente. Aves podem apresentar fraqueza nas pernas, dificuldade de locomoção, osteoporose e, em casos graves, paralisia e morte. Ovos com casca fina são mais propensos a quebrar e contaminar.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">Fornecer uma dieta balanceada com níveis adequados de cálcio e fósforo, especialmente para poedeiras. Suplementos de cálcio, como calcário moído ou farinha de ostra, devem estar sempre disponíveis. A vitamina D3 é essencial para a absorção de cálcio .</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Aumentar a oferta de cálcio na dieta. Disponibilize calcário moído, farinha de ostra ou cascas de ovos trituradas (bem secas e moídas) em um comedouro separado para que as aves consumam à vontade.</span></div><div class="field-block"><span class="field-label med-label">💊 Vitamina D3</span><span class="field-text">Garanta que as aves tenham acesso à luz solar direta ou suplemente com vitamina D3 na água de bebida, pois ela é essencial para a absorção do cálcio.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> A deficiência de cálcio é um problema nutricional. A correção da dieta é fundamental. O uso de suplementos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador. A deficiência de cálcio é um dos problemas nutricionais mais comuns em galinhas poedeiras e afeta diretamente a qualidade da casca dos ovos e a saúde óssea das aves.</div><div class="alert-box">⚠️ <strong>Aviso:</strong> A correção da dieta é fundamental para evitar novas deficiências. O uso de medicamentos e suplementos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador.</div><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Os sintomas variam conforme a vitamina deficiente:</span></div><div class="field-block"><span class="field-label med-label">💊 Vitamina A</span><span class="field-text">Problemas de visão, secreção nasal e ocular, lesões nas mucosas, maior suscetibilidade a infecções .</span></div><div class="field-block"><span class="field-label med-label">💊 Vitamina D3</span><span class="field-text">Raquitismo em aves jovens, problemas de casca de ovos, fraqueza óssea em aves adultas ].</span></div><div class="field-block"><span class="field-label med-label">💊 Vitamina E</span><span class="field-text">Encefalomalácia (problemas neurológicos), distrofia muscular, problemas reprodutivos .</span></div><div class="field-block"><span class="field-label med-label">💊 Vitamina B2 (Riboflavina)</span><span class="field-text">Paralisia dos dedos (curvatura para dentro), dificuldade de locomoção, crescimento retardado.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">Fornecer uma ração balanceada e de qualidade, que contenha todas as vitaminas essenciais. Em dietas caseiras, a suplementação vitamínica pode ser necessária. Oferecer vegetais frescos e acesso à luz solar (para vitamina D3).</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">A suplementação com a vitamina deficiente é crucial, geralmente através da água de bebida ou da ração.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suplementação</span><span class="field-text">Utilizar complexos vitamínicos específicos para aves, seguindo a dosagem recomendada pelo fabricante, dependendo do suplemento utilizado.</span></div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Deficiências Vitamínicas (A, D, E, B2 etc.)</summary>
+                <div class="disease-content">
+                    <p>As deficiências de vitaminas, ou hipovitaminoses, ocorrem quando a dieta não fornece quantidades suficientes desses micronutrientes essenciais. Cada vitamina desempenha um papel vital, e sua falta pode levar a uma série de problemas de saúde.</p><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">A galinha fica prostrada, com dificuldade para andar (andar de pinguim), esforço para defecar, perda de apetite, inchaço e dor na região abdominal. Pode haver secreção cloacal e a ave pode tentar empurrar o ovo sem sucesso .</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">Dieta balanceada com cálcio adequado, evitando ovos muito grandes (seleção genética), controle de obesidade e estresse. Garantir ninhos adequados e tranquilos.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">A retenção de ovo é uma emergência e requer ação rápida.</span></div><div class="field-block"><span class="field-label treatment-label">🚨 Primeiros Socorros</span><span class="field-text">Isole a galinha em um local quente e tranquilo. Prepare um banho morno com sal Epsom (sulfato de magnésio) – cerca de 1 xícara de sal para 5 litros de água morna. Deixe a galinha de molho por 15- 20 minutos, com a parte inferior do corpo submersa. Isso ajuda a relaxar os músculos e lubrificar a cloaca.</span></div><div class="field-block"><span class="field-label treatment-label">🧴 Lubrificação</span><span class="field-text">Após o banho, seque a ave e lubrifique suavemente a cloaca com óleo vegetal (azeite, óleo de coco). Com luvas, tente fazer uma massagem muito delicada na região abdominal, na direção da cloaca, para tentar auxiliar a saída do ovo.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suplementação</span><span class="field-text">Ofereça cálcio líquido (ex: cálcio para aves) via oral ou na água de bebida, pois a deficiência de cálcio pode ser uma causa.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> Se o ovo não sair após algumas horas, a intervenção veterinária é crucial, pois o ovo pode quebrar internamente ou causar infecção. As ações aqui descritas são baseadas em experiência prática e o uso é por conta e risco do criador.</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Retenção de Ovo (Egg Binding)</summary>
+                <div class="disease-content">
+                    <p>A retenção de ovo ocorre quando a galinha não consegue expelir um ovo do oviduto. É uma condição grave que pode ser fatal se não for tratada rapidamente.</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Ferimentos, Bicagem e Canibalismo</summary>
+                <div class="disease-content">
+                    <p>Ferimentos, bicagem excessiva e canibalismo são problemas comportamentais que podem surgir em plantéis de galinhas, causando lesões, estresse e até a morte de aves</p><div class="field-block"><span class="field-label symptom-label">⚡ Causas</span><span class="field-text">Superlotação, falta de espaço, tédio, deficiências nutricionais (especialmente proteína e sal), luz muito intensa, alta temperatura, introdução de novas aves, presença de aves feridas ou com sangue .</span></div><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Aves com penas arrancadas, lesões na pele (especialmente na cloaca, crista e dedos), sangramento, estresse e morte de aves atacadas .</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">Garantir espaço adequado (galinheiro e piquete), enriquecimento ambiental (poleiros, áreas para ciscar, brinquedos), dieta balanceada, controle da intensidade da luz, remoção imediata de aves feridas ou com sangue, e introdução gradual de novas aves.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Isole imediatamente as aves feridas para evitar mais ataques. Limpe as feridas com solução antisséptica suave (ex: iodo diluído ou clorexidina) e aplique pomada cicatrizante ou repelente para evitar infecções e atrair moscas.</span></div><div class="field-block"><span class="field-label prevention-label">🔍 Identificação</span><span class="field-text">É crucial identificar e corrigir a causa do problema (superlotação, tédio, deficiência nutricional, luz intensa).</span></div><div class="field-block"><span class="field-label support-label">🩹 Suplementação</span><span class="field-text">Oferecer vitaminas e eletrólitos na água de bebida para auxiliar na recuperação e reduzir o estresse.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> Em casos de ferimentos graves ou persistência do problema, a consulta a um profissional é recomendada. O uso de anéis anti-bicagem ou desbaste de bico deve ser feito com cautela e, idealmente, por um profissional. As ações aqui descritas são baseadas em experiência prática e o uso é por conta e risco do criador.</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Ectoparasitoses (ácaros, piolhos, carrapatos)</summary>
+                <div class="disease-content">
+                    <p>Ectoparasitas, como ácaros, piolhos e carrapatos, vivem na superfície do corpo das galinhas, causando irritação, estresse, perda de sangue, anemia e transmissão de doenças. São um problema comum em criações.</p><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Coceira intensa, penas arrepiadas, perda de penas, pele irritada, crostas, anemia (mucosas pálidas), perda de peso, queda na produção de ovos e, em infestações severas, morte. Os parasitas podem ser visíveis na pele e nas penas.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">Higiene regular do galinheiro, banhos de areia disponíveis para as aves, inspeção periódica das aves, controle de aves silvestres e roedores. O uso de produtos naturais (como cinza vegetal) ou inseticidas específicos no ambiente pode ajudar.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">A utilização de produtos específicos é crucial para o controle de ectoparasitas.</span></div><div class="field-block"><span class="field-label med-label">💉 Produtos (Aves)</span><span class="field-text">Pode-se usar Ivermectina (solução pour-on ou injetável) na dose de 0,2 mg/kg de peso vivo, em dose única, repetindo após 10-14 dias se necessário. Outra opção é o Fipronil (spray) aplicado diretamente nas aves, evitando a face.</span></div><div class="field-block"><span class="field-label med-label">🏠 Produtos (Ambiente)</span><span class="field-text">: Para o ambiente, pode-se usar Cipermetrina (diluída em água) para pulverizar o galinheiro, poleiros e ninhos, após a remoção das aves. A Terra de Diatomáceas de grau alimentício também pode ser polvilhada no ambiente e na cama.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> É fundamental seguir rigorosamente as instruções do fabricante para a aplicação e respeitar o período de carência dos produtos para o consumo de ovos e carne. O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador.</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Peito seco  ( Atrofiamento do musculo peitoral)</summary>
+                <div class="disease-content">
+                    <p>Peito seco é um sintoma, não uma doença. A ave fica magra, com o osso do peito (quilha) muito aparente, pouca musculatura e perda de peso. Normalmente acontece quando a galinha para de comer direito por causa de alguma doença, levando à desnutrição e fraqueza.</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Principais Problemas</summary>
+                <div class="disease-content">
+                    <p>que causam peito seco</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Coccidiose (Eimeria spp.)</summary>
+                <div class="disease-content">
+                    <div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Diarreia (às vezes com sangue), penas arrepiadas, prostração, perda de peso, desidratação, má absorção de alimentos e aumento da mortalidade.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A higiene rigorosa do galinheiro, o controle da umidade da cama e a rotação de piquetes são importantes. O uso de coccidiostáticos na ração (em aves de corte) ou a vacinação (em poedeiras e reprodutoras) são medidas preventivas eficazes.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Medicamentos anticoccidianos são eficazes no tratamento da Coccidiose.</span></div><div class="field-block"><span class="field-label med-label">💉 Anticoccidianos</span><span class="field-text">Pode-se usar Toltrazuril (ex: Baycox®) na dose de 7 mg/kg de peso vivo, via oral, em dose única, repetindo após 5 dias se necessário. Outra opção é o Amprolium (ex: Amprol®) na dose de 125 mg/litro de água de bebida, por 5 a 7 dias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Oferecer eletrólitos e vitaminas (principalmente vitamina K para auxiliar na coagulação em casos de diarreia sanguinolenta) na água de bebida. Manter a cama seca e limpa.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador. A Coccidiose é uma doença parasitária comum e amplamente distribuída, causada por protozoários do gênero Eimeria. Afeta o intestino das galinhas, causando lesões na mucosa e prejudicando a absorção de nutrientes.</div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Oferecer vitaminas e eletrólitos na água de bebida. Manter a higiene do galinheiro para reduzir a reinfestação.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Medicamentos vermífugos (anti- helmínticos) são eficazes no tratamento das verminoses.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">Higiene do galinheiro, rotação de piquetes e controle de hospedeiros intermediários (como minhocas e insetos) são importantes. A vermifugação regular do plantel é a principal medida preventiva.</span></div><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Perda de peso, emagrecimento, diarreia, penas arrepiadas, anemia, diminuição da produção de ovos e, em infestações severas, obstrução intestinal e morte. Os vermes podem ser visíveis nas fezes.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> É crucial respeitar o período de carência dos vermífugos para o consumo de ovos e carne. O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador.</div><div class="field-block"><span class="field-label med-label">💉 Vermífugos</span><span class="field-text">Pode-se usar Levamisol (ex: Ripercol®) na dose de 20-25 mg/kg de peso vivo, via oral, em dose única. Outra opção é o Fenbendazol (ex: Panacur®) na dose de 10-20 mg/kg de peso vivo, via oral, por 3 a 5 dias.</span></div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Verminoses (Ascaridia, Heterakis, Capillaria, Tênias )</summary>
+                <div class="disease-content">
+                    <p>As verminoses são infestações por vermes parasitas no trato gastrointestinal das galinhas. Diferentes tipos de vermes podem causar problemas, como Ascaridia galli (lombriga), Heterakis gallinarum (cecal) e Capillaria spp. (capilares), além de tênias.</p><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Espirros, tosse, secreção nasal, dificuldade respiratória, inchaço dos seios da face, conjuntivite e lacrimejamento. Em casos crônicos, pode haver emagrecimento e queda na produção de ovos.</span></div><div class="field-block"><span class="field-label prevention-label">🛡️ Prevenção</span><span class="field-text">A aquisição de aves de plantéis livres de micoplasma é a melhor forma de prevenção. A vacinação está disponível e é utilizada em áreas de alta incidência. Boas práticas de biosseguridade e manejo, como controle de poeira e ventilação, são importantes.</span></div><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Antibióticos específicos para micoplasma podem ser eficazes na redução dos sintomas e da transmissão, mas raramente eliminam a infecção.</span></div><div class="field-block"><span class="field-label med-label">💉 Antibióticos</span><span class="field-text">Tilosina (ex: Tylan®) na dose de 15mg/kg de peso vivo, via oral, por 5 a 7 dias, ou Tiamulina na dose de 25 mg/kg de peso vivo, via oral, por 3 a 5 dias.</span></div><div class="field-block"><span class="field-label support-label">🩹 Suporte</span><span class="field-text">Manter as aves em ambiente limpo, seco e bem ventilado. Oferecer vitaminas e eletrólitos na água de bebida.</span></div><div class="alert-box">⚠️ <strong>Aviso:</strong> O uso de medicamentos deve ser feito com cautela e, idealmente, sob orientação de um profissional. As dosagens aqui apresentadas são baseadas em experiência prática e o uso é por conta e risco do criador.</div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Micoplasmose Respiratória (DRC – Mycoplasma gallisepticum</summary>
+                <div class="disease-content">
+                    <p>A Micoplasmose Respiratória, ou Doença Respiratória Crônica (DRC), é causada pela bactéria Mycoplasma gallisepticum. É uma doença crônica que afeta o sistema respiratório, causando perdas significativas na produção de ovos e carne.</p>
+                </div>
+            </details></div>
+<div id="capitulo-2" class="section-content"><h2 class="section-title">📋 Capítulo 2 — Tabelas e Guias Rápidos</h2><div class="field-block"><span class="field-label symptom-label">🔴 Sintomas</span><span class="field-text">Sintoma(s) Inchaço da face ou cabeça</span></div><p>Doença(s) Provável(is)</p>
+            <details class="disease-card">
+                <summary>Bronquite Infecciosa,</summary>
+                <div class="disease-content">
+                    <p>Laringotraqueíte, Metapneumovirose, Micoplasmose, Coriza Infecciosa</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Coriza Infecciosa,</summary>
+                <div class="disease-content">
+                    <p>Metapneumovirose (Síndrome da Cabeça Inchada), Micoplasmose</p><div class="field-block"><span class="field-label treatment-label">💊 Tratamento</span><span class="field-text">Tratamento Sugerido (Experiência Prática)</span></div>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Coriza Infecciosa:</summary>
+                <div class="disease-content">
+                    <p>Enrofloxacino ou Tilosina. Metapneumovirose: Suporte, Tilosina ou Doxiciclina para secundárias. Micoplasmose: Tilosina ou Tiamulina.</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Bronquite Infecciosa:</summary>
+                <div class="disease-content">
+                    <p>Suporte, Oxitetraciclina ou Enrofloxacina para secundárias. Laringotraqueíte: Suporte, Tilosina ou Oxitetraciclina para secundárias. Metapneumovirose: Suporte, Tilosina ou Doxiciclina para secundárias. Micoplasmose: Tilosina ou Tiamulina. Coriza Infecciosa: Enrofloxacino ou Tilosina. Respiratórios (espirros, tosse, ronco)</p>
+                </div>
+            </details><p>Esta tabela é um guia rápido para ajudar a</p><p>identificar possíveis doenças com base nos sintomas observados, as dosagens deve-se levar em consideraçao a bula do medicamento escolhido. Lembre-se que o diagnóstico definitivo deve ser feito por um profissional. Paralisia, dificuldade de locomoção, torcicolo Lesões na boca e garganta (placas amarelas) Diarreia (aquosa, esverdeada, com sangue) Lesões na pele (verrugas, crostas)</p>
+            <details class="disease-card">
+                <summary>Varíola Aviária</summary>
+                <div class="disease-content">
+                    <p>(Bouba Aviária)</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Tricomoníase,</summary>
+                <div class="disease-content">
+                    
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Varíola Aviária</summary>
+                <div class="disease-content">
+                    <p>(forma úmida)</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Coccidiose,</summary>
+                <div class="disease-content">
+                    
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Salmonelose,</summary>
+                <div class="disease-content">
+                    
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Cólera Aviária,</summary>
+                <div class="disease-content">
+                    <p>Doença de Gumboro,</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Verminoses,</summary>
+                <div class="disease-content">
+                    <p>Enterite Necrótica,</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Criptosporidiose</summary>
+                <div class="disease-content">
+                    <p>Doença de Marek, Doença de Newcastle, Deficiências Vitamínicas (B2), Deficiência de Cálcio</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Varíola Aviária: Limpeza das</summary>
+                <div class="disease-content">
+                    <p>lesões, com iodo, thuya, pomadas cicatrizantes/repelentes, suporte vitamínico. Marek: Suporte (incurável), observaçao, oferecer comida e agua fresca para a ave isolada. Newcastle: Suporte, Oxitetraciclina para secundárias.</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Deficiências Vitamínicas:</summary>
+                <div class="disease-content">
+                    <p>Suplementação vitamínica (Complexo B, Vit. A injetável).</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Deficiência de Cálcio:</summary>
+                <div class="disease-content">
+                    <p>Suplementação de cálcio e Vit. D3.</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Coccidiose: Toltrazuril ou</summary>
+                <div class="disease-content">
+                    <p>Amprolium. Salmonelose: Enrofloxacina ou Sulfametoxazol + Trimetoprim. Cólera Aviária: Oxitetraciclina ou Sulfametoxazol + Trimetoprim. Gumboro: Suporte, Oxitetraciclina para secundárias. Verminoses: Levamisol ou Fenbendazol.</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Enterite Necrótica: Amoxicilina</summary>
+                <div class="disease-content">
+                    <p>ou Bacitracina. Criptosporidiose: Suporte, Toltrazuril.</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Tricomoníase: Metronidazol.</summary>
+                <div class="disease-content">
+                    
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Varíola Aviária: Limpeza das</summary>
+                <div class="disease-content">
+                    <p>lesões, com iodo, thuya, pomadas, retirar placas com cuidado, sem forçar. cicatrizantes/repelentes, suporte vitamínico. Morte súbita</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Cólera Aviária,</summary>
+                <div class="disease-content">
+                    <p>Doença de Newcastle,</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Influenza Aviária,</summary>
+                <div class="disease-content">
+                    <p>Enterite Necrótica</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Cólera Aviária:</summary>
+                <div class="disease-content">
+                    <p>Oxitetraciclina ou Sulfametoxazol + Trimetoprim. Newcastle: Suporte, Oxitetraciclina para secundárias. Influenza Aviária: Suporte visando aliviar os sintomas e prevenir infecções secundárias. Oferecer eletrólitos e vitaminas na água de bebida. (notificação obrigatória). Enterite Necrótica: Amoxicilina ou Bacitracina. Queda na produção de ovos, ovos com casca fina/mole Perda de peso, emagrecimento, prostração</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Verminoses,</summary>
+                <div class="disease-content">
+                    
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Coccidiose,</summary>
+                <div class="disease-content">
+                    <p>Doença de Marek,</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Salmonelose,</summary>
+                <div class="disease-content">
+                    <p>Micoplasmose Crônica,</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Histomoníase</summary>
+                <div class="disease-content">
+                    <p>Bronquite Infecciosa, Doença de Newcastle, Deficiência de Cálcio, Deficiências Vitamínicas</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Bronquite Infecciosa:</summary>
+                <div class="disease-content">
+                    <p>Suporte, Oxitetraciclina ou Enrofloxacina para secundárias. Newcastle: Suporte, Oxitetraciclina para secundárias.</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Deficiência de Cálcio:</summary>
+                <div class="disease-content">
+                    <p>Suplementação de cálcio e Vit. D3. Deficiências Vitamínicas: Suplementação vitamínica.</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Verminoses: Levamisol ou</summary>
+                <div class="disease-content">
+                    <p>Fenbendazol. Coccidiose: Toltrazuril ou Amprolium. Marek: Suporte (incurável), observaçao, oferecer comida e agua fresca para a ave isolada. Salmonelose: Enrofloxacina ou Sulfametoxazol + Trimetoprim. Micoplasmose: Tilosina ou Tiamulina. Histomoníase: Metronidazol.</p>
+                </div>
+            </details></div>
+<div id="checklist" class="section-content"><h2 class="section-title">📝 Checklist de Manejo Diário</h2><p>Utilize este checklist para garantir que todas as tarefas essenciais do manejo diário sejam cumpridas.</p><h3 class="time-header">🌅 Manhã:</h3><div class="checklist-item">☐ Observar o comportamento geral das aves (ativas, alertas).</div><div class="checklist-item">☐ Lavar os bebedouros e fornecer água fresca e limpa.</div><div class="checklist-item">☐ Abastecer os comedouros com ração.</div><div class="checklist-item">☐ Coletar os ovos.</div><div class="checklist-item">☐ Verificar se há aves doentes ou isoladas, separar aves apaticas, ou com qualquer sintoma que tenha visto nesse guia</div><h3 class="time-header">☀️ Tarde:</h3><div class="checklist-item">☐ Verificar os níveis de água e comida, reabastecendo se necessário.</div><div class="checklist-item">☐ Coletar os ovos novamente.</div><h3 class="time-header">🌙 Final do Dia:</h3><div class="checklist-item">☐ Garantir que todas as aves retornaram ao galinheiro.</div><div class="checklist-item">☐ Trancar o galinheiro para proteção contra predadores, caso necessario.</div><div class="checklist-item">☐ Fazer uma última observação geral do plantel. 1º dia 7º dia</div><p>Idade 14-18 dias 21-28 dias 35-42 dias</p><p>Vacina Marek Gumboro (reforço) Gumboro (cepa suave/inter mediária) Newcastle (cepa B1/LaSota) + Bronquite Infecciosa Bouba Aviária (cepa suave) Doença(s) Prevenida(s)</p>
+            <details class="disease-card">
+                <summary>Doença de Marek</summary>
+                <div class="disease-content">
+                    
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Doença de Gumboro</summary>
+                <div class="disease-content">
+                    <p>Bouba Aviária (Varíola Aviária)</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Doença de Newcastle</summary>
+                <div class="disease-content">
+                    <p>e Bronquite Infecciosa Ocular ou Oral Ocular ou Oral Subcutânea (no pescoço)</p><p>Via de Aplicação Punção na membrana da asa Ocular (gota no olho) ou Oral (na água de beber)</p>
+                </div>
+            </details></div>
+<div id="vacinacao" class="section-content"><h2 class="section-title">💉 Calendário de Vacinação</h2>
+            <details class="disease-card">
+                <summary>Doença de Gumboro</summary>
+                <div class="disease-content">
+                    <p>Fase 1: Pintinhos (1 a 8 semanas) Este é um exemplo de calendário de vacinação. O protocolo ideal deve ser definido com um veterinário, com base nos desafios sanitários da sua região</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Doença de Newcastle</summary>
+                <div class="disease-content">
+                    <p>e Bronquite Infecciosa</p><p>Fase 2: Frangas (9 a 16 semanas)</p><p>Idade 9-10 semanas 12-14 semanas 13-14 semanas 15-16 semanas</p><p>Vacina Newcastle (reforço) + Bronquite (reforço) Coriza Infecciosa (1ª dose) Coriza Infecciosa (2ª dose) Bouba Aviária (reforço, cepa forte) Doença(s) Prevenida(s) Bouba Aviária</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Coriza Infecciosa das</summary>
+                <div class="disease-content">
+                    <p>Aves</p>
+                </div>
+            </details>
+            <details class="disease-card">
+                <summary>Coriza Infecciosa das</summary>
+                <div class="disease-content">
+                    <p>Aves Subcutânea ou Intramuscular Subcutânea ou Intramuscular</p><p>Via de Aplicação Ocular, Oral ou Spray Punção na membrana da asa</p>
+                </div>
+            </details></div>
+<div id="vermifugacao" class="section-content"><h2 class="section-title">🧪 Protocolos de Vermifugação</h2><p>Nota: Este é um guia de referência rápida. A frequência e o tipo de medicamento podem variar. Consulte sempre um médico veterinário para um plano personalizado para sua criação.</p><p>Aves Jovens: Primeira vermifugação por volta de 30-45 dias de idade. Repetir a dose após 15 dias.</p><p>Aves Adultas: Vermifugar a cada 3 a 6 meses, dependendo do sistema de criação (aves em piquetes têm maior risco de infestação).</p><p>Rotação de Princípios Ativos: É recomendado alternar o princípio ativo do vermífugo para evitar o desenvolvimento de resistência dos parasitas.</p><p>Período de Carência: Respeite o período de carência indicado na bula do medicamento para o consumo de ovos e carne após a vermifugação A vermifugação regular é essencial para o controle de parasitas internos. As informaçoes sobre vermifugaçoes, sao com base na minha experiencia de sempre. Consulte um veterinário para a escolha do vermífugo e a frequência ideal</p></div>
+<div id="conclusao" class="section-content"><h2 class="section-title">✅ Conclusão e Recomendações</h2><p>Quando Procurar um Veterinário</p><p>Procure um médico veterinário sempre que: Doenças, uma vez instaladas, geram custos com medicamentos, perdas na produção, sofrimento para as aves e, em muitos casos, mortalidade que poderia ser evitada. Um manejo sanitário rigoroso, uma nutrição balance ada, um ambiente limpo e sem estresse, e um programa de vacinação bem executado não são despesas, mas sim investimentos na saúde e na longevidade do seu plantel. Cada ação preventiva, desde a limpeza diária dos bebedouros até a quarentena de uma nova ave, constrói uma barreira de proteção contra os desafios que inevitavelmente surgirão</p><p>Você observar sintomas que não consegue identificar ou que não respondem aos tratamentos iniciais.</p><p>Houver um surto de doença com alta mortalidade ou disseminação rápida. Você precisar de um diagnóstico preciso, exames laboratoriais ou prescrição de medicamentos controlados.</p><p>Para elaborar um calendário de vacinação e vermifugação personalizado para a sua realidade. Este e-book foi criado para ser um guia prático, baseado em anos de experiência, para ajudá-lo a tomar as melhores decisões no dia a dia. No entanto, é crucial reconhecer os limites do conhecimento prático e a importância do suporte profissional. Lembre-se: a parceria com um profissional qualificado agrega segurança e conhecimento técnico à sua experiência prática, formando a combinação ideal para o sucesso da sua criação. Desejamos a você muito sucesso! Espero que este guia seja um companheiro valioso em sua jornada. Que ele traga a confiança e a clareza necessárias para você alcançar seus objetivos com suas aves, evitar prejuízos e desfrutar de uma criação próspera e gratificante.</p></div>
 
-    <div class="container">
-
-    <!-- APRESENTAÇÃO -->
-    <div id="apresentacao" class="section-content active-fallback">
-        <h1>O Segredo das Doenças</h1>
-        <div class="intro-text">
-            <p><strong>Olá, amigo criador!</strong></p>
-            <p>Se você chegou até aqui, é provável que tenha enfrentado uma situação comum: ver suas galinhas adoecerem e não saber como proceder.</p>
-            <p>Meu nome é João Paulo, sou criador há mais de 10 anos. Compartilho aqui o que <strong>realmente funcionou na prática de campo</strong>.</p>
-            <p><i>Aviso: Não sou veterinário, mas essas são as condutas e medicamentos que já salvaram milhares de aves.</i></p>
-        </div>
-        
-        <h3>O que você encontrará:</h3>
-        <ul class="checklist">
-            <li>Identificação rápida das principais doenças.</li>
-            <li>Causas e sintomas mais comuns.</li>
-            <li>Tratamentos eficazes testados na prática (doses e antibióticos).</li>
-        </ul>
-        <br>
-        <p>Use o menu superior para deslizar e encontrar rapidamente a categoria que sua ave precisa.</p>
     </div>
-    
-    <div id="respiratorias" class="section-content">
-        <h2 class="section-title">&#129440; Respiratórias</h2>
-
-        <details>
-            <summary>Bronquite Infecciosa (IBV)</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Sintomas: Espirros, tosse, dificuldade respiratória.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Tilosina (ex: Tylan®) 15 mg/kg ou Enrofloxacino (ex: Chimetril®) 10 mg/kg via oral (3-5 dias).</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Doença viral. Antibióticos previnem infecções secundárias.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Laringotraqueíte Infecciosa (ILT)</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Dificuldade respiratória severa, tosse sanguinolenta, bombeamento do pescoço.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Tilosina 15 mg/kg ou Oxitetraciclina 30 mg/kg (5-7 dias).</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Vacinação previne.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Metapneumovirose Aviária</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Inchaço da cabeça e seios, espirros.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Tilosina 15mg/kg ou Doxiciclina 15 mg/kg.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Também chamada de Síndrome da Cabeça Inchada.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Micoplasmose Respiratória (DRC)</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Secreção nasal fétida, ronco crônico.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Tilosina 15mg/kg ou Tiamulina 25 mg/kg.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Causada pelo M. gallisepticum.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Coriza Infecciosa</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Pus nos olhos, rosto muito inchado, cheiro ruim.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Enrofloxacino (Baytril) 10 mg/kg ou Tilosina 15mg/kg.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Bacteriana, isolar imediatamente.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Ornithobacterium (ORT)</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Inchaço no rosto, dificuldade extrema para respirar.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Enrofloxacino 10 mg/kg ou Doxiciclina 15 mg/kg.</p>
-
-            </div>
-        </details>
-
-    </div>
-
-    <div id="virais" class="section-content">
-        <h2 class="section-title">&#129516; Virais Sistêmicas</h2>
-
-        <details>
-            <summary>Doença de Newcastle</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Mortalidade rápida, torcicolo, tremores, diarreia verde.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Suporte vitamínico. Oxitetraciclina 30mg/kg para secundárias.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Altamente contagiosa e trágica. Vacinação é obrigatória.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Doença de Marek</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Paralisia das asas e pernas, cegueira, olho cinza.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Incurável. Suporte alimentar isolado.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Prevenção apenas vacinando pintinhos no 1º dia.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Doença de Gumboro</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Aves tristes, diarreia aquosa, penas arrepiadas (bolsa de Fabricius).</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Vitamina ADE. Oxitetraciclina 30mg/kg para secundárias.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Ataca a imunidade da ave.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Varíola Aviária (Bouba)</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Verrugas/crostas pretas no rosto (seca). Placas amareladas na boca (úmida).</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Iodo ou Thuya Avícola + pomada cicatrizante.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Transmitida por mosquitos. Vacinação é certeira.
-                </div>
-
-            </div>
-        </details>
-
-    </div>
-
-    <div id="bacterianas" class="section-content">
-        <h2 class="section-title">&#129658; Bacterianas & Entéricas</h2>
-
-        <details>
-            <summary>Salmonelose (Pullorum/Tifo)</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Diarreia branca (pintinhos), fezes grudadas na cloaca.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Enrofloxacina 10 mg/kg ou Sulfametoxazol+Trimetoprim 30 mg/kg.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Evite comprar aves de origem desconhecida.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Cólera Aviária</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Morte súbita, crista fica roxa/azulada, diarreia verde-amarelada.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Oxitetraciclina 30 mg/kg ou Sulfametoxazol+Trimetoprim 30 mg/kg.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Pode dizimar o plantel em 2 dias.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Colibacilose (E. coli)</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Saco vitelino inflamado em pintos, barriga d'água.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Enrofloxacina 10 mg/kg ou Gentamicina 5 mg/kg injetável.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Higiene da água e poeira.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Enterite Necrótica</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Diarreia necrótica (podre), ave muito deprimida.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Amoxicilina 20 mg/kg ou Bacitracina.</p>
-
-            </div>
-        </details>
-
-    </div>
-
-    <div id="parasitas" class="section-content">
-        <h2 class="section-title">&#128027; Parasitárias</h2>
-
-        <details>
-            <summary>Coccidiose</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Diarreia com sangue, ave perde peso rápido e fica secando.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Toltrazuril (Baycox) 7 mg/kg ou Amprolium.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Higiene do piso e da cama de frango é lei.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Verminoses (Lombriga, etc)</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Peito Seco, fezes anormais, emagrecimento grave.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Levamisol (ex: Ripercol) 20-25mg/kg dose única. Ou Fenbendazol.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Vermifugar plantel a cada 3~6 meses.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Histomoníase (Cabeça Negra)</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Diarreia amarela-enxofre, pele da cabeça escurece.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Metronidazol 35 mg/kg (5 a 7 dias).</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Doença transmitida por vermes.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Tricomoníase</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Massa amarela fedida que tampa a garganta e a boca.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Metronidazol 25-50 mg/kg.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Aves pegam isso muitas vezes da água suja ou de pombos.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Ectoparasitas (Piolho/Ácaro)</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Coceira extrema, falta de pena, pele escamosa.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Ivermectina Pour-on (na nuca) gota ou Mectimax. Ou spray de Fipronil.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Dedetizar o galinheiro com Cipermetrina sem as aves presentes.
-                </div>
-
-            </div>
-        </details>
-
-    </div>
-
-    <div id="nutricionais" class="section-content">
-        <h2 class="section-title">&#129367; Nutricionais & Especiais</h2>
-
-        <details>
-            <summary>Ovo Preso (Retenção)</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Ave não consegue botar, fica tipo pinguim, estufada.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Banho morno na cloaca com sal epsom para relaxar, massagem com banha/óleo.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Falta de cálcio gera ovos enormes ou frágeis.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Peito Seco (Sintoma)</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>O osso do peito fica afiado parecendo uma faca.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Não é uma doença, é um SINTOMA de fome causada por Coccidiose, vermes ou vírus.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Descubra a raiz do problema rápido para tratar.
-                </div>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Canibalismo / Arrancamento</summary>
-            <div class="details-content">
-                <p><strong>Sintomas Típicos:</strong><br>Aves se bicando até sangrar e arrancar penas.</p>
-                <div class="med-tag">Dose & Medicamento:</div>
-                <p>Falta de proteína aguda, superlotação, estresse.</p>
-
-                <div class="alert-box">
-                    <strong>Atenção:</strong> Isolar ave ferida e passar pomada escurecedora.
-                </div>
-
-            </div>
-        </details>
-
-    </div>
-
-    <!-- TABELAS -->
-    <div id="tabelas" class="section-content">
-        <h2 class="section-title">&#128202; Protocolos Rápidos</h2>
-        
-        <details>
-            <summary>Checklist Diário</summary>
-            <div class="details-content">
-                <ul class="checklist">
-                    <li><strong>Manhã:</strong> Lavar bebedouros, botar ração, olhar atitude (ave quieta vai pro isolamento).</li>
-                    <li><strong>Tarde:</strong> Checar se sobrou água limpa (galinha sofre rápido sem). Coletar os ovos.</li>
-                    <li><strong>Noite:</strong> Trancar galinheiro para predador.</li>
-                </ul>
-            </div>
-        </details>
-        
-        <details>
-            <summary>Guia de Vacinação Base</summary>
-            <div class="details-content">
-                <p><strong>1º Dia:</strong> Marek e Gumboro</p>
-                <p><strong>14 dias:</strong> Newcastle e Bronquite</p>
-                <p><strong>21 dias:</strong> Bouba Aviária</p>
-                <p><strong>14 Semanas:</strong> Coriza Infecciosa</p>
-            </div>
-        </details>
-        
-        <details>
-            <summary>Vermifugação</summary>
-            <div class="details-content">
-                <p>Dar vermífugo na fase de crescimento (ex: 30 a 45 dias) e depois fazer reforço a cada 4 ou 6 meses no plantel adulto inteiro no mesmo dia.</p>
-                <div class="alert-box">Descarte os ovos durante os dias do vermífugo, pois sai veneno na gema. Leia a bula!</div>
-            </div>
-        </details>
-    </div>
-    
-    </div> <!-- Fim container -->
-
     <script>
-        // JS Nativo para Abas (Sem dependência pesada)
-        function activateTab(element, targetId) {
-            // Remove active from all tabs
-            const tabs = document.querySelectorAll('.scroll-tab');
-            tabs.forEach(t => t.classList.remove('active'));
-            
-            // Add active to clicked tab
-            if(element) element.classList.add('active');
-            
-            // Hide all sections, remove active-fallback so hash routing takes over precisely without clash
-            const sections = document.querySelectorAll('.section-content');
-            sections.forEach(s => {
+    (function(){
+        'use strict';
+        window.activateTab = function(el, targetId) {
+            if(document.body.classList.contains('search-active')) return;
+            document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
+            if(el) el.classList.add('active');
+            document.querySelectorAll('.section-content').forEach(function(s){
                 s.style.display = 'none';
-                s.classList.remove('active-fallback'); // pure reset
+                s.classList.remove('active-fallback');
             });
-            
-            // Show target
-            setTimeout(() => {
-                const target = document.getElementById(targetId);
-                if(target) {
-                    target.style.display = 'block';
-                    // Scroll topo suave caso as sections sejam muito longas
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            }, 10);
-        }
-
-        // Se acessar com hash direto via URL, ativar o display (Fallback de carregamento inicial)
-        window.addEventListener('load', () => {
-            if(window.location.hash) {
-                const h = window.location.hash.substring(1);
-                const el = document.querySelector('.scroll-tab[href="#'+h+'"]');
+            setTimeout(function(){
+                var target = document.getElementById(targetId);
+                if(target){target.style.display='block';window.scrollTo({top:0,behavior:'smooth'})}
+            }, 15);
+        };
+        window.addEventListener('load', function(){
+            if(window.location.hash){
+                var h=window.location.hash.substring(1);
+                var el=document.querySelector('.tab[href="#'+h+'"]');
                 if(el) activateTab(el, h);
             }
         });
+
+        var searchInput=document.getElementById('searchInput');
+        var searchStatus=document.getElementById('searchStatus');
+        var cards=document.querySelectorAll('.disease-card');
+        var debounce;
+        cards.forEach(function(c){c._text=(c.textContent||c.innerText).toLowerCase()});
+
+        searchInput.addEventListener('input',function(){
+            clearTimeout(debounce);
+            debounce=setTimeout(function(){doSearch(searchInput.value.trim())},250);
+        });
+
+        function doSearch(query){
+            var q=query.toLowerCase();
+            if(!q){
+                document.body.classList.remove('search-active');
+                searchStatus.textContent='';
+                cards.forEach(function(c){c.classList.remove('hidden-by-search');c.removeAttribute('open')});
+                var activeTab=document.querySelector('.tab.active');
+                if(activeTab) activateTab(activeTab, activeTab.getAttribute('href').substring(1));
+                else activateTab(document.querySelector('.tab'),'inicio');
+                return;
+            }
+            document.body.classList.add('search-active');
+            var matched=0;
+            cards.forEach(function(c){
+                if(c._text.indexOf(q)>=0){c.classList.remove('hidden-by-search');c.setAttribute('open','');matched++}
+                else{c.classList.add('hidden-by-search');c.removeAttribute('open')}
+            });
+            searchStatus.textContent=matched>0
+                ? matched+' resultado(s) encontrado(s) para "'+query+'"'
+                : 'Nenhum resultado para "'+query+'"';
+        }
+    })();
     </script>
 </body>
 </html>
