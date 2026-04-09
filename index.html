@@ -2402,7 +2402,7 @@
                                         <span id="top-checkout-card-installment" style="font-size: 1.3rem; color: #16a34a; font-weight: 900; line-height: 1;">4x de R$ 37,47</span>
                                     </div>
                                     <div style="font-size: 0.85rem; color: #0f172a; font-weight: 700; margin-top: 2px;">
-                                        Ou <span id="checkout-product-price-display" style="color: #22c55e; font-weight: 800;">R$ 79,90</span> com desconto no PIX ou Boleto
+                                        Ou <span id="checkout-product-price-display" style="color: #22c55e; font-weight: 800;">R$ 79,90</span> com desconto no PIX
                                     </div>
                                     <div style="font-size: 0.7rem; color: #64748b; margin-top: 4px; font-style: italic; border-top: 1px dashed #e2e8f0; padding-top: 6px;">
                                         Menos de 3 reais por dia para salvar suas galinhas.
@@ -2469,7 +2469,7 @@
                             <div id="pix-fields">
                                 <div class="ck-form-group form-group">
                                     <label for="payer-name">Nome Completo</label>
-                                    <input type="text" id="payer-name" class="form-input ck-input"
+                                    <input type="text" id="payer-name" name="name" autocomplete="name" class="form-input ck-input"
                                         placeholder="Como no seu documento" required
                                         data-tip="Digite seu nome e sobrenome completo."
                                         oninput="if(document.getElementById('checkout-payer-firstname')) document.getElementById('checkout-payer-firstname').textContent = this.value.trim().split(' ')[0].toLowerCase()">
@@ -2479,15 +2479,15 @@
                                 <div class="ck-form-row">
                                     <div class="ck-form-group form-group">
                                         <label for="payer-email">E-mail (Opcional)</label>
-                                        <input type="email" id="payer-email" class="form-input ck-input"
+                                        <input type="email" id="payer-email" name="email" autocomplete="email" class="form-input ck-input"
                                             placeholder="seu@email.com (Opcional)" inputmode="email"
                                             data-tip="Seu melhor email onde recebera o acesso ao guia.">
                                         <div class="field-tooltip">Onde voce recebera o acesso</div>
                                     </div>
                                     <div class="ck-form-group form-group">
                                         <label for="payer-phone">WhatsApp</label>
-                                        <input type="tel" id="payer-phone" class="form-input ck-input"
-                                            placeholder="(00) 00000-0000" required inputmode="numeric" pattern="[0-9]*"
+                                        <input type="tel" id="payer-phone" name="phone" autocomplete="tel" class="form-input ck-input"
+                                            placeholder="(00) 00000-0000" required inputmode="tel"
                                             data-tip="Para suporte e avisos importantes (DDD + Numero).">
                                         <div class="field-tooltip">DDD + Numero</div>
                                     </div>
@@ -2495,7 +2495,7 @@
 
                                 <div class="ck-form-group form-group">
                                     <label for="payer-cpf">CPF</label>
-                                    <input type="tel" id="payer-cpf" class="form-input ck-input"
+                                    <input type="tel" id="payer-cpf" name="cpf" autocomplete="off" class="form-input ck-input"
                                         placeholder="000.000.000-00" required inputmode="numeric" pattern="[0-9]*"
                                         data-tip="Necessario para emitir a nota fiscal (apenas numeros).">
                                     <div class="field-tooltip">Apenas numeros do CPF</div>
@@ -2544,15 +2544,6 @@
                                             style="height: 18px;" alt="Mastercard">
                                     </div>
                                 </div>
-                                <div class="radio-item" onclick="selectPaymentMethod('boleto')">
-                                    <input type="radio" name="paymentMethod" id="method-boleto" value="boleto"
-                                        style="display:none;">
-                                    <div class="radio-label">
-                                        <span class="radio-title">BOLETO</span>
-                                        <span class="radio-desc" style="font-size: 0.6rem;">Com desconto</span>
-                                    </div>
-                                    <i class="fa-solid fa-barcode" style="font-size: 20px; color: #64748b;"></i>
-                                </div>
                             </div>
 
                             <!-- Card Area -->
@@ -2560,49 +2551,49 @@
                             <div id="card-area" style="display: none;">
                                 <div class="ck-form-group form-group">
                                     <label>Nome no Cartao</label>
-                                    <input type="text" id="card-holder" class="form-input ck-input"
+                                    <input type="text" id="card-holder" name="ccname" autocomplete="cc-name" class="form-input ck-input"
                                         placeholder="Como impresso no cartao"
                                         data-tip="Nome exatamente como impresso no cartao.">
                                     <div class="field-tooltip">Igual impresso no cartao</div>
                                 </div>
                                 <div class="ck-form-group form-group">
                                     <label>E-mail (Opcional)</label>
-                                    <input type="email" id="card-email" class="form-input ck-input"
+                                    <input type="email" id="card-email" name="email" autocomplete="email" class="form-input ck-input"
                                         placeholder="seu@email.com (Opcional)" inputmode="email">
                                 </div>
                                 <div class="ck-form-row">
                                     <div class="ck-form-group form-group">
                                         <label>WhatsApp</label>
-                                        <input type="tel" id="card-phone" class="form-input ck-input"
-                                            placeholder="(00) 00000-0000" inputmode="numeric" pattern="[0-9]*">
+                                        <input type="tel" id="card-phone" name="phone" autocomplete="tel" class="form-input ck-input"
+                                            placeholder="(00) 00000-0000" inputmode="tel">
                                     </div>
                                     <div class="ck-form-group form-group">
                                         <label>CPF do Titular</label>
-                                        <input type="tel" id="card-cpf" class="form-input ck-input"
+                                        <input type="tel" id="card-cpf" name="cpf" autocomplete="off" class="form-input ck-input"
                                             placeholder="000.000.000-00" inputmode="numeric" pattern="[0-9]*">
                                     </div>
                                 </div>
                                 <div class="ck-form-group form-group">
                                     <label>Numero do Cartao</label>
-                                    <input type="text" id="card-number" class="form-input ck-input"
-                                        placeholder="0000 0000 0000 0000">
+                                    <input type="text" id="card-number" name="cardnumber" autocomplete="cc-number" class="form-input ck-input"
+                                        placeholder="0000 0000 0000 0000" inputmode="numeric">
                                     <div class="field-tooltip">Digite os numeros do cartao</div>
                                 </div>
                                 <div class="ck-form-row">
                                     <div class="ck-form-group form-group">
                                         <label>Validade</label>
-                                        <input type="text" id="card-expiration" class="form-input ck-input"
-                                            placeholder="MM/AA">
+                                        <input type="text" id="card-expiration" name="cc-exp" autocomplete="cc-exp" class="form-input ck-input"
+                                            placeholder="MM/AA" inputmode="numeric">
                                     </div>
                                     <div class="ck-form-group form-group">
                                         <label>CVV</label>
-                                        <input type="text" id="card-cvv" class="form-input ck-input" placeholder="123">
+                                        <input type="text" id="card-cvv" name="cvc" autocomplete="cc-csc" class="form-input ck-input" placeholder="123" inputmode="numeric">
                                     </div>
                                 </div>
                                 <div class="ck-form-row">
                                     <div class="ck-form-group form-group">
                                         <label>CEP</label>
-                                        <input type="tel" id="card-cep" class="form-input ck-input"
+                                        <input type="tel" id="card-cep" name="postal-code" autocomplete="postal-code" class="form-input ck-input"
                                             placeholder="00000-000" inputmode="numeric" pattern="[0-9]*">
                                     </div>
                                     <div class="ck-form-group form-group">
@@ -2631,8 +2622,6 @@
                                         acesso.</button>
                                     <button type="button" id="btn-pay-card" class="ck-btn-checkout"
                                         style="display: none;">FINALIZAR PAGAMENTO</button>
-                                    <button type="button" id="btn-pay-boleto" class="ck-btn-checkout"
-                                        style="display: none;">GERAR BOLETO</button>
                                 </div>
 
                             </div>
@@ -2744,38 +2733,6 @@
                 <button onclick="document.getElementById('pix-result').classList.add('hidden'); document.getElementById('checkout-main-view').classList.remove('hidden');" style="margin-top: 1rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-family: inherit;">Voltar</button>
             </div>
 
-            <!-- BOLETO Result (hidden) -->
-            <div id="boleto-result" class="hidden" style="text-align: center;">
-                <h3 id="boleto-greeting" style="font-size: 1.5rem; font-weight: 700; color: #1f2937;">Boleto Gerado!</h3>
-                <p style="font-size: 0.9rem; color: #6b7280; margin: 0.5rem 0;">Copie o código de barras ou acesse o PDF para pagar.</p>
-
-                <div class="qr-container" style="background: #fff; padding: 1.5rem; border-radius: 1.2rem; margin: 1.5rem auto; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                    <i class="fa-solid fa-barcode" style="font-size: 3.5rem; color: #1f2937; margin-bottom: 10px;"></i>
-                    <p style="font-size: 0.85rem; color: #64748b; font-weight: 600; text-transform: uppercase;">Código de Barras</p>
-                    <div style="background: #f1f5f9; padding: 10px; border-radius: 8px; margin-top: 10px; word-break: break-all; font-family: monospace; font-size: 0.9rem; font-weight: 700; color: #0f172a;" id="boleto-barcode-display">
-                        Aguardando...
-                    </div>
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
-                    <button id="btn-copy-boleto" class="ck-btn-checkout" style="width: 100%; max-width: 260px; background: linear-gradient(135deg, #22c55e, #16a34a);">
-                        <i class="fa-regular fa-copy"></i> COPIAR CÓDIGO
-                    </button>
-                    <a id="btn-pdf-boleto" href="#" target="_blank" class="ck-btn-checkout" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 260px; background: #3b82f6; text-decoration: none;">
-                        <i class="fa-solid fa-file-pdf"></i> VER BOLETO (PDF)
-                    </a>
-                </div>
-
-                <div style="text-align: left; font-size: 0.85rem; color: #6b7280; line-height: 1.6; background: #fefce8; border: 1px solid #fef08a; padding: 1rem; border-radius: 0.5rem; margin-top: 15px;">
-                    <p><i class="fa-solid fa-circle-exclamation" style="color: #ca8a04;"></i> Seu acesso será liberado em até <strong>48 horas úteis</strong> após o pagamento do boleto.</p>
-                </div>
-
-                <div style="margin-top: 1.5rem; font-size: 0.85rem;">
-                    Dúvidas? <a href="https://wa.me/5538999832950" target="_blank" style="color: #25d366; font-weight: 700;"><i class="fa-brands fa-whatsapp"></i> Chame no WhatsApp</a>
-                </div>
-
-                <button onclick="document.getElementById('boleto-result').classList.add('hidden'); document.getElementById('checkout-main-view').classList.remove('hidden');" style="margin-top: 1rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-family: inherit;">Voltar ao Checkout</button>
-            </div>
 
 
             <!-- Payment Pending View -->
@@ -2889,7 +2846,7 @@
                 <button onclick="startCheckoutProcess('ebook-doencas')" class="floating-cta-btn">
                     SALVAR MINHAS GALINHAS AGORA
                 </button>
-                <span class="floating-cta-subtext"><span class="dyn-cta-pix">R$ 79,90 no PIX ou Boleto</span> &bull; Acesso
+                <span class="floating-cta-subtext"><span class="dyn-cta-pix">R$ 79,90 no PIX</span> &bull; Acesso
                     imediato &bull; Garantia de 7 dias</span>
             </div>
         </div>
