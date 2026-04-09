@@ -3,6 +3,11 @@ import { generateDownloadToken } from './utils.js';
 // Envia os dados para o webhook do Make.com que disparará o e-mail via Gmail
 export async function sendEmail(env, customer, items, paymentId = null) {
     try {
+        if (!customer || !customer.email || customer.email.trim() === '') {
+            console.warn('[EMAIL WARNING] Tentativa de envio abortada. E-mail não fornecido.');
+            return false;
+        }
+
         const BASE_URL = env.BASE_URL || 'https://mura-api.joaopaulojaguar.workers.dev';
         const downloadToken = await generateDownloadToken(customer.email, items, paymentId, env);
         const downloadLink = `${BASE_URL}/api/access/${downloadToken}`;

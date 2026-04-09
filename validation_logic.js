@@ -39,11 +39,11 @@ function validateField(input) {
     const val = input.value.trim();
     let valid = true;
 
-    // Basic validation: not empty
-    if (val.length === 0) valid = false;
+    // Basic validation: not empty (unless it's an email)
+    if (val.length === 0 && !input.id.includes('email')) valid = false;
 
     // Specific validations
-    if (input.id.includes('email') && !val.includes('@')) valid = false;
+    if (input.id.includes('email') && val.length > 0 && !val.includes('@')) valid = false;
     if (input.id.includes('cpf') && val.length < 11) valid = false;
     if (input.id.includes('phone') && val.length < 10) valid = false;
     if (input.id.includes('card-number') && val.length < 13) valid = false;

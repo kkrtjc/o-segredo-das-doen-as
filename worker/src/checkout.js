@@ -51,7 +51,7 @@ checkoutRoutes.post('/pix', async (c) => {
         notification_url: `${BASE_URL}/api/webhooks/mercadopago`,
         statement_descriptor: 'GALOS MURA BRASIL',
         payer: {
-            email: customer.email,
+            email: customer.email || 'contatogalosmura@gmail.com',
             first_name: customer.name.split(' ')[0],
             last_name: customer.name.split(' ').slice(1).join(' ') || 'User',
             identification: { type: 'CPF', number: cleanCPF },
@@ -86,6 +86,81 @@ checkoutRoutes.post('/pix', async (c) => {
     });
 });
 
+// ─── BOLETO ────────────────────────────────────────────────
+checkoutRoutes.post('/boleto', async (c) => {
+    const { items, customer } = await c.req.json();
+    const MP_TOKEN = c.env.MP_ACCESS_TOKEN;
+    const BASE_URL = c.env.BASE_URL || 'https://mura-api.joaopaulosantoscamargo.workers.dev';
+
+    const totalAmount = Number(items.reduce((acc, i) => acc + Number(i.price), 0).toFixed(2));
+    if (totalAmount <= 0) return c.json({ error: 'Valor inválido.' }, 400);
+
+    const cleanCPF = (customer.cpf || '').replace(/\D/g, '');
+    if (cleanCPF.length !== 11) return c.json({ error: 'CPF deve ter 11 dígitos.' }, 400);
+
+    // Vencimento de 48 horas (calculando MS e convertendo para ISO)
+    const expirationDate = new Date(Date.now() + 48 * 60 * 60 * 1000);
+    // Ajusta para o formato exigido pelo Mercado Pago (ISO com timezone)
+    const offset = expirationDate.getTimezoneOffset();
+    const dateOffset = new Date(expirationDate.getTime() - (offset*60*1000));
+    const formattedExpiration = dateOffset.toISOString().split('.')[0] + '-03:00'; // Assume time in UTC so offset back to BRT roughly or just standard ISO String. Actually, simple expirationDate.toISOString() usually works globally in MP (because it's UTC).
+    // Let's just use standard UTC format:
+    const expirationStr = expirationDate.toISOString();
+
+    const body = {
+        transaction_amount: totalAmount,
+        description: items.map(i => i.title).join(', '),
+        payment_method_id: 'bolbradesco',
+        date_of_expiration: expirationStr,
+        external_reference: `ORDER-${Date.now()}`,
+        notification_url: `${BASE_URL}/api/webhooks/mercadopago`,
+        statement_descriptor: 'GALOS MURA BRASIL',
+        payer: {
+            email: customer.email || 'contatogalosmura@gmail.com',
+            first_name: customer.name.split(' ')[0],
+            last_name: customer.name.split(' ').slice(1).join(' ') || 'Cliente',
+            identification: { type: 'CPF', number: cleanCPF },
+            // MOCK ADDRESS - Simplicidade máxima
+            address: {
+                zip_code: '01001000',
+                street_name: 'Pça. da Sé',
+                street_number: '1',
+                neighborhood: 'Sé',
+                city: 'São Paulo',
+                federal_unit: 'SP'
+            }
+        },
+        metadata: {
+            customer_name: customer.name,
+            customer_email: customer.email,
+            customer_phone: customer.phone,
+        },
+    };
+
+    const res = await fetch(MP_API, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${MP_TOKEN}`,
+            'X-Idempotency-Key': `boleto-${Date.now()}-${cleanCPF}`,
+        },
+        body: JSON.stringify(body),
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+        return c.json({ error: getFriendlyError(data) }, 500);
+    }
+
+    // Boleto details typically come in data.transaction_details.external_resource_url and data.barcode
+    return c.json({
+        id: data.id,
+        status: data.status,
+        external_resource_url: data.transaction_details?.external_resource_url || data.point_of_interaction?.transaction_data?.ticket_url,
+        barcode: data.barcode?.content,
+    });
+});
+
 // ─── CARTÃO ─────────────────────────────────────────────────
 checkoutRoutes.post('/card', async (c) => {
     const MP_TOKEN = c.env.MP_ACCESS_TOKEN;
@@ -113,7 +188,7 @@ checkoutRoutes.post('/card', async (c) => {
         notification_url: `${BASE_URL}/api/webhooks/mercadopago`,
         statement_descriptor: 'GALOSMURA',
         payer: {
-            email: customer.email,
+            email: customer.email || 'contatogalosmura@gmail.com',
             first_name: customer.name.split(' ')[0],
             last_name: customer.name.split(' ').slice(1).join(' ') || 'Cliente',
             identification: { type: 'CPF', number: cleanCPF },
