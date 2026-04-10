@@ -934,14 +934,17 @@ app.post('/api/checkout/boleto', async (req, res) => {
             status: response.status
         }));
 
-        // Extração Robusta da Linha Digitável (API v2)
+        // Extração Robusta da Linha Digitável (Priorizar 47 dígitos)
         let barcodeContent = 'Código de barras não disponível';
-        if (response.point_of_interaction?.transaction_data?.barcode?.content) {
+        
+        if (response.transaction_details?.barcode) {
+            // Oficial para Linha Digitável (47 dígitos)
+            barcodeContent = response.transaction_details.barcode;
+        } else if (response.point_of_interaction?.transaction_data?.barcode?.content) {
+            // Fallback para Barcode Content (44-47 dígitos)
             barcodeContent = response.point_of_interaction.transaction_data.barcode.content;
         } else if (response.barcode?.content) {
             barcodeContent = response.barcode.content;
-        } else if (response.transaction_details?.barcode) {
-            barcodeContent = response.transaction_details.barcode;
         }
 
         let extUrl = '';
