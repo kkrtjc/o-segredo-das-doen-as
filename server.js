@@ -934,18 +934,17 @@ app.post('/api/checkout/boleto', async (req, res) => {
             status: response.status
         }));
 
-        // Extração Robusta da Linha Digitável (Priorizar 47 dígitos)
-        let barcodeContent = 'Código de barras não disponível';
-        
-        if (response.transaction_details?.barcode) {
-            // Oficial para Linha Digitável (47 dígitos)
-            barcodeContent = response.transaction_details.barcode;
-        } else if (response.point_of_interaction?.transaction_data?.barcode?.content) {
-            // Fallback para Barcode Content (44-47 dígitos)
-            barcodeContent = response.point_of_interaction.transaction_data.barcode.content;
-        } else if (response.barcode?.content) {
-            barcodeContent = response.barcode.content;
-        }
+        // Extração Inteligente: Procura primeiro por uma Linha Digitável válida (47-48 números)
+        const candidates = [
+            response.transaction_details?.barcode,
+            response.point_of_interaction?.transaction_data?.barcode?.content,
+            response.barcode?.content
+        ].filter(v => v != null).map(v => String(v).trim());
+
+        // Prioriza qualquer campo que tenha o comprimento de uma linha digitável (47 ou 48 dígitos)
+        let barcodeContent = candidates.find(v => v.length >= 47 && v.length <= 48) 
+                          || candidates[0] 
+                          || 'Código de barras não disponível';
 
         let extUrl = '';
         if (response.transaction_details && response.transaction_details.external_resource_url) {
