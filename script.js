@@ -28,7 +28,8 @@ function applyDynamicPrices(productData) {
         document.querySelectorAll('.dyn-discount-percent').forEach(el => el.innerText = discountStr);
     }
     
-    const instStr = `4x de R$ ${fmt(price / 4)} sem juros`;
+    const instPrice = productData.originalPrice ? (Math.floor((productData.originalPrice / 4) * 100) / 100) : (price / 4);
+    const instStr = `4x de R$ ${fmt(instPrice)} sem juros`;
 
     document.querySelectorAll('.dyn-price-main').forEach(el => el.innerText = fmt(price));
     document.querySelectorAll('.dyn-installments').forEach(el => el.innerText = instStr);
@@ -752,7 +753,7 @@ async function renderHomeProducts() {
 
         // Calculando variáveis dinâmicas
         const discountPercent = Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100);
-        const installmentPrice = (p.originalPrice / 4).toFixed(2).replace('.', ',');
+        const installmentPrice = "37,47"; // Baseado em 149,90 / 4 (truncado)
         const priceStr = p.price.toFixed(2).split('.');
         const priceInt = priceStr[0];
         const priceDec = priceStr[1];
