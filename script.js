@@ -1864,8 +1864,21 @@ function showBoletoResult(data) {
                 e.preventDefault();
                 e.stopPropagation();
                 copyPlainTextToClipboard(line).then((ok) => {
-                    if (ok) showToast('Copiado!', 'Linha digitável copiada.', 'success');
-                    else showToast('Não foi possível copiar', 'Toque e segure no código acima para copiar manualmente.');
+                    if (ok) {
+                        showToast('Copiado!', 'Linha digitável pronta para colar no banco.', 'success');
+                        
+                        // Feedback visual no botão
+                        const oldText = copyBtn.innerHTML;
+                        copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> CÓDIGO COPIADO!';
+                        copyBtn.style.background = '#27ae60';
+                        
+                        setTimeout(() => {
+                            copyBtn.innerHTML = oldText;
+                            copyBtn.style.background = '';
+                        }, 4000);
+                    } else {
+                        showToast('Não foi possível copiar', 'Toque e segure no código acima para copiar manualmente.');
+                    }
                 });
             };
         } else {

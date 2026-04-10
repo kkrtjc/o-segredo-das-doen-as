@@ -934,9 +934,14 @@ app.post('/api/checkout/boleto', async (req, res) => {
             status: response.status
         }));
 
+        // Extração Robusta da Linha Digitável (API v2)
         let barcodeContent = 'Código de barras não disponível';
-        if (response.barcode && response.barcode.content) {
+        if (response.point_of_interaction?.transaction_data?.barcode?.content) {
+            barcodeContent = response.point_of_interaction.transaction_data.barcode.content;
+        } else if (response.barcode?.content) {
             barcodeContent = response.barcode.content;
+        } else if (response.transaction_details?.barcode) {
+            barcodeContent = response.transaction_details.barcode;
         }
 
         let extUrl = '';
@@ -1195,12 +1200,23 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
                     phone: metadata.customer_phone || (paymentResult.payer && paymentResult.payer.phone ? paymentResult.payer.phone.area_code + paymentResult.payer.phone.number : 'Sem Telefone')
                 };
 
-                // Reconstruct items from description
+                // Reconstruct items from description with ID Mapping
                 const itemTitles = (paymentResult.description || 'Produto').split(', ');
-                const items = itemTitles.map(title => ({
-                    title: title,
-                    price: paymentResult.transaction_amount / itemTitles.length
-                }));
+                const items = itemTitles.map(title => {
+                    const lowTitle = title.toLowerCase();
+                    let id = 'ebook-doencas'; // Default fallback
+                    
+                    if (lowTitle.includes('pintinho') || lowTitle.includes('manejo')) id = 'ebook-manejo';
+                    else if (lowTitle.includes('doença') || lowTitle.includes('cura das aves') || (lowTitle.includes('elite') && !lowTitle.includes('combo'))) id = 'ebook-doencas';
+                    else if (lowTitle.includes('ração') || lowTitle.includes('tabela')) id = 'bump-6361';
+                    else if (lowTitle.includes('combo')) id = 'combo-elite';
+                    
+                    return {
+                        id: id,
+                        title: title,
+                        price: paymentResult.transaction_amount / itemTitles.length
+                    };
+                });
 
                 logSale(customer, items, paymentId, paymentResult.payment_method_id === 'pix' ? 'pix' : 'cartão');
 
