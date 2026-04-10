@@ -1858,8 +1858,9 @@ function showBoletoResult(data) {
     }
 
     if (copyBtn) {
+        // Usuário solicitou remover a opção de cópia (deixar apenas download)
+        copyBtn.style.display = 'none';
         if (!badLine) {
-            copyBtn.style.display = 'block';
             copyBtn.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
