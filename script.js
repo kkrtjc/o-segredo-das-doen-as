@@ -559,7 +559,7 @@ function renderOrderBumps(bumps) {
                         <div style="margin-top: 4px; display: flex; align-items: baseline; gap: 6px; position: relative; z-index: 5;">
                             <span class="order-bump-old-price">${isManejo ? 'R$ 99,90' : 'R$ 49,90'}</span>
                             <span class="order-bump-price">
-                                + ${formatBRL(currentPaymentMethod === 'pix' ? bump.price : (bump.priceCard || bump.price))}
+                                + ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.priceCard || bump.price))}
                             </span>
                         </div>
                     </div>
@@ -650,13 +650,13 @@ function updateTotal() {
 
     document.querySelectorAll('.pix-discount-badge').forEach(b => b.remove());
 
-    const finalDisplayPrice = currentPaymentMethod === 'pix' ? total : cardTotal;
+    const finalDisplayPrice = (currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? total : cardTotal;
 
     // Atualiza Resumo Dinâmico do Pedido (Minimalista)
     const pInstPix = formatBRL(basePrice / 4);
     const pInstCard = formatBRL(cardPrice / 4);
-    let eliteHtml = currentPaymentMethod === 'pix'
-        ? `<div style="display: flex; justify-content: space-between; font-weight: 500;"><span style="font-weight:700;">Protocolo Elite</span><span style="text-align: right; line-height: 1.2;"><span style="color: #64748b; font-size: 0.75rem;">4x de ${pInstCard} s/ juros</span><br><span style="font-size: 0.85rem; color: #10b981; font-weight: 800;">ou ${formatBRL(basePrice)} no PIX</span></span></div>`
+    let eliteHtml = (currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto')
+        ? `<div style="display: flex; justify-content: space-between; font-weight: 500;"><span style="font-weight:700;">Protocolo Elite</span><span style="text-align: right; line-height: 1.2;"><span style="color: #64748b; font-size: 0.75rem;">4x de ${pInstCard} s/ juros</span><br><span style="font-size: 0.85rem; color: #10b981; font-weight: 800;">ou ${formatBRL(basePrice)} no ${currentPaymentMethod === 'pix' ? 'PIX' : 'Boleto'}</span></span></div>`
         : `<div style="display: flex; justify-content: space-between; font-weight: 500;"><span style="font-weight:700;">Protocolo Elite</span><span style="text-align: right; line-height: 1.2;"><span style="color: #10b981; font-size: 0.85rem; font-weight: 800;">4x de ${pInstCard}</span><br><span style="font-size: 0.75rem; color: #64748b;">(ou ${formatBRL(cardPrice)} à vista)</span></span></div>`;
         
     let summaryHtml = eliteHtml;
@@ -670,7 +670,7 @@ function updateTotal() {
         if (id === 'bump-6361') bumpTitle = 'Tabela de Ração';
         if (id === 'ebook-manejo' || id.includes('manejo')) bumpTitle = 'Manual de Pintinhos';
         
-        const priceForMethod = currentPaymentMethod === 'pix' ? (bump?.price || 0) : (bump?.priceCard || bump?.price || 0);
+        const priceForMethod = (currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? (bump?.price || 0) : (bump?.priceCard || bump?.price || 0);
         summaryHtml += `<div style="display: flex; justify-content: space-between; color: #16a34a; font-weight: 500;"><span>+ ${bumpTitle}</span><span>${formatBRL(priceForMethod)}</span></div>`;
     });
 
@@ -916,12 +916,14 @@ function switchMethod(method) {
     const cardArea = document.getElementById('card-area');
     const btnPix = document.getElementById('btn-pay-pix');
     const btnCard = document.getElementById('btn-pay-card');
+    const btnBoleto = document.getElementById('btn-pay-boleto');
 
     if (method === 'pix') {
         if (pixArea) { pixArea.style.display = 'block'; }
         if (cardArea) { cardArea.style.display = 'none'; }
         if (btnPix) btnPix.style.display = 'block';
         if (btnCard) btnCard.style.display = 'none';
+        if (btnBoleto) btnBoleto.style.display = 'none';
         const pixFields = document.getElementById('pix-fields');
         if (pixFields) pixFields.style.display = 'block';
 
@@ -930,8 +932,18 @@ function switchMethod(method) {
         if (cardArea) { cardArea.style.display = 'block'; }
         if (btnPix) btnPix.style.display = 'none';
         if (btnCard) btnCard.style.display = 'block';
+        if (btnBoleto) btnBoleto.style.display = 'none';
         const pixFields = document.getElementById('pix-fields');
         if (pixFields) pixFields.style.display = 'none';
+
+    } else if (method === 'boleto') {
+        if (pixArea) { pixArea.style.display = 'block'; }
+        if (cardArea) { cardArea.style.display = 'none'; }
+        if (btnPix) btnPix.style.display = 'none';
+        if (btnCard) btnCard.style.display = 'none';
+        if (btnBoleto) btnBoleto.style.display = 'block';
+        const pixFields = document.getElementById('pix-fields');
+        if (pixFields) pixFields.style.display = 'block';
     }
 
     // RECALCULATE TOTAL WHEN SWITCHING
@@ -957,7 +969,7 @@ async function handlePayment(method) {
             : (document.getElementById('payer-phone')?.value || '').replace(/\D/g, '')
     };
 
-    if (method === 'pix') {
+    if (method === 'pix' || method === 'boleto') {
         customer = {
             ...commonData,
             name: document.getElementById('payer-name').value,
@@ -1018,13 +1030,19 @@ async function handlePayment(method) {
 
     console.log(`📦 [CHECKOUT] Payload Items (${method}):`, items);
 
-    if (method === 'pix') {
-        const btn = document.getElementById('btn-pay-pix');
-        const originalText = (btn) ? btn.innerText : 'Gerar PIX';
+    if (method === 'pix' || method === 'boleto') {
+        const isBoleto = method === 'boleto';
+        const btn = document.getElementById(isBoleto ? 'btn-pay-boleto' : 'btn-pay-pix');
+        const originalText = (btn) ? btn.innerText : (isBoleto ? 'Gerar Boleto' : 'Gerar PIX');
 
         // --- INSTANT UI FEEDBACK ---
         document.getElementById('checkout-main-view').classList.add('hidden');
-        document.getElementById('pix-result').classList.remove('hidden');
+        document.getElementById('pix-result').classList.add('hidden');
+        const boletoResult = document.getElementById('boleto-result');
+        if (boletoResult) boletoResult.classList.add('hidden');
+
+        const resultView = document.getElementById(isBoleto ? 'boleto-result' : 'pix-result');
+        resultView.classList.remove('hidden');
         
         // Rolar imediatamente para o topo
         setTimeout(() => { 
@@ -1033,10 +1051,25 @@ async function handlePayment(method) {
             if (cp) cp.scrollTo({ top: 0, behavior: 'smooth' });
         }, 50);
         
-        document.getElementById('qr-loader').classList.remove('hidden');
-        document.getElementById('qr-code-img').style.opacity = '0';
-        document.getElementById('pix-receiver-info').classList.add('hidden');
-        document.getElementById('btn-copy-pix').style.display = 'none';
+        if (!isBoleto) {
+            document.getElementById('qr-loader').classList.remove('hidden');
+            document.getElementById('qr-code-img').style.opacity = '0';
+            document.getElementById('pix-receiver-info').classList.add('hidden');
+            document.getElementById('btn-copy-pix').style.display = 'none';
+        } else {
+            document.getElementById('boleto-barcode-display').innerText = 'Gerando código...';
+            document.getElementById('btn-copy-boleto').style.display = 'none';
+            document.getElementById('btn-download-boleto').style.display = 'none';
+            const boletoImgLoading = document.getElementById('boleto-img-loading');
+            const boletoImgWrap = document.getElementById('boleto-img-wrap');
+            const boletoDisplayImg = document.getElementById('boleto-display-img');
+            if (boletoDisplayImg) {
+                revokeBoletoIllustrationObjectUrl(boletoDisplayImg);
+                boletoDisplayImg.removeAttribute('src');
+            }
+            if (boletoImgWrap) boletoImgWrap.classList.add('hidden');
+            if (boletoImgLoading) boletoImgLoading.classList.remove('hidden');
+        }
 
         const totalAmount = items.reduce((acc, item) => acc + Number(item.price), 0);
         const itemIds = items.map(i => i.id).sort().join(',');
@@ -1046,11 +1079,12 @@ async function handlePayment(method) {
                 console.error("Cart Error: No main product selected");
                 alert("Houve um erro: produto não selecionado. Por favor, reinicie a compra.");
                 document.getElementById('checkout-main-view').classList.remove('hidden');
-                document.getElementById('pix-result').classList.add('hidden');
+                resultView.classList.add('hidden');
                 return;
             }
 
-            const res = await fetch(`${API_URL}/api/checkout/pix`, {
+            const endpointVar = isBoleto ? '/api/checkout/boleto' : '/api/checkout/pix';
+            const res = await fetch(`${API_URL}${endpointVar}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ items, customer })
@@ -1058,21 +1092,24 @@ async function handlePayment(method) {
 
             const data = await res.json();
 
-            if (data.qr_code) {
+            if (!isBoleto && data.qr_code) {
                 localStorage.setItem('active_pix_session', JSON.stringify({
                     data: data,
                     total: totalAmount,
                     itemIds: itemIds,
                     timestamp: Date.now()
                 }));
-
                 captureAbandonedLead({ pixGenerated: true, pixId: data.id });
                 showPixResult(data, items);
+
+            } else if (isBoleto && (data.barcode || data.external_resource_url)) {
+                captureAbandonedLead({ pixGenerated: true, pixId: data.id });
+                showBoletoResult(data);
             } else {
                 console.error("Payment Error Response:", data);
                 alert(data.error || data.message || 'Houve um erro ao processar o pagamento.');
                 document.getElementById('checkout-main-view').classList.remove('hidden');
-                document.getElementById('pix-result').classList.add('hidden');
+                resultView.classList.add('hidden');
                 if (btn) {
                     btn.disabled = false;
                     btn.innerText = originalText;
@@ -1275,6 +1312,17 @@ async function processPixPayment() {
     handlePayment('pix');
 }
 
+async function startBoletoPayment(event) {
+    if (event) event.preventDefault();
+    console.log('🟡 startBoletoPayment CALLED');
+
+    if (!validateCheckoutInputs('boleto')) {
+        return;
+    }
+
+    handlePayment('boleto');
+}
+
 
 
 // --- 2. CARD PAYMENT (Simplified) ---
@@ -1330,11 +1378,11 @@ function showToast(title, message, type = 'error') {
 function validateCheckoutInputs(method) {
     console.log('🔍 [VALIDATE] Inicando validação para:', method);
     
-    const isPixMethod = method === 'pix';
-    const name = document.getElementById(isPixMethod ? 'payer-name' : 'card-holder');
-    const email = document.getElementById(isPixMethod ? 'payer-email' : 'card-email');
-    const phone = document.getElementById(isPixMethod ? 'payer-phone' : 'card-phone');
-    const cpf = document.getElementById(isPixMethod ? 'payer-cpf' : 'card-cpf');
+    const isPixOrBoleto = method === 'pix' || method === 'boleto';
+    const name = document.getElementById(isPixOrBoleto ? 'payer-name' : 'card-holder');
+    const email = document.getElementById(isPixOrBoleto ? 'payer-email' : 'card-email');
+    const phone = document.getElementById(isPixOrBoleto ? 'payer-phone' : 'card-phone');
+    const cpf = document.getElementById(isPixOrBoleto ? 'payer-cpf' : 'card-cpf');
 
     if (!validateField(name, 'text')) { 
         showToast('Nome incompleto', 'Por favor, informe seu nome completo para emissão da nota.'); 
@@ -1409,6 +1457,7 @@ async function captureAbandonedLead(extra = {}) {
 
 // Event Listeners with Order Bump Interception
 document.getElementById('btn-pay-pix')?.addEventListener('click', startPixPayment);
+document.getElementById('btn-pay-boleto')?.addEventListener('click', startBoletoPayment);
 document.getElementById('btn-pay-card')?.addEventListener('click', startCardPayment);
 document.getElementById('btn-pay-card-direct')?.addEventListener('click', processCardPayment);
 
@@ -1438,11 +1487,20 @@ document.querySelector('.close-modal')?.addEventListener('click', async () => {
         btnCard.disabled = false;
         btnCard.innerText = 'PAGAR COM CARTÃO';
     }
+    const btnBoleto = document.getElementById('btn-pay-boleto');
+    if (btnBoleto) {
+        btnBoleto.disabled = false;
+        btnBoleto.innerText = 'GERAR BOLETO';
+    }
 
     // Reset State logic for next open
     setTimeout(() => {
         document.getElementById('checkout-main-view').classList.remove('hidden');
         document.getElementById('pix-result').classList.add('hidden');
+        const boletoResult = document.getElementById('boleto-result');
+        if (boletoResult) boletoResult.classList.add('hidden');
+        const boletoImg = document.getElementById('boleto-display-img');
+        if (boletoImg) revokeBoletoIllustrationObjectUrl(boletoImg);
         if (window.activePixPoll) {
             clearInterval(window.activePixPoll);
             window.activePixPoll = null;
@@ -1674,6 +1732,158 @@ function showPixResult(data, items) {
 
     // Kick off first poll immediately
     window.activePixPoll = setTimeout(pollLogic, 1000);
+}
+
+function normalizeBoletoDigitableLine(data) {
+    if (!data || data.barcode == null) return '';
+    const b = data.barcode;
+    if (typeof b === 'object' && b.content != null) return String(b.content).trim();
+    return String(b).trim();
+}
+
+async function fetchBoletoIllustrationBlob() {
+    const api = `${API_URL.replace(/\/$/, '')}/api/checkout/boleto/safe-preview`;
+    try {
+        const res = await fetch(api, { cache: 'no-store' });
+        if (res.ok) return await res.blob();
+    } catch (e) {
+        console.warn('[BOLETO] API ilustrativa indisponível, usando fallback local.');
+    }
+    const fallback = `assets/boleto-ilustrativo.png?t=${Date.now()}`;
+    const res2 = await fetch(fallback, { cache: 'no-store' });
+    if (!res2.ok) throw new Error('boleto_illustration');
+    return res2.blob();
+}
+
+function revokeBoletoIllustrationObjectUrl(imgEl) {
+    if (imgEl && imgEl._boletoBlobUrl) {
+        try {
+            URL.revokeObjectURL(imgEl._boletoBlobUrl);
+        } catch (e) { /* ignore */ }
+        imgEl._boletoBlobUrl = null;
+    }
+}
+
+function copyPlainTextToClipboard(text) {
+    const value = String(text || '');
+    if (!value) return Promise.resolve(false);
+
+    const tryLegacy = () => {
+        try {
+            const ta = document.createElement('textarea');
+            ta.value = value;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'fixed';
+            ta.style.top = '0';
+            ta.style.left = '0';
+            ta.style.width = '2px';
+            ta.style.height = '2px';
+            ta.style.padding = '0';
+            ta.style.border = 'none';
+            ta.style.outline = 'none';
+            ta.style.boxShadow = 'none';
+            ta.style.background = 'transparent';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            ta.setSelectionRange(0, value.length);
+            const ok = document.execCommand('copy');
+            document.body.removeChild(ta);
+            return ok;
+        } catch (e) {
+            return false;
+        }
+    };
+
+    if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(value).then(() => true).catch(() => tryLegacy());
+    }
+    return Promise.resolve(tryLegacy());
+}
+
+function showBoletoResult(data) {
+    setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const cp = document.getElementById('checkout-page');
+        if (cp) cp.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+
+    const barcodeEl = document.getElementById('boleto-barcode-display');
+    const copyBtn = document.getElementById('btn-copy-boleto');
+    const downloadBtn = document.getElementById('btn-download-boleto');
+    const imgLoading = document.getElementById('boleto-img-loading');
+    const imgWrap = document.getElementById('boleto-img-wrap');
+    const displayImg = document.getElementById('boleto-display-img');
+
+    const line = normalizeBoletoDigitableLine(data);
+    const badLine = !line || line === 'Código de barras não disponível';
+    const pdfUrl = (data.external_resource_url != null && String(data.external_resource_url).trim())
+        ? String(data.external_resource_url).trim()
+        : '';
+
+    if (displayImg && imgWrap) {
+        revokeBoletoIllustrationObjectUrl(displayImg);
+        displayImg.removeAttribute('src');
+        displayImg.onload = () => {
+            if (imgLoading) imgLoading.classList.add('hidden');
+            imgWrap.classList.remove('hidden');
+        };
+        displayImg.onerror = () => {
+            if (imgLoading) imgLoading.classList.add('hidden');
+            imgWrap.classList.add('hidden');
+        };
+        fetchBoletoIllustrationBlob()
+            .then((blob) => {
+                const url = URL.createObjectURL(blob);
+                displayImg._boletoBlobUrl = url;
+                displayImg.src = url;
+                displayImg.alt = 'Ilustração de boleto com dados genéricos (000 / XXXX)';
+            })
+            .catch(() => {
+                if (imgLoading) imgLoading.classList.add('hidden');
+                imgWrap.classList.add('hidden');
+            });
+    } else if (imgLoading) {
+        imgLoading.classList.add('hidden');
+    }
+
+    if (barcodeEl) {
+        if (!badLine) {
+            barcodeEl.innerText = line;
+        } else if (pdfUrl) {
+            barcodeEl.innerText = 'Use o botão Baixar boleto ou o e-mail do Mercado Pago. A linha digitável pode vir no PDF.';
+        } else {
+            barcodeEl.innerText = 'Consulte o boleto no e-mail enviado pelo Mercado Pago.';
+        }
+    }
+
+    if (copyBtn) {
+        if (!badLine) {
+            copyBtn.style.display = 'block';
+            copyBtn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                copyPlainTextToClipboard(line).then((ok) => {
+                    if (ok) showToast('Copiado!', 'Linha digitável copiada.', 'success');
+                    else showToast('Não foi possível copiar', 'Toque e segure no código acima para copiar manualmente.');
+                });
+            };
+        } else {
+            copyBtn.style.display = 'none';
+        }
+    }
+
+    if (downloadBtn) {
+        if (pdfUrl) {
+            downloadBtn.style.display = 'block';
+            downloadBtn.onclick = (e) => {
+                e.preventDefault();
+                window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+            };
+        } else {
+            downloadBtn.style.display = 'none';
+        }
+    }
 }
 
 

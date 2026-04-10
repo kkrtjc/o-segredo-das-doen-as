@@ -7,6 +7,7 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
+const { getSafeBoletoPngBuffer } = require('./lib/boletoSafePreview');
 
 
 dotenv.config();
@@ -93,6 +94,15 @@ if (!fs.existsSync(ANALYTICS_PATH)) fs.writeFileSync(ANALYTICS_PATH, JSON.string
     },
     daily: {}
 }, null, 4));
+
+// Original do boleto e pasta private não são servidos como arquivo estático
+app.use((req, res, next) => {
+    const p = req.path || '';
+    if (p.startsWith('/private/') || p === '/boleto/BoletoBancario.png') {
+        return res.status(404).end();
+    }
+    next();
+});
 
 // Serve static files
 app.use(express.static(__dirname));
@@ -951,6 +961,18 @@ app.post('/api/checkout/boleto', async (req, res) => {
             originalError: error.message,
             code: error.response?.data?.cause?.[0]?.code || error.response?.data?.cause?.[0]?.id
         });
+    }
+});
+
+app.get('/api/checkout/boleto/safe-preview', async (req, res) => {
+    try {
+        const png = await getSafeBoletoPngBuffer();
+        res.setHeader('Content-Type', 'image/png');
+        res.setHeader('Cache-Control', 'private, max-age=60');
+        res.send(png);
+    } catch (e) {
+        console.error('[BOLETO SAFE-PREVIEW]', e.message);
+        res.status(500).json({ error: 'Pré-visualização indisponível' });
     }
 });
 

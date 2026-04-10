@@ -98,8 +98,8 @@ checkoutRoutes.post('/boleto', async (c) => {
     const cleanCPF = (customer.cpf || '').replace(/\D/g, '');
     if (cleanCPF.length !== 11) return c.json({ error: 'CPF deve ter 11 dígitos.' }, 400);
 
-    // Vencimento de 48 horas (calculando MS e convertendo para ISO)
-    const expirationDate = new Date(Date.now() + 48 * 60 * 60 * 1000);
+    // Vencimento de 72 horas
+    const expirationDate = new Date(Date.now() + 72 * 60 * 60 * 1000);
     // Ajusta para o formato exigido pelo Mercado Pago (ISO com timezone)
     const offset = expirationDate.getTimezoneOffset();
     const dateOffset = new Date(expirationDate.getTime() - (offset*60*1000));
@@ -158,6 +158,25 @@ checkoutRoutes.post('/boleto', async (c) => {
         status: data.status,
         external_resource_url: data.transaction_details?.external_resource_url || data.point_of_interaction?.transaction_data?.ticket_url,
         barcode: data.barcode?.content,
+    });
+});
+
+// PNG mascarado (Worker repassa Node se NODE_BOLETO_PREVIEW_ORIGIN estiver definido)
+checkoutRoutes.get('/boleto/safe-preview', async (c) => {
+    const origin = (c.env.NODE_BOLETO_PREVIEW_ORIGIN || '').replace(/\/$/, '');
+    if (!origin) {
+        return c.json({ error: 'Defina NODE_BOLETO_PREVIEW_ORIGIN ou use assets/boleto-ilustrativo.png no site estático.' }, 503);
+    }
+    const r = await fetch(`${origin}/api/checkout/boleto/safe-preview`, {
+        headers: { Accept: 'image/png' },
+    });
+    if (!r.ok) return c.json({ error: 'upstream' }, 502);
+    const ab = await r.arrayBuffer();
+    return new Response(ab, {
+        headers: {
+            'Content-Type': 'image/png',
+            'Cache-Control': 'private, max-age=60',
+        },
     });
 });
 

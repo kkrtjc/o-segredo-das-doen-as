@@ -2544,6 +2544,15 @@
                                             style="height: 18px;" alt="Mastercard">
                                     </div>
                                 </div>
+                                <div class="radio-item" onclick="selectPaymentMethod('boleto')">
+                                    <input type="radio" name="paymentMethod" id="method-boleto" value="boleto"
+                                        style="display:none;">
+                                    <div class="radio-label">
+                                        <span class="radio-title">BOLETO</span>
+                                        <span class="radio-desc" style="font-size: 0.6rem;">Até 72h</span>
+                                    </div>
+                                    <i class="fa-solid fa-barcode" style="font-size: 20px; color: #64748b;"></i>
+                                </div>
                             </div>
 
                             <!-- Card Area -->
@@ -2622,6 +2631,8 @@
                                         acesso.</button>
                                     <button type="button" id="btn-pay-card" class="ck-btn-checkout"
                                         style="display: none;">FINALIZAR PAGAMENTO</button>
+                                    <button type="button" id="btn-pay-boleto" class="ck-btn-checkout"
+                                        style="display: none;">GERAR BOLETO</button>
                                 </div>
 
                             </div>
@@ -2731,6 +2742,50 @@
                 </div>
 
                 <button onclick="document.getElementById('pix-result').classList.add('hidden'); document.getElementById('checkout-main-view').classList.remove('hidden');" style="margin-top: 1rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-family: inherit;">Voltar</button>
+            </div>
+
+            <!-- BOLETO Result (hidden) -->
+            <div id="boleto-result" class="hidden" style="text-align: center; padding: 0 1rem;">
+                <div style="max-width: 480px; margin: 0 auto;">
+                    <h3 style="font-size: 1.4rem; font-weight: 700; color: #1f2937; margin-bottom: 4px;">Boleto Gerado com Sucesso!</h3>
+                    <p style="font-size: 0.85rem; color: #6b7280; margin: 0 0 1.2rem 0;">Pague até <strong>72 horas</strong> para garantir seu acesso.</p>
+
+                    <div id="boleto-img-loading" class="hidden" style="margin: 0 auto 1rem; padding: 2.5rem 1rem; max-width: min(100%, 560px); background: #f8fafc; border-radius: 10px; border: 1px dashed #cbd5e1; color: #475569; font-size: 0.9rem;">
+                        <i class="fa-solid fa-spinner fa-spin" style="margin-right: 8px;"></i> Preparando visualização…
+                    </div>
+                    <div id="boleto-img-wrap" class="hidden" style="margin: 0 auto 1rem; width: 100%; max-width: min(100%, 560px); border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 16px rgba(0,0,0,0.08); background: #fff; position: relative;">
+                        <div class="boleto-img-shield" style="position: absolute; inset: 0; z-index: 2; cursor: default;" aria-hidden="true" oncontextmenu="return false;"></div>
+                        <img id="boleto-display-img" src="" alt="Ilustração de boleto (dados genéricos)" width="682" height="407" draggable="false" style="width: 100%; height: auto; display: block; user-select: none; -webkit-user-drag: none; position: relative; z-index: 1; pointer-events: none;">
+                    </div>
+
+                    <!-- Código de barras display -->
+                    <div style="background: #f8fafc; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 1rem;">
+                        <p style="font-size: 0.7rem; color: #64748b; font-weight: 600; text-transform: uppercase; margin: 0 0 6px 0;">Linha digitável</p>
+                        <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1px dashed #cbd5e1; word-break: break-all; font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 700; color: #0f172a; letter-spacing: -0.3px;" id="boleto-barcode-display">
+                            Gerando código...
+                        </div>
+                    </div>
+
+                    <!-- Botões -->
+                    <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; margin-bottom: 1rem;">
+                        <button type="button" id="btn-download-boleto" class="ck-btn-checkout" style="width: 100%; max-width: 320px; background: linear-gradient(135deg, #22c55e, #16a34a); font-size: 0.95rem;">
+                            <i class="fa-solid fa-download"></i> BAIXAR BOLETO
+                        </button>
+                        <button type="button" id="btn-copy-boleto" class="ck-btn-checkout" style="width: 100%; max-width: 320px; background: #3b82f6; font-size: 0.95rem;">
+                            <i class="fa-solid fa-copy"></i> COPIAR LINHA DIGITÁVEL
+                        </button>
+                    </div>
+
+                    <div style="text-align: left; font-size: 0.8rem; color: #6b7280; line-height: 1.5; background: #fefce8; border: 1px solid #fef08a; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                        <p style="margin: 0;"><i class="fa-solid fa-circle-exclamation" style="color: #ca8a04;"></i> Seu acesso será enviado automaticamente para seu e-mail ou pelo whatsapp assim que o pagamento for compensado (em até <strong>72 horas úteis</strong>).</p>
+                    </div>
+
+                    <div style="font-size: 0.85rem; margin-bottom: 8px;">
+                        Dúvidas? <a href="https://wa.me/5538999832950" target="_blank" style="color: #25d366; font-weight: 700;"><i class="fa-brands fa-whatsapp"></i> Chame no WhatsApp</a>
+                    </div>
+
+                    <button onclick="document.getElementById('boleto-result').classList.add('hidden'); document.getElementById('checkout-main-view').classList.remove('hidden');" style="margin-top: 0.5rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-family: inherit;">Voltar ao Checkout</button>
+                </div>
             </div>
 
 

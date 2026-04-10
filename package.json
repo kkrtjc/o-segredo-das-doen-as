@@ -4,6 +4,7 @@
   "main": "script.js",
   "scripts": {
     "start": "node server.js",
+    "build:boleto": "node scripts/build-boleto-preview.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -19,6 +20,7 @@
     "mercadopago": "^2.0.11",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.7",
-    "resend": "^2.0.0"
+    "resend": "^2.0.0",
+    "sharp": "^0.34.5"
   }
 }
