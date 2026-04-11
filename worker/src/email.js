@@ -1,7 +1,7 @@
 import { generateDownloadToken } from './utils.js';
 
 // Envia os dados para o webhook do Make.com que disparará o e-mail via Gmail
-export async function sendEmail(env, customer, items, paymentId = null) {
+export async function sendEmail(env, customer, items, paymentId = null, facebookEventId = null) {
     try {
         if (!customer || !customer.email || customer.email.trim() === '') {
             console.warn('[EMAIL WARNING] Tentativa de envio abortada. E-mail não fornecido.');
@@ -58,7 +58,8 @@ export async function sendEmail(env, customer, items, paymentId = null) {
             text: `Olá ${customer.name}, seu acesso foi liberado!\n\nPara baixar seus materiais, acesse o link abaixo:\n${downloadLink}\n\nSe tiver qualquer dúvida, me mande uma mensagem no WhatsApp:\nhttps://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20com%20meu%20acesso\n\nAtt,\nProtocolo Elite`,
             download_link: downloadLink,
             customer_name: customer.name,
-            whatsapp_link: 'https://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20com%20meu%20acesso'
+            whatsapp_link: 'https://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20com%20meu%20acesso',
+            facebook_event_id: facebookEventId // Pass the event_id to Make.com
         };
 
         const res = await fetch(webhookUrl, {

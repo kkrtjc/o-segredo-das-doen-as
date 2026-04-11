@@ -60,7 +60,7 @@ export async function saveAnalytics(env, data) {
 // ─── LOG SALE ────────────────────────────────────────────────
 export async function logSale(env, customer, items, paymentId, method) {
     const history = await getHistory(env);
-    if (history.some(h => String(h.paymentId) === String(paymentId))) return;
+    if (history.some(h => String(h.paymentId) === String(paymentId))) return false;
     history.push({
         id: paymentId, paymentId,
         date: new Date().toISOString(),
@@ -70,6 +70,7 @@ export async function logSale(env, customer, items, paymentId, method) {
         method, status: 'approved'
     });
     await saveHistory(env, history);
+    return true;
 }
 
 // ─── CONFIG ──────────────────────────────────────────────────

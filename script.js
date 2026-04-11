@@ -10,6 +10,11 @@ let cart = {
 
 // GLOBAL PAYMENT STATE
 let currentPaymentMethod = 'pix'; // Default
+let currentFacebookEventId = null; 
+
+function generateEventID() {
+    return 'ev_' + Date.now() + '_' + Math.random().toString(16).slice(2, 10);
+}
 
 // --- PERFORMANCE: PRE-FETCHING ---
 const prefetchedProducts = {};
@@ -271,15 +276,16 @@ async function trackEvent(type, isMobileManual = null, ctaId = null, details = n
     }
 }
 
-function trackPixel(eventName, params = {}) {
+function trackPixel(eventName, params = {}, eventId = null) {
+    const options = eventId ? { eventID: eventId } : {};
     if (typeof fbq === 'function') {
-        fbq('track', eventName, params);
+        fbq('track', eventName, params, options);
     } else {
         let attempts = 0;
         const interval = setInterval(() => {
             attempts++;
             if (typeof fbq === 'function') {
-                fbq('track', eventName, params);
+                fbq('track', eventName, params, options);
                 clearInterval(interval);
             } else if (attempts >= 10) clearInterval(interval);
         }, 500);
@@ -340,6 +346,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     
     trackEvent('click');
     sessionStorage.setItem('mura_modal_open', 'true');
+    currentFacebookEventId = generateEventID(); 
     // InitiateCheckout will be fired in loadCheckoutData once we have the price and name
 
 
@@ -425,7 +432,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             content_type: 'product',
             value: productData.price,
             currency: 'BRL'
-        });
+        }, currentFacebookEventId);
 
         document.getElementById('checkout-product-name').innerText = productData.title;
         document.getElementById('checkout-product-price-display').innerText = formatBRL(productData.price);
@@ -1088,7 +1095,7 @@ async function handlePayment(method) {
             const res = await fetch(`${API_URL}${endpointVar}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ items, customer })
+                body: JSON.stringify({ items, customer, facebookEventId: currentFacebookEventId })
             });
 
             const data = await res.json();
@@ -1189,7 +1196,8 @@ async function handlePayment(method) {
                 installments: document.getElementById('installments-select')?.value || '1',
                 payment_method_id: getPaymentMethodId(cardNumber),
                 issuer_id: null,
-                deviceId: (typeof mp !== 'undefined' && mp.getDeviceId) ? mp.getDeviceId() : null
+                deviceId: (typeof mp !== 'undefined' && mp.getDeviceId) ? mp.getDeviceId() : null,
+                facebookEventId: currentFacebookEventId
             };
             console.log("Enviando Payload API:", payload);
 
@@ -1211,7 +1219,7 @@ async function handlePayment(method) {
                     currency: 'BRL',
                     content_name: cart.mainProduct ? cart.mainProduct.title : 'Checkout',
                     content_ids: items.map(i => i.id)
-                });
+                }, currentFacebookEventId);
 
                 window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
             } else if (result.status === 'in_process' || result.status === 'pending') {
@@ -1709,7 +1717,7 @@ function showPixResult(data, items) {
                     currency: 'BRL',
                     content_name: cart.mainProduct ? cart.mainProduct.title : 'Checkout',
                     content_ids: items.map(i => i.id)
-                });
+                }, currentFacebookEventId);
 
                 window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
             } else {

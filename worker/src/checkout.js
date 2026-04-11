@@ -33,7 +33,7 @@ function getFriendlyError(error) {
 
 // ─── PIX ────────────────────────────────────────────────────
 checkoutRoutes.post('/pix', async (c) => {
-    const { items, customer } = await c.req.json();
+    const { items, customer, facebookEventId } = await c.req.json();
     const MP_TOKEN = c.env.MP_ACCESS_TOKEN;
     const BASE_URL = c.env.BASE_URL || 'https://mura-api.joaopaulosantoscamargo.workers.dev';
 
@@ -60,6 +60,7 @@ checkoutRoutes.post('/pix', async (c) => {
             customer_name: customer.name,
             customer_email: customer.email,
             customer_phone: customer.phone,
+            facebook_event_id: facebookEventId,
         },
     };
 
@@ -88,7 +89,7 @@ checkoutRoutes.post('/pix', async (c) => {
 
 // ─── BOLETO ────────────────────────────────────────────────
 checkoutRoutes.post('/boleto', async (c) => {
-    const { items, customer } = await c.req.json();
+    const { items, customer, facebookEventId } = await c.req.json();
     const MP_TOKEN = c.env.MP_ACCESS_TOKEN;
     const BASE_URL = c.env.BASE_URL || 'https://mura-api.joaopaulosantoscamargo.workers.dev';
 
@@ -134,6 +135,7 @@ checkoutRoutes.post('/boleto', async (c) => {
             customer_name: customer.name,
             customer_email: customer.email,
             customer_phone: customer.phone,
+            facebook_event_id: facebookEventId,
         },
     };
 
@@ -184,7 +186,7 @@ checkoutRoutes.get('/boleto/safe-preview', async (c) => {
 checkoutRoutes.post('/card', async (c) => {
     const MP_TOKEN = c.env.MP_ACCESS_TOKEN;
     const BASE_URL = c.env.BASE_URL || 'https://mura-api.joaopaulosantoscamargo.workers.dev';
-    const { items, customer, token, installments, payment_method_id, issuer_id, deviceId } = await c.req.json();
+    const { items, customer, token, installments, payment_method_id, issuer_id, deviceId, facebookEventId } = await c.req.json();
 
     const totalAmount = Number(items.reduce((acc, i) => acc + Number(i.price), 0).toFixed(2));
     if (totalAmount <= 0) return c.json({ error: 'Valor inválido.' }, 400);
@@ -236,6 +238,7 @@ checkoutRoutes.post('/card', async (c) => {
             customer_email: customer.email,
             customer_phone: customer.phone,
             customer_cep: customer.cep,
+            facebook_event_id: facebookEventId,
         },
     };
 
@@ -252,8 +255,10 @@ checkoutRoutes.post('/card', async (c) => {
     const result = await res.json();
 
     if (result.status === 'approved') {
-        await logSale(c.env, customer, items, result.id, 'cartão');
-        await sendEmail(c.env, customer, items, result.id); 
+        const isNewSale = await logSale(c.env, customer, items, result.id, 'cartão');
+        if (isNewSale) {
+            await sendEmail(c.env, customer, items, result.id, facebookEventId); 
+        }
         const dlToken = await generateDownloadToken(customer.email, items, result.id, c.env);
         return c.json({ status: 'approved', id: result.id, redirectToken: dlToken });
     } else if (result.status === 'in_process' || result.status === 'pending') {
@@ -280,7 +285,12 @@ checkoutRoutes.get('/payment/:id', async (c) => {
         };
         const itemTitles = (result.description || 'Produto').split(', ');
         const items = itemTitles.map(title => ({ title, price: result.transaction_amount / itemTitles.length }));
-        await logSale(c.env, customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão');
+        const isNewSale = await logSale(c.env, customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão');
+        
+        if (isNewSale) {
+            await sendEmail(c.env, customer, items, result.id, metadata.facebook_event_id);
+        }
+        
         const token = await generateDownloadToken(customer.email, items, result.id, c.env);
         return c.json({ id: result.id, status: result.status, redirectToken: token });
     }

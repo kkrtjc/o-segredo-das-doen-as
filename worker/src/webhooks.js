@@ -39,7 +39,7 @@ webhookRoutes.post('/mercadopago', async (c) => {
                     price: payment.transaction_amount / itemTitles.length,
                 }));
 
-                await logSale(c.env, customer, items, paymentId, payment.payment_method_id === 'pix' ? 'pix' : 'cartão');
+                const isNewSale = await logSale(c.env, customer, items, paymentId, payment.payment_method_id === 'pix' ? 'pix' : 'cartão');
 
                 // Marcar abandono como pago
                 const abandons = await getAbandons(c.env);
@@ -50,8 +50,10 @@ webhookRoutes.post('/mercadopago', async (c) => {
                     await saveAbandons(c.env, abandons);
                 }
 
-                // Envia e-mail
-                await sendEmail(c.env, customer, items, paymentId);
+                // Envia e-mail (Apenas se for uma venda nova e ainda não processada)
+                if (isNewSale) {
+                    await sendEmail(c.env, customer, items, paymentId, metadata.facebook_event_id);
+                }
             }
         } catch (e) {
             console.error('[WEBHOOK ERROR]', e.message);
