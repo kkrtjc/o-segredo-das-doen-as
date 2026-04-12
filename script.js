@@ -1091,11 +1091,20 @@ async function handlePayment(method) {
                 return;
             }
 
+            const { fbc, fbp } = getMetaCookies();
+
             const endpointVar = isBoleto ? '/api/checkout/boleto' : '/api/checkout/pix';
             const res = await fetch(`${API_URL}${endpointVar}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ items, customer, facebookEventId: currentFacebookEventId })
+                body: JSON.stringify({ 
+                    items, 
+                    customer, 
+                    facebookEventId: currentFacebookEventId,
+                    fbc: fbc,
+                    fbp: fbp,
+                    userAgent: navigator.userAgent
+                })
             });
 
             const data = await res.json();
@@ -1191,13 +1200,18 @@ async function handlePayment(method) {
             const copyArea = processingView.querySelector('.copy-paste-area');
             if (copyArea) copyArea.style.display = 'none';
 
+            const { fbc, fbp } = getMetaCookies();
+
             const payload = {
                 items, customer, token: token.id,
                 installments: document.getElementById('installments-select')?.value || '1',
                 payment_method_id: getPaymentMethodId(cardNumber),
                 issuer_id: null,
                 deviceId: (typeof mp !== 'undefined' && mp.getDeviceId) ? mp.getDeviceId() : null,
-                facebookEventId: currentFacebookEventId
+                facebookEventId: currentFacebookEventId,
+                fbc: fbc,
+                fbp: fbp,
+                userAgent: navigator.userAgent
             };
             console.log("Enviando Payload API:", payload);
 
@@ -1362,6 +1376,17 @@ async function processCardPayment() {
 
 // --- VALIDATION AND INTERCEPTION FUNCTIONS ---
 
+
+function getMetaCookies() {
+    const cookies = document.cookie.split(';');
+    let fbc = '';
+    let fbp = '';
+    cookies.forEach(c => {
+        if (c.trim().startsWith('_fbc=')) fbc = c.trim().substring(5);
+        if (c.trim().startsWith('_fbp=')) fbp = c.trim().substring(5);
+    });
+    return { fbc, fbp };
+}
 
 function showToast(title, message, type = 'error') {
     const container = document.getElementById('toast-container');

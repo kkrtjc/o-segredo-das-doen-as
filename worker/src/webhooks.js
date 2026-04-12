@@ -39,6 +39,18 @@ webhookRoutes.post('/mercadopago', async (c) => {
                     price: payment.transaction_amount / itemTitles.length,
                 }));
 
+                // Lock anti-duplicidade na KV HISTORY (dura 2 horas)
+                const lockKey = `lock_${paymentId}`;
+                const isLocked = await c.env.HISTORY.get(lockKey);
+                
+                if (isLocked) {
+                    console.log(`[WEBHOOK] Disparo duplicado ignorado pelo lock: ${paymentId}`);
+                    return c.text('OK', 200);
+                }
+                
+                // Aplica o lock imediatamente
+                await c.env.HISTORY.put(lockKey, 'locked', { expirationTtl: 7200 });
+
                 const isNewSale = await logSale(c.env, customer, items, paymentId, payment.payment_method_id === 'pix' ? 'pix' : 'cartão');
 
                 // Marcar abandono como pago
@@ -50,9 +62,13 @@ webhookRoutes.post('/mercadopago', async (c) => {
                     await saveAbandons(c.env, abandons);
                 }
 
-                // Envia e-mail (Apenas se for uma venda nova e ainda não processada)
+                // Envia e-mail e dados CAPI se for novo
                 if (isNewSale) {
-                    await sendEmail(c.env, customer, items, paymentId, metadata.facebook_event_id);
+                    await sendEmail(c.env, customer, items, paymentId, 
+                        metadata.facebook_event_id, 
+                        metadata.fbc, 
+                        metadata.fbp, 
+                        metadata.user_agent);
                 }
             }
         } catch (e) {

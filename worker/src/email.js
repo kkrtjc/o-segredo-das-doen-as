@@ -1,7 +1,7 @@
 import { generateDownloadToken } from './utils.js';
 
 // Envia os dados para o webhook do Make.com que disparará o e-mail via Gmail
-export async function sendEmail(env, customer, items, paymentId = null, facebookEventId = null) {
+export async function sendEmail(env, customer, items, paymentId = null, facebookEventId = null, fbc = null, fbp = null, userAgent = null) {
     try {
         if (!customer || !customer.email || customer.email.trim() === '') {
             console.warn('[EMAIL WARNING] Tentativa de envio abortada. E-mail não fornecido.');
@@ -59,7 +59,10 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
             download_link: downloadLink,
             customer_name: customer.name,
             whatsapp_link: 'https://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20com%20meu%20acesso',
-            facebook_event_id: facebookEventId // Pass the event_id to Make.com
+            facebook_event_id: facebookEventId, // Pass the event_id to Make.com
+            fbc: fbc,
+            fbp: fbp,
+            client_user_agent: userAgent
         };
 
         const res = await fetch(webhookUrl, {
