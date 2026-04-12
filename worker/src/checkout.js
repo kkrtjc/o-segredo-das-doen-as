@@ -266,7 +266,7 @@ checkoutRoutes.post('/card', async (c) => {
     if (result.status === 'approved') {
         const isNewSale = await logSale(c.env, customer, items, result.id, 'cartão');
         if (isNewSale) {
-            await sendEmail(c.env, customer, items, result.id, facebookEventId); 
+            await sendEmail(c.env, customer, items, result.id, facebookEventId, fbc, fbp, userAgent); 
         }
         const dlToken = await generateDownloadToken(customer.email, items, result.id, c.env);
         return c.json({ status: 'approved', id: result.id, redirectToken: dlToken });
@@ -297,7 +297,11 @@ checkoutRoutes.get('/payment/:id', async (c) => {
         const isNewSale = await logSale(c.env, customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão');
         
         if (isNewSale) {
-            await sendEmail(c.env, customer, items, result.id, metadata.facebook_event_id);
+            await sendEmail(c.env, customer, items, result.id, 
+                metadata.facebook_event_id,
+                metadata.fbc,
+                metadata.fbp,
+                metadata.user_agent);
         }
         
         const token = await generateDownloadToken(customer.email, items, result.id, c.env);

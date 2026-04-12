@@ -74,12 +74,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const s = await fetch(`${API_URL}/api/payment/${session.data.id}`);
                     const sd = await s.json();
                     if (sd.status === 'approved') {
+                        const recoveryEventId = generateEventID();
                         trackPixel('Purchase', {
                             value: session.total || 0,
                             currency: 'BRL',
                             content_name: 'Combo Elite / Produtos',
                             content_ids: session.itemIds ? session.itemIds.split(',') : []
-                        });
+                        }, recoveryEventId);
                         localStorage.removeItem('active_pix_session');
                         window.location.href = `downloads.html?items=${session.itemIds}&total=${session.total.toFixed(2)}`;
                     } else {
@@ -106,11 +107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (typeof applyDynamicPrices === 'function') {
                         applyDynamicPrices(resp);
                     }
-
-                    trackPixel('ViewContent', {
-                        content_ids: [id], content_name: resp.title, content_type: 'product',
-                        value: resp.price, currency: 'BRL'
-                    });
+                    // ViewContent é disparado em renderHomeProducts() — não duplicar aqui
                 }
             }
         } catch (e) { console.warn(`[PREFETCH] Failed: ${id}`); }

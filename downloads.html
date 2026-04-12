@@ -496,16 +496,21 @@
                     };
                 }
 
-                // Tracking (Silent Fail)
+                // Tracking (Silent Fail) — com deduplicação
                 try {
                     const total = parseFloat(params.get('total') || '0');
-                    if (total > 0 && typeof fbq === 'function') {
+                    const purchaseKey = 'mura_dl_purchase_' + itemsParam;
+                    
+                    // Só dispara se NÃO tiver sido disparado nesta sessão (evita refresh = duplicado)
+                    if (total > 0 && typeof fbq === 'function' && !sessionStorage.getItem(purchaseKey)) {
+                        const eventId = 'ev_dl_' + Date.now() + '_' + Math.random().toString(16).slice(2, 8);
                         fbq('track', 'Purchase', {
                             value: total,
                             currency: 'BRL',
                             content_ids: items,
                             content_type: 'product'
-                        });
+                        }, { eventID: eventId });
+                        sessionStorage.setItem(purchaseKey, 'fired');
                     }
                 } catch (e) { console.error('Erro tracking pixel', e); }
 
