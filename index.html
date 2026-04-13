@@ -1119,12 +1119,10 @@
                 </div>
             </div>
 
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
-
+            <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; padding: 0 1rem;">
+                <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary btn-large" style="margin: 0;">SALVAR MINHAS GALINHAS AGORA</button>
                 <a id="btn-ver-aprendizado" href="#learning" class="btn-outline"
-                    style="text-decoration: none; display: flex; align-items: center; justify-content: center;">VER O
-                    QUE
-                    VOU APRENDER</a>
+                    style="text-decoration: none; display: flex; align-items: center; justify-content: center; min-width: 250px;">VER O QUE VOU APRENDER</a>
             </div>
         </div>
     </section>
@@ -2906,19 +2904,42 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const floatingCta = document.getElementById('floating-cta');
-            const trigger = document.getElementById('btn-ver-aprendizado');
-            if (!floatingCta || !trigger) return;
+            const learningBtn = document.getElementById('btn-ver-aprendizado');
+            const learningSection = document.getElementById('learning');
+            
+            if (!floatingCta) return;
 
+            // Função para mostrar o CTA
+            const showCta = () => {
+                floatingCta.classList.add('visible');
+                document.body.classList.add('cta-visible');
+            };
+
+            // Função para esconder o CTA
+            const hideCta = () => {
+                floatingCta.classList.remove('visible');
+                document.body.classList.remove('cta-visible');
+            };
+
+            // 1. Mostrar se o usuário clicar no botão "VER O QUE VOU APRENDER"
+            if (learningBtn) {
+                learningBtn.addEventListener('click', function() {
+                    // Dá um pequeno delay para a rolagem começar e então mostra
+                    setTimeout(showCta, 300);
+                });
+            }
+
+            // 2. Controlar via Scroll (Usando o topo da seção de aprendizado como gatilho)
             window.addEventListener('scroll', function () {
-                // Calcula a posição absoluta do botão no documento
-                const triggerPoint = trigger.getBoundingClientRect().top + window.pageYOffset + trigger.offsetHeight;
+                if (!learningSection) return;
                 
-                if (window.scrollY > triggerPoint) {
-                    floatingCta.classList.add('visible');
-                    document.body.classList.add('cta-visible');
+                const sectionPos = learningSection.getBoundingClientRect().top;
+                
+                // Se a seção de aprendizado chegar perto do topo (ou já estiver visível), mostra o CTA
+                if (sectionPos < 400) {
+                    showCta();
                 } else {
-                    floatingCta.classList.remove('visible');
-                    document.body.classList.remove('cta-visible');
+                    hideCta();
                 }
             });
         });
