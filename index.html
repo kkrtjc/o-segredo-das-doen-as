@@ -847,25 +847,30 @@
             </p>
             <div
                 style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem; margin: 0 auto 2rem; max-width: 800px; backdrop-filter: blur(8px); box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
-                <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 1rem;">
-                    <span
-                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
+                <div class="hero-pills-container" style="display: flex; gap: 8px; justify-content: center; margin: 0 auto 0.5rem; flex-wrap: nowrap; overflow-x: auto; padding: 10px 15px; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
+                    <style>
+                        .hero-pills-container::-webkit-scrollbar { display: none; }
+                        @media (max-width: 600px) { 
+                            .hero-pills-container { justify-content: flex-start !important; }
+                            .hero-pill { font-size: 0.75rem !important; padding: 6px 12px !important; } 
+                        }
+                    </style>
+                    <span class="hero-pill"
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 14px; border-radius: 20px; font-size: 0.95rem; font-weight: 800; border: 1.5px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5); white-space: nowrap; flex: 0 0 auto;"><i
                             class="fa-solid fa-triangle-exclamation"></i> Ronqueira</span>
-                    <span
-                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
+                    <span class="hero-pill"
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 14px; border-radius: 20px; font-size: 0.95rem; font-weight: 800; border: 1.5px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5); white-space: nowrap; flex: 0 0 auto;"><i
                             class="fa-solid fa-skull-crossbones"></i> Peito Seco</span>
-                    <span
-                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
+                    <span class="hero-pill"
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 14px; border-radius: 20px; font-size: 0.95rem; font-weight: 800; border: 1.5px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5); white-space: nowrap; flex: 0 0 auto;"><i
                             class="fa-solid fa-notes-medical"></i> Espirro</span>
-                    <span
-                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 16px; border-radius: 20px; font-size: 1.1rem; font-weight: 800; border: 2px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5);"><i
+                    <span class="hero-pill"
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 14px; border-radius: 20px; font-size: 0.95rem; font-weight: 800; border: 1.5px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5); white-space: nowrap; flex: 0 0 auto;"><i
                             class="fa-solid fa-arrow-trend-down"></i> Queda de Postura</span>
                 </div>
 
-                <p
-                    style="font-size: 1.25rem; color: #ffffff; margin-bottom: 0.5rem; line-height: 1.4; font-weight: 800; text-shadow: 0 2px 6px rgba(0,0,0,0.8);">
-                    Tudo isso você vai aprender a tratar <strong
-                        style="color: #ffffff; text-decoration: underline; text-decoration-color: var(--brand-red); text-underline-offset: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">corretamente</strong>.
+                <p style="font-size: 0.8rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2rem; opacity: 0.7; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+                    E mais de 10 doenças que matam galinhas todos os dias no Brasil
                 </p>
 
                 <p
@@ -874,247 +879,89 @@
                 </p>
 
                 <!-- Autoridade / Before and After Gallery -->
-                <style>
-                    .authority-gallery-container {
-                        width: 100%;
-                        margin-top: 1.5rem;
-                        margin-bottom: 0.5rem;
-                    }
-
-                    .authority-gallery-title {
-                        font-size: 1.2rem;
-                        color: #ffffff;
-                        text-align: center;
-                        margin-bottom: 1rem;
-                        font-weight: 800;
-                        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-                    }
-
-                    .authority-gallery-track {
-                        display: grid;
-                        grid-template-columns: repeat(3, 1fr);
-                        gap: 8px;
-                        /* Espaço bem menor entre elas */
-                    }
-
-                    .authority-gallery-item {
-                        background: #0f172a;
-                        border: 1px solid rgba(255, 255, 255, 0.08);
-                        border-radius: 8px;
-                        overflow: hidden;
-                        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-                        transition: transform 0.2s ease, box-shadow 0.2s ease;
-                    }
-
-                    .authority-gallery-item:hover {
-                        transform: translateY(-2px);
-                        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
-                    }
-
-                    .authority-gallery-item img {
-                        width: 100%;
-                        aspect-ratio: 1/1;
-                        /* Garante que todas sao quadradas */
-                        height: auto;
-                        object-fit: contain;
-                        /* Encaixa perfeitamente pois as imagens ja foram processadas */
-                        object-position: center;
-                        background: #020617;
-                        display: block;
-                    }
-
-                    .image-wrapper {
-                        position: relative;
-                        width: 100%;
-                        overflow: hidden;
-                        border-bottom: 2px solid #22c55e;
-                    }
-
-                    .antes-depois-bar {
-                        position: absolute;
-                        bottom: 0;
-                        left: 0;
-                        width: 100%;
-                        display: flex;
-                        justify-content: space-between;
-                        pointer-events: none;
-                    }
-
-                    .badge-antes,
-                    .badge-depois {
-                        width: 50%;
-                        text-align: center;
-                        font-family: inherit;
-                        font-size: 0.75rem;
-                        font-weight: 900;
-                        color: #ffffff;
-                        padding: 4px 0;
-                        text-shadow: 0 1px 3px rgba(0, 0, 0, 1);
-                        letter-spacing: 0.5px;
-                        z-index: 10;
-                    }
-
-                    .badge-antes {
-                        background: rgba(180, 30, 30, 0.95);
-                    }
-
-                    .badge-depois {
-                        background: rgba(22, 130, 55, 0.95);
-                        border-left: 2px solid #111;
-                    }
-
-                    .authority-gallery-label {
-                        padding: 6px 4px;
-                        text-align: center;
-                        font-size: 0.65rem;
-                        font-weight: 800;
-                        color: #f8fafc;
-                        text-transform: uppercase;
-                        letter-spacing: 0.3px;
-                        line-height: 1.2;
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        justify-content: center;
-                        gap: 3px;
-                    }
-
-                    .authority-gallery-label i {
-                        color: #22c55e;
-                        font-size: 0.8rem;
-                    }
-
-                    .mobile-scroll-hint {
-                        display: none;
-                    }
-
-                    /* MOBILE LAYOUT (Slider Compacto) */
-                    @media (max-width: 650px) {
-                        .authority-gallery-track {
-                            display: flex;
-                            overflow-x: auto;
-                            scroll-snap-type: x mandatory;
-                            gap: 10px;
-                            margin: 0 -1.5rem;
-                            padding: 0 1.5rem 10px 1.5rem;
-                            -ms-overflow-style: none;
-                            scrollbar-width: none;
-                        }
-
-                        .authority-gallery-track::-webkit-scrollbar {
-                            display: none;
-                        }
-
-                        .authority-gallery-item {
-                            width: 82%;
-                            /* Largura padrão */
-                            flex-shrink: 0;
-                            scroll-snap-align: center;
-                        }
-
-                        .mobile-scroll-hint {
-                            display: block;
-                            text-align: center;
-                            margin-top: 2px;
-                            margin-bottom: 15px;
-                            font-size: 0.7rem;
-                            color: rgba(255, 255, 255, 0.6);
-                            font-weight: 600;
-                        }
-
-                        .authority-gallery-title {
-                            font-size: 1.15rem;
-                        }
-                    }
-                </style>
-
-                <div class="authority-gallery-container">
-                    <h3 class="authority-gallery-title">Resultados dos tratamentos com o protocolo de elite</h3>
-
-                    <div class="authority-gallery-track">
-                        <!-- Card 1 -->
-                        <div class="authority-gallery-item">
+                <!-- Authority Carousel Elite -->
+                <div class="authority-slider-wrapper">
+                    <div class="slider-track">
+                        <!-- Slide 1: Coriza -->
+                        <div class="slide">
                             <div class="image-wrapper">
-                                <img src="autoridade/proc_coriza.webp" alt="Coriza Infecciosa" loading="lazy">
-                                <div class="antes-depois-bar">
-                                    <span class="badge-antes">ANTES</span>
-                                    <span class="badge-depois">DEPOIS</span>
-                                </div>
-                            </div>
-                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Coriza
-                                Infecciosa</div>
-                        </div>
-
-                        <!-- Card 2 -->
-                        <div class="authority-gallery-item">
-                            <div class="image-wrapper">
-                                <img src="autoridade/proc_ronqueira-gogo.webp" alt="Ronqueira / Gogo" loading="lazy">
-                                <div class="antes-depois-bar">
-                                    <span class="badge-antes">ANTES</span>
-                                    <span class="badge-depois">DEPOIS</span>
-                                </div>
-                            </div>
-                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Ronqueira /
-                                Gogo</div>
-                        </div>
-
-                        <!-- Card 3 -->
-                        <div class="authority-gallery-item">
-                            <div class="image-wrapper">
-                                <img src="autoridade/proc_bronquite aviaria.webp" alt="Bronquite Aviária"
-                                    loading="lazy">
-                                <div class="antes-depois-bar">
-                                    <span class="badge-antes">ANTES</span>
-                                    <span class="badge-depois">DEPOIS</span>
-                                </div>
-                            </div>
-                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Bronquite
-                                Aviária</div>
-                        </div>
-
-                        <!-- Card 4 -->
-                        <div class="authority-gallery-item">
-                            <div class="image-wrapper">
-                                <img src="autoridade/proc_Coccidiose.webp" alt="Coccidiose" loading="lazy">
-                                <div class="antes-depois-bar">
-                                    <span class="badge-antes">ANTES</span>
-                                    <span class="badge-depois">DEPOIS</span>
-                                </div>
-                            </div>
-                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Coccidiose
+                                <img src="autoridade/proc_coriza.webp" alt="Coriza Infecciosa" style="object-position: center 20%;">
+                                <div class="slide-label">Coriza Infecciosa</div>
                             </div>
                         </div>
-
-                        <!-- Card 5 -->
-                        <div class="authority-gallery-item">
+                        <!-- Slide 2: Bronquite -->
+                        <div class="slide">
                             <div class="image-wrapper">
-                                <img src="autoridade/proc_Magreza extrema-peito seco.webp"
-                                    alt="Magreza Extrema / Peito Seco" loading="lazy">
-                                <div class="antes-depois-bar">
-                                    <span class="badge-antes">ANTES</span>
-                                    <span class="badge-depois">DEPOIS</span>
-                                </div>
-                            </div>
-                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Peito Seco /
-                                Magreza</div>
-                        </div>
-
-                        <!-- Card 6 -->
-                        <div class="authority-gallery-item">
-                            <div class="image-wrapper">
-                                <img src="autoridade/proc_vermes.webp" alt="Vermes" loading="lazy">
-                                <div class="antes-depois-bar">
-                                    <span class="badge-antes">ANTES</span>
-                                    <span class="badge-depois">DEPOIS</span>
-                                </div>
-                            </div>
-                            <div class="authority-gallery-label"><i class="fa-solid fa-shield-virus"></i> Verminose
+                                <img src="autoridade/proc_bronquite aviaria.webp" alt="Bronquite Aviária">
+                                <div class="slide-label">Bronquite Aviária</div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="mobile-scroll-hint">
-                        <i class="fa-solid fa-arrows-left-right fa-fade"></i> Arraste para o lado para ver os resultados
+                        <!-- Slide 3: Coccidiose -->
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_Coccidiose.webp" alt="Coccidiose">
+                                <div class="slide-label">Coccidiose</div>
+                            </div>
+                        </div>
+                        <!-- Slide 4: Ronqueira -->
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_ronqueira-gogo.webp" alt="Ronqueira / Gogo">
+                                <div class="slide-label">Ronqueira / Gogo</div>
+                            </div>
+                        </div>
+                        <!-- Slide 5: Vermes -->
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_vermes.webp" alt="Vermes">
+                                <div class="slide-label">Verminose</div>
+                            </div>
+                        </div>
+                        <!-- Slide 6: Peito Seco -->
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_Magreza extrema-peito seco.webp" alt="Magreza Extrema / Peito Seco">
+                                <div class="slide-label">Peito Seco / Magreza</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Duplicação para Loop Infinito -->
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_coriza.webp" alt="Coriza Infecciosa" style="object-position: center 20%;">
+                                <div class="slide-label">Coriza Infecciosa</div>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_bronquite aviaria.webp" alt="Bronquite Aviária">
+                                <div class="slide-label">Bronquite Aviária</div>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_Coccidiose.webp" alt="Coccidiose">
+                                <div class="slide-label">Coccidiose</div>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_ronqueira-gogo.webp" alt="Ronqueira / Gogo">
+                                <div class="slide-label">Ronqueira / Gogo</div>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_vermes.webp" alt="Vermes">
+                                <div class="slide-label">Verminose</div>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_Magreza extrema-peito seco.webp" alt="Magreza Extrema / Peito Seco">
+                                <div class="slide-label">Peito Seco / Magreza</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
