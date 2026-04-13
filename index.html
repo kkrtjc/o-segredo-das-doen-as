@@ -1121,7 +1121,7 @@
 
             <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
 
-                <a href="#learning" class="btn-outline"
+                <a id="btn-ver-aprendizado" href="#learning" class="btn-outline"
                     style="text-decoration: none; display: flex; align-items: center; justify-content: center;">VER O
                     QUE
                     VOU APRENDER</a>
@@ -2906,11 +2906,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const floatingCta = document.getElementById('floating-cta');
-            if (!floatingCta) return;
+            const trigger = document.getElementById('btn-ver-aprendizado');
+            if (!floatingCta || !trigger) return;
 
             window.addEventListener('scroll', function () {
-                // Show after 700px scroll
-                if (window.scrollY > 700) {
+                // Calcula a posição absoluta do botão no documento
+                const triggerPoint = trigger.getBoundingClientRect().top + window.pageYOffset + trigger.offsetHeight;
+                
+                if (window.scrollY > triggerPoint) {
                     floatingCta.classList.add('visible');
                     document.body.classList.add('cta-visible');
                 } else {
