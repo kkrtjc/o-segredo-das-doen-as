@@ -964,10 +964,16 @@
                 </div>
             </div>
 
-            <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; padding: 0 1rem;">
-                <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary btn-large" style="margin: 0;">SALVAR MINHAS GALINHAS AGORA</button>
-                <a id="btn-ver-aprendizado" href="#learning" class="btn-outline"
-                    style="text-decoration: none; display: flex; align-items: center; justify-content: center; min-width: 250px;">VER O QUE VOU APRENDER</a>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 2rem;">
+                <div style="text-align: center; line-height: 1.2;">
+                    <span style="display: block; font-size: 0.9rem; color: #94a3b8; text-decoration: line-through; opacity: 0.8;">De R$ 149,90</span>
+                    <span style="display: block; font-size: 1.3rem; color: #fff; font-weight: 900;">Por apenas R$ 89,90 no PIX</span>
+                </div>
+                <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; padding: 0 1rem; width: 100%;">
+                    <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary btn-large" style="margin: 0;">SALVAR MINHAS GALINHAS AGORA</button>
+                    <a id="btn-ver-aprendizado" href="#learning" class="btn-outline"
+                        style="text-decoration: none; display: flex; align-items: center; justify-content: center; min-width: 250px;">VER O QUE VOU APRENDER</a>
+                </div>
             </div>
         </div>
     </section>
@@ -1021,13 +1027,14 @@
                 <div
                     style="margin-top: 1.25rem; padding: 1.5rem; background: rgba(15, 23, 42, 0.4); border-radius: 1rem; text-align: center; border: 1px solid var(--slate-800); box-shadow: var(--shadow-xl);">
                     <span
-                        style="display: block; font-size: 0.85rem; color: var(--slate-400); font-weight: 600; text-transform: uppercase; margin-bottom: 5px; opacity: 0.8;">POR
-                        APENAS</span>
-                    <span style="display: block; font-size: 1.5rem; color: var(--white); font-weight: 900;">R$ <span
-                            id="display-price-value" class="dyn-price-main">79,90</span> no pix</span>
+                        style="display: block; font-size: 0.9rem; color: var(--slate-500); text-decoration: line-through; margin-bottom: 2px;">De R$ 149,90 por:</span>
+                    <span
+                        style="display: block; font-size: 0.85rem; color: var(--slate-400); font-weight: 600; text-transform: uppercase; margin-bottom: 5px; opacity: 0.8;">APENAS</span>
+                    <span style="display: block; font-size: 1.8rem; color: var(--white); font-weight: 900;">R$ <span
+                            id="display-price-value" class="dyn-price-main">89,90</span> no pix</span>
                     <span class="dyn-discount-badge"
                         style="font-size: 0.75rem; color: #10b981; font-weight: 800; display: block; margin-top: 3px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 15px; display: inline-block;">🔥
-                        <span class="dyn-discount-percent">46</span>% DE DESCONTO NO PIX</span>
+                        <span class="dyn-discount-percent">40</span>% DE DESCONTO NO PIX</span>
                     <span style="font-size: 0.9rem; color: var(--slate-300); display: block; margin-top: 5px;">ou em até
                         <strong class="dyn-installments" style="color: #fff;">4x de R$ 37,47 sem juros</strong> no
                         cartão</span>
@@ -1158,7 +1165,7 @@
     <section class="urgency-bar">
         <div class="container urgency-content">
             <div class="urgency-pill"><i class="fa-solid fa-triangle-exclamation"></i> Oferta Por Tempo Limitado</div>
-            <p style="font-size: 1.5rem; font-weight: 700;">⏰ Economize R$ 40 hoje — preço sobe em breve!</p>
+            <p style="font-size: 1.5rem; font-weight: 700;">⏰ Economize R$ 60 hoje — preço sobe em breve!</p>
             <p style="font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; font-family: monospace;"
                 id="urgency-countdown">23:59:59</p>
         </div>
@@ -2240,7 +2247,7 @@
                                         <span id="top-checkout-card-installment" style="font-size: 1.3rem; color: #16a34a; font-weight: 900; line-height: 1;">4x de R$ 37,47</span>
                                     </div>
                                     <div style="font-size: 0.85rem; color: #0f172a; font-weight: 700; margin-top: 2px;">
-                                        Ou <span id="checkout-product-price-display" style="color: #22c55e; font-weight: 800;">R$ 79,90</span> com desconto no PIX
+                                        Ou <span id="checkout-product-price-display" style="color: #22c55e; font-weight: 800;">R$ 89,90</span> com desconto no PIX
                                     </div>
                                     <div style="font-size: 0.7rem; color: #64748b; margin-top: 4px; font-style: italic; border-top: 1px dashed #e2e8f0; padding-top: 6px;">
                                         Menos de 3 reais por dia para salvar suas galinhas.
@@ -2739,7 +2746,7 @@
                 <button onclick="startCheckoutProcess('ebook-doencas')" class="floating-cta-btn">
                     SALVAR MINHAS GALINHAS AGORA
                 </button>
-                <span class="floating-cta-subtext"><span class="dyn-cta-pix">R$ 79,90 no PIX</span> &bull; Acesso
+                <span class="floating-cta-subtext"><span class="dyn-cta-pix">R$ 89,90 no PIX</span> &bull; Acesso
                     imediato &bull; Garantia de 7 dias</span>
             </div>
         </div>
