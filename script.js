@@ -82,7 +82,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                             content_ids: session.itemIds ? session.itemIds.split(',') : []
                         }, recoveryEventId);
                         localStorage.removeItem('active_pix_session');
-                        window.location.href = `downloads.html?items=${session.itemIds}&total=${session.total.toFixed(2)}`;
+                        // Timeout para garantir que o Meta Pixel dispare antes de sair da página
+                        setTimeout(() => {
+                            window.location.href = `downloads.html?items=${session.itemIds}&total=${session.total.toFixed(2)}`;
+                        }, 500);
                     } else {
                         localStorage.removeItem('active_pix_session');
                     }
@@ -1232,7 +1235,10 @@ async function handlePayment(method) {
                     content_ids: items.map(i => i.id)
                 }, currentFacebookEventId);
 
-                window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
+                // Timeout para garantir que o Meta Pixel dispare antes de sair da página
+                setTimeout(() => {
+                    window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
+                }, 500);
             } else if (result.status === 'in_process' || result.status === 'pending') {
                 // NOVO: Pagamento em análise - Tela Profissional
                 console.log("⏳ Pagamento em análise - Mostrando View Pendente");
@@ -1741,7 +1747,10 @@ function showPixResult(data, items) {
                     content_ids: items.map(i => i.id)
                 }, currentFacebookEventId);
 
-                window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
+                // Timeout para garantir que o Meta Pixel dispare antes de sair da página
+                setTimeout(() => {
+                    window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
+                }, 500);
             } else {
                 // If not approved yet, schedule next poll
                 attempts++;
