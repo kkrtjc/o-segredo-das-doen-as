@@ -33,6 +33,7 @@ app.get('/api/payment/:id', async (c) => {
     if (result.status === 'approved') {
         const { logSale } = await import('./admin.js');
         const { generateDownloadToken } = await import('./utils.js');
+        const { sendEmail } = await import('./email.js');
         const metadata = result.metadata || {};
         const customer = {
             name: metadata.customer_name || `${result.payer?.first_name || ''} ${result.payer?.last_name || ''}`.trim() || 'Cliente',
@@ -41,7 +42,23 @@ app.get('/api/payment/:id', async (c) => {
         };
         const itemTitles = (result.description || 'Produto').split(', ');
         const items = itemTitles.map(t => ({ title: t, price: result.transaction_amount / itemTitles.length }));
-        await logSale(c.env, customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão');
+        
+        // Anti-duplicação: verifica lock na KV antes de registrar
+        const lockKey = `lock_${result.id}`;
+        const isLocked = await c.env.HISTORY.get(lockKey);
+        
+        if (!isLocked) {
+            await c.env.HISTORY.put(lockKey, 'locked', { expirationTtl: 7200 });
+            const isNewSale = await logSale(c.env, customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão');
+            if (isNewSale) {
+                await sendEmail(c.env, customer, items, result.id,
+                    metadata.facebook_event_id,
+                    metadata.fbc,
+                    metadata.fbp,
+                    metadata.user_agent);
+            }
+        }
+        
         const token = await generateDownloadToken(customer.email, items, result.id, c.env);
         return c.json({ id: result.id, status: result.status, redirectToken: token });
     }

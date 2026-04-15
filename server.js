@@ -1141,7 +1141,15 @@ app.get('/api/payment/:id', async (req, res) => {
                 price: result.transaction_amount / itemTitles.length
             }));
 
-            logSale(customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão');
+            // Só registra e envia e-mail se ainda não foi processado
+            const history = getHistory();
+            const alreadyLogged = history.some(h => String(h.paymentId) === String(result.id));
+            
+            if (!alreadyLogged) {
+                logSale(customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão');
+                sendEmail(customer, items, result.id);
+                console.log(`📤 [POLL] E-mail enviado para ${customer.email} (pagamento ${result.id})`);
+            }
 
             // Generate Secure Token for Redirect
             const token = generateDownloadToken(customer.email, items, result.id);
@@ -1220,22 +1228,30 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
                     };
                 });
 
-                logSale(customer, items, paymentId, paymentResult.payment_method_id === 'pix' ? 'pix' : 'cartão');
+                // Verifica se a venda JÁ foi registrada (pelo checkout direto ou por outro webhook)
+                const history = getHistory();
+                const alreadyLogged = history.some(h => String(h.paymentId) === String(paymentId));
 
-                // Marca abandono como pago via webhook (caso o frontend não tenha feito isso)
-                const abandons = getAbandons();
-                const aIdx = abandons.findIndex(a => a.pixId === String(paymentId));
-                if (aIdx > -1 && !abandons[aIdx].paid) {
-                    abandons[aIdx].paid = true;
-                    abandons[aIdx].paidAt = new Date().toISOString();
-                    saveAbandons(abandons);
-                    console.log(`✅ [WEBHOOK] Abandono marcado como pago: ${paymentId}`);
+                if (alreadyLogged) {
+                    console.log(`ℹ️ [WEBHOOK] Venda ${paymentId} já processada anteriormente. Ignorando e-mail duplicado.`);
+                } else {
+                    logSale(customer, items, paymentId, paymentResult.payment_method_id === 'pix' ? 'pix' : 'cartão');
+
+                    // Marca abandono como pago via webhook (caso o frontend não tenha feito isso)
+                    const abandons = getAbandons();
+                    const aIdx = abandons.findIndex(a => a.pixId === String(paymentId));
+                    if (aIdx > -1 && !abandons[aIdx].paid) {
+                        abandons[aIdx].paid = true;
+                        abandons[aIdx].paidAt = new Date().toISOString();
+                        saveAbandons(abandons);
+                        console.log(`✅ [WEBHOOK] Abandono marcado como pago: ${paymentId}`);
+                    }
+
+                    console.log(`📤 [WEBHOOK] Enviando e-mail automático...`);
+                    sendEmail(customer, items, paymentId);
+
+                    console.log(`📦 Venda registrada via Webhook: ${customer.name} - ${itemTitles.join(', ')}`);
                 }
-
-                console.log(`📤 [WEBHOOK] Enviando e-mail automático...`);
-                sendEmail(customer, items, paymentId);
-
-                console.log(`📦 Venda registrada via Webhook: ${customer.name} - ${itemTitles.join(', ')}`);
             }
             res.sendStatus(200);
         } catch (error) {
