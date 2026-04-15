@@ -1,6 +1,8 @@
 import { generateDownloadToken } from './utils.js';
+import { sendCAPIEvent } from './capi.js';
 
 // Envia os dados para o webhook do Make.com que disparará o e-mail via Gmail
+// E dispara o Purchase server-side via Meta CAPI para atribuição confiável
 export async function sendEmail(env, customer, items, paymentId = null, facebookEventId = null, fbc = null, fbp = null, userAgent = null) {
     try {
         if (!customer || !customer.email || customer.email.trim() === '') {
@@ -59,7 +61,7 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
             download_link: downloadLink,
             customer_name: customer.name,
             whatsapp_link: 'https://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20com%20meu%20acesso',
-            facebook_event_id: facebookEventId, // Pass the event_id to Make.com
+            facebook_event_id: facebookEventId,
             fbc: fbc,
             fbp: fbp,
             client_user_agent: userAgent
@@ -73,10 +75,34 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
 
         if (!res.ok) {
             console.error('[EMAIL ERROR] Falha no disparo pro Make.com');
-            return false;
+            // Mesmo se email falhar, CAPI deve disparar
+        } else {
+            console.log(`[EMAIL] Webhook acionado para ${customer.email}`);
         }
 
-        console.log(`[EMAIL] Webhook acionado para ${customer.email}`);
+        // ── META CAPI: Purchase server-side ──────────────────────────
+        // Dispara SEMPRE que há uma venda aprovada, independente do email
+        const totalValue = items.reduce((acc, i) => acc + Number(i.price || 0), 0);
+        const contentIds = items.map(i => i.id || i.title);
+
+        try {
+            await sendCAPIEvent(env, {
+                eventName: 'Purchase',
+                eventId: facebookEventId, // Mesmo ID do pixel browser para deduplicação
+                customer: customer,
+                value: totalValue,
+                currency: 'BRL',
+                contentIds: contentIds,
+                fbc: fbc,
+                fbp: fbp,
+                userAgent: userAgent,
+                sourceUrl: 'https://osegredodasgalinhas.pages.dev/downloads.html'
+            });
+        } catch (capiErr) {
+            console.error('[CAPI ERROR]', capiErr.message);
+            // Não bloqueia o fluxo — CAPI é best-effort
+        }
+
         return true;
 
     } catch (err) {
@@ -84,4 +110,5 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
         return false;
     }
 }
+
 

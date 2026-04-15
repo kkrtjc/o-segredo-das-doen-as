@@ -74,18 +74,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const s = await fetch(`${API_URL}/api/payment/${session.data.id}`);
                     const sd = await s.json();
                     if (sd.status === 'approved') {
-                        const recoveryEventId = generateEventID();
-                        trackPixel('Purchase', {
-                            value: session.total || 0,
-                            currency: 'BRL',
-                            content_name: 'Combo Elite / Produtos',
-                            content_ids: session.itemIds ? session.itemIds.split(',') : []
-                        }, recoveryEventId);
                         localStorage.removeItem('active_pix_session');
-                        // Timeout para garantir que o Meta Pixel dispare antes de sair da página
-                        setTimeout(() => {
-                            window.location.href = `downloads.html?items=${session.itemIds}&total=${session.total.toFixed(2)}`;
-                        }, 500);
+                        // Recuperação: Redireciona para downloads.html que dispara Purchase com deduplicação
+                        const recoveryEventId = session.facebookEventId || generateEventID();
+                        const { fbc: recFbc, fbp: recFbp } = getMetaCookies();
+                        window.location.href = `downloads.html?items=${session.itemIds}&total=${session.total.toFixed(2)}&evid=${encodeURIComponent(recoveryEventId)}&fbc=${encodeURIComponent(recFbc)}&fbp=${encodeURIComponent(recFbp)}`;
                     } else {
                         localStorage.removeItem('active_pix_session');
                     }
@@ -1093,6 +1086,14 @@ async function handlePayment(method) {
 
             const { fbc, fbp } = getMetaCookies();
 
+            // PIXEL: AddPaymentInfo — sinal crucial para o Meta otimizar
+            trackPixel('AddPaymentInfo', {
+                content_ids: items.map(i => i.id),
+                content_type: 'product',
+                value: totalAmount,
+                currency: 'BRL'
+            }, currentFacebookEventId);
+
             const endpointVar = isBoleto ? '/api/checkout/boleto' : '/api/checkout/pix';
             const res = await fetch(`${API_URL}${endpointVar}`, {
                 method: 'POST',
@@ -1114,6 +1115,7 @@ async function handlePayment(method) {
                     data: data,
                     total: totalAmount,
                     itemIds: itemIds,
+                    facebookEventId: currentFacebookEventId,
                     timestamp: Date.now()
                 }));
                 captureAbandonedLead({ pixGenerated: true, pixId: data.id });
@@ -1202,6 +1204,14 @@ async function handlePayment(method) {
 
             const { fbc, fbp } = getMetaCookies();
 
+            // PIXEL: AddPaymentInfo — sinal crucial para o Meta otimizar
+            trackPixel('AddPaymentInfo', {
+                content_ids: items.map(i => i.id),
+                content_type: 'product',
+                value: items.reduce((acc, i) => acc + Number(i.price), 0),
+                currency: 'BRL'
+            }, currentFacebookEventId);
+
             const payload = {
                 items, customer, token: token.id,
                 installments: document.getElementById('installments-select')?.value || '1',
@@ -1227,18 +1237,15 @@ async function handlePayment(method) {
             if (result.status === 'approved') {
                 const totalVal = document.querySelector('.checkout-total-display').innerText.replace(/[^\d,]/g, '').replace(',', '.');
                 
-                // PIXEL: Purchase (Card Approval)
-                trackPixel('Purchase', {
-                    value: Number(totalVal) || cart.total || 0,
-                    currency: 'BRL',
-                    content_name: cart.mainProduct ? cart.mainProduct.title : 'Checkout',
-                    content_ids: items.map(i => i.id)
-                }, currentFacebookEventId);
+                // Purchase é disparado APENAS no downloads.html para evitar duplicação
+                // O eventID é passado via URL para deduplicação com o CAPI server-side
+                const evid = currentFacebookEventId || generateEventID();
+                const { fbc: purchFbc, fbp: purchFbp } = getMetaCookies();
 
-                // Timeout para garantir que o Meta Pixel dispare antes de sair da página
+                // Timeout para garantir que AddPaymentInfo dispare antes de sair da página
                 setTimeout(() => {
-                    window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
-                }, 500);
+                    window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}&evid=${encodeURIComponent(evid)}&fbc=${encodeURIComponent(purchFbc)}&fbp=${encodeURIComponent(purchFbp)}`;
+                }, 1500);
             } else if (result.status === 'in_process' || result.status === 'pending') {
                 // NOVO: Pagamento em análise - Tela Profissional
                 console.log("⏳ Pagamento em análise - Mostrando View Pendente");
@@ -1739,18 +1746,15 @@ function showPixResult(data, items) {
 
                 const totalVal = document.querySelector('.checkout-total-display').innerText.replace(/[^\d,]/g, '').replace(',', '.');
 
-                // PIXEL: Purchase (PIX Poll Success)
-                trackPixel('Purchase', {
-                    value: Number(totalVal) || cart.total || 0,
-                    currency: 'BRL',
-                    content_name: cart.mainProduct ? cart.mainProduct.title : 'Checkout',
-                    content_ids: items.map(i => i.id)
-                }, currentFacebookEventId);
+                // Purchase é disparado APENAS no downloads.html para evitar duplicação
+                // O eventID é passado via URL para deduplicação com o CAPI server-side
+                const evid = currentFacebookEventId || generateEventID();
+                const { fbc: pixFbc, fbp: pixFbp } = getMetaCookies();
 
-                // Timeout para garantir que o Meta Pixel dispare antes de sair da página
+                // Timeout mais longo para garantir que o navegador processe tudo
                 setTimeout(() => {
-                    window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}`;
-                }, 500);
+                    window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}&evid=${encodeURIComponent(evid)}&fbc=${encodeURIComponent(pixFbc)}&fbp=${encodeURIComponent(pixFbp)}`;
+                }, 1500);
             } else {
                 // If not approved yet, schedule next poll
                 attempts++;

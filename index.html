@@ -250,36 +250,6 @@
     </style>
 
 
-    <!-- UPSELL MODAL SIDE-PANEL -->
-    <div id="upsell-modal-container" class="upsell-modal-container">
-        <div class="upsell-content">
-            <!-- Tag vermelha de urgência -->
-            <div style="background: #dc2626; color: #fff; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; padding: 5px 12px; border-radius: 6px; display: inline-block; margin-bottom: 8px;">⚡ Oferta exclusiva — só enquanto você está aqui</div>
-
-            <h3 style="color: #111; font-size: 1.05rem; font-weight: 900; line-height: 1.3; margin-bottom: 6px;">Você sabe que <span style="color: #dc2626;">8 em cada 10 pintinhos morrem</span> antes dos 20 dias — e o erro costuma ser seu.</h3>
-
-            <p style="font-size: 0.8rem; color: #4b5563; margin-bottom: 10px; line-height: 1.4;">
-                Temperatura errada, ração inadequada, bico molhado — detalhes de manejo que o guia das doenças não cobre. <strong style="color: #111;">O Manual de Pintinhos preenche exatamente esse buraco.</strong>
-            </p>
-
-            <div style="display: flex; gap: 12px; background: #f0fdf4; padding: 10px; border-radius: 10px; border: 1px solid #86efac; margin-bottom: 10px; align-items: center;">
-                <img src="capadospintinhos.webp" style="width: 66px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">
-                <div>
-                    <p style="font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.3px; margin: 0 0 2px;">Manual de Manejo de Pintinhos</p>
-                    <p style="font-size: 0.78rem; color: #6b7280; margin: 0;">De: <span style="text-decoration: line-through;">R$ 99,90</span></p>
-                    <div style="font-weight: 900; color: #16a34a; font-size: 1.1rem; line-height: 1;">Por: R$ 49,90 <span style="font-size: 0.65rem; color: #6b7280; font-weight: 400;">adicionado ao pedido</span></div>
-                </div>
-            </div>
-
-            <button onclick="acceptUpsell()" class="btn-upsell-yes">
-                <i class="fa-solid fa-check"></i> SIM, QUERO PROTEGER MEUS PINTINHOS
-            </button>
-            <button onclick="declineUpsell()" class="btn-upsell-no">
-                Não, prefiro arriscar perder meus pintinhos
-            </button>
-        </div>
-    </div>
-
     <style>
         .upsell-modal-container {
             position: fixed;
@@ -417,6 +387,37 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WVBJNXCQ" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+
+    <!-- UPSELL MODAL SIDE-PANEL (movido do head para body) -->
+    <div id="upsell-modal-container" class="upsell-modal-container">
+        <div class="upsell-content">
+            <!-- Tag vermelha de urgência -->
+            <div style="background: #dc2626; color: #fff; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; padding: 5px 12px; border-radius: 6px; display: inline-block; margin-bottom: 8px;">⚡ Oferta exclusiva — só enquanto você está aqui</div>
+
+            <h3 style="color: #111; font-size: 1.05rem; font-weight: 900; line-height: 1.3; margin-bottom: 6px;">Você sabe que <span style="color: #dc2626;">8 em cada 10 pintinhos morrem</span> antes dos 20 dias — e o erro costuma ser seu.</h3>
+
+            <p style="font-size: 0.8rem; color: #4b5563; margin-bottom: 10px; line-height: 1.4;">
+                Temperatura errada, ração inadequada, bico molhado — detalhes de manejo que o guia das doenças não cobre. <strong style="color: #111;">O Manual de Pintinhos preenche exatamente esse buraco.</strong>
+            </p>
+
+            <div style="display: flex; gap: 12px; background: #f0fdf4; padding: 10px; border-radius: 10px; border: 1px solid #86efac; margin-bottom: 10px; align-items: center;">
+                <img src="capadospintinhos.webp" style="width: 66px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">
+                <div>
+                    <p style="font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.3px; margin: 0 0 2px;">Manual de Manejo de Pintinhos</p>
+                    <p style="font-size: 0.78rem; color: #6b7280; margin: 0;">De: <span style="text-decoration: line-through;">R$ 99,90</span></p>
+                    <div style="font-weight: 900; color: #16a34a; font-size: 1.1rem; line-height: 1;">Por: R$ 49,90 <span style="font-size: 0.65rem; color: #6b7280; font-weight: 400;">adicionado ao pedido</span></div>
+                </div>
+            </div>
+
+            <button onclick="acceptUpsell()" class="btn-upsell-yes">
+                <i class="fa-solid fa-check"></i> SIM, QUERO PROTEGER MEUS PINTINHOS
+            </button>
+            <button onclick="declineUpsell()" class="btn-upsell-no">
+                Não, prefiro arriscar perder meus pintinhos
+            </button>
+        </div>
+    </div>
+
 
     <!-- Header -->
     <header class="sticky">

@@ -496,21 +496,43 @@
                     };
                 }
 
-                // Tracking (Silent Fail) — com deduplicação
+                // PIXEL: Purchase — PONTO ÚNICO de disparo (deduplicado)
                 try {
                     const total = parseFloat(params.get('total') || '0');
                     const purchaseKey = 'mura_dl_purchase_' + itemsParam;
                     
+                    // EventID vindo do checkout (mesmo usado pelo CAPI server-side)
+                    const eventId = params.get('evid') || ('ev_dl_' + Date.now() + '_' + Math.random().toString(16).slice(2, 8));
+                    
                     // Só dispara se NÃO tiver sido disparado nesta sessão (evita refresh = duplicado)
-                    if (total > 0 && typeof fbq === 'function' && !sessionStorage.getItem(purchaseKey)) {
-                        const eventId = 'ev_dl_' + Date.now() + '_' + Math.random().toString(16).slice(2, 8);
-                        fbq('track', 'Purchase', {
-                            value: total,
-                            currency: 'BRL',
-                            content_ids: items,
-                            content_type: 'product'
-                        }, { eventID: eventId });
-                        sessionStorage.setItem(purchaseKey, 'fired');
+                    if (total > 0 && !sessionStorage.getItem(purchaseKey)) {
+                        const firePurchase = () => {
+                            if (typeof fbq === 'function') {
+                                fbq('track', 'Purchase', {
+                                    value: total,
+                                    currency: 'BRL',
+                                    content_ids: items,
+                                    content_type: 'product'
+                                }, { eventID: eventId });
+                                sessionStorage.setItem(purchaseKey, 'fired');
+                                console.log('✅ [PIXEL] Purchase disparado com eventID:', eventId);
+                                return true;
+                            }
+                            return false;
+                        };
+                        
+                        // Tenta disparar imediatamente
+                        if (!firePurchase()) {
+                            // fbq ainda não carregou — retry com intervalo
+                            let retries = 0;
+                            const retryInterval = setInterval(() => {
+                                retries++;
+                                if (firePurchase() || retries >= 20) {
+                                    clearInterval(retryInterval);
+                                    if (retries >= 20) console.warn('⚠️ [PIXEL] fbq não carregou após 10s');
+                                }
+                            }, 500);
+                        }
                     }
                 } catch (e) { console.error('Erro tracking pixel', e); }
 

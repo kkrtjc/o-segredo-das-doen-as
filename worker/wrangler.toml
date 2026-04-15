@@ -41,3 +41,4 @@ BASE_URL = "https://mura-api.joaopaulojaguar.workers.dev"
 # npx wrangler secret put GMAIL_CLIENT_ID
 # npx wrangler secret put GMAIL_CLIENT_SECRET
 # npx wrangler secret put GMAIL_REFRESH_TOKEN
+# npx wrangler secret put META_ACCESS_TOKEN
