@@ -426,7 +426,11 @@
     </div>
 
     <script>
-        // --- Versão Simplificada e Robusta ---
+        // --- 1. CONFIG & STATE ---
+        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:'
+            ? 'http://localhost:10000'
+            : 'https://mura-api.joaopaulojaguar.workers.dev';
+
         document.addEventListener('DOMContentLoaded', () => {
             try {
                 const params = new URLSearchParams(window.location.search);
@@ -453,38 +457,37 @@
                     showDoencas = true;
                 }
 
-                // 🚨 FALLBACK DE SEGURANÇA: Se nenhum item for detectado na URL, MOSTRAR TUDO.
-                // Isso evita que o cliente fique sem acesso em caso de erro na URL.
+                // 🚨 SEGURANÇA: Se nenhum item for detectado, libera APENAS o principal (Doenças)
                 if (!showManejo && !showDoencas && !showBump) {
-                    console.warn('Fallback ativado: Nenhum item detectado, liberando tudo.');
-                    showManejo = true;
+                    console.warn('Fallback ativado: Liberando apenas produto principal.');
                     showDoencas = true;
-                    showBump = true;
-                    if (successMsg) successMsg.innerText = 'Seus materiais foram liberados!';
+                    if (successMsg) successMsg.innerText = 'Seu acesso foi liberado!';
                 }
 
-                // Aplicar Visibilidade
-                if (showManejo && itemManejo) itemManejo.style.display = 'block';
-                if (showDoencas && itemDoencas) itemDoencas.style.display = 'block';
-                if (showBump && itemOrderbump) itemOrderbump.style.display = 'block';
+                // Aplicar Visibilidade e URLs
+                const token = params.get('t') || '';
+                
+                if (showManejo && itemManejo) {
+                    itemManejo.style.display = 'block';
+                    const link = itemManejo.querySelector('.btn-download');
+                    link.href = `${API_URL}/download/manejo${token ? '?t=' + token : ''}`;
+                }
+                if (showDoencas && itemDoencas) {
+                    itemDoencas.style.display = 'block';
+                    const link = itemDoencas.querySelector('.btn-download');
+                    link.href = `${API_URL}/download/doencas${token ? '?t=' + token : ''}`;
+                }
+                if (showBump && itemOrderbump) {
+                    itemOrderbump.style.display = 'block';
+                    const link = itemOrderbump.querySelector('.btn-download');
+                    link.href = `${API_URL}/download/orderbump${token ? '?t=' + token : ''}`;
+                }
 
                 // Mensagens de Sucesso Personalizadas
                 if (successMsg) {
                     if (showManejo && showDoencas) successMsg.innerText = 'Seu Combo e bônus foram liberados!';
                     else if (showManejo) successMsg.innerText = 'Seu Manual de Pintinhos foi liberado!';
                     else if (showDoencas) successMsg.innerText = 'Seu Guia de Doenças foi liberado!';
-                }
-
-                // WhatsApp
-                const token = params.get('t') || '';
-
-                // Propagar token para os links de download para rastreio
-                if (token) {
-                    document.querySelectorAll('.btn-download').forEach(btn => {
-                        const url = new URL(btn.href);
-                        url.searchParams.set('t', token);
-                        btn.href = url.toString();
-                    });
                 }
 
                 if (whatsappBtn) {
