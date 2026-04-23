@@ -93,22 +93,22 @@ adminRoutes.post('/config/reset', async (c) => {
     const defaultDB = {
         products: {
             'ebook-doencas': {
-                title: 'PROTOCOLO ELITE: A Cura das Aves', price: 79.9, originalPrice: 149.9,
+                title: 'PROTOCOLO ELITE: A Cura das Aves', price: 89.90, originalPrice: 149.90,
                 description: 'Protocolo Elite Doenças', isFeatured: true, badge: 'OFERTA PRINCIPAL',
                 features: ['11 Doenças Documentadas', 'Tabelas de Sintomas', 'Protocolos de Tratamento', 'Bônus: Tabela de Ração (no PIX)'],
-                cover: 'capadasdoencas.webp', orderBumps: ['bump-6361', 'ebook-manejo']
+                cover: 'capadasdoencas.webp', orderBumps: ['combo-elite-bump']
             },
             'ebook-manejo': {
                 title: 'Manejo de Pintinhos (Upsell)', price: 49.9, originalPrice: 99, enabled: true,
                 description: 'Manual de Criação', cover: 'capadospintinhos.webp', orderBumps: []
             },
             'combo-elite': {
-                title: 'COMBO ELITE: Doenças + Pintinhos', price: 0.01, originalPrice: 159.8,
-                description: 'O Guia Completo', badge: 'MAIS VENDIDO', cover: 'combo', orderBumps: ['bump-6361']
+                title: 'COMBO CRIADOR ELITE', price: 139.80, originalPrice: 249.70,
+                description: 'O Guia Completo', badge: 'MAIS VENDIDO', cover: 'combo', orderBumps: []
             }
         },
         orderBumps: {
-            'bump-6361': { id: 'bump-6361', title: 'Tabela de Ração', price: 19.9, description: 'Alimentação correta.', image: 'tabela_racao_bump.webp' }
+            'combo-elite-bump': { id: 'combo-elite-bump', title: 'Combo Criador Elite', price: 49.90, description: 'O protocolo completo — doenças, pintinhos e tabela de ração em um único pacote.', image: 'capadospintinhos.webp' }
         }
     };
     await saveDB(c.env, defaultDB);

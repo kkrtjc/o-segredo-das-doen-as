@@ -381,14 +381,21 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             originalPrice: 149.90,
             cover: 'capadasdoencas.webp',
             fullBumps: [
-                { id: 'ebook-manejo', title: 'Manual de Pintinhos', price: 49.90, priceCard: 49.90, image: 'capadospintinhos.webp', description: '90% das mortes ocorrem antes dos 20 dias. O manual ensina temperatura, ração e manejo correto para garantir a sobrevivência dos seus pintinhos.' },
-                { id: 'bump-6361', title: 'Tabela de Ração', price: 19.90, priceCard: 19.90, image: 'tabela_racao_bump.webp', description: 'Corte até R$ 80/mês no gasto com ração. Aprenda a montar sua própria ração balanceada e nutritiva sem depender de marca cara.', tag: 'OFERTA ÚNICA' }
+                { 
+                    id: 'combo-elite-bump', 
+                    title: 'Combo Criador Elite', 
+                    price: 49.90, 
+                    priceCard: 49.90, 
+                    image: 'capadospintinhos.webp', 
+                    description: '<b>O protocolo completo</b> — doenças, pintinhos e tabela de ração em um único pacote.<br><br>• Ebook Completo de Doenças<br>• Manual Criação de Pintinhos<br>• 🎁 BÔNUS: Tabela de Rações', 
+                    tag: 'OFERTA ELITE' 
+                }
             ]
         },
         'combo-elite': {
-            title: 'Combo Elite (Doenças + Manual)',
-            price: 147.00,
-            originalPrice: 169.80,
+            title: 'Combo Criador Elite',
+            price: 139.90,
+            originalPrice: 249.90,
             cover: 'combo',
             fullBumps: [
                 { id: 'bump-6361', title: 'Tabela de Ração', price: 14.90, priceCard: 19.90, image: 'tabela_racao_bump.webp', description: 'Alimentação correta em todas as fases da sua criação.', tag: 'OFERTA ÚNICA' }
@@ -416,6 +423,32 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         }
 
         cart.mainProduct = { ...productData, id: productId };
+
+        // HOTFIX: Force the new Combo bump to bypass API/KV cache delays
+        if (productId === 'ebook-doencas') {
+            cart.mainProduct.fullBumps = [
+                { 
+                    id: 'combo-elite-bump', 
+                    title: 'ESPERE! Leve o Kit Completo e Economize AGORA!', 
+                    price: 50.00, 
+                    priceCard: 50.00, 
+                    image: 'capadospintinhos.webp', 
+                    description: `
+                        <div style="color: #ffffff; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; font-size: 0.85rem; line-height: 1.4;">
+                            <span style="color: #fca5a5; font-weight: 800; font-style: italic; display: block; margin-bottom: 8px; font-size: 0.95rem;">Já perdeu quantos pintinhos sem saber o motivo?</span>
+                            Adicione o <strong>Manual de Elite de Criação de Pintinhos</strong>, Aprenda a <strong>MELHOR forma</strong> de cuidar do seus pintinhos e garanta <strong>90% de sobrevivência</strong> dos seus filhotes do nascimento à fase adulta. 
+                            <br><br>
+                            E tem mais: <span style="color: #4ade80; font-weight: 900;">GANHE a Tabela de Ração</span> (valor de R$ 19,90) que vai te fazer economizar <strong>até 70% nos custos de alimentação!</strong>
+                            <br><br>
+                            <div style="font-size: 1.1rem; color: #fbbf24; font-weight: 900;">Tudo isso por apenas +R$ 50,00!</div>
+                        </div>
+                    `, 
+                    tag: 'PRESENTE LIBERADO' 
+                }
+            ];
+            productData.fullBumps = cart.mainProduct.fullBumps;
+        }
+
         cart.bumps = forceBumps || [];
 
         // PIXEL: InitiateCheckout (Now with real data)
@@ -499,10 +532,10 @@ function renderOrderBumps(bumps) {
     area.style.marginTop = '0.5rem';
 
     const bumpHeader = `
-        <div style="text-align: center; margin-bottom: 6px; padding: 8px 10px; background: rgba(239,68,68,0.08); border-radius: 8px; border: 1px solid rgba(239,68,68,0.2);">
-            <p style="color: #ef4444; font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin: 0; line-height: 1.6;">
-                ⚡ ADICIONE AGORA ESSAS OFERTAS IMPERDÍVEIS!<br>
-                <span style="color: #fbbf24;">ELAS NÃO APARECEM EM OUTRO LUGAR — ESSA É SUA ÚNICA CHANCE.</span>
+        <div style="text-align: center; margin-bottom: 4px; padding: 6px 10px; background: rgba(239,68,68,0.08); border-radius: 8px; border: 1px solid rgba(239,68,68,0.2);">
+            <p style="color: #ef4444; font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin: 0; line-height: 1.4;">
+                ⚡ ATENÇÃO OFERTA IMPERDÍVEL!<br>
+                <span style="color: #fbbf24;">ELA NÃO APARECE EM OUTRO LUGAR — ESSA É SUA ÚNICA CHANCE.</span>
             </p>
         </div>
     `;
@@ -518,38 +551,37 @@ function renderOrderBumps(bumps) {
             else if (bump.title?.includes('Ração') || bump.title?.includes('Racao') || bump.title?.includes('Tabela')) imgSrc = 'tabela_racao_bump.webp';
         }
 
+        const isCombo = (bump.id === 'combo-elite-bump');
         const isManejo = (bump.id === 'ebook-manejo' || bump.title?.includes('Pintinhos'));
-        const title = isManejo ? '🐣 SALVE SEUS PINTINHOS' : '💰 CORTE SUA CONTA DE RAÇÃO';
-        const desc = isManejo 
-            ? '<span style="color: #fca5a5;"><strong>8 em cada 10 pintinhos morrem antes dos 20 dias.</strong></span> Temperatura errada, ração imprópria, bico molhado. <span style="color: #4ade80;"><strong>O manual te ensina o passo a passo completo</strong></span> do nascimento à fase adulta.' 
-            : '<span style="color: #fca5a5;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até R$ 80/mês</strong> no seu plantel.';
+        
+        let title = isManejo ? '🐣 SALVE SEUS PINTINHOS' : '💰 CORTE SUA CONTA DE RAÇÃO';
+        if (isCombo) title = '💎 UPGRADE: PROTOCOLO COMPLETO';
+
+        let desc = bump.description;
+        if (!desc) {
+            desc = isManejo 
+                ? '<span style="color: #fca5a5;"><strong>8 em cada 10 pintinhos morrem antes dos 20 dias.</strong></span> Temperatura errada, ração imprópria, bico molhado. <span style="color: #4ade80;"><strong>O manual te ensina o passo a passo completo</strong></span> do nascimento à fase adulta.' 
+                : '<span style="color: #fca5a5;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até R$ 80/mês</strong> no seu plantel.';
+        }
 
         const bumpLabel = isManejo ? 'MANUAL DE ELITE<br>DOS PINTINHOS' : 'TABELA DE RAÇÃO';
 
         return `
-            <div style="display: flex; flex-direction: column; gap: 6px; align-items: center; text-align: center;">
-                <span style="font-size: 0.72rem; font-weight: 800; color: #f8fafc; text-transform: uppercase; letter-spacing: 1.2px; line-height: 1.1; min-height: 26px; display: flex; align-items: center; justify-content: center; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 0 2px 4px rgba(0,0,0,0.5);">
-                    ${bumpLabel}
-                </span>
+            <div style="display: flex; flex-direction: column; gap: 4px; align-items: center; text-align: center;">
                 <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="margin-bottom: 0; min-height: 140px; padding: 0; position: relative; overflow: hidden; border-radius: 10px; cursor: pointer; width: 100%;">
                     
                     <!-- Background Image -->
-                    ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: ${isManejo ? 'center 20%' : 'center'}; z-index: 0;">` : ''}
+                    ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: ${isManejo ? 'center 0%' : 'center'}; z-index: 0;">` : ''}
                     
                     <!-- Gradient Overlay -->
                     <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.85) 60%); z-index: 1;"></div>
-
+                    
                     <!-- Content -->
-                    <div style="position: relative; z-index: 2; display: flex; flex-direction: column; padding: 8px; width: 100%; height: 100%; justify-content: flex-end; min-height: 140px;">
+                    <div style="position: relative; z-index: 2; display: flex; flex-direction: column; padding: 12px; width: 100%; height: 100%; justify-content: flex-end; min-height: 140px;">
                         
-                        <div style="position: absolute; top: 6px; right: 6px;" class="bump-check-wrapper-container">
-                            <div class="bump-check-wrapper" style="width: 18px; height: 18px; border-radius: 4px; border: 2px solid ${isSelected ? '#10b981' : '#fbbf24'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#10b981' : 'rgba(0,0,0,0.4)'};">
-                                ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.6rem;"></i>' : ''}
-                            </div>
-                        </div>
                         <input type="checkbox" id="bump-chk-${bump.id}" ${isSelected ? 'checked' : ''} style="display: none;">
                         
-                        <strong class="order-bump-title">
+                        <strong class="order-bump-title" style="margin-top: 5px;">
                             ${title}
                         </strong>
                         
@@ -557,11 +589,21 @@ function renderOrderBumps(bumps) {
                             ${desc}
                         </p>
 
-                        <div style="margin-top: 4px; display: flex; align-items: baseline; gap: 6px; position: relative; z-index: 5;">
-                            <span class="order-bump-old-price">${isManejo ? 'R$ 99,90' : 'R$ 49,90'}</span>
-                            <span class="order-bump-price">
+                        <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 2px; position: relative; z-index: 5; background: rgba(0,0,0,0.5); padding: 8px 12px; border-radius: 8px; width: fit-content; border: 1px solid rgba(255,255,255,0.1);">
+                            <span class="order-bump-old-price" style="font-size: 0.8rem !important; margin-bottom: -4px;">De ${formatBRL(isCombo ? 249.90 : (isManejo ? 99.90 : 49.90))} por apenas:</span>
+                            <span class="order-bump-price" style="font-size: 1.5rem !important; color: #4ade80 !important; font-weight: 900; text-shadow: 0 0 10px rgba(74,222,128,0.3) !important;">
                                 + ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.priceCard || bump.price))}
                             </span>
+                        </div>
+
+                        <!-- Bottom Checkbox + Label Area -->
+                        <div style="margin-top: 12px; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 8px; background: ${isSelected ? 'rgba(16,185,129,0.15)' : 'rgba(0,0,0,0.6)'}; padding: 8px 10px; border-radius: 6px; border: 1px solid ${isSelected ? '#10b981' : '#fbbf24'};">
+                            <span style="color: #fff; font-size: 0.72rem; font-weight: 900; text-align: left; text-shadow: 1px 1px 1px #000; line-height: 1.2;">
+                                ${isCombo ? 'SIM! Eu quero o Kit Criador de Elite e ganhar a Tabela de Ração GRÁTIS!' : bumpLabel}
+                            </span>
+                            <div class="bump-check-wrapper" style="width: 24px; height: 24px; border-radius: 6px; border: 2px solid ${isSelected ? '#10b981' : '#fbbf24'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#10b981' : 'rgba(0,0,0,0.4)'}; flex-shrink: 0;">
+                                ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.9rem;"></i>' : ''}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -569,7 +611,7 @@ function renderOrderBumps(bumps) {
     }).join('');
 
     area.innerHTML = bumpHeader + `
-        <div class="order-bump-grid-view">
+        <div class="order-bump-grid-view" style="grid-template-columns: ${filteredBumps.length === 1 ? '1fr' : '1fr 1fr'} !important;">
             ${bumpHtml}
         </div>
     `;
@@ -670,6 +712,7 @@ function updateTotal() {
         if (id === 'ebook-doencas' || id === 'bump-doencas') bumpTitle = 'Guia de Doenças';
         if (id === 'bump-6361') bumpTitle = 'Tabela de Ração';
         if (id === 'ebook-manejo' || id.includes('manejo')) bumpTitle = 'Manual de Pintinhos';
+        if (id === 'combo-elite-bump') bumpTitle = 'Combo Criador Elite';
         
         const priceForMethod = (currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? (bump?.price || 0) : (bump?.priceCard || bump?.price || 0);
         summaryHtml += `<div style="display: flex; justify-content: space-between; color: #16a34a; font-weight: 500;"><span>+ ${bumpTitle}</span><span>${formatBRL(priceForMethod)}</span></div>`;
