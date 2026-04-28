@@ -546,6 +546,9 @@
                             if (p[0]) a[p[0]] = p[1] || '';
                             return a;
                         }, {});
+                        const tCodeUrl = params.get('testCode') || sessionStorage.getItem('mura_test_code') || null;
+                        if (tCodeUrl && !sessionStorage.getItem('mura_test_code')) sessionStorage.setItem('mura_test_code', tCodeUrl);
+                        
                         fetch(CAPI_URL2 + '/api/capi-event', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -564,6 +567,7 @@
                                 value: total,
                                 currency: 'BRL',
                                 contentIds: items,
+                                testCode: tCodeUrl
                             }),
                             keepalive: true,
                         }).catch(function(){});
