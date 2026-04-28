@@ -320,11 +320,15 @@ function getMetaCookies() {
  * Complementa o fbq() — Meta deduplica pelo eventId.
  *
  * @param {string} eventName   - 'ViewContent' | 'InitiateCheckout' | 'AddPaymentInfo' | 'Purchase'
- * @param {string} eventId     - Mesmo ID usado no fbq() para deduáo
+ * @param {string} eventId     - Mesmo ID usado no fbq() para deduplicação
  * @param {Object} [extra]     - { value, contentIds, contentName, customer }
  */
 async function trackCAPI(eventName, eventId, extra = {}) {
     try {
+        const params = new URLSearchParams(window.location.search);
+        const testCode = params.get('testCode') || sessionStorage.getItem('mura_test_code') || null;
+        if (testCode && !sessionStorage.getItem('mura_test_code')) sessionStorage.setItem('mura_test_code', testCode);
+
         const { fbc, fbp } = getMetaCookies();
         const formData = getCurrentCustomerData();
         // extra.customer sobrescreve o form quando temos dados completos (ex: no pagamento)
@@ -345,6 +349,7 @@ async function trackCAPI(eventName, eventId, extra = {}) {
             fbc,
             fbp,
             externalId,
+            testCode,
         };
         if (extra.value      !== undefined) payload.value       = extra.value;
         if (extra.currency   !== undefined) payload.currency    = extra.currency;

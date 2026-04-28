@@ -54,6 +54,11 @@
                 sid = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
                 sessionStorage.setItem('mura_session_id', sid);
             }
+            // Captura código de teste para debug em tempo real
+            var params = new URLSearchParams(window.location.search);
+            var testCode = params.get('testCode') || sessionStorage.getItem('mura_test_code') || null;
+            if (testCode && !sessionStorage.getItem('mura_test_code')) sessionStorage.setItem('mura_test_code', testCode);
+
             var apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
                 ? 'http://localhost:10000'
                 : 'https://mura-api.joaopaulojaguar.workers.dev';
@@ -67,7 +72,8 @@
                     customer: {},
                     fbc: ck['_fbc'] || '',
                     fbp: ck['_fbp'] || '',
-                    externalId: sid
+                    externalId: sid,
+                    testCode: testCode
                 }),
                 keepalive: true
             }).catch(function(){});

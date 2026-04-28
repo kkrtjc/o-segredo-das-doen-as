@@ -139,6 +139,7 @@ function buildUserData(customer = {}, meta = {}) {
  * @param {string}   [options.contentName] - Nome do produto/conteúdo
  * @param {string}   [options.contentType] - Default: 'product'
  * @param {string}   [options.sourceUrl]   - URL da página de origem
+ * @param {string}   [options.testCode]    - Código de teste para exibição em tempo real no Meta
  */
 export async function sendCAPIEvent(env, options) {
     const PIXEL_ID = env.META_PIXEL_ID || '1346740157465853';
@@ -162,6 +163,7 @@ export async function sendCAPIEvent(env, options) {
         contentName,
         contentType = 'product',
         sourceUrl = DEFAULT_URL,
+        testCode,
     } = options;
 
     const userData = buildUserData(customer, meta);
@@ -173,6 +175,8 @@ export async function sendCAPIEvent(env, options) {
         action_source: 'website',
         user_data: userData,
     };
+
+    if (testCode) eventData.test_event_code = testCode;
 
     // custom_data — só inclui se houver dados relevantes
     const customData = {};
