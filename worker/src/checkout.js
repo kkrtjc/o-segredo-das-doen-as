@@ -60,6 +60,7 @@ checkoutRoutes.post('/pix', async (c) => {
             customer_name: customer.name,
             customer_email: customer.email,
             customer_phone: customer.phone,
+            customer_cpf: cleanCPF,
             facebook_event_id: facebookEventId,
             fbc: fbc,
             fbp: fbp,
@@ -138,6 +139,7 @@ checkoutRoutes.post('/boleto', async (c) => {
             customer_name: customer.name,
             customer_email: customer.email,
             customer_phone: customer.phone,
+            customer_cpf: cleanCPF,
             facebook_event_id: facebookEventId,
             fbc: fbc,
             fbp: fbp,
@@ -244,6 +246,7 @@ checkoutRoutes.post('/card', async (c) => {
             customer_email: customer.email,
             customer_phone: customer.phone,
             customer_cep: customer.cep,
+            customer_cpf: cleanCPF,
             facebook_event_id: facebookEventId,
             fbc: fbc,
             fbp: fbp,
@@ -291,6 +294,7 @@ checkoutRoutes.get('/payment/:id', async (c) => {
             name: metadata.customer_name || `${result.payer?.first_name || ''} ${result.payer?.last_name || ''}`.trim() || 'Cliente',
             email: metadata.customer_email || result.payer?.email || 'galosmurabrasill@gmail.com',
             phone: metadata.customer_phone || 'Sem Telefone',
+            cpf: metadata.customer_cpf || result.payer?.identification?.number || 'Sem CPF',
         };
         const itemTitles = (result.description || 'Produto').split(', ');
         const items = itemTitles.map(title => ({ title, price: result.transaction_amount / itemTitles.length }));

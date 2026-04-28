@@ -3,7 +3,7 @@ import { sendCAPIEvent } from './capi.js';
 
 // Envia os dados para o webhook do Make.com que disparará o e-mail via Gmail
 // E dispara o Purchase server-side via Meta CAPI para atribuição confiável
-export async function sendEmail(env, customer, items, paymentId = null, facebookEventId = null, fbc = null, fbp = null, userAgent = null) {
+export async function sendEmail(env, customer, items, paymentId = null, facebookEventId = null, fbc = null, fbp = null, userAgent = null, clientIp = null) {
     try {
         if (!customer || !customer.email || customer.email.trim() === '') {
             console.warn('[EMAIL WARNING] Tentativa de envio abortada. E-mail não fornecido.');
@@ -81,26 +81,41 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
         }
 
         // ── META CAPI: Purchase server-side ──────────────────────────
-        // Dispara SEMPRE que há uma venda aprovada, independente do email
+        // CPF, cidade, estado — tudo que tiver disponível vai hasheado
         const totalValue = items.reduce((acc, i) => acc + Number(i.price || 0), 0);
         const contentIds = items.map(i => i.id || i.title);
+        const contentName = items.map(i => i.title).join(', ');
+        const sourceUrl = env.SITE_URL
+            ? `${env.SITE_URL}/downloads.html`
+            : 'https://osegredodasgalinhas.pages.dev/downloads.html';
 
         try {
             await sendCAPIEvent(env, {
                 eventName: 'Purchase',
-                eventId: facebookEventId, // Mesmo ID do pixel browser para deduplicação
-                customer: customer,
+                eventId: facebookEventId,
+                customer: {
+                    name:  customer.name,
+                    email: customer.email,
+                    phone: customer.phone,
+                    cpf:   customer.cpf,    // ← CPF agora incluído
+                    city:  customer.city,
+                    state: customer.state,
+                    zip:   customer.zip,
+                },
+                meta: {
+                    fbc,
+                    fbp,
+                    userAgent,
+                    clientIp,
+                },
                 value: totalValue,
                 currency: 'BRL',
-                contentIds: contentIds,
-                fbc: fbc,
-                fbp: fbp,
-                userAgent: userAgent,
-                sourceUrl: 'https://osegredodasgalinhas.pages.dev/downloads.html'
+                contentIds,
+                contentName,
+                sourceUrl,
             });
         } catch (capiErr) {
             console.error('[CAPI ERROR]', capiErr.message);
-            // Não bloqueia o fluxo — CAPI é best-effort
         }
 
         return true;

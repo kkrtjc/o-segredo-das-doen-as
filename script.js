@@ -78,7 +78,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         // Recuperação: Redireciona para downloads.html que dispara Purchase com deduplicação
                         const recoveryEventId = session.facebookEventId || generateEventID();
                         const { fbc: recFbc, fbp: recFbp } = getMetaCookies();
-                        window.location.href = `downloads.html?items=${session.itemIds}&total=${session.total.toFixed(2)}&evid=${encodeURIComponent(recoveryEventId)}&fbc=${encodeURIComponent(recFbc)}&fbp=${encodeURIComponent(recFbp)}`;
+                        const rc = session.customer || {};
+                        window.location.href = `downloads.html?items=${session.itemIds}&total=${session.total.toFixed(2)}&evid=${encodeURIComponent(recoveryEventId)}&fbc=${encodeURIComponent(recFbc)}&fbp=${encodeURIComponent(recFbp)}&email=${encodeURIComponent(rc.email||'')}&name=${encodeURIComponent(rc.name||'')}&cpf=${encodeURIComponent(rc.cpf||'')}&phone=${encodeURIComponent(rc.phone||'')}`;
                     } else {
                         localStorage.removeItem('active_pix_session');
                     }
@@ -285,7 +286,86 @@ function trackPixel(eventName, params = {}, eventId = null) {
     }
 }
 
-// Interceptador para Promoção de Elite (Pré-Checkout) - REMOVIDO PARA USAR MURA ENGINE DIRETO
+// ─── CAPI SERVER-SIDE ENGINE ──────────────────────────────────────────────────────────────
+// Coleta dados do usuário do formulário e envia ao Worker,
+// que repassa ao Meta com IP e User-Agent reais do servidor.
+// Meta recebe: email + telefone + nome + CPF + cidade + estado — tudo hasheado.
+
+/** Lê os campos do formulário de checkout que estejam preenchidos */
+function getCurrentCustomerData() {
+    const get = (id) => (document.getElementById(id)?.value || '').trim();
+    return {
+        name:  get('customer-name')  || get('payer-name')  || '',
+        email: get('customer-email') || get('payer-email') || '',
+        phone: get('customer-phone') || get('payer-phone') || '',
+        cpf:   get('customer-cpf')   || get('payer-cpf')   || '',
+        city:  get('customer-city')  || '',
+        state: get('customer-state') || '',
+        zip:   get('customer-cep')   || get('customer-zip') || '',
+    };
+}
+
+/** Lê cookies _fbc e _fbp do Meta */
+function getMetaCookies() {
+    const cookies = document.cookie.split(';').reduce((acc, c) => {
+        const [k, v] = c.trim().split('=');
+        if (k) acc[k] = v || '';
+        return acc;
+    }, {});
+    return { fbc: cookies['_fbc'] || '', fbp: cookies['_fbp'] || '' };
+}
+
+/**
+ * Envia evento ao Worker que repassa ao Meta CAPI server-side.
+ * Complementa o fbq() — Meta deduplica pelo eventId.
+ *
+ * @param {string} eventName   - 'ViewContent' | 'InitiateCheckout' | 'AddPaymentInfo' | 'Purchase'
+ * @param {string} eventId     - Mesmo ID usado no fbq() para deduáo
+ * @param {Object} [extra]     - { value, contentIds, contentName, customer }
+ */
+async function trackCAPI(eventName, eventId, extra = {}) {
+    try {
+        const { fbc, fbp } = getMetaCookies();
+        const formData = getCurrentCustomerData();
+        // extra.customer sobrescreve o form quando temos dados completos (ex: no pagamento)
+        const customer = extra.customer ? { ...formData, ...extra.customer } : formData;
+
+        // Session ID para match cross-device (mesmo sem cookies)
+        let externalId = sessionStorage.getItem('mura_session_id');
+        if (!externalId) {
+            externalId = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+            sessionStorage.setItem('mura_session_id', externalId);
+        }
+
+        const payload = {
+            eventName,
+            eventId: eventId || null,
+            sourceUrl: window.location.href,
+            customer,
+            fbc,
+            fbp,
+            externalId,
+        };
+        if (extra.value      !== undefined) payload.value       = extra.value;
+        if (extra.currency   !== undefined) payload.currency    = extra.currency;
+        if (extra.contentIds !== undefined) payload.contentIds  = extra.contentIds;
+        if (extra.contentName!== undefined) payload.contentName = extra.contentName;
+        if (extra.contentType!== undefined) payload.contentType = extra.contentType;
+
+        // keepalive garante envio mesmo se página navegar antes de concluir
+        fetch(`${API_URL}/api/capi-event`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            keepalive: true,
+        }).catch(() => {});
+
+    } catch (e) {
+        console.warn('[trackCAPI]', e.message);
+    }
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 async function openCheckout(productId, forceBumps = []) {
     return startCheckoutProcess(productId, forceBumps);
 }
@@ -332,14 +412,12 @@ function declineEliteCombo() {
 }
 
 async function startCheckoutProcess(productId, forceBumps = []) {
-    if (!sessionStorage.getItem('mura_checkout_opened')) {
-        trackEvent('checkout_open');
-        sessionStorage.setItem('mura_checkout_opened', 'true');
-    }
+    // trackEvent('checkout_open') modificado: removido o limite de 1 por sessão 
+    // e o trackEvent('click') redundante para evitar "Race Conditions" no banco de dados KV
+    trackEvent('checkout_open');
     
-    trackEvent('click');
     sessionStorage.setItem('mura_modal_open', 'true');
-    currentFacebookEventId = generateEventID(); 
+    currentFacebookEventId = generateEventID();
     // InitiateCheckout will be fired in loadCheckoutData once we have the price and name
 
 
@@ -451,7 +529,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
 
         cart.bumps = forceBumps || [];
 
-        // PIXEL: InitiateCheckout (Now with real data)
+        // PIXEL + CAPI: InitiateCheckout
         trackPixel('InitiateCheckout', {
             content_ids: [productId],
             content_name: productData.title,
@@ -459,6 +537,10 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             value: productData.price,
             currency: 'BRL'
         }, currentFacebookEventId);
+        trackCAPI('InitiateCheckout', currentFacebookEventId, {
+            value: productData.price, currency: 'BRL',
+            contentIds: [productId], contentName: productData.title,
+        });
 
         document.getElementById('checkout-product-name').innerText = productData.title;
         document.getElementById('checkout-product-price-display').innerText = formatBRL(productData.price);
@@ -776,13 +858,18 @@ async function renderHomeProducts() {
             return;
         }
 
-        // PIXEL: ViewContent
+        // PIXEL + CAPI: ViewContent
+        const viewEventId = generateEventID();
         trackPixel('ViewContent', {
             content_ids: [mainId],
             content_name: p.title,
             content_type: 'product',
             value: p.price,
             currency: 'BRL'
+        }, viewEventId);
+        trackCAPI('ViewContent', viewEventId, {
+            value: p.price, currency: 'BRL',
+            contentIds: [mainId], contentName: p.title,
         });
 
         const card = document.createElement('div');
@@ -1129,13 +1216,18 @@ async function handlePayment(method) {
 
             const { fbc, fbp } = getMetaCookies();
 
-            // PIXEL: AddPaymentInfo — sinal crucial para o Meta otimizar
+            // PIXEL + CAPI: AddPaymentInfo — sinal crucial para o Meta otimizar
+            const addPaymentEventId = generateEventID();
             trackPixel('AddPaymentInfo', {
                 content_ids: items.map(i => i.id),
                 content_type: 'product',
                 value: totalAmount,
                 currency: 'BRL'
-            }, currentFacebookEventId);
+            }, addPaymentEventId);
+            trackCAPI('AddPaymentInfo', addPaymentEventId, {
+                value: totalAmount, currency: 'BRL',
+                contentIds: items.map(i => i.id),
+            });
 
             const endpointVar = isBoleto ? '/api/checkout/boleto' : '/api/checkout/pix';
             const res = await fetch(`${API_URL}${endpointVar}`, {
@@ -1247,13 +1339,19 @@ async function handlePayment(method) {
 
             const { fbc, fbp } = getMetaCookies();
 
-            // PIXEL: AddPaymentInfo — sinal crucial para o Meta otimizar
+            // PIXEL + CAPI: AddPaymentInfo — sinal crucial para o Meta otimizar
+            const addPayEventIdCard = generateEventID();
             trackPixel('AddPaymentInfo', {
                 content_ids: items.map(i => i.id),
                 content_type: 'product',
                 value: items.reduce((acc, i) => acc + Number(i.price), 0),
                 currency: 'BRL'
-            }, currentFacebookEventId);
+            }, addPayEventIdCard);
+            trackCAPI('AddPaymentInfo', addPayEventIdCard, {
+                value: items.reduce((acc, i) => acc + Number(i.price), 0),
+                currency: 'BRL',
+                contentIds: items.map(i => i.id),
+            });
 
             const payload = {
                 items, customer, token: token.id,
@@ -1287,7 +1385,8 @@ async function handlePayment(method) {
 
                 // Timeout para garantir que AddPaymentInfo dispare antes de sair da página
                 setTimeout(() => {
-                    window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}&evid=${encodeURIComponent(evid)}&fbc=${encodeURIComponent(purchFbc)}&fbp=${encodeURIComponent(purchFbp)}`;
+                    const c = getCurrentCustomerData();
+                    window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}&evid=${encodeURIComponent(evid)}&fbc=${encodeURIComponent(purchFbc)}&fbp=${encodeURIComponent(purchFbp)}&email=${encodeURIComponent(c.email||'')}&name=${encodeURIComponent(c.name||'')}&cpf=${encodeURIComponent(c.cpf||'')}&phone=${encodeURIComponent(c.phone||'')}`;
                 }, 1500);
             } else if (result.status === 'in_process' || result.status === 'pending') {
                 // NOVO: Pagamento em análise - Tela Profissional
@@ -1430,16 +1529,7 @@ async function processCardPayment() {
 // --- VALIDATION AND INTERCEPTION FUNCTIONS ---
 
 
-function getMetaCookies() {
-    const cookies = document.cookie.split(';');
-    let fbc = '';
-    let fbp = '';
-    cookies.forEach(c => {
-        if (c.trim().startsWith('_fbc=')) fbc = c.trim().substring(5);
-        if (c.trim().startsWith('_fbp=')) fbp = c.trim().substring(5);
-    });
-    return { fbc, fbp };
-}
+// getMetaCookies já definido acima no CAPI Engine (linha ~309)
 
 function showToast(title, message, type = 'error') {
     const container = document.getElementById('toast-container');
@@ -1796,7 +1886,8 @@ function showPixResult(data, items) {
 
                 // Timeout mais longo para garantir que o navegador processe tudo
                 setTimeout(() => {
-                    window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}&evid=${encodeURIComponent(evid)}&fbc=${encodeURIComponent(pixFbc)}&fbp=${encodeURIComponent(pixFbp)}`;
+                    const cust = getCurrentCustomerData();
+                    window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}&evid=${encodeURIComponent(evid)}&fbc=${encodeURIComponent(pixFbc)}&fbp=${encodeURIComponent(pixFbp)}&email=${encodeURIComponent(cust.email||'')}&name=${encodeURIComponent(cust.name||'')}&cpf=${encodeURIComponent(cust.cpf||'')}&phone=${encodeURIComponent(cust.phone||'')}`;
                 }, 1500);
             } else {
                 // If not approved yet, schedule next poll

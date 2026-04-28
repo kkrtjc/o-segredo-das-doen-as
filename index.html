@@ -38,7 +38,40 @@
         }(window, document, 'script',
             'https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', '1346740157465853');
-        fbq('track', 'PageView');
+        // PageView com eventID para deduplicação com CAPI server-side
+        var pvEventId = 'pv_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+        fbq('track', 'PageView', {}, { eventID: pvEventId });
+
+        // CAPI SERVER-SIDE: PageView — envia ao Worker com IP/UA reais
+        (function() {
+            var ck = document.cookie.split(';').reduce(function(a, c) {
+                var p = c.trim().split('=');
+                if (p[0]) a[p[0]] = p[1] || '';
+                return a;
+            }, {});
+            var sid = sessionStorage.getItem('mura_session_id');
+            if (!sid) {
+                sid = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+                sessionStorage.setItem('mura_session_id', sid);
+            }
+            var apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                ? 'http://localhost:10000'
+                : 'https://mura-api.joaopaulojaguar.workers.dev';
+            fetch(apiUrl + '/api/capi-event', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    eventName: 'PageView',
+                    eventId: pvEventId,
+                    sourceUrl: window.location.href,
+                    customer: {},
+                    fbc: ck['_fbc'] || '',
+                    fbp: ck['_fbp'] || '',
+                    externalId: sid
+                }),
+                keepalive: true
+            }).catch(function(){});
+        })();
     </script>
     <noscript>
         <img height="1" width="1" style="display:none"

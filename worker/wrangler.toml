@@ -33,6 +33,7 @@ id = "4e3344c03dc345d0b4fa1ebcbb4f1ec4"
 # Variaveis publicas
 [vars]
 BASE_URL = "https://mura-api.joaopaulojaguar.workers.dev"
+SITE_URL = "https://osegredodasgalinhas.pages.dev"
 
 # Segredos — configurar via:
 # npx wrangler secret put MP_ACCESS_TOKEN

@@ -32,6 +32,7 @@ webhookRoutes.post('/mercadopago', async (c) => {
                     name: metadata.customer_name || `${payment.payer?.first_name || ''} ${payment.payer?.last_name || ''}`.trim() || 'Cliente',
                     email: metadata.customer_email || payment.payer?.email || 'galosmurabrasill@gmail.com',
                     phone: metadata.customer_phone || 'Sem Telefone',
+                    cpf: metadata.customer_cpf || payment.payer?.identification?.number || 'Sem CPF',
                 };
                 const itemTitles = (payment.description || 'Produto').split(', ');
                 const items = itemTitles.map(title => ({
