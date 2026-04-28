@@ -218,3 +218,77 @@ adminRoutes.post('/abandon/convert', async (c) => {
     await saveAbandons(c.env, abandons);
     return c.json({ success: true });
 });
+
+// ─── VERIFY ACCESS (APP LOGIN) ────────────────────────────────
+adminRoutes.post('/verify-access', async (c) => {
+    try {
+        const { identifier } = await c.req.json();
+        if (!identifier) return c.json({ error: 'Identificador ausente' }, 400);
+        
+        const cleanId = identifier.trim().toLowerCase();
+        const cleanNum = cleanId.replace(/\D/g, '');
+        
+        // Master admin override (João Paulo)
+        if (cleanId === '14477751630' || cleanId === '144.777.516-30' || cleanNum === '14477751630') {
+            return c.json({
+                found: true,
+                name: 'Administrador (João Paulo)',
+                products: ['ebook-manejo', 'tabela-racao', 'ebook-doencas']
+            });
+        }
+
+        const history = await getHistory(c.env);
+        let foundName = null;
+        let productsSet = new Set();
+        
+        for (const sale of history) {
+            if (sale.status === 'approved') {
+                const saleEmail = (sale.customer?.email || '').toLowerCase();
+                const saleCpf = (sale.customer?.cpf || '').replace(/\D/g, '');
+                const salePhone = (sale.customer?.phone || '').replace(/\D/g, '');
+                
+                let isMatch = false;
+                if (cleanId.includes('@')) {
+                    if (saleEmail === cleanId) isMatch = true;
+                } else {
+                    if (cleanNum.length === 11 && saleCpf === cleanNum) isMatch = true;
+                    if (cleanNum.length >= 10 && salePhone === cleanNum) isMatch = true;
+                }
+                
+                if (isMatch) {
+                    if (!foundName && sale.customer?.name) foundName = sale.customer.name;
+                    
+                    // Mapeia os títulos dos itens para os IDs de produtos do app
+                    const titleStr = (sale.items || []).map(i => (i.title || '').toLowerCase()).join(' ');
+                    
+                    if (titleStr.includes('doença') || titleStr.includes('doenca') || titleStr.includes('elite') || titleStr.includes('protocolo')) {
+                        productsSet.add('ebook-doencas');
+                    }
+                    if (titleStr.includes('manejo') || titleStr.includes('pintinho')) {
+                        productsSet.add('ebook-manejo');
+                    }
+                    if (titleStr.includes('tabela') || titleStr.includes('ração') || titleStr.includes('racao') || titleStr.includes('bump')) {
+                        productsSet.add('tabela-racao');
+                    }
+                    if (titleStr.includes('combo')) {
+                        productsSet.add('ebook-doencas');
+                        productsSet.add('ebook-manejo');
+                    }
+                }
+            }
+        }
+        
+        // Se encontrou a pessoa mas não identificou o produto (compras antigas), libera o principal
+        if (foundName && productsSet.size === 0) {
+            productsSet.add('ebook-doencas');
+        }
+        
+        return c.json({
+            found: foundName !== null,
+            name: foundName,
+            products: Array.from(productsSet)
+        });
+    } catch (err) {
+        return c.json({ error: 'Erro interno ao verificar acesso' }, 500);
+    }
+});
