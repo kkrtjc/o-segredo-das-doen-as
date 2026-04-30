@@ -49,13 +49,22 @@
                 if (p[0]) a[p[0]] = p[1] || '';
                 return a;
             }, {});
+            // Captura parâmetros de URL para fallback se cookies não existirem
+            var params = new URLSearchParams(window.location.search);
+            var fbcFromUrl = params.get('fbclid');
+            var fbcValue = ck['_fbc'] || '';
+            
+            // Se não tem cookie mas tem fbclid na URL, monta o formato padrão da Meta
+            if (!fbcValue && fbcFromUrl) {
+                fbcValue = 'fb.1.' + Date.now() + '.' + fbcFromUrl;
+            }
+
             var sid = sessionStorage.getItem('mura_session_id');
             if (!sid) {
                 sid = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
                 sessionStorage.setItem('mura_session_id', sid);
             }
-            // Captura código de teste para debug em tempo real
-            var params = new URLSearchParams(window.location.search);
+            
             var testCode = params.get('testCode') || sessionStorage.getItem('mura_test_code') || null;
             if (testCode && !sessionStorage.getItem('mura_test_code')) sessionStorage.setItem('mura_test_code', testCode);
 
@@ -70,7 +79,7 @@
                     eventId: pvEventId,
                     sourceUrl: window.location.href,
                     customer: {},
-                    fbc: ck['_fbc'] || '',
+                    fbc: fbcValue,
                     fbp: ck['_fbp'] || '',
                     externalId: sid,
                     testCode: testCode

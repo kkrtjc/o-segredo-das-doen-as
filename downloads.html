@@ -562,7 +562,13 @@
                                     phone: params.get('phone') || '',
                                     cpf:   params.get('cpf')   || '',
                                 },
-                                fbc: params.get('fbc') || ck['_fbc'] || '',
+                                fbc: (function() {
+                                    var fbc = params.get('fbc') || ck['_fbc'] || '';
+                                    if (!fbc && params.get('fbclid')) {
+                                        fbc = 'fb.1.' + Date.now() + '.' + params.get('fbclid');
+                                    }
+                                    return fbc;
+                                })(),
                                 fbp: params.get('fbp') || ck['_fbp'] || '',
                                 value: total,
                                 currency: 'BRL',

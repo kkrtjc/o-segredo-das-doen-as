@@ -312,7 +312,20 @@ function getMetaCookies() {
         if (k) acc[k] = v || '';
         return acc;
     }, {});
-    return { fbc: cookies['_fbc'] || '', fbp: cookies['_fbp'] || '' };
+    
+    let fbc = cookies['_fbc'] || '';
+    const fbp = cookies['_fbp'] || '';
+
+    // FALLBACK: Se o cookie _fbc não existe mas o fbclid está na URL
+    if (!fbc) {
+        const params = new URLSearchParams(window.location.search);
+        const fbclid = params.get('fbclid');
+        if (fbclid) {
+            fbc = `fb.1.${Date.now()}.${fbclid}`;
+        }
+    }
+
+    return { fbc, fbp };
 }
 
 /**
