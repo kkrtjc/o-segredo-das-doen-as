@@ -2374,3 +2374,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// ─── LEAD CAPTURE: Enriquece CAPI com e-mail do checkout ─────────────────────
+// Dispara evento 'Lead' (padrão Meta) UMA VEZ por sessão quando o cliente
+// termina de preencher o e-mail no checkout. Não interfere em nenhum outro evento.
+// O Meta usa esse e-mail hasheado para melhorar o match de Remarketing e Lookalike.
+(function initLeadCapture() {
+    const EMAIL_IDS = ['payer-email', 'card-email'];
+    const FLAG_KEY  = 'mura_lead_captured';
+
+    function isValidEmail(v) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    }
+
+    function onEmailBlur(e) {
+        const email = (e.target.value || '').trim();
+        if (!email || !isValidEmail(email)) return;
+        if (sessionStorage.getItem(FLAG_KEY)) return;
+
+        sessionStorage.setItem(FLAG_KEY, 'true');
+
+        const leadEventId = generateEventID();
+
+        // Pixel browser-side (deduplicado pelo eventId)
+        trackPixel('Lead', {
+            content_name: cart.mainProduct?.title || 'Protocolo Elite',
+            value: cart.mainProduct?.price || 0,
+            currency: 'BRL'
+        }, leadEventId);
+
+        // CAPI server-side — getCurrentCustomerData() já coleta todos os campos
+        // preenchidos até o momento (nome, telefone, CPF etc.)
+        trackCAPI('Lead', leadEventId, {
+            value: cart.mainProduct?.price || 0,
+            currency: 'BRL',
+            contentIds: [cart.mainProduct?.id || 'ebook-doencas'],
+            contentName: cart.mainProduct?.title || 'Protocolo Elite',
+        });
+
+        console.log('📧 [LEAD] E-mail capturado via CAPI:', email.replace(/(.{2}).*(@.*)/, '$1***$2'));
+    }
+
+    // Attach listeners — usa evento delegado para funcionar mesmo se
+    // os campos forem renderizados depois do DOMContentLoaded
+    document.addEventListener('focusout', function(e) {
+        if (e.target && EMAIL_IDS.includes(e.target.id)) {
+            onEmailBlur(e);
+        }
+    });
+})();
+
