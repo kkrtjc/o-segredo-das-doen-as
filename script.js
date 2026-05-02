@@ -1248,7 +1248,7 @@ async function handlePayment(method) {
             const { fbc, fbp } = getMetaCookies();
 
             // PIXEL + CAPI: AddPaymentInfo — sinal crucial para o Meta otimizar
-            const addPaymentEventId = generateEventID();
+            const addPaymentEventId = 'ap_pix_' + Date.now() + '_' + Math.random().toString(16).slice(2, 10);
             trackPixel('AddPaymentInfo', {
                 content_ids: items.map(i => i.id),
                 content_type: 'product',
@@ -1259,6 +1259,7 @@ async function handlePayment(method) {
                 value: totalAmount, currency: 'BRL',
                 contentIds: items.map(i => i.id),
             });
+            console.log('[TRACKING] AddPaymentInfo PIX disparado. eventId:', addPaymentEventId);
 
             const endpointVar = isBoleto ? '/api/checkout/boleto' : '/api/checkout/pix';
             const res = await fetch(`${API_URL}${endpointVar}`, {
@@ -1371,7 +1372,7 @@ async function handlePayment(method) {
             const { fbc, fbp } = getMetaCookies();
 
             // PIXEL + CAPI: AddPaymentInfo — sinal crucial para o Meta otimizar
-            const addPayEventIdCard = generateEventID();
+            const addPayEventIdCard = 'ap_card_' + Date.now() + '_' + Math.random().toString(16).slice(2, 10);
             trackPixel('AddPaymentInfo', {
                 content_ids: items.map(i => i.id),
                 content_type: 'product',
@@ -1383,6 +1384,7 @@ async function handlePayment(method) {
                 currency: 'BRL',
                 contentIds: items.map(i => i.id),
             });
+            console.log('[TRACKING] AddPaymentInfo Cartão disparado. eventId:', addPayEventIdCard);
 
             const payload = {
                 items, customer, token: token.id,

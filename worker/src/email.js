@@ -1,5 +1,5 @@
 import { generateDownloadToken } from './utils.js';
-import { sendCAPIEvent } from './capi.js';
+// sendCAPIEvent removido daqui — Purchase é disparado pelo downloads.html com deduplicação correta
 
 // Envia os dados para o webhook do Make.com que disparará o e-mail via Gmail
 // E dispara o Purchase server-side via Meta CAPI para atribuição confiável
@@ -78,44 +78,6 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
             // Mesmo se email falhar, CAPI deve disparar
         } else {
             console.log(`[EMAIL] Webhook acionado para ${customer.email}`);
-        }
-
-        // ── META CAPI: Purchase server-side ──────────────────────────
-        // CPF, cidade, estado — tudo que tiver disponível vai hasheado
-        const totalValue = items.reduce((acc, i) => acc + Number(i.price || 0), 0);
-        const contentIds = items.map(i => i.id || i.title);
-        const contentName = items.map(i => i.title).join(', ');
-        const sourceUrl = env.SITE_URL
-            ? `${env.SITE_URL}/downloads.html`
-            : 'https://osegredodasgalinhas.pages.dev/downloads.html';
-
-        try {
-            await sendCAPIEvent(env, {
-                eventName: 'Purchase',
-                eventId: facebookEventId,
-                customer: {
-                    name:  customer.name,
-                    email: customer.email,
-                    phone: customer.phone,
-                    cpf:   customer.cpf,    // ← CPF agora incluído
-                    city:  customer.city,
-                    state: customer.state,
-                    zip:   customer.zip,
-                },
-                meta: {
-                    fbc,
-                    fbp,
-                    userAgent,
-                    clientIp,
-                },
-                value: totalValue,
-                currency: 'BRL',
-                contentIds,
-                contentName,
-                sourceUrl,
-            });
-        } catch (capiErr) {
-            console.error('[CAPI ERROR]', capiErr.message);
         }
 
         return true;
