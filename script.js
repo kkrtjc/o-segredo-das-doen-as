@@ -141,6 +141,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 7. GLOBAL MOBILE FIXES
     initMobileFixes();
+
+    // 8. DIRECT CHECKOUT LINK (Para campanhas de WhatsApp)
+    // Se o link tiver ?checkout=doencas, abre o modal automaticamente
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('checkout') === 'doencas') {
+        setTimeout(() => {
+            if (typeof openCheckout === 'function') {
+                openCheckout('ebook-doencas');
+            }
+        }, 800);
+    }
 });
 
 // --- COMPONENT INITIALIZERS (Refactored for clarity) ---
