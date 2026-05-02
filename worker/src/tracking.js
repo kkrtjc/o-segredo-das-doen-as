@@ -10,7 +10,7 @@ import { today } from './utils.js';
 export const trackingRoutes = new Hono();
 
 trackingRoutes.post('/track', async (c) => {
-    const { type, isMobile, ctaId } = await c.req.json();
+    const { type, isMobile, ctaId, site } = await c.req.json();
     const analytics = await getAnalytics(c.env);
     const todayStr = today();
 
@@ -24,7 +24,13 @@ trackingRoutes.post('/track', async (c) => {
 
     const t = analytics.totals;
     const d = analytics.daily[todayStr];
-    const inc = (key) => { t[key] = (t[key] || 0) + 1; d[key] = (d[key] || 0) + 1; };
+    
+    const suffix = site === 'amazon' ? '_amazon' : '';
+    const inc = (baseKey) => { 
+        const key = baseKey + suffix;
+        t[key] = (t[key] || 0) + 1; 
+        d[key] = (d[key] || 0) + 1; 
+    };
 
     if (type === 'click') inc('clicks');
     else if (type === 'unique_visit') inc('uniqueVisits');

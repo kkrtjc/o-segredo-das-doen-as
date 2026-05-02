@@ -193,7 +193,7 @@ adminRoutes.get('/abandons', async (c) => {
 });
 
 adminRoutes.post('/abandon', async (c) => {
-    const { name, email, phone, product, pixGenerated, pixId } = await c.req.json();
+    const { name, email, phone, product, pixGenerated, pixId, site } = await c.req.json();
     if (!phone && !email) return c.json({ error: 'Contato não fornecido' }, 400);
     const abandons = await getAbandons(c.env);
     const todayStr = today();
@@ -204,7 +204,7 @@ adminRoutes.post('/abandon', async (c) => {
         await saveAbandons(c.env, abandons);
         return c.json({ success: true });
     }
-    abandons.push({ id: Date.now().toString(), date: new Date().toISOString(), name: name || '', email: email || '', phone: phone || '', product: product || 'unknown', pixGenerated: pixGenerated || false, pixId: pixId || null, paid: false });
+    abandons.push({ id: Date.now().toString(), date: new Date().toISOString(), name: name || '', email: email || '', phone: phone || '', product: product || 'unknown', pixGenerated: pixGenerated || false, pixId: pixId || null, paid: false, site: site || 'official' });
     await saveAbandons(c.env, abandons);
     return c.json({ success: true });
 });

@@ -205,6 +205,59 @@
             </div>
         </div>
 
+        <!-- TAB 1.5: AMAZON -->
+        <div id="tab-amazon" class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; margin-top: 5px;">
+                <h2 class="section-title" style="margin: 0;">Amazon Hub</h2>
+                <select id="period-filter-amazon" style="padding: 6px; border-radius: 6px; border: 1px solid var(--ios-border); background: var(--ios-bg); font-size: 13px;" onchange="renderAmazonStats()">
+                    <option value="today">Hoje</option>
+                    <option value="yesterday">Ontem</option>
+                    <option value="7days">Últimos 7 Dias</option>
+                    <option value="all" selected>Tudo</option>
+                </select>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <i class="fa-brands fa-amazon"></i>
+                    <div class="metric-title">Visitas (AMZ)</div>
+                    <div class="metric-value" id="val-visits-amz">0</div>
+                </div>
+                <div class="metric-card">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <div class="metric-title">Checkouts</div>
+                    <div class="metric-value" id="val-checkouts-amz">0</div>
+                </div>
+                <div class="metric-card green">
+                    <i class="fa-solid fa-money-check-dollar"></i>
+                    <div class="metric-title">Vendas (Tx)</div>
+                    <div class="metric-value" id="val-sales-amz">0</div>
+                </div>
+                <div class="metric-card red">
+                    <i class="fa-solid fa-basket-shopping"></i>
+                    <div class="metric-title">Abandonos</div>
+                    <div class="metric-value" id="val-abandons-amz">0</div>
+                </div>
+            </div>
+            
+            <div class="list-group">
+                <div class="list-item">
+                    <div class="list-item-title">Receita Total (Amazon)</div>
+                    <div class="list-item-sub">Faturamento gerado no site da Amazon</div>
+                    <div class="list-item-right" id="val-revenue-amz" style="color:var(--ios-blue);">R$ 0,00</div>
+                </div>
+            </div>
+
+            <h2 class="section-title" style="margin-top: 20px;">Vendas da Amazon</h2>
+            <div class="list-group" id="amazon-sales-list">
+                 <div class="empty-state">As vendas aparecerão aqui.</div>
+            </div>
+
+            <h2 class="section-title" style="margin-top: 20px;">Abandonos da Amazon</h2>
+            <div class="list-group" id="amazon-abandons-list">
+                 <div class="empty-state">Os abandonos aparecerão aqui.</div>
+            </div>
+        </div>
+
         <!-- TAB 2: ABANDONS -->
         <div id="tab-abandons" class="tab-content">
             <h2 class="section-title">Checkouts Abandonados</h2>
@@ -260,9 +313,13 @@
 
     <!-- BOTTOM NAVIGATION -->
     <nav class="bottom-nav" id="app-nav" style="display: none;">
-        <div class="nav-item active" onclick="switchTab('dashboard', this, 'Dashboard')">
+        <div class="nav-item active" onclick="switchTab('dashboard', this, 'Dashboard Oficial')">
             <i class="fa-solid fa-chart-pie"></i>
-            <span>Métricas</span>
+            <span>Oficial</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('amazon', this, 'Amazon Hub')">
+            <i class="fa-brands fa-amazon"></i>
+            <span>Amazon</span>
         </div>
         <div class="nav-item" onclick="switchTab('abandons', this, 'Abandonos')">
             <i class="fa-solid fa-basket-shopping"></i>
@@ -377,6 +434,7 @@
 
         function loadCurrentTab() {
             if(currentTab === 'dashboard') loadDashboard();
+            if(currentTab === 'amazon') loadDashboard();
             if(currentTab === 'abandons') loadAbandons();
             if(currentTab === 'pix') loadPixHistory();
             if(currentTab === 'products') loadProducts();
@@ -414,11 +472,13 @@
                 let agg = { visits: 0, checkouts: 0, sales: 0, abandons: 0, revenue: 0 };
 
                 if(filter === 'all') {
-                    agg.visits = globalAnalytics.totals?.uniqueVisits || 0;
-                    agg.checkouts = globalAnalytics.totals?.checkoutOpens || 0;
-                    agg.sales = globalAnalytics.approvedCount || 0;
-                    agg.abandons = globalAnalytics.totals?.checkoutAbandons || 0;
-                    agg.revenue = globalAnalytics.totalRevenue || 0;
+                    agg.visits = Math.max(0, (globalAnalytics.totals?.uniqueVisits || 0) - (globalAnalytics.totals?.uniqueVisits_amazon || 0));
+                    agg.checkouts = Math.max(0, (globalAnalytics.totals?.checkoutOpens || 0) - (globalAnalytics.totals?.checkoutOpens_amazon || 0));
+                    agg.abandons = Math.max(0, (globalAnalytics.totals?.checkoutAbandons || 0) - (globalAnalytics.totals?.checkoutAbandons_amazon || 0));
+                    
+                    const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0 && !(h.items || []).some(i => i.includes('[AMZ]'))) : [];
+                    agg.sales = validHistory.length;
+                    agg.revenue = validHistory.reduce((a, s) => a + Number(s.total), 0);
                 } else {
                     const datesToKeep = [];
                     const now = new Date();
@@ -447,16 +507,15 @@
                     const daily = globalAnalytics.daily || {};
                     datesToKeep.forEach(dStr => {
                         if (daily[dStr]) {
-                            agg.visits += daily[dStr].uniqueVisits || daily[dStr].pageViews || 0;
-                            agg.checkouts += daily[dStr].checkoutOpens || daily[dStr].checkoutStarts || 0;
-                            agg.abandons += daily[dStr].checkoutAbandons || 0;
+                            agg.visits += Math.max(0, (daily[dStr].uniqueVisits || daily[dStr].pageViews || 0) - (daily[dStr].uniqueVisits_amazon || 0));
+                            agg.checkouts += Math.max(0, (daily[dStr].checkoutOpens || daily[dStr].checkoutStarts || 0) - (daily[dStr].checkoutOpens_amazon || 0));
+                            agg.abandons += Math.max(0, (daily[dStr].checkoutAbandons || 0) - (daily[dStr].checkoutAbandons_amazon || 0));
                         }
                     });
 
-                    // Compute sales and revenue from history arrays
-                    const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0) : [];
+                    // Compute sales and revenue from history arrays (excluding Amazon)
+                    const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0 && !(h.items || []).some(i => i.includes('[AMZ]'))) : [];
                     validHistory.forEach(sale => {
-                        // Converte a data da venda para data local antes de comparar
                         const saleDateObj = new Date(sale.date || Date.now());
                         const saleLocalDate = getLocalDate(saleDateObj);
                         
@@ -472,8 +531,150 @@
                 document.getElementById('val-sales').textContent = agg.sales;
                 document.getElementById('val-abandons').textContent = agg.abandons;
                 document.getElementById('val-revenue').textContent = formatBRL(agg.revenue);
+                
+                if (currentTab === 'amazon') renderAmazonStats();
             } catch(e) {
                 console.error("Render stats error:", e);
+            }
+        }
+
+        function renderAmazonStats() {
+            try {
+                if(!globalAnalytics || !globalHistory) return;
+                
+                const filter = document.getElementById('period-filter-amazon').value;
+                let agg = { visits: 0, checkouts: 0, sales: 0, abandons: 0, revenue: 0 };
+                let amazonSalesList = [];
+
+                if(filter === 'all') {
+                    agg.visits = globalAnalytics.totals?.uniqueVisits_amazon || 0;
+                    agg.checkouts = globalAnalytics.totals?.checkoutOpens_amazon || 0;
+                    agg.abandons = globalAnalytics.totals?.checkoutAbandons_amazon || 0;
+                    
+                    const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0 && (h.items || []).some(i => i.includes('[AMZ]'))) : [];
+                    agg.sales = validHistory.length;
+                    agg.revenue = validHistory.reduce((a, s) => a + Number(s.total), 0);
+                    amazonSalesList = validHistory;
+                } else {
+                    const datesToKeep = [];
+                    const now = new Date();
+                    
+                    const getLocalDate = (d) => {
+                        const year = d.getFullYear();
+                        const month = String(d.getMonth() + 1).padStart(2, '0');
+                        const day = String(d.getDate()).padStart(2, '0');
+                        return `${year}-${month}-${day}`;
+                    };
+                    
+                    if (filter === 'today') {
+                        datesToKeep.push(getLocalDate(now));
+                    } else if (filter === 'yesterday') {
+                        const y = new Date(now);
+                        y.setDate(now.getDate() - 1);
+                        datesToKeep.push(getLocalDate(y));
+                    } else if (filter === '7days') {
+                        for(let i=0; i<7; i++) {
+                            const d = new Date(now);
+                            d.setDate(now.getDate() - i);
+                            datesToKeep.push(getLocalDate(d));
+                        }
+                    }
+
+                    const daily = globalAnalytics.daily || {};
+                    datesToKeep.forEach(dStr => {
+                        if (daily[dStr]) {
+                            agg.visits += daily[dStr].uniqueVisits_amazon || 0;
+                            agg.checkouts += daily[dStr].checkoutOpens_amazon || 0;
+                            agg.abandons += daily[dStr].checkoutAbandons_amazon || 0;
+                        }
+                    });
+
+                    // Compute sales and revenue from history arrays (only Amazon)
+                    const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0 && (h.items || []).some(i => i.includes('[AMZ]'))) : [];
+                    validHistory.forEach(sale => {
+                        const saleDateObj = new Date(sale.date || Date.now());
+                        const saleLocalDate = getLocalDate(saleDateObj);
+                        
+                        if(datesToKeep.includes(saleLocalDate)) {
+                            agg.sales++;
+                            agg.revenue += (Number(sale.total) || 0);
+                            amazonSalesList.push(sale);
+                        }
+                    });
+                }
+
+                document.getElementById('val-visits-amz').textContent = agg.visits;
+                document.getElementById('val-checkouts-amz').textContent = agg.checkouts;
+                document.getElementById('val-sales-amz').textContent = agg.sales;
+                document.getElementById('val-abandons-amz').textContent = agg.abandons;
+                document.getElementById('val-revenue-amz').textContent = formatBRL(agg.revenue);
+
+                // Render sales list
+                const listEl = document.getElementById('amazon-sales-list');
+                if(amazonSalesList.length === 0) {
+                    listEl.innerHTML = '<div class="empty-state">Nenhuma venda da Amazon neste período.</div>';
+                } else {
+                    amazonSalesList.sort((a,b) => new Date(b.date) - new Date(a.date));
+                    let html = '';
+                    amazonSalesList.forEach(sale => {
+                        const isPix = sale.method === 'pix';
+                        const methodStr = isPix ? 'PIX' : 'Cartão';
+                        const methodColor = isPix ? 'var(--ios-green)' : 'var(--ios-blue)';
+                        const dataObj = new Date(sale.date || Date.now());
+                        const dStr = dataObj.toLocaleDateString() + ' ' + dataObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+                        html += `
+                        <div class="list-item">
+                            <div class="list-item-title">${sale.name || 'Sem Nome'} <span style="font-size: 11px; background: ${methodColor}; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${methodStr}</span></div>
+                            <div class="list-item-sub">${sale.email || ''} • ${sale.cpf || 'Sem CPF'}</div>
+                            <div class="list-item-right" style="color:var(--ios-text);">${formatBRL(sale.total)}</div>
+                            <div class="list-item-sub" style="margin-top: 4px; font-size:11px;">Data: ${dStr}</div>
+                            <div class="list-item-sub" style="font-size:11px; color: var(--ios-blue);">Produtos: ${sale.items?.join(', ') || 'N/A'}</div>
+                        </div>`;
+                    });
+                    listEl.innerHTML = html;
+                }
+
+                // Render Amazon Abandons
+                const abandonsRes = await fetch('https://mura-api.joaopaulojaguar.workers.dev/api/abandons', { headers: { 'x-admin-password': currentPass } });
+                const abandonsData = await abandonsRes.json();
+                const amzAbandonsList = document.getElementById('amazon-abandons-list');
+                
+                if(!Array.isArray(abandonsData)) {
+                    amzAbandonsList.innerHTML = '<div class="empty-state">Erro ao carregar abandonos.</div>';
+                } else {
+                    const amzAbandons = abandonsData.filter(a => a.site === 'amazon');
+                    if(amzAbandons.length === 0) {
+                        amzAbandonsList.innerHTML = '<div class="empty-state">Nenhum abandono da Amazon.</div>';
+                    } else {
+                        amzAbandons.sort((a,b) => new Date(b.date) - new Date(a.date));
+                        let htmlAb = '';
+                        amzAbandons.forEach(item => {
+                            const nome = item.name || 'Desconhecido';
+                            const email = item.email || 'Sem email';
+                            const phone = item.phone || 'Sem celular';
+                            const dataObj = new Date(item.date || Date.now());
+                            const dStr = dataObj.toLocaleDateString() + ' às ' + dataObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                            const cleanPhone = parsePhone(phone);
+                            
+                            htmlAb += `
+                            <div class="list-item">
+                                <div class="list-item-title">${nome}</div>
+                                <div class="list-item-sub"><i class="fa-regular fa-envelope"></i> ${email}</div>
+                                <div class="list-item-sub"><i class="fa-solid fa-phone"></i> ${phone}</div>
+                                <div class="list-item-sub" style="margin-top: 4px; font-size:11px;">Capturado em: ${dStr}</div>
+                                
+                                <div class="action-row">
+                                    ${cleanPhone ? \`<a href="https://wa.me/\${cleanPhone}" target="_blank" class="btn-small btn-green"><i class="fa-brands fa-whatsapp"></i> Chamar</a>\` : ''}
+                                </div>
+                            </div>`;
+                        });
+                        amzAbandonsList.innerHTML = htmlAb;
+                    }
+                }
+
+            } catch(e) {
+                console.error("Render amazon stats error:", e);
             }
         }
 
@@ -490,10 +691,18 @@
                     return;
                 }
 
-                data.sort((a,b) => new Date(b.date) - new Date(a.date));
+                // Filter out Amazon
+                const officialAbandons = data.filter(a => a.site !== 'amazon');
+
+                if (officialAbandons.length === 0) {
+                    list.innerHTML = `<div class="empty-state">Nenhum abandono capturado ainda.</div>`;
+                    return;
+                }
+
+                officialAbandons.sort((a,b) => new Date(b.date) - new Date(a.date));
 
                 let html = '';
-                data.forEach(item => {
+                officialAbandons.forEach(item => {
                     const nome = item.name || 'Desconhecido';
                     const email = item.email || 'Sem email';
                     const phone = item.phone || 'Sem celular';
@@ -532,8 +741,8 @@
                     return;
                 }
                 
-                // Filly only with actual data generated
-                const sales = data.filter(h => h && h.name);
+                // Filly only with actual data generated and exclude Amazon
+                const sales = data.filter(h => h && h.name && !(h.items || []).some(i => i.includes('[AMZ]')));
                 
                 if(sales.length === 0) {
                     list.innerHTML = '<div class="empty-state">Nenhuma venda/PIX gerado.</div>';

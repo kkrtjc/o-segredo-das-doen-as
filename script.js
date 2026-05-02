@@ -266,7 +266,7 @@ async function trackEvent(type, isMobileManual = null, ctaId = null, details = n
         window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
     );
 
-    const body = JSON.stringify({ type, isMobile, ctaId, details });
+    const body = JSON.stringify({ type, isMobile, ctaId, details, site: 'official' });
 
     for (let attempt = 1; attempt <= 2; attempt++) {
         try {
@@ -549,7 +549,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                     price: 19.90,
                     priceCard: 19.90,
                     image: 'tabela_racao_bump.webp',
-                    description: '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até R$ 80/mês</strong> no seu plantel.',
+                    description: '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até 60% na ração</strong> das suas aves.',
                     tag: 'OFERTA ÚNICA'
                 }
             ];
@@ -672,7 +672,7 @@ function renderOrderBumps(bumps) {
         if (!desc) {
             desc = isManejo 
                 ? '<span style="color: #ff4444;"><strong>8 em cada 10 pintinhos morrem antes dos 20 dias.</strong></span> Temperatura errada, ração imprópria, ambiente inapropriado. <span style="color: #4ade80;"><strong>O manual te ensina o passo a passo completo</strong></span> do nascimento à fase adulta.' 
-                : '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até R$ 80/mês</strong> no seu plantel.';
+                : '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até 60% na ração</strong> das suas aves.';
         }
 
         const bumpLabel = isManejo ? 'MANUAL DE ELITE<br>DOS PINTINHOS' : 'TABELA DE RAÇÃO';
@@ -711,9 +711,12 @@ function renderOrderBumps(bumps) {
                         </p>
 
                         <!-- Price -->
-                        <div style="text-align: center; margin-top: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 0px;">
-                            <span style="color: #a3a3a3; font-size: 0.75rem; text-decoration: line-through; text-shadow: 1px 1px 1px #000;">R$ ${isManejo ? '99,90' : '49,90'}</span>
-                            <span style="color: #4ade80; font-size: 1.15rem; font-weight: 900; text-shadow: 0 0 10px rgba(74,222,128,0.4), 1px 1px 2px #000;">+ R$ ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.priceCard || bump.price))}</span>
+                        <div style="text-align: center; margin-top: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px;">
+                            <span style="color: #a3a3a3; font-size: 0.75rem; text-decoration: line-through; text-shadow: 1px 1px 1px #000;">De R$ ${isManejo ? '99,90' : '89,90'}</span>
+                            <span style="color: #4ade80; font-size: 0.85rem; font-weight: 800; text-shadow: 0 0 8px rgba(74,222,128,0.4), 1px 1px 2px #000; line-height: 1.15;">
+                                Por APENAS <span style="font-size: 1.05rem;">R$ ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.priceCard || bump.price)).replace('R$ ', '')}</span><br>
+                                ${isManejo ? 'você salva seus pintinhos' : ', você economiza até 60% na ração'}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -1651,7 +1654,8 @@ async function captureAbandonedLead(extra = {}) {
                     phone,
                     product: productId,
                     pixGenerated: extra.pixGenerated || false,
-                    pixId: extra.pixId || null
+                    pixId: extra.pixId || null,
+                    site: 'official'
                 })
             });
         } catch (e) {
