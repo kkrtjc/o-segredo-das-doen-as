@@ -537,47 +537,10 @@
                             }, 500);
                         }
 
-                        // ── CAPI SERVER-SIDE: Purchase ────────────────────────
-                        const CAPI_URL2 = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                            ? 'http://localhost:10000'
-                            : 'https://mura-api.joaopaulojaguar.workers.dev';
-                        const ck = document.cookie.split(';').reduce(function(a, c) {
-                            const p = c.trim().split('=');
-                            if (p[0]) a[p[0]] = p[1] || '';
-                            return a;
-                        }, {});
-                        const tCodeUrl = params.get('testCode') || sessionStorage.getItem('mura_test_code') || null;
-                        if (tCodeUrl && !sessionStorage.getItem('mura_test_code')) sessionStorage.setItem('mura_test_code', tCodeUrl);
-                        
-                        fetch(CAPI_URL2 + '/api/capi-event', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                eventName: 'Purchase',
-                                eventId: eventId,
-                                sourceUrl: window.location.href,
-                                customer: {
-                                    email: params.get('email') || '',
-                                    name:  params.get('name')  || '',
-                                    phone: params.get('phone') || '',
-                                    cpf:   params.get('cpf')   || '',
-                                },
-                                fbc: (function() {
-                                    var fbc = params.get('fbc') || ck['_fbc'] || '';
-                                    if (!fbc && params.get('fbclid')) {
-                                        fbc = 'fb.1.' + Date.now() + '.' + params.get('fbclid');
-                                    }
-                                    return fbc;
-                                })(),
-                                fbp: params.get('fbp') || ck['_fbp'] || '',
-                                value: total,
-                                currency: 'BRL',
-                                contentIds: items,
-                                testCode: tCodeUrl
-                            }),
-                            keepalive: true,
-                        }).catch(function(){});
-                        console.log('[CAPI] Purchase server-side enviado');
+                        // ── CAPI SERVER-SIDE: REMOVIDO ────────────────────────
+                        // A responsabilidade de disparar o CAPI Purchase agora é 100% do Backend (Webhook)
+                        // Isso garante nota 10/10 no Event Match Quality e previne perda de conversões se a página fechar antes.
+                        // A desduplicação é garantida pelo eventId idêntico.
                     }
                 } catch (e) { console.error('Erro tracking pixel', e); }
 
