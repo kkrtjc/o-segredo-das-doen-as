@@ -534,37 +534,23 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         // HOTFIX: Force the new Combo bump to bypass API/KV cache delays
         if (productId === 'ebook-doencas') {
             cart.mainProduct.fullBumps = [
-                { 
-                    id: 'combo-elite-bump', 
-                    title: '⚠️ ÚLTIMA CHANCE — SÓ APARECE AQUI!', 
-                    price: 50.00, 
-                    priceCard: 50.00, 
-                    image: 'capadospintinhos.webp', 
-                    description: `
-                        <div style="color: #ffffff; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; font-size: 0.85rem; line-height: 1.5;">
-                            <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(239, 68, 68, 0.6); border-radius: 6px; padding: 10px; margin-bottom: 12px; border-left: 4px solid #ef4444;">
-                                <span style="color: #ff6b6b; font-weight: 900; font-size: 0.95rem; display: block; margin-bottom: 4px;">☠️ 8 em cada 10 pintinhos morrem antes dos 20 dias.</span>
-                                <span style="font-size: 0.85rem; color: #ffffff;">Temperatura errada, ração imprópria, água suja — e você perde dinheiro toda vez.</span>
-                            </div>
-                            
-                            <span style="color: #4ade80; font-weight: 900; font-size: 0.95rem;">✅ Com o Manual de Criação de Pintinhos:</span><br>
-                            • Garanta <strong>90% de sobrevivência</strong> dos filhotes<br>
-                            • Protocolo do dia 1 até a fase adulta<br>
-                            • Chocadeira, vacinação, alimentação correta e principais doenças nos pintinhos<br>
-                            <br>
-                            <div style="background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.3); border-radius: 6px; padding: 8px;">
-                                <span style="color: #4ade80; font-weight: 900;">🎁 BÔNUS EXCLUSIVO:</span> Tabela de Ração Profissional<br>
-                                <span style="font-size: 0.8rem;">Economize <strong style="color: #fbbf24;">até R$ 80/mês</strong> montando sua própria ração balanceada.</span>
-                            </div>
-                            <br>
-                            <div style="text-align: center;">
-                                <span style="text-decoration: line-through; color: #888; font-size: 0.85rem;">Separado: R$ 99,90 + R$ 19,90 = R$ 119,80</span><br>
-                                <span style="font-size: 1.3rem; color: #4ade80; font-weight: 900; text-shadow: 0 0 15px rgba(74,222,128,0.4);">Hoje: apenas +R$ 50,00</span><br>
-                                <span style="font-size: 0.75rem; color: #fbbf24; font-weight: 700;">💰 Você economiza R$ 69,80 levando agora</span>
-                            </div>
-                        </div>
-                    `, 
-                    tag: '🔥 OFERTA ÚNICA — SÓ AGORA' 
+                {
+                    id: 'ebook-manejo',
+                    title: 'MANUAL DE ELITE DOS PINTINHOS',
+                    price: 49.90,
+                    priceCard: 49.90,
+                    image: 'capadospintinhos.webp',
+                    description: '<span style="color: #ff4444;"><strong>8 em cada 10 pintinhos morrem antes dos 20 dias.</strong></span> Temperatura errada, ração imprópria, ambiente inapropriado. <span style="color: #4ade80;"><strong>O manual te ensina o passo a passo completo</strong></span> do nascimento à fase adulta.',
+                    tag: 'OFERTA ÚNICA'
+                },
+                {
+                    id: 'bump-6361',
+                    title: 'TABELA DE RAÇÃO',
+                    price: 19.90,
+                    priceCard: 19.90,
+                    image: 'tabela_racao_bump.webp',
+                    description: '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até R$ 80/mês</strong> no seu plantel.',
+                    tag: 'OFERTA ÚNICA'
                 }
             ];
             productData.fullBumps = cart.mainProduct.fullBumps;
@@ -659,8 +645,8 @@ function renderOrderBumps(bumps) {
     const bumpHeader = `
         <div style="text-align: center; margin-bottom: 4px; padding: 6px 10px; background: rgba(239,68,68,0.08); border-radius: 8px; border: 1px solid rgba(239,68,68,0.2);">
             <p style="color: #ef4444; font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin: 0; line-height: 1.4;">
-                ⚠️ NÃO FECHE SEM VER ISSO!<br>
-                <span style="color: #fbbf24;">ESSA OFERTA DESAPARECE QUANDO VOCÊ SAIR DESTA PÁGINA.</span>
+                ⚡ ADICIONE AGORA ESSAS OFERTAS IMPERDÍVEIS!<br>
+                <span style="color: #fbbf24;">ELAS NÃO APARECEM EM OUTRO LUGAR — ESSA É SUA ÚNICA CHANCE.</span>
             </p>
         </div>
     `;
@@ -685,50 +671,49 @@ function renderOrderBumps(bumps) {
         let desc = bump.description;
         if (!desc) {
             desc = isManejo 
-                ? '<span style="color: #fca5a5;"><strong>8 em cada 10 pintinhos morrem antes dos 20 dias.</strong></span> Temperatura errada, ração imprópria, bico molhado. <span style="color: #4ade80;"><strong>O manual te ensina o passo a passo completo</strong></span> do nascimento à fase adulta.' 
-                : '<span style="color: #fca5a5;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até R$ 80/mês</strong> no seu plantel.';
+                ? '<span style="color: #ff4444;"><strong>8 em cada 10 pintinhos morrem antes dos 20 dias.</strong></span> Temperatura errada, ração imprópria, ambiente inapropriado. <span style="color: #4ade80;"><strong>O manual te ensina o passo a passo completo</strong></span> do nascimento à fase adulta.' 
+                : '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até R$ 80/mês</strong> no seu plantel.';
         }
 
         const bumpLabel = isManejo ? 'MANUAL DE ELITE<br>DOS PINTINHOS' : 'TABELA DE RAÇÃO';
 
         return `
-            <div style="display: flex; flex-direction: column; gap: 4px; align-items: center; text-align: center;">
-                <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="margin-bottom: 0; min-height: 140px; padding: 0; position: relative; overflow: hidden; border-radius: 10px; cursor: pointer; width: 100%;">
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                <div style="font-weight: 900; color: #fff; font-size: 0.75rem; text-transform: uppercase; text-align: center; text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 0 4px 6px rgba(0,0,0,0.5); letter-spacing: 0.5px; line-height: 1.1; margin-bottom: -5px; z-index: 2; position: relative;">
+                    ${bumpLabel}
+                </div>
+                <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="min-height: 160px; padding: 0; position: relative; overflow: hidden; border-radius: 10px; cursor: pointer; width: 100%; border: 3px solid ${isSelected ? '#10b981' : '#ffc107'}; background: #000; box-shadow: 0 4px 15px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.8);">
                     
                     <!-- Background Image -->
-                    ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: ${isManejo ? 'center 0%' : 'center'}; z-index: 0;">` : ''}
+                    ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: ${isManejo ? 'center 0%' : 'center'}; z-index: 0; opacity: 0.85;">` : ''}
                     
                     <!-- Gradient Overlay -->
-                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.85) 60%); z-index: 1;"></div>
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.9) 70%, rgba(0,0,0,1) 100%); z-index: 1;"></div>
                     
                     <!-- Content -->
-                    <div style="position: relative; z-index: 2; display: flex; flex-direction: column; padding: 12px; width: 100%; height: 100%; justify-content: flex-end; min-height: 140px;">
+                    <div style="position: relative; z-index: 2; display: flex; flex-direction: column; padding: 10px; width: 100%; height: 100%; min-height: 160px; justify-content: space-between;">
                         
                         <input type="checkbox" id="bump-chk-${bump.id}" ${isSelected ? 'checked' : ''} style="display: none;">
                         
-                        <strong class="order-bump-title" style="margin-top: 5px;">
-                            ${title}
-                        </strong>
-                        
-                        <p class="order-bump-description">
+                        <!-- Top Bar (Title + Checkbox) -->
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 4px;">
+                            <strong style="color: #ffd700; font-size: 0.85rem; line-height: 1.1; text-shadow: 2px 2px 4px #000, 0 0 10px rgba(0,0,0,0.8); text-align: left;">
+                                ${title}
+                            </strong>
+                            <div class="bump-check-wrapper" style="width: 22px; height: 22px; border-radius: 4px; border: 2px solid ${isSelected ? '#10b981' : '#ffc107'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#10b981' : 'rgba(0,0,0,0.7)'}; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
+                                ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.75rem;"></i>' : ''}
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <p style="color: #fff; font-size: 0.65rem; line-height: 1.3; text-shadow: 1px 1px 2px #000; margin: 6px 0; text-align: center; font-weight: 500;">
                             ${desc}
                         </p>
 
-                        <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 2px; position: relative; z-index: 5; background: rgba(0,0,0,0.5); padding: 8px 12px; border-radius: 8px; width: fit-content; border: 1px solid rgba(255,255,255,0.1);">
-                            <span class="order-bump-old-price" style="font-size: 0.8rem !important; margin-bottom: -4px;">De ${formatBRL(isCombo ? 249.90 : (isManejo ? 99.90 : 49.90))} por apenas:</span>
-                            <span class="order-bump-price" style="font-size: 1.5rem !important; color: #4ade80 !important; font-weight: 900; text-shadow: 0 0 10px rgba(74,222,128,0.3) !important;">
-                                + ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.priceCard || bump.price))}
-                            </span>
-                        </div>
-
-                        <!-- Bottom Checkbox + Label Area -->
-                        <div style="margin-top: 12px; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 8px; background: ${isSelected ? 'rgba(16,185,129,0.15)' : 'rgba(0,0,0,0.6)'}; padding: 8px 10px; border-radius: 6px; border: 1px solid ${isSelected ? '#10b981' : '#fbbf24'};">
-                            <span style="color: #fff; font-size: 0.72rem; font-weight: 900; text-align: left; text-shadow: 1px 1px 1px #000; line-height: 1.2;">
-                                ${isCombo ? 'SIM! Quero salvar meus pintinhos e ganhar a Tabela de Ração GRÁTIS!' : bumpLabel}
-                            </span>
-                            <div class="bump-check-wrapper" style="width: 24px; height: 24px; border-radius: 6px; border: 2px solid ${isSelected ? '#10b981' : '#fbbf24'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#10b981' : 'rgba(0,0,0,0.4)'}; flex-shrink: 0;">
-                                ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.9rem;"></i>' : ''}
-                            </div>
+                        <!-- Price -->
+                        <div style="text-align: center; margin-top: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 0px;">
+                            <span style="color: #a3a3a3; font-size: 0.75rem; text-decoration: line-through; text-shadow: 1px 1px 1px #000;">R$ ${isManejo ? '99,90' : '49,90'}</span>
+                            <span style="color: #4ade80; font-size: 1.15rem; font-weight: 900; text-shadow: 0 0 10px rgba(74,222,128,0.4), 1px 1px 2px #000;">+ R$ ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.priceCard || bump.price))}</span>
                         </div>
                     </div>
                 </div>
