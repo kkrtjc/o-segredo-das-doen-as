@@ -525,21 +525,35 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             cart.mainProduct.fullBumps = [
                 { 
                     id: 'combo-elite-bump', 
-                    title: 'ESPERE! Leve o Kit Completo e Economize AGORA!', 
+                    title: '⚠️ ÚLTIMA CHANCE — SÓ APARECE AQUI!', 
                     price: 50.00, 
                     priceCard: 50.00, 
                     image: 'capadospintinhos.webp', 
                     description: `
-                        <div style="color: #ffffff; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; font-size: 0.85rem; line-height: 1.4;">
-                            <span style="color: #fca5a5; font-weight: 800; font-style: italic; display: block; margin-bottom: 8px; font-size: 0.95rem;">Já perdeu quantos pintinhos sem saber o motivo?</span>
-                            Adicione o <strong>Manual de Elite de Criação de Pintinhos</strong>, Aprenda a <strong>MELHOR forma</strong> de cuidar do seus pintinhos e garanta <strong>90% de sobrevivência</strong> dos seus filhotes do nascimento à fase adulta. 
-                            <br><br>
-                            E tem mais: <span style="color: #4ade80; font-weight: 900;">GANHE a Tabela de Ração</span> (valor de R$ 19,90) que vai te fazer economizar <strong>até 70% nos custos de alimentação!</strong>
-                            <br><br>
-                            <div style="font-size: 1.1rem; color: #fbbf24; font-weight: 900;">Tudo isso por apenas +R$ 50,00!</div>
+                        <div style="color: #ffffff; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; font-size: 0.85rem; line-height: 1.5;">
+                            <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(239, 68, 68, 0.6); border-radius: 6px; padding: 10px; margin-bottom: 12px; border-left: 4px solid #ef4444;">
+                                <span style="color: #ff6b6b; font-weight: 900; font-size: 0.95rem; display: block; margin-bottom: 4px;">☠️ 8 em cada 10 pintinhos morrem antes dos 20 dias.</span>
+                                <span style="font-size: 0.85rem; color: #ffffff;">Temperatura errada, ração imprópria, água suja — e você perde dinheiro toda vez.</span>
+                            </div>
+                            
+                            <span style="color: #4ade80; font-weight: 900; font-size: 0.95rem;">✅ Com o Manual de Criação de Pintinhos:</span><br>
+                            • Garanta <strong>90% de sobrevivência</strong> dos filhotes<br>
+                            • Protocolo do dia 1 até a fase adulta<br>
+                            • Chocadeira, vacinação, alimentação correta e principais doenças nos pintinhos<br>
+                            <br>
+                            <div style="background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.3); border-radius: 6px; padding: 8px;">
+                                <span style="color: #4ade80; font-weight: 900;">🎁 BÔNUS EXCLUSIVO:</span> Tabela de Ração Profissional<br>
+                                <span style="font-size: 0.8rem;">Economize <strong style="color: #fbbf24;">até R$ 80/mês</strong> montando sua própria ração balanceada.</span>
+                            </div>
+                            <br>
+                            <div style="text-align: center;">
+                                <span style="text-decoration: line-through; color: #888; font-size: 0.85rem;">Separado: R$ 99,90 + R$ 19,90 = R$ 119,80</span><br>
+                                <span style="font-size: 1.3rem; color: #4ade80; font-weight: 900; text-shadow: 0 0 15px rgba(74,222,128,0.4);">Hoje: apenas +R$ 50,00</span><br>
+                                <span style="font-size: 0.75rem; color: #fbbf24; font-weight: 700;">💰 Você economiza R$ 69,80 levando agora</span>
+                            </div>
                         </div>
                     `, 
-                    tag: 'PRESENTE LIBERADO' 
+                    tag: '🔥 OFERTA ÚNICA — SÓ AGORA' 
                 }
             ];
             productData.fullBumps = cart.mainProduct.fullBumps;
@@ -634,8 +648,8 @@ function renderOrderBumps(bumps) {
     const bumpHeader = `
         <div style="text-align: center; margin-bottom: 4px; padding: 6px 10px; background: rgba(239,68,68,0.08); border-radius: 8px; border: 1px solid rgba(239,68,68,0.2);">
             <p style="color: #ef4444; font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin: 0; line-height: 1.4;">
-                ⚡ ATENÇÃO OFERTA IMPERDÍVEL!<br>
-                <span style="color: #fbbf24;">ELA NÃO APARECE EM OUTRO LUGAR — ESSA É SUA ÚNICA CHANCE.</span>
+                ⚠️ NÃO FECHE SEM VER ISSO!<br>
+                <span style="color: #fbbf24;">ESSA OFERTA DESAPARECE QUANDO VOCÊ SAIR DESTA PÁGINA.</span>
             </p>
         </div>
     `;
@@ -655,7 +669,7 @@ function renderOrderBumps(bumps) {
         const isManejo = (bump.id === 'ebook-manejo' || bump.title?.includes('Pintinhos'));
         
         let title = isManejo ? '🐣 SALVE SEUS PINTINHOS' : '💰 CORTE SUA CONTA DE RAÇÃO';
-        if (isCombo) title = '💎 UPGRADE: PROTOCOLO COMPLETO';
+        if (isCombo) title = '<span style="color: #000; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 0 5px #fff; display: inline-block; padding: 2px 4px; border-radius: 4px; background: rgba(255,255,255,0.1);">⚠️ SEUS PINTINHOS VÃO MORRER SEM ISSO</span>';
 
         let desc = bump.description;
         if (!desc) {
@@ -699,7 +713,7 @@ function renderOrderBumps(bumps) {
                         <!-- Bottom Checkbox + Label Area -->
                         <div style="margin-top: 12px; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 8px; background: ${isSelected ? 'rgba(16,185,129,0.15)' : 'rgba(0,0,0,0.6)'}; padding: 8px 10px; border-radius: 6px; border: 1px solid ${isSelected ? '#10b981' : '#fbbf24'};">
                             <span style="color: #fff; font-size: 0.72rem; font-weight: 900; text-align: left; text-shadow: 1px 1px 1px #000; line-height: 1.2;">
-                                ${isCombo ? 'SIM! Eu quero o Kit Criador de Elite e ganhar a Tabela de Ração GRÁTIS!' : bumpLabel}
+                                ${isCombo ? 'SIM! Quero salvar meus pintinhos e ganhar a Tabela de Ração GRÁTIS!' : bumpLabel}
                             </span>
                             <div class="bump-check-wrapper" style="width: 24px; height: 24px; border-radius: 6px; border: 2px solid ${isSelected ? '#10b981' : '#fbbf24'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#10b981' : 'rgba(0,0,0,0.4)'}; flex-shrink: 0;">
                                 ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.9rem;"></i>' : ''}
