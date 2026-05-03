@@ -341,23 +341,27 @@
 
     <!-- LOGIC -->
     <script>
-        let currentPass = localStorage.getItem('mura_admin_pass') || '';
+        let currentPass = '';
         let currentTab = 'dashboard';
-        let configDataCache = null; // para editar produtos
+        let configDataCache = null;
         let globalAnalytics = null;
         let globalHistory = null;
 
+        const WORKER_URL = 'https://mura-api.joaopaulojaguar.workers.dev';
+
         // Init
         window.addEventListener('DOMContentLoaded', () => {
-            if (currentPass) {
-                // Try auto login
-                validateFastLogin();
-            }
+            const savedPass = localStorage.getItem('mura_admin_pass') || '';
             
             // Enter key on login
             document.getElementById('admin-pass').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') doLogin();
             });
+
+            if (savedPass) {
+                currentPass = savedPass;
+                validateFastLogin();
+            }
         });
 
         function showToast(msg) {
@@ -368,41 +372,49 @@
         }
 
         async function doLogin() {
-            const pass = document.getElementById('admin-pass').value;
-            if(!pass) return;
+            const passInput = document.getElementById('admin-pass');
+            const btn = passInput.nextElementSibling;
+            const pass = passInput.value.trim();
+            if (!pass) { alert('Digite a senha.'); return; }
+
             currentPass = pass;
-            
-            // Tenta validar puxando analytics simples
+            if (btn) { btn.textContent = 'Entrando...'; btn.disabled = true; }
+
             try {
-                const res = await fetch('https://mura-api.joaopaulojaguar.workers.dev/api/history', { 
+                const res = await fetch(`${WORKER_URL}/api/history`, {
                     headers: { 'x-admin-password': currentPass }
                 });
-                if(res.ok) {
+                if (res.ok) {
                     localStorage.setItem('mura_admin_pass', currentPass);
                     activateApp();
                 } else {
-                    alert('Senha incorreta.');
+                    localStorage.removeItem('mura_admin_pass');
                     currentPass = '';
+                    alert('Senha incorreta. Tente novamente.');
                 }
-            } catch(e) {
-                alert('Erro de conexão.');
+            } catch (e) {
+                alert('Erro de conexão com o servidor. Verifique sua internet.');
+                console.error('Login error:', e);
+            } finally {
+                if (btn) { btn.textContent = 'Entrar'; btn.disabled = false; }
             }
         }
 
         async function validateFastLogin() {
             try {
-                const res = await fetch('https://mura-api.joaopaulojaguar.workers.dev/api/history?limit=1', { 
+                const res = await fetch(`${WORKER_URL}/api/history?limit=1`, {
                     headers: { 'x-admin-password': currentPass }
                 });
-                if(res.ok) {
+                if (res.ok) {
                     activateApp();
                 } else {
                     localStorage.removeItem('mura_admin_pass');
                     currentPass = '';
                 }
-            } catch(e) {
-                // assume ok if offline, allow render
-                activateApp();
+            } catch (e) {
+                // Offline ou timeout — deixa o usuário logar manualmente
+                localStorage.removeItem('mura_admin_pass');
+                currentPass = '';
             }
         }
 
