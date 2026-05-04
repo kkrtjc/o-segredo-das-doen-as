@@ -157,7 +157,6 @@ function applyDynamicPrices(productData) {
     } else {
         document.addEventListener('DOMContentLoaded', initPage);
     }
-});
 
 // --- COMPONENT INITIALIZERS (Refactored for clarity) ---
 
