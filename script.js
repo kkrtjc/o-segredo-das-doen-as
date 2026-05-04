@@ -1483,7 +1483,7 @@ async function handlePayment(method) {
                 btn.innerText = originalText;
             }
         } catch (e) {
-            console.error("ERRO CRÃTICO CARTÃO:", e);
+            console.error("ERRO CRÃ TICO CARTÃO:", e);
             let errDisplay = 'Erro desconhecido';
 
             if (e && e.message) errDisplay = e.message;
@@ -1830,6 +1830,10 @@ function showPixResult(data, items) {
     }
 
     qrImg.src = `data:image/png;base64,${data.qr_code_base64}`;
+    qrImg.classList.remove('hidden');
+    qrImg.style.display = 'block';
+    qrImg.style.opacity = '1';
+    
     document.getElementById('pix-copy-paste').value = data.qr_code;
 
     // Fallback: Exibir UI imediatamente (evita ficar preso no "Conectando" se a imagem falhar)
