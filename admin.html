@@ -484,9 +484,9 @@
                 let agg = { visits: 0, checkouts: 0, sales: 0, abandons: 0, revenue: 0 };
 
                 if(filter === 'all') {
-                    agg.visits = Math.max(0, (globalAnalytics.totals?.uniqueVisits || 0) - (globalAnalytics.totals?.uniqueVisits_amazon || 0));
-                    agg.checkouts = Math.max(0, (globalAnalytics.totals?.checkoutOpens || 0) - (globalAnalytics.totals?.checkoutOpens_amazon || 0));
-                    agg.abandons = Math.max(0, (globalAnalytics.totals?.checkoutAbandons || 0) - (globalAnalytics.totals?.checkoutAbandons_amazon || 0));
+                    agg.visits = globalAnalytics.totals?.uniqueVisits || 0;
+                    agg.checkouts = globalAnalytics.totals?.checkoutOpens || 0;
+                    agg.abandons = globalAnalytics.totals?.checkoutAbandons || 0;
                     
                     const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0 && !(h.items || []).some(i => i.includes('[AMZ]'))) : [];
                     agg.sales = validHistory.length;
@@ -519,9 +519,9 @@
                     const daily = globalAnalytics.daily || {};
                     datesToKeep.forEach(dStr => {
                         if (daily[dStr]) {
-                            agg.visits += Math.max(0, (daily[dStr].uniqueVisits || daily[dStr].pageViews || 0) - (daily[dStr].uniqueVisits_amazon || 0));
-                            agg.checkouts += Math.max(0, (daily[dStr].checkoutOpens || daily[dStr].checkoutStarts || 0) - (daily[dStr].checkoutOpens_amazon || 0));
-                            agg.abandons += Math.max(0, (daily[dStr].checkoutAbandons || 0) - (daily[dStr].checkoutAbandons_amazon || 0));
+                            agg.visits += (daily[dStr].uniqueVisits || daily[dStr].pageViews || 0);
+                            agg.checkouts += (daily[dStr].checkoutOpens || daily[dStr].checkoutStarts || 0);
+                            agg.abandons += (daily[dStr].checkoutAbandons || 0);
                         }
                     });
 

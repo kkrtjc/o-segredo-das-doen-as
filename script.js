@@ -44,113 +44,118 @@ function applyDynamicPrices(productData) {
 }
 
 // --- INIT: CHECK PENDING PIX (Recover Logic) ---
-document.addEventListener('DOMContentLoaded', async () => {
-    // 1. UNIQUE VISITOR + SESSÃO TRACKING
-    const today = new Date().toISOString().split('T')[0];
-    const lastVisit = localStorage.getItem('mura_visita_hoje');
-
-    trackEvent('session_start');
-
-    if (lastVisit !== today) {
-        trackEvent('unique_visit');
-        localStorage.setItem('mura_visita_hoje', today);
-    }
-
-    // 2. CTA CLICK TRACKING
-    document.querySelectorAll('a[href^="#offer"]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const ctaId = btn.getAttribute('data-cta') || 'generic_cta';
-            trackEvent('cta_click', null, ctaId);
-        });
-    });
-
-    // 3. PIX RECOVERY
-    const cached = localStorage.getItem('active_pix_session');
-    if (cached) {
+    // Wrap everything in a robust initialization
+    const initPage = async () => {
+        // 1. UNIQUE VISITOR + SESSÃO TRACKING
         try {
-            const session = JSON.parse(cached);
-            if ((Date.now() - session.timestamp) < 60 * 60 * 1000) {
-                try {
-                    const s = await fetch(`${API_URL}/api/payment/${session.data.id}`);
-                    const sd = await s.json();
-                    if (sd.status === 'approved') {
-                        localStorage.removeItem('active_pix_session');
-                        // Recuperação: Redireciona para downloads.html que dispara Purchase com deduplicação
-                        const recoveryEventId = session.facebookEventId || generateEventID();
-                        const { fbc: recFbc, fbp: recFbp } = getMetaCookies();
-                        const rc = session.customer || {};
-                        window.location.href = `downloads.html?items=${session.itemIds}&total=${session.total.toFixed(2)}&evid=${encodeURIComponent(recoveryEventId)}&fbc=${encodeURIComponent(recFbc)}&fbp=${encodeURIComponent(recFbp)}&email=${encodeURIComponent(rc.email||'')}&name=${encodeURIComponent(rc.name||'')}&cpf=${encodeURIComponent(rc.cpf||'')}&phone=${encodeURIComponent(rc.phone||'')}`;
-                    } else {
-                        localStorage.removeItem('active_pix_session');
-                    }
-                } catch (e) { /* Recover silently */ }
-            } else {
-                localStorage.removeItem('active_pix_session');
+            const todayStr = new Date().toISOString().split('T')[0];
+            const lastVisit = localStorage.getItem('mura_visita_hoje');
+
+            // Sequentialize to avoid KV race conditions in Worker
+            await trackEvent('session_start');
+
+            if (lastVisit !== todayStr) {
+                await trackEvent('unique_visit');
+                localStorage.setItem('mura_visita_hoje', todayStr);
             }
-        } catch (e) { localStorage.removeItem('active_pix_session'); }
-    }
 
-    // 4. PRE-FETCH
-    const productsToPreload = ['ebook-doencas', 'combo-elite', 'ebook-manejo'];
-    productsToPreload.forEach(async (id) => {
-        try {
-            const response = await fetch(`${API_URL}/api/products/${id}`);
-            if (response.ok) {
-                prefetchedProducts[id] = await response.json();
-                
-                if (id === 'ebook-doencas') {
-                    const resp = prefetchedProducts[id];
-                    
-                    if (typeof applyDynamicPrices === 'function') {
-                        applyDynamicPrices(resp);
-                    }
-                    // ViewContent é disparado em renderHomeProducts() — não duplicar aqui
-                }
-            }
-        } catch (e) { console.warn(`[PREFETCH] Failed: ${id}`); }
-    });
-
-    // 5. COMPONENTS INIT
-    initFAQ();
-    initSmoothScroll();
-    initComparisonSlider();
-    initStickyCTA();
-    initLazyLoading();
-    initImageTransitions();
-    initHelpBubbles();
-    setupFields();
-    renderHomeProducts();
-
-    // 6. LAZY VIDEO
-    const lazyVideo = document.getElementById('vsl-video');
-    if (lazyVideo && 'IntersectionObserver' in window) {
-        const videoObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const source = lazyVideo.querySelector('source');
-                    if (source && source.dataset.src) {
-                        source.src = source.dataset.src;
-                        lazyVideo.load();
-                    }
-                    observer.unobserve(lazyVideo);
-                }
+            // 2. CTA CLICK TRACKING
+            document.querySelectorAll('a[href^="#offer"]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const ctaId = btn.getAttribute('data-cta') || 'generic_cta';
+                    trackEvent('cta_click', null, ctaId);
+                });
             });
-        }, { rootMargin: '200px' });
-        videoObserver.observe(lazyVideo);
-    }
+        } catch (e) {
+            console.warn('[TRACKING] Failed:', e);
+        }
 
-    // 7. GLOBAL MOBILE FIXES
-    initMobileFixes();
+        // 3. PIX RECOVERY
+        const cached = localStorage.getItem('active_pix_session');
+        if (cached) {
+            try {
+                const session = JSON.parse(cached);
+                if ((Date.now() - session.timestamp) < 60 * 60 * 1000) {
+                    try {
+                        const s = await fetch(`${API_URL}/api/payment/${session.data.id}`);
+                        const sd = await s.json();
+                        if (sd.status === 'approved') {
+                            localStorage.removeItem('active_pix_session');
+                            const recoveryEventId = session.facebookEventId || generateEventID();
+                            const { fbc: recFbc, fbp: recFbp } = getMetaCookies();
+                            const rc = session.customer || {};
+                            window.location.href = `downloads.html?items=${session.itemIds}&total=${session.total.toFixed(2)}&evid=${encodeURIComponent(recoveryEventId)}&fbc=${encodeURIComponent(recFbc)}&fbp=${encodeURIComponent(recFbp)}&email=${encodeURIComponent(rc.email||'')}&name=${encodeURIComponent(rc.name||'')}&cpf=${encodeURIComponent(rc.cpf||'')}&phone=${encodeURIComponent(rc.phone||'')}`;
+                        } else {
+                            localStorage.removeItem('active_pix_session');
+                        }
+                    } catch (e) { /* Recover silently */ }
+                } else {
+                    localStorage.removeItem('active_pix_session');
+                }
+            } catch (e) { localStorage.removeItem('active_pix_session'); }
+        }
 
-    // 8. DIRECT CHECKOUT LINK (Para campanhas de WhatsApp)
-    // Se o link tiver ?checkout=doencas, abre o modal automaticamente
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('checkout') === 'doencas') {
-        setTimeout(() => {
-            if (typeof openCheckout === 'function') {
-                openCheckout('ebook-doencas');
-            }
-        }, 800);
+        // 4. PRE-FETCH
+        const productsToPreload = ['ebook-doencas', 'combo-elite', 'ebook-manejo'];
+        productsToPreload.forEach(async (id) => {
+            try {
+                const response = await fetch(`${API_URL}/api/products/${id}`);
+                if (response.ok) {
+                    prefetchedProducts[id] = await response.json();
+                    if (id === 'ebook-doencas') {
+                        const resp = prefetchedProducts[id];
+                        if (typeof applyDynamicPrices === 'function') applyDynamicPrices(resp);
+                    }
+                }
+            } catch (e) { console.warn(`[PREFETCH] Failed: ${id}`); }
+        });
+
+        // 5. COMPONENTS INIT
+        initFAQ();
+        initSmoothScroll();
+        initComparisonSlider();
+        initStickyCTA();
+        initLazyLoading();
+        initImageTransitions();
+        initHelpBubbles();
+        setupFields();
+        renderHomeProducts();
+
+        // 6. LAZY VIDEO
+        const lazyVideo = document.getElementById('vsl-video');
+        if (lazyVideo && 'IntersectionObserver' in window) {
+            const videoObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const source = lazyVideo.querySelector('source');
+                        if (source && source.dataset.src) {
+                            source.src = source.dataset.src;
+                            lazyVideo.load();
+                        }
+                        observer.unobserve(lazyVideo);
+                    }
+                });
+            }, { rootMargin: '200px' });
+            videoObserver.observe(lazyVideo);
+        }
+
+        // 7. GLOBAL MOBILE FIXES
+        initMobileFixes();
+
+        // 8. DIRECT CHECKOUT LINK
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('checkout') === 'doencas') {
+            setTimeout(() => {
+                if (typeof openCheckout === 'function') openCheckout('ebook-doencas');
+            }, 800);
+        }
+    };
+
+    // Robust Entry Point
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        initPage();
+    } else {
+        document.addEventListener('DOMContentLoaded', initPage);
     }
 });
 
