@@ -5,8 +5,10 @@ import { sendCAPIEvent } from './capi.js';
 // E dispara o Purchase server-side via Meta CAPI para atribuição confiável (Desduplicado cirurgicamente)
 export async function sendEmail(env, customer, items, paymentId = null, facebookEventId = null, fbc = null, fbp = null, userAgent = null, clientIp = null) {
     try {
-        if (!customer || !customer.email || customer.email.trim() === '') {
-            console.warn('[EMAIL WARNING] Tentativa de envio abortada. E-mail não fornecido.');
+        // Validação rigorosa de e-mail para evitar erro no Make/Gmail
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!customer || !customer.email || !emailRegex.test(customer.email.trim())) {
+            console.warn(`[EMAIL ABORTED] E-mail inválido ou ausente: ${customer?.email}`);
             return false;
         }
 

@@ -267,10 +267,20 @@ checkoutRoutes.post('/card', async (c) => {
     const result = await res.json();
 
     if (result.status === 'approved') {
-        const isNewSale = await logSale(c.env, customer, items, result.id, 'cartão');
-        if (isNewSale) {
-            await sendEmail(c.env, customer, items, result.id, facebookEventId, fbc, fbp, userAgent); 
+        // Lock anti-duplicidade (mesmo usado no webhook)
+        const lockKey = `lock_${result.id}`;
+        const isLocked = await c.env.HISTORY.get(lockKey);
+        
+        if (!isLocked) {
+            // Aplica o lock imediatamente
+            await c.env.HISTORY.put(lockKey, 'locked', { expirationTtl: 7200 });
+            
+            const isNewSale = await logSale(c.env, customer, items, result.id, 'cartão');
+            if (isNewSale) {
+                await sendEmail(c.env, customer, items, result.id, facebookEventId, fbc, fbp, userAgent); 
+            }
         }
+        
         const dlToken = await generateDownloadToken(customer.email, items, result.id, c.env);
         return c.json({ status: 'approved', id: result.id, redirectToken: dlToken });
     } else if (result.status === 'in_process' || result.status === 'pending') {
