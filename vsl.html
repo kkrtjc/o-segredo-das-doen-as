@@ -890,6 +890,10 @@
             if (video.currentTime >= CTA_TIME && !ctaRevealed) {
                 ctaRevealed = true;
                 revealContainer.classList.add('visible');
+                // Scroll suave para o conteúdo revelado
+                setTimeout(() => {
+                    revealContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
             }
         });
 
@@ -906,6 +910,9 @@
             if (!ctaRevealed) {
                 ctaRevealed = true;
                 revealContainer.classList.add('visible');
+                setTimeout(() => {
+                    revealContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
             }
             playBtn.innerHTML = '<i class="fa-solid fa-rotate-right"></i>';
         });
