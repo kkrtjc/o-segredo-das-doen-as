@@ -1,7 +1,8 @@
-// --- 1. GLOBAL CONFIG & STATE ---
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:'
     ? 'http://localhost:10000'
     : 'https://mura-api.joaopaulojaguar.workers.dev';
+
+const PAGE_SOURCE = window.location.pathname.includes('vsl.html') ? 'vsl' : 'text';
 
 let cart = {
     mainProduct: null,
@@ -270,7 +271,7 @@ async function trackEvent(type, isMobileManual = null, ctaId = null, details = n
         window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
     );
 
-    const body = JSON.stringify({ type, isMobile, ctaId, details, site: 'official' });
+    const body = JSON.stringify({ type, isMobile, ctaId, details, site: PAGE_SOURCE });
 
     for (let attempt = 1; attempt <= 2; attempt++) {
         try {
@@ -378,6 +379,7 @@ async function trackCAPI(eventName, eventId, extra = {}) {
             fbp,
             externalId,
             testCode,
+            site: PAGE_SOURCE
         };
         if (extra.value      !== undefined) payload.value       = extra.value;
         if (extra.currency   !== undefined) payload.currency    = extra.currency;
@@ -1275,7 +1277,8 @@ async function handlePayment(method) {
                     facebookEventId: currentFacebookEventId,
                     fbc: fbc,
                     fbp: fbp,
-                    userAgent: navigator.userAgent
+                    userAgent: navigator.userAgent,
+                    site: PAGE_SOURCE
                 })
             });
 
@@ -1399,7 +1402,8 @@ async function handlePayment(method) {
                 facebookEventId: currentFacebookEventId,
                 fbc: fbc,
                 fbp: fbp,
-                userAgent: navigator.userAgent
+                userAgent: navigator.userAgent,
+                site: PAGE_SOURCE
             };
             console.log("Enviando Payload API:", payload);
 
@@ -1661,7 +1665,7 @@ async function captureAbandonedLead(extra = {}) {
                     product: productId,
                     pixGenerated: extra.pixGenerated || false,
                     pixId: extra.pixId || null,
-                    site: 'official'
+                    site: PAGE_SOURCE
                 })
             });
         } catch (e) {

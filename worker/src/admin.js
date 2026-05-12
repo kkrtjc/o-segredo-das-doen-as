@@ -58,7 +58,7 @@ export async function saveAnalytics(env, data) {
 }
 
 // ─── LOG SALE ────────────────────────────────────────────────
-export async function logSale(env, customer, items, paymentId, method) {
+export async function logSale(env, customer, items, paymentId, method, site = 'text') {
     const history = await getHistory(env);
     if (history.some(h => String(h.paymentId) === String(paymentId))) return false;
     history.push({
@@ -67,7 +67,8 @@ export async function logSale(env, customer, items, paymentId, method) {
         name: customer.name, email: customer.email, phone: customer.phone,
         items: items.map(i => i.title),
         total: items.reduce((acc, i) => acc + Number(i.price), 0),
-        method, status: 'approved'
+        method, status: 'approved',
+        site: site
     });
     await saveHistory(env, history);
     return true;
@@ -204,7 +205,7 @@ adminRoutes.post('/abandon', async (c) => {
         await saveAbandons(c.env, abandons);
         return c.json({ success: true });
     }
-    abandons.push({ id: Date.now().toString(), date: new Date().toISOString(), name: name || '', email: email || '', phone: phone || '', product: product || 'unknown', pixGenerated: pixGenerated || false, pixId: pixId || null, paid: false, site: site || 'official' });
+    abandons.push({ id: Date.now().toString(), date: new Date().toISOString(), name: name || '', email: email || '', phone: phone || '', product: product || 'unknown', pixGenerated: pixGenerated || false, pixId: pixId || null, paid: false, site: site || 'text' });
     await saveAbandons(c.env, abandons);
     return c.json({ success: true });
 });

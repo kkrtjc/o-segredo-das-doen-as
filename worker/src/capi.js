@@ -183,6 +183,7 @@ export async function sendCAPIEvent(env, options) {
     if (value > 0) { customData.value = value; customData.currency = currency; }
     if (contentIds.length > 0) { customData.content_ids = contentIds; customData.content_type = contentType; }
     if (contentName) customData.content_name = contentName;
+    if (options.site) customData.site = options.site; // Adiciona o site para segmentação no Meta
     if (Object.keys(customData).length > 0) eventData.custom_data = customData;
 
     if (eventId) eventData.event_id = eventId;

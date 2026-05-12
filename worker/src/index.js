@@ -54,13 +54,15 @@ app.get('/api/payment/:id', async (c) => {
         
         if (!isLocked) {
             await c.env.HISTORY.put(lockKey, 'locked', { expirationTtl: 7200 });
-            const isNewSale = await logSale(c.env, customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão');
+            const isNewSale = await logSale(c.env, customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão', metadata.site || 'text');
             if (isNewSale) {
                 await sendEmail(c.env, customer, items, result.id,
                     metadata.facebook_event_id,
                     metadata.fbc,
                     metadata.fbp,
-                    metadata.user_agent);
+                    metadata.user_agent,
+                    null,
+                    metadata.site || 'text');
             }
         }
         

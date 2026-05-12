@@ -3,7 +3,7 @@ import { sendCAPIEvent } from './capi.js';
 
 // Envia os dados para o webhook do Make.com que disparará o e-mail via Gmail
 // E dispara o Purchase server-side via Meta CAPI para atribuição confiável (Desduplicado cirurgicamente)
-export async function sendEmail(env, customer, items, paymentId = null, facebookEventId = null, fbc = null, fbp = null, userAgent = null, clientIp = null) {
+export async function sendEmail(env, customer, items, paymentId = null, facebookEventId = null, fbc = null, fbp = null, userAgent = null, clientIp = null, site = 'text') {
     try {
         // Validação rigorosa de e-mail para evitar erro no Make/Gmail
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -103,7 +103,8 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
                     currency: 'BRL',
                     contentIds: contentIds,
                     contentType: 'product',
-                    sourceUrl: env.SITE_URL || 'https://osegredodasgalinhas.pages.dev/'
+                    sourceUrl: env.SITE_URL || 'https://osegredodasgalinhas.pages.dev/',
+                    site: site
                 });
                 console.log(`[CAPI] Purchase server-side disparado com sucesso. EventID: ${facebookEventId}`);
             } catch (capiErr) {

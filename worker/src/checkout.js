@@ -33,7 +33,7 @@ function getFriendlyError(error) {
 
 // ─── PIX ────────────────────────────────────────────────────
 checkoutRoutes.post('/pix', async (c) => {
-    const { items, customer, facebookEventId, fbc, fbp, userAgent } = await c.req.json();
+    const { items, customer, facebookEventId, fbc, fbp, userAgent, site } = await c.req.json();
     const MP_TOKEN = c.env.MP_ACCESS_TOKEN;
     const BASE_URL = c.env.BASE_URL || 'https://mura-api.joaopaulosantoscamargo.workers.dev';
 
@@ -64,7 +64,8 @@ checkoutRoutes.post('/pix', async (c) => {
             facebook_event_id: facebookEventId,
             fbc: fbc,
             fbp: fbp,
-            user_agent: userAgent
+            user_agent: userAgent,
+            site: site || 'text'
         },
     };
 
@@ -93,7 +94,7 @@ checkoutRoutes.post('/pix', async (c) => {
 
 // ─── BOLETO ────────────────────────────────────────────────
 checkoutRoutes.post('/boleto', async (c) => {
-    const { items, customer, facebookEventId, fbc, fbp, userAgent } = await c.req.json();
+    const { items, customer, facebookEventId, fbc, fbp, userAgent, site } = await c.req.json();
     const MP_TOKEN = c.env.MP_ACCESS_TOKEN;
     const BASE_URL = c.env.BASE_URL || 'https://mura-api.joaopaulosantoscamargo.workers.dev';
 
@@ -143,7 +144,8 @@ checkoutRoutes.post('/boleto', async (c) => {
             facebook_event_id: facebookEventId,
             fbc: fbc,
             fbp: fbp,
-            user_agent: userAgent
+            user_agent: userAgent,
+            site: site || 'text'
         },
     };
 
@@ -250,7 +252,8 @@ checkoutRoutes.post('/card', async (c) => {
             facebook_event_id: facebookEventId,
             fbc: fbc,
             fbp: fbp,
-            user_agent: userAgent
+            user_agent: userAgent,
+            site: site || 'text'
         },
     };
 
@@ -275,9 +278,9 @@ checkoutRoutes.post('/card', async (c) => {
             // Aplica o lock imediatamente
             await c.env.HISTORY.put(lockKey, 'locked', { expirationTtl: 7200 });
             
-            const isNewSale = await logSale(c.env, customer, items, result.id, 'cartão');
+            const isNewSale = await logSale(c.env, customer, items, result.id, 'cartão', site || 'text');
             if (isNewSale) {
-                await sendEmail(c.env, customer, items, result.id, facebookEventId, fbc, fbp, userAgent); 
+                await sendEmail(c.env, customer, items, result.id, facebookEventId, fbc, fbp, userAgent, null, site || 'text'); 
             }
         }
         
@@ -308,14 +311,17 @@ checkoutRoutes.get('/payment/:id', async (c) => {
         };
         const itemTitles = (result.description || 'Produto').split(', ');
         const items = itemTitles.map(title => ({ title, price: result.transaction_amount / itemTitles.length }));
-        const isNewSale = await logSale(c.env, customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão');
+        const isNewSale = await logSale(c.env, customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão', metadata.site || 'text');
         
         if (isNewSale) {
             await sendEmail(c.env, customer, items, result.id, 
-                metadata.facebook_event_id,
-                metadata.fbc,
-                metadata.fbp,
-                metadata.user_agent);
+                metadata.facebook_event_id, 
+                metadata.fbc, 
+                metadata.fbp, 
+                metadata.user_agent,
+                null,
+                metadata.site || 'text'
+            ); 
         }
         
         const token = await generateDownloadToken(customer.email, items, result.id, c.env);

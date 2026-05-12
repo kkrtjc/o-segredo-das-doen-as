@@ -89,6 +89,7 @@ capiRoutes.post('/capi-event', async (c) => {
                 contentType,
                 sourceUrl,
                 testCode: body.testCode, // Extraído do corpo do request
+                site: body.site,         // Origem detectada (text/vsl)
             })
         );
 
