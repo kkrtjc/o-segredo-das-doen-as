@@ -584,14 +584,25 @@
             pointer-events: all;
         }
         .vsl-cta-btn {
-            width: 100%; padding: 18px 20px;
-            border-radius: 14px; border: none; cursor: pointer;
             background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            color: #fff; font-weight: 900; font-size: 1rem;
-            text-transform: uppercase; letter-spacing: 0.5px;
-            box-shadow: 0 8px 30px rgba(34,197,94,0.4);
-            animation: ctaBounce 2s ease-in-out infinite;
-            font-family: inherit;
+            color: #fff;
+            border: none;
+            padding: 18px 30px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: pulse-cta 1.5s infinite ease-in-out;
+        }
+        @keyframes pulse-cta {
+            0% { transform: scale(1); box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4); }
+            50% { transform: scale(1.03); box-shadow: 0 15px 35px rgba(34, 197, 94, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4); }
         }
         .vsl-cta-sub {
             font-size: 0.7rem; color: #64748b; margin-top: 6px;
@@ -809,7 +820,14 @@
         const resumeModal = document.getElementById('vsl-resume-modal');
         let ctaRevealed = false;
         const SAVE_KEY = 'vsl_position';
+        const UNLOCK_KEY = 'vsl_unlocked';
         const CTA_TIME = 40;
+
+        // Check if already unlocked
+        if (localStorage.getItem(UNLOCK_KEY) === 'true') {
+            ctaRevealed = true;
+            revealContainer.classList.add('visible');
+        }
 
         // Autoplay muted on load
         function initVideo() {
@@ -889,6 +907,7 @@
             // Reveal CTA and Content at 40s
             if (video.currentTime >= CTA_TIME && !ctaRevealed) {
                 ctaRevealed = true;
+                localStorage.setItem(UNLOCK_KEY, 'true');
                 revealContainer.classList.add('visible');
                 // Scroll suave para o conteúdo revelado
                 setTimeout(() => {
@@ -909,6 +928,7 @@
         video.addEventListener('ended', function() {
             if (!ctaRevealed) {
                 ctaRevealed = true;
+                localStorage.setItem(UNLOCK_KEY, 'true');
                 revealContainer.classList.add('visible');
                 setTimeout(() => {
                     revealContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
