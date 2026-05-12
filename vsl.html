@@ -1,0 +1,2507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-430QD56D2K"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-430QD56D2K');
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-WVBJNXCQ');</script>
+    <!-- End Google Tag Manager -->
+    <!-- Meta Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1346740157465853');
+        // PageView com eventID para deduplicação com CAPI server-side
+        var pvEventId = 'pv_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+        fbq('track', 'PageView', {}, { eventID: pvEventId });
+
+        // CAPI SERVER-SIDE: PageView — envia ao Worker com IP/UA reais
+        (function() {
+            var ck = document.cookie.split(';').reduce(function(a, c) {
+                var p = c.trim().split('=');
+                if (p[0]) a[p[0]] = p[1] || '';
+                return a;
+            }, {});
+            // Captura parâmetros de URL para fallback se cookies não existirem
+            var params = new URLSearchParams(window.location.search);
+            var fbcFromUrl = params.get('fbclid');
+            var fbcValue = ck['_fbc'] || '';
+            
+            // Se não tem cookie mas tem fbclid na URL, monta o formato padrão da Meta
+            if (!fbcValue && fbcFromUrl) {
+                fbcValue = 'fb.1.' + Date.now() + '.' + fbcFromUrl;
+            }
+
+            var sid = sessionStorage.getItem('mura_session_id');
+            if (!sid) {
+                sid = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+                sessionStorage.setItem('mura_session_id', sid);
+            }
+            
+            var testCode = params.get('testCode') || sessionStorage.getItem('mura_test_code') || null;
+            if (testCode && !sessionStorage.getItem('mura_test_code')) sessionStorage.setItem('mura_test_code', testCode);
+
+            var apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                ? 'http://localhost:10000'
+                : 'https://mura-api.joaopaulojaguar.workers.dev';
+            fetch(apiUrl + '/api/capi-event', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    eventName: 'PageView',
+                    eventId: pvEventId,
+                    sourceUrl: window.location.href,
+                    customer: {},
+                    fbc: fbcValue,
+                    fbp: ck['_fbp'] || '',
+                    externalId: sid,
+                    testCode: testCode
+                }),
+                keepalive: true
+            }).catch(function(){});
+        })();
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=1346740157465853&ev=PageView&noscript=1" />
+    </noscript>
+    <!-- End Meta Pixel Code -->
+    <!-- TikTok Pixel Code -->
+    <script>
+        !function (w, d, t) {
+            w.TiktokAnalyticsObject = t; var ttq = w[t] = w[t] || []; ttq.methods = ["page", "track", "identify", "instances", "load", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie"], ttq.setAndDefer = function (t, e) { t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }; for (var i = 0; i < ttq.methods.length; i++)ttq.setAndDefer(ttq, ttq.methods[i]); ttq.instance = function (t) { for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++)ttq.setAndDefer(e, ttq.methods[n]); return e }, ttq.load = function (e, n) { var i = "https://analytics.tiktok.com/i18n/pixel/events.js"; ttq._i = ttq._i || {}, ttq._i[e] = [], ttq._i[e]._u = i, ttq._t = ttq._t || {}, ttq._t[e] = +new Date, ttq._o = ttq._o || {}, ttq._o[e] = n || {}; var o = d.createElement("script"); o.type = "text/javascript", o.async = !0, o.src = i + "?sdkid=" + e + "&lib=" + t; var a = d.getElementsByTagName("script")[0]; a.parentNode.insertBefore(o, a) };
+            ttq.load('D4VFSO3C77U98L8KBEF0');
+            ttq.page();
+        }(window, document, 'ttq');
+    </script>
+    <!-- End TikTok Pixel Code -->
+    <title>PROTOCOLO ELITE: A Cura das Aves | O Segredo das Galinhas</title>
+
+    <!-- Performance Optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        media="print" onload="this.media='all'">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="modern_enhancements.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="mobile_modal_fix.css">
+
+    <!-- Preload critical assets -->
+    <link rel="preload" href="logo.webp" as="image">
+    <link rel="preload" href="capadasdoencas.webp" as="image">
+    <!-- DNS Prefetch for external payment APIs -->
+    <link rel="dns-prefetch" href="https://secure.mlstatic.com">
+    <link rel="dns-prefetch" href="https://api.mercadopago.com">
+
+    <style>
+        /* === PERFORMANCE: Content Visibility for off-screen sections === */
+        .guarantee-section,
+        .urgency-bar,
+        .authority-section,
+        .vsl-square-section+section {
+            content-visibility: auto;
+            contain-intrinsic-size: 0 400px;
+        }
+
+        /* GPU-composited hover — avoids layout recalculation */
+        .btn-primary,
+        .floating-cta-btn,
+        .card {
+            will-change: transform;
+        }
+
+        /* Promoção de Elite Interstitial Re-style */
+        .elite-promo-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 21000;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .elite-promo-modal.show {
+            display: flex;
+        }
+
+        .elite-promo-content {
+            background: #0a0a0a;
+            width: 100%;
+            max-width: 480px;
+            max-height: 95vh;
+            border-radius: 20px;
+            border: 2px solid #fbbf24;
+            overflow-y: auto;
+            position: relative;
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 50px rgba(251, 191, 36, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .elite-promo-header {
+            background: #fbbf24;
+            color: #000;
+            padding: 15px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .elite-promo-header h2 {
+            margin: 0;
+            font-size: 1.35rem;
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .elite-promo-body {
+            padding: 20px 15px;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .benefit-box {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            text-align: left;
+            border: 1px solid rgba(251, 191, 36, 0.1);
+        }
+
+        .benefit-box h4 {
+            color: #fbbf24;
+            margin: 0 0 8px 0;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .benefit-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .benefit-box li {
+            color: #ccc;
+            font-size: 0.825rem;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .benefit-box li i {
+            color: #fbbf24;
+            font-size: 0.75rem;
+            margin-top: 3px;
+        }
+
+        .elite-promo-price {
+            margin: 15px 0;
+            background: rgba(251, 191, 36, 0.05);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px dashed #fbbf24;
+        }
+
+        .promo-timer-bar {
+            background: #e74c3c;
+            color: #fff;
+            font-weight: 900;
+            font-size: 0.8rem;
+            padding: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .elite-promo-btn-accept {
+            background: #22c55e;
+            color: #fff;
+            width: 100%;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 6px 15px rgba(34, 197, 94, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .elite-promo-btn-decline {
+            background: none;
+            border: none;
+            color: #555;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 0.8rem;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .elite-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #e74c3c;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-weight: 900;
+            font-size: 0.65rem;
+            z-index: 10;
+        }
+    </style>
+
+
+    <style>
+        .upsell-modal-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            align-items: center;
+            /* Center vertically on mobile */
+            justify-content: center;
+            /* Center horizontally on mobile */
+        }
+
+        .upsell-modal-container.active {
+            display: flex;
+            /* Flex to center */
+            opacity: 1;
+        }
+
+        .upsell-content {
+            background: #fff;
+            width: 90%;
+            max-width: 400px;
+            /* Standard modal width */
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateX(-50px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: left;
+            position: relative;
+        }
+
+        /* Desktop specific: Slide from left side */
+        @media (min-width: 768px) {
+            .upsell-modal-container {
+                justify-content: flex-start;
+                /* Align to left */
+            }
+
+            .upsell-content {
+                width: 400px;
+                height: 100%;
+                border-radius: 0 20px 20px 0;
+                transform: translateX(-100%);
+                /* Start fully off-screen */
+                margin: 0;
+                max-width: none;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+        }
+
+        .upsell-modal-container.active .upsell-content {
+            transform: translateX(0);
+        }
+
+        .btn-upsell-yes {
+            width: 100%;
+            padding: 10px;
+            background: var(--success);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-upsell-yes:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-upsell-no {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: var(--gray-400);
+            border: none;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .btn-upsell-no:hover {
+            color: var(--gray-600);
+        }
+    </style>
+
+    <!-- FORÇAR BARRA TRANSLÚCIDA -->
+    <style>
+        header,
+        .header,
+        .sticky,
+        header.sticky {
+            background: rgba(0, 0, 0, 0.6) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+        }
+
+        /* Garantir legibilidade do texto flutuante */
+        header h1,
+        .header h1,
+        header h1 span {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        }
+    </style>
+
+    <style>
+    </style>
+</head>
+
+
+
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WVBJNXCQ" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- UPSELL MODAL SIDE-PANEL -->
+    <div id="upsell-modal-container" class="upsell-modal-container">
+        <div class="upsell-content">
+            <div style="background: #dc2626; color: #fff; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; padding: 5px 12px; border-radius: 6px; display: inline-block; margin-bottom: 8px;">⚡ Oferta exclusiva — só enquanto você está aqui</div>
+            <h3 style="color: #111; font-size: 1.05rem; font-weight: 900; line-height: 1.3; margin-bottom: 6px;">Você sabe que <span style="color: #dc2626;">8 em cada 10 pintinhos morrem</span> antes dos 20 dias — e o erro costuma ser seu.</h3>
+            <p style="font-size: 0.8rem; color: #4b5563; margin-bottom: 10px; line-height: 1.4;">
+                Temperatura errada, ração inadequada, bico molhado — detalhes de manejo que o guia das doenças não cobre. <strong style="color: #111;">O Manual de Pintinhos preenche exatamente esse buraco.</strong>
+            </p>
+            <div style="display: flex; gap: 12px; background: #f0fdf4; padding: 10px; border-radius: 10px; border: 1px solid #86efac; margin-bottom: 10px; align-items: center;">
+                <img src="capadospintinhos.webp" style="width: 66px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">
+                <div>
+                    <p style="font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.3px; margin: 0 0 2px;">Manual de Manejo de Pintinhos</p>
+                    <p style="font-size: 0.78rem; color: #6b7280; margin: 0;">De: <span style="text-decoration: line-through;">R$ 99,90</span></p>
+                    <div style="font-weight: 900; color: #16a34a; font-size: 1.1rem; line-height: 1;">Por: R$ 49,90 <span style="font-size: 0.65rem; color: #6b7280; font-weight: 400;">adicionado ao pedido</span></div>
+                </div>
+            </div>
+            <button onclick="acceptUpsell()" class="btn-upsell-yes">
+                <i class="fa-solid fa-check"></i> SIM, QUERO PROTEGER MEUS PINTINHOS
+            </button>
+            <button onclick="declineUpsell()" class="btn-upsell-no">
+                Não, prefiro arriscar perder meus pintinhos
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== VSL PAGE ==================== -->
+    <style>
+        /* === VSL PAGE STYLES === */
+        .vsl-page { background: #000; min-height: 100vh; }
+        .vsl-header {
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 16px;
+            position: sticky; top: 0; z-index: 100;
+            border-bottom: 1px solid rgba(251,191,36,0.15);
+        }
+        .vsl-header-inner {
+            max-width: 600px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .vsl-header img { height: 40px; border-radius: 6px; }
+        .vsl-header h1 {
+            font-size: 0.85rem; font-weight: 800; color: #fff; margin: 0;
+            letter-spacing: 1px; text-transform: uppercase;
+        }
+        .vsl-header h1 span { color: #fbbf24; }
+
+        /* Headline */
+        .vsl-headline {
+            text-align: center; padding: 28px 20px 8px;
+            max-width: 600px; margin: 0 auto;
+        }
+        .vsl-headline h2 {
+            font-size: 1.45rem; font-weight: 900; color: #fff;
+            line-height: 1.2; margin: 0 0 8px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+        .vsl-headline h2 em {
+            font-style: normal; color: #ef4444;
+            text-decoration: underline; text-decoration-color: rgba(239,68,68,0.4);
+            text-underline-offset: 4px;
+        }
+        .vsl-headline p {
+            font-size: 0.85rem; color: #94a3b8; margin: 0;
+            font-weight: 500;
+        }
+
+        /* Video Container */
+        .vsl-video-wrap {
+            max-width: 400px; margin: 16px auto 0;
+            padding: 0 12px; position: relative;
+        }
+        .vsl-player-box {
+            position: relative; width: 100%;
+            aspect-ratio: 9/16; border-radius: 16px;
+            overflow: hidden; background: #111;
+            box-shadow: 0 0 40px rgba(251,191,36,0.08), 0 20px 60px rgba(0,0,0,0.6);
+            border: 2px solid rgba(251,191,36,0.15);
+        }
+        .vsl-player-box video {
+            width: 100%; height: 100%; object-fit: cover;
+            display: block;
+        }
+
+        /* Sound Overlay */
+        .vsl-sound-overlay {
+            position: absolute; inset: 0; z-index: 10;
+            background: rgba(0,0,0,0.55);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            cursor: pointer; transition: opacity 0.4s;
+        }
+        .vsl-sound-overlay.hidden { opacity: 0; pointer-events: none; }
+        .vsl-sound-btn {
+            width: 72px; height: 72px; border-radius: 50%;
+            background: rgba(251,191,36,0.9); border: none;
+            display: flex; align-items: center; justify-content: center;
+            animation: vslPulse 2s ease-in-out infinite;
+            cursor: pointer; box-shadow: 0 0 30px rgba(251,191,36,0.4);
+        }
+        .vsl-sound-btn i { font-size: 28px; color: #000; }
+        .vsl-sound-text {
+            color: #fff; font-size: 0.8rem; font-weight: 700;
+            margin-top: 12px; text-transform: uppercase;
+            letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+        @keyframes vslPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(251,191,36,0.4); }
+            50% { transform: scale(1.1); box-shadow: 0 0 40px rgba(251,191,36,0.6); }
+        }
+
+        /* Custom Controls */
+        .vsl-controls {
+            position: absolute; bottom: 0; left: 0; right: 0; z-index: 5;
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+        }
+        .vsl-ctrl-btn {
+            background: none; border: none; color: #fff;
+            font-size: 20px; cursor: pointer; padding: 4px;
+            opacity: 0.9; transition: opacity 0.2s;
+        }
+        .vsl-ctrl-btn:hover { opacity: 1; }
+        .vsl-volume-slider {
+            -webkit-appearance: none; appearance: none;
+            width: 80px; height: 4px; border-radius: 2px;
+            background: rgba(255,255,255,0.3); outline: none;
+        }
+        .vsl-volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 14px; height: 14px; border-radius: 50%;
+            background: #fbbf24; cursor: pointer;
+        }
+
+        /* CTA Button */
+        .vsl-cta-section {
+            max-width: 400px; margin: 0 auto;
+            padding: 0 12px; text-align: center;
+            opacity: 0; transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            pointer-events: none;
+        }
+        .vsl-cta-section.visible {
+            opacity: 1; transform: translateY(0);
+            pointer-events: all;
+        }
+        .vsl-cta-btn {
+            width: 100%; padding: 18px 20px;
+            border-radius: 14px; border: none; cursor: pointer;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: #fff; font-weight: 900; font-size: 1rem;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            box-shadow: 0 8px 30px rgba(34,197,94,0.4);
+            animation: ctaBounce 2s ease-in-out infinite;
+            font-family: inherit;
+        }
+        .vsl-cta-sub {
+            font-size: 0.7rem; color: #64748b; margin-top: 6px;
+            font-weight: 600;
+        }
+        @keyframes ctaBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        /* Disease Carousel */
+        .vsl-diseases {
+            max-width: 500px; margin: 24px auto;
+            padding: 0 12px;
+        }
+        .vsl-diseases-label {
+            text-align: center; font-size: 0.7rem; font-weight: 800;
+            color: #ef4444; text-transform: uppercase;
+            letter-spacing: 1.5px; margin-bottom: 12px;
+        }
+
+        /* Resume Modal */
+        .vsl-resume-modal {
+            position: fixed; inset: 0; z-index: 20000;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+            display: none; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .vsl-resume-modal.show { display: flex; }
+        .vsl-resume-box {
+            background: #0f172a; border: 2px solid #fbbf24;
+            border-radius: 16px; padding: 28px 24px;
+            max-width: 340px; width: 100%; text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .vsl-resume-box h3 {
+            color: #fff; font-size: 1.1rem; font-weight: 800; margin: 0 0 6px;
+        }
+        .vsl-resume-box p {
+            color: #94a3b8; font-size: 0.85rem; margin: 0 0 20px;
+        }
+        .vsl-resume-btn {
+            width: 100%; padding: 14px; border-radius: 12px;
+            border: none; cursor: pointer; font-weight: 800;
+            font-size: 0.9rem; margin-bottom: 10px; font-family: inherit;
+        }
+        .vsl-resume-continue {
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            color: #000;
+        }
+        .vsl-resume-restart {
+            background: rgba(255,255,255,0.08); color: #94a3b8;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Testimonials Section */
+        .vsl-testimonials {
+            max-width: 500px;
+            margin: 0 auto 30px;
+            padding: 0 16px;
+        }
+        .vsl-testim-title {
+            text-align: center; font-size: 1.1rem; font-weight: 800;
+            color: #fff; margin-bottom: 20px; text-transform: uppercase;
+        }
+        .vsl-testim-title span { color: #22c55e; }
+        
+        .masonry-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .testim-img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: block;
+        }
+
+        .wa-time i { color: #53bdeb; }
+
+        /* Reveal Section */
+        .vsl-reveal-content {
+            display: none; /* Escondido por padrão */
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        .vsl-reveal-content.visible {
+            display: block;
+            opacity: 1;
+        }
+    </style>
+
+    <!-- Resume Modal -->
+    <div id="vsl-resume-modal" class="vsl-resume-modal">
+        <div class="vsl-resume-box">
+            <h3>🎬 Bem-vindo de volta!</h3>
+            <p>Deseja continuar de onde parou?</p>
+            <button class="vsl-resume-btn vsl-resume-continue" onclick="resumeVideo(true)">
+                ▶ CONTINUAR DE ONDE PAREI
+            </button>
+            <button class="vsl-resume-btn vsl-resume-restart" onclick="resumeVideo(false)">
+                ↺ Assistir do início
+            </button>
+        </div>
+    </div>
+
+    <div class="vsl-page">
+        <!-- Header -->
+        <div class="vsl-header">
+            <div class="vsl-header-inner">
+                <img src="logo.webp" alt="Logo">
+                <h1>PROTOCOLO <span>ELITE</span></h1>
+            </div>
+        </div>
+
+        <!-- Headline -->
+        <div class="vsl-headline">
+            <h2>Sua galinha tá <em>morrendo</em> e você<br>não sabe o que fazer?</h2>
+            <p>Assista o vídeo antes que seja tarde demais.</p>
+        </div>
+
+        <!-- Video Player -->
+        <div class="vsl-video-wrap">
+            <div class="vsl-player-box">
+                <video id="vsl-main-video" playsinline preload="auto" muted>
+                    <source src="vsl_hero.mp4" type="video/mp4">
+                </video>
+
+                <!-- Sound Overlay -->
+                <div id="vsl-sound-overlay" class="vsl-sound-overlay" onclick="activateSound()">
+                    <button class="vsl-sound-btn">
+                        <i class="fa-solid fa-volume-high"></i>
+                    </button>
+                    <span class="vsl-sound-text">🔊 Toque para ativar o som</span>
+                </div>
+
+                <!-- Custom Controls -->
+                <div class="vsl-controls">
+                    <button class="vsl-ctrl-btn" id="vsl-play-btn" onclick="togglePlay()">
+                        <i class="fa-solid fa-pause"></i>
+                    </button>
+                    <button class="vsl-ctrl-btn" id="vsl-mute-btn" onclick="toggleMute()">
+                        <i class="fa-solid fa-volume-xmark"></i>
+                    </button>
+                    <input type="range" class="vsl-volume-slider" id="vsl-volume" min="0" max="1" step="0.05" value="0" oninput="changeVolume(this.value)">
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENT TO BE REVEALED -->
+        <div id="vsl-delayed-content" class="vsl-reveal-content">
+            <!-- CTA Button -->
+            <div class="vsl-cta-section visible" style="margin-top: 20px; opacity: 1; transform: none; pointer-events: all;">
+                <button class="vsl-cta-btn" onclick="startCheckoutProcess('ebook-doencas')">
+                    ACESSAR CONTEÚDO COMPLETO AGORA
+                </button>
+                <p class="vsl-cta-sub">R$ 89,90 no PIX • Acesso imediato • Garantia 7 dias</p>
+            </div>
+
+            <!-- Disease Carousel -->
+            <div class="vsl-diseases">
+                <p class="vsl-diseases-label">Doenças que estão matando suas aves agora</p>
+                <div class="authority-slider-wrapper">
+                    <div class="slider-track">
+                        <div class="slide"><div class="image-wrapper"><img src="autoridade/proc_coriza.webp" alt="Coriza Infecciosa" style="object-position: center 20%;" loading="lazy"><div class="slide-label">Coriza Infecciosa</div></div></div>
+                        <div class="slide"><div class="image-wrapper"><img src="autoridade/proc_bronquite aviaria.webp" alt="Bronquite Aviária" loading="lazy"><div class="slide-label">Bronquite Aviária</div></div></div>
+                        <div class="slide"><div class="image-wrapper"><img src="autoridade/proc_Coccidiose.webp" alt="Coccidiose" loading="lazy"><div class="slide-label">Coccidiose</div></div></div>
+                        <div class="slide"><div class="image-wrapper"><img src="autoridade/proc_ronqueira-gogo.webp" alt="Ronqueira / Gogo" loading="lazy"><div class="slide-label">Ronqueira / Gogo</div></div></div>
+                        <div class="slide"><div class="image-wrapper"><img src="autoridade/proc_vermes.webp" alt="Vermes" loading="lazy"><div class="slide-label">Verminose</div></div></div>
+                        <div class="slide"><div class="image-wrapper"><img src="autoridade/proc_Magreza extrema-peito seco.webp" alt="Peito Seco" loading="lazy"><div class="slide-label">Peito Seco / Magreza</div></div></div>
+                        <!-- Clones for loop -->
+                        <div class="slide"><div class="image-wrapper"><img src="autoridade/proc_coriza.webp" alt="Coriza Infecciosa" style="object-position: center 20%;" loading="lazy"><div class="slide-label">Coriza Infecciosa</div></div></div>
+                        <div class="slide"><div class="image-wrapper"><img src="autoridade/proc_bronquite aviaria.webp" alt="Bronquite Aviária" loading="lazy"><div class="slide-label">Bronquite Aviária</div></div></div>
+                        <div class="slide"><div class="image-wrapper"><img src="autoridade/proc_Coccidiose.webp" alt="Coccidiose" loading="lazy"><div class="slide-label">Coccidiose</div></div></div>
+                        <div class="slide"><div class="image-wrapper"><img src="autoridade/proc_ronqueira-gogo.webp" alt="Ronqueira / Gogo" loading="lazy"><div class="slide-label">Ronqueira / Gogo</div></div></div>
+                        <div class="slide"><div class="image-wrapper"><img src="autoridade/proc_vermes.webp" alt="Vermes" loading="lazy"><div class="slide-label">Verminose</div></div></div>
+                        <div class="slide"><div class="image-wrapper"><img src="autoridade/proc_Magreza extrema-peito seco.webp" alt="Peito Seco" loading="lazy"><div class="slide-label">Peito Seco / Magreza</div></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonials -->
+            <div class="vsl-testimonials">
+                <h3 class="vsl-testim-title">Veja os resultados dos <span>nossos alunos</span></h3>
+                <div class="masonry-grid">
+                    <img src="autoridade/dep1.webp" alt="Depoimento 1" class="testim-img" loading="lazy">
+                    <img src="autoridade/dep2.webp" alt="Depoimento 2" class="testim-img" loading="lazy">
+                    <img src="autoridade/dep3.webp" alt="Depoimento 3" class="testim-img" loading="lazy">
+                    <img src="autoridade/dep4.webp" alt="Depoimento 4" class="testim-img" loading="lazy">
+                    <img src="autoridade/dep5.webp" alt="Depoimento 5" class="testim-img" loading="lazy">
+                    <img src="autoridade/dep6.webp" alt="Depoimento 6" class="testim-img" loading="lazy">
+                    <img src="autoridade/dep7.webp" alt="Depoimento 7" class="testim-img" loading="lazy">
+                </div>
+            </div>
+        </div>
+
+        <!-- Minimal Footer -->
+        <div style="text-align: center; padding: 30px 20px 40px; border-top: 1px solid rgba(255,255,255,0.05);">
+            <p style="font-size: 0.7rem; color: #475569; margin: 0;">© 2026 Galos Mura Brasil — Todos os direitos reservados.</p>
+        </div>
+    </div>
+
+    <!-- VSL Video Controller Script -->
+    <script>
+    (function() {
+        const video = document.getElementById('vsl-main-video');
+        const soundOverlay = document.getElementById('vsl-sound-overlay');
+        const playBtn = document.getElementById('vsl-play-btn');
+        const muteBtn = document.getElementById('vsl-mute-btn');
+        const volumeSlider = document.getElementById('vsl-volume');
+        const revealContainer = document.getElementById('vsl-delayed-content');
+        const resumeModal = document.getElementById('vsl-resume-modal');
+        let ctaRevealed = false;
+        const SAVE_KEY = 'vsl_position';
+        const CTA_TIME = 40;
+
+        // Autoplay muted on load
+        function initVideo() {
+            const savedPos = parseFloat(localStorage.getItem(SAVE_KEY));
+            if (savedPos && savedPos > 3 && savedPos < 60) {
+                resumeModal.classList.add('show');
+            } else {
+                video.play().catch(function(){});
+            }
+        }
+
+        // Resume modal handlers
+        window.resumeVideo = function(continueFromSaved) {
+            resumeModal.classList.remove('show');
+            if (continueFromSaved) {
+                const savedPos = parseFloat(localStorage.getItem(SAVE_KEY));
+                if (savedPos) video.currentTime = savedPos;
+            } else {
+                video.currentTime = 0;
+            }
+            video.play().catch(function(){});
+        };
+
+        // Activate sound
+        window.activateSound = function() {
+            video.muted = false;
+            video.currentTime = 0; // Reinicia o vídeo para o usuário não perder o começo
+            video.volume = 0.8;
+            volumeSlider.value = 0.8;
+            soundOverlay.classList.add('hidden');
+            muteBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+            video.play().catch(function(){});
+        };
+
+        // Toggle play/pause
+        window.togglePlay = function() {
+            if (video.paused) {
+                video.play();
+                playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+            } else {
+                video.pause();
+                playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+            }
+        };
+
+        // Toggle mute
+        window.toggleMute = function() {
+            if (video.muted || video.volume === 0) {
+                video.muted = false;
+                video.volume = 0.8;
+                volumeSlider.value = 0.8;
+                muteBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+                soundOverlay.classList.add('hidden');
+            } else {
+                video.muted = true;
+                volumeSlider.value = 0;
+                muteBtn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+            }
+        };
+
+        // Change volume
+        window.changeVolume = function(val) {
+            video.volume = parseFloat(val);
+            video.muted = (val == 0);
+            muteBtn.innerHTML = val == 0
+                ? '<i class="fa-solid fa-volume-xmark"></i>'
+                : '<i class="fa-solid fa-volume-high"></i>';
+            if (val > 0) soundOverlay.classList.add('hidden');
+        };
+
+        // Time update: save position + reveal CTA
+        video.addEventListener('timeupdate', function() {
+            // Save position every 5 seconds
+            if (Math.floor(video.currentTime) % 5 === 0 && video.currentTime > 1) {
+                localStorage.setItem(SAVE_KEY, video.currentTime.toFixed(1));
+            }
+            // Reveal CTA and Content at 40s
+            if (video.currentTime >= CTA_TIME && !ctaRevealed) {
+                ctaRevealed = true;
+                revealContainer.classList.add('visible');
+            }
+        });
+
+        // Update play button on video state changes
+        video.addEventListener('play', function() {
+            playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+        });
+        video.addEventListener('pause', function() {
+            playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+        });
+
+        // Video ended: show CTA if not shown yet
+        video.addEventListener('ended', function() {
+            if (!ctaRevealed) {
+                ctaRevealed = true;
+                revealContainer.classList.add('visible');
+            }
+            playBtn.innerHTML = '<i class="fa-solid fa-rotate-right"></i>';
+        });
+
+        // Init on DOM ready
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            initVideo();
+        } else {
+            document.addEventListener('DOMContentLoaded', initVideo);
+        }
+    })();
+    </script>
+
+    <!-- ============================================ -->
+    <!-- CHECKOUT INLINE (Substituiu o modal antigo) -->
+    <!-- ============================================ -->
+    <div id="checkout-page" style="display: none;">
+        <style>
+            /* === CHECKOUT PAGE - FULLSCREEN OVERLAY === */
+            #checkout-page {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #f5f5f0;
+                color: #1f2937;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                line-height: 1.5;
+                z-index: 10000;
+                overflow-y: auto;
+                overflow-x: hidden;
+                overscroll-behavior-y: contain;
+                padding-bottom: 50px;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            #checkout-page * {
+                box-sizing: border-box;
+            }
+
+            /* Header do Checkout */
+            .ck-header {
+                background: #0f172a;
+                padding: 12px 0;
+                position: sticky;
+                top: 0;
+                z-index: 200;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+
+            .ck-header-container {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 0 16px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .ck-logo {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 700;
+                font-size: 16px;
+                letter-spacing: -0.5px;
+                color: #fff;
+            }
+
+            .ck-logo-elite {
+                color: #fbbf24;
+            }
+
+            .ck-security-badge {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                color: #22c55e;
+                font-weight: 600;
+                font-size: 12px;
+            }
+
+            .ck-back-btn {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                color: #94a3b8;
+                font-size: 13px;
+                cursor: pointer;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 6px 12px;
+                border-radius: 6px;
+                font-family: inherit;
+                transition: all 0.3s ease;
+            }
+
+            .ck-back-btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: #fff;
+            }
+
+            /* Timer de Urgencia */
+            .ck-urgency-banner {
+                text-align: center;
+                padding: 10px 16px;
+                background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d);
+                animation: ckPulse 3s infinite;
+            }
+
+            .ck-timer-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                color: #fff;
+                font-size: 14px;
+                font-weight: 700;
+            }
+
+            @keyframes ckPulse {
+
+                0%,
+                100% {
+                    opacity: 1;
+                }
+
+                50% {
+                    opacity: 0.85;
+                }
+            }
+
+            /* Main Container */
+            .ck-main {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 10px;
+            }
+
+            /* Grid Layout */
+            .ck-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            @media (min-width: 768px) {
+                .ck-grid {
+                    grid-template-columns: 7fr 5fr;
+                    gap: 24px;
+                }
+            }
+
+            /* Secoes */
+            .ck-section {
+                background-color: #ffffff;
+                border-radius: 12px;
+                padding: 10px;
+                border: 1px solid #e5e7eb;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            }
+
+            @media (min-width: 768px) {
+                .ck-section {
+                    padding: 16px;
+                }
+            }
+
+            .ck-section-header {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 10px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid #f3f4f6;
+            }
+
+            .ck-section-number {
+                background: linear-gradient(135deg, #dc2626, #991b1b);
+                color: #ffffff;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                font-size: 14px;
+                flex-shrink: 0;
+            }
+
+            .ck-section-title {
+                font-size: 16px;
+                font-weight: 700;
+                color: #1f2937;
+                margin: 0;
+            }
+
+            @media (min-width: 768px) {
+                .ck-section-title {
+                    font-size: 18px;
+                }
+            }
+
+            /* Formulario */
+            #checkout-page .ck-form-group {
+                margin-bottom: 8px;
+            }
+
+            #checkout-page .ck-form-group label {
+                display: block;
+                font-size: 12px;
+                font-weight: 700;
+                color: #374151;
+                margin-bottom: 4px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            #checkout-page .form-input,
+            #checkout-page .ck-input {
+                width: 100% !important;
+                padding: 12px 14px !important;
+                border: 1.5px solid #d1d5db !important;
+                border-radius: 8px !important;
+                font-size: 16px !important;
+                font-family: inherit !important;
+                background: #ffffff !important;
+                color: #1f2937 !important;
+                height: auto !important;
+                -webkit-appearance: none !important;
+                -moz-appearance: none !important;
+                appearance: none !important;
+            }
+
+            #checkout-page .form-input:focus,
+            #checkout-page .ck-input:focus {
+                outline: none;
+                border-color: #dc2626 !important;
+                box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+            }
+
+            #checkout-page .form-input::placeholder,
+            #checkout-page .ck-input::placeholder {
+                color: #9ca3af !important;
+                font-size: 14px !important;
+            }
+
+            #checkout-page .ck-form-row {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 10px;
+            }
+
+            @media (min-width: 768px) {
+                #checkout-page .ck-form-row {
+                    grid-template-columns: 1fr 1fr !important;
+                }
+            }
+
+            #checkout-page .order-bump-grid-view {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+            }
+
+            @media (min-width: 480px) {
+                #checkout-page .order-bump-grid-view {
+                    display: grid !important;
+                    grid-template-columns: 1fr 1fr !important;
+                    gap: 8px !important;
+                }
+            }
+
+            /* Abas de Pagamento */
+            #checkout-page .radio-item {
+                flex: 1;
+                padding: 14px 10px !important;
+                font-weight: 700;
+                text-align: center;
+                background: #ffffff !important;
+                border: 2px solid #e5e7eb !important;
+                cursor: pointer;
+                color: #9ca3af !important;
+                font-size: 14px;
+                transition: all 0.2s ease;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center;
+                gap: 8px;
+                border-radius: 10px !important;
+                height: auto !important;
+            }
+
+            #checkout-page .radio-item.selected {
+                color: #dc2626 !important;
+                border-color: #dc2626 !important;
+                background: #fef2f2 !important;
+            }
+
+            #checkout-page .radio-title {
+                color: inherit !important;
+                font-weight: 800;
+                font-size: 15px;
+            }
+
+            #checkout-page .radio-desc {
+                font-size: 11px;
+                color: #6b7280 !important;
+            }
+
+            /* Order Bump - CLEAN MOBILE DESIGN */
+            #checkout-page #order-bump-area {
+                margin-top: 16px;
+            }
+
+            #checkout-page .order-bump-container {
+                position: relative;
+                overflow: hidden;
+                border: 2px solid #fbbf24 !important;
+                border-radius: 12px;
+                cursor: pointer;
+                min-height: auto !important;
+                margin-bottom: 10px;
+                background: #fffbeb !important;
+                box-shadow: none !important;
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: stretch !important;
+                padding: 0 !important;
+            }
+
+            #checkout-page .order-bump-container.selected {
+                border-color: #22c55e !important;
+                background: #000 !important; /* Base black under image */
+                box-shadow: 0 0 15px rgba(34, 197, 94, 0.4) !important;
+                border-width: 3px !important;
+            }
+
+            #checkout-page .order-bump-container:not(.selected) {
+                animation: none !important;
+            }
+
+            /* MOSTRAR imagens dos bumps no mobile com layout otimizado */
+            #checkout-page .order-bump-container img {
+                display: block !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+                z-index: 0 !important;
+                pointer-events: none !important;
+            }
+
+            /* MOSTRAR gradient overlay dos bumps para legibilidade */
+            #checkout-page .order-bump-container div[style*="linear-gradient"] {
+                display: block !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                z-index: 1 !important;
+                background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 90%) !important;
+                pointer-events: none !important;
+            }
+
+            /* Forcar layout limpo dos bumps */
+            #checkout-page .order-bump-container>div[style*="z-index: 2"] {
+                position: relative !important;
+                z-index: 1 !important;
+                padding: 12px !important;
+                width: 100% !important;
+                height: auto !important;
+                justify-content: flex-start !important;
+                background: transparent !important;
+            }
+
+            /* CORES E TIPOGRAFIA DOS ORDER BUMPS - FORCA ALTO CONTRASTE */
+            #checkout-page .order-bump-container .order-bump-title,
+            #checkout-page .order-bump-title {
+                color: #fbbf24 !important; /* Gold */
+                font-size: 1rem !important;
+                font-weight: 900 !important;
+                text-shadow: 0 2px 6px rgba(0,0,0,1) !important;
+                line-height: 1.2 !important;
+                margin-bottom: 6px !important;
+                display: block !important;
+                letter-spacing: -0.2px !important;
+                padding-right: 28px !important;
+            }
+
+            #checkout-page .order-bump-container .order-bump-description,
+            #checkout-page .order-bump-description {
+                color: #f1f5f9 !important;
+                font-size: 0.75rem !important;
+                line-height: 1.35 !important;
+                text-shadow: 0 1px 4px rgba(0,0,0,1) !important;
+            }
+
+            /* Permite cores inline (vermelho/verde) nas spans da descricao */
+            #checkout-page .order-bump-description span,
+            #checkout-page .order-bump-description strong {
+                text-shadow: 0 1px 4px rgba(0,0,0,0.9) !important;
+            }
+
+            #checkout-page .order-bump-container .order-bump-price,
+            #checkout-page .order-bump-price {
+                color: #4ade80 !important; /* Verde brilhante = ganho */
+                font-size: 1.1rem !important;
+                font-weight: 900 !important;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.9) !important;
+            }
+
+            #checkout-page .order-bump-container .order-bump-old-price {
+                color: #fca5a5 !important; /* Rosa = prejuizo evitado */
+                text-decoration: line-through !important;
+                font-size: 0.75rem !important;
+                opacity: 1 !important;
+                font-weight: 600 !important;
+            }
+
+            #checkout-page .bump-check-wrapper {
+                border-color: #fbbf24 !important;
+            }
+
+            #checkout-page .order-bump-container:not(.selected) {
+                box-shadow: 0 0 0 2px rgba(251,191,36,0.3);
+                animation: bumpPulse 2.5s ease-in-out infinite;
+            }
+
+            @keyframes bumpPulse {
+                0%, 100% { box-shadow: 0 0 0 2px rgba(251,191,36,0.2); }
+                50% { box-shadow: 0 0 0 3px rgba(251,191,36,0.6), 0 4px 16px rgba(0,0,0,0.4); }
+            }
+
+            #checkout-page .order-bump-container.selected {
+                animation: none !important;
+            }
+
+            #checkout-page .order-bump-container.selected .bump-check-wrapper {
+                background: #22c55e !important;
+                border-color: #22c55e !important;
+            }
+
+            /* GRID dos bumps - lado a lado no checkout puro */
+            #checkout-page .order-bump-grid-view {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+            }
+
+            @media (min-width: 480px) {
+                #checkout-page .order-bump-grid-view {
+                    display: grid !important;
+                    grid-template-columns: 1fr 1fr !important;
+                    gap: 8px !important;
+                }
+            }
+
+            /* Botao Principal */
+            .ck-btn-checkout {
+                width: 100%;
+                padding: 16px;
+                border-radius: 12px;
+                background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+                color: #ffffff;
+                font-weight: 800;
+                font-size: 16px;
+                border: none;
+                cursor: pointer;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                transition: all 0.2s ease;
+                box-shadow: 0 4px 15px rgba(22, 197, 94, 0.3);
+                margin-bottom: 12px;
+                font-family: inherit;
+            }
+
+            .ck-btn-checkout:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 6px 20px rgba(22, 197, 94, 0.4);
+            }
+
+            .ck-btn-checkout:active {
+                transform: translateY(0);
+            }
+
+            /* Resumo do Pedido (Sidebar) */
+            .ck-order-summary {
+                position: static;
+            }
+
+            @media (min-width: 768px) {
+                .ck-order-summary {
+                    position: sticky;
+                    top: 70px;
+                }
+            }
+
+            .ck-product-card {
+                display: flex;
+                gap: 12px;
+                margin-bottom: 16px;
+                padding-bottom: 16px;
+                border-bottom: 1px solid #f3f4f6;
+            }
+
+            .ck-product-image {
+                width: 65px;
+                height: 82px;
+                border-radius: 8px;
+                border: 1px solid #e5e7eb;
+                flex-shrink: 0;
+                overflow: hidden;
+            }
+
+            .ck-product-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .ck-product-info h3 {
+                font-size: 13px;
+                font-weight: 700;
+                margin: 0 0 2px 0;
+                line-height: 1.3;
+                color: #1f2937;
+            }
+
+            .ck-product-info p {
+                font-size: 11px;
+                color: #6b7280;
+                margin: 0 0 6px 0;
+            }
+
+            .ck-price-original {
+                text-decoration: line-through;
+                color: #9ca3af;
+                font-size: 12px;
+            }
+
+            .ck-price-current {
+                color: #dc2626;
+                font-weight: 800;
+                font-size: 16px;
+            }
+
+            /* Resumo de Precos */
+            .ck-price-breakdown {
+                font-size: 13px;
+                border-top: 1px solid #f3f4f6;
+                padding-top: 12px;
+            }
+
+            .ck-price-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+                color: #6b7280;
+            }
+
+            .ck-price-row.discount {
+                color: #16a34a;
+                font-weight: 600;
+            }
+
+            .ck-price-row.total {
+                font-size: 18px;
+                font-weight: 800;
+                color: #1f2937;
+                border-top: 2px solid #f3f4f6;
+                padding-top: 10px;
+                margin-top: 8px;
+            }
+
+            /* Garantia */
+            .ck-guarantee-box {
+                background: #f0fdf4;
+                border: 1px solid #bbf7d0;
+                border-radius: 10px;
+                padding: 12px;
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                margin-top: 20px;
+            }
+
+            .ck-guarantee-icon {
+                font-size: 24px;
+                flex-shrink: 0;
+            }
+
+            .ck-guarantee-content p:first-child {
+                font-size: 12px;
+                font-weight: 800;
+                color: #166534;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin: 0 0 2px 0;
+            }
+
+            .ck-guarantee-content p:last-child {
+                font-size: 11px;
+                color: #15803d;
+                margin: 0;
+                line-height: 1.4;
+            }
+
+            /* Prova Social */
+            .ck-social-proof {
+                margin-top: 20px;
+            }
+
+            .ck-proof-label {
+                font-size: 11px;
+                font-weight: 700;
+                color: #9ca3af;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+
+            .ck-testimonial-box {
+                background: #f9fafb;
+                padding: 12px;
+                border-radius: 8px;
+                font-size: 12px;
+                color: #4b5563;
+                font-style: italic;
+                margin-bottom: 8px;
+                border-left: 3px solid #22c55e;
+                line-height: 1.4;
+            }
+
+            .ck-testimonial-author {
+                margin-top: 6px;
+                font-weight: 700;
+                color: #1f2937;
+                font-style: normal;
+                font-size: 11px;
+            }
+
+            .ck-stars {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 2px;
+                margin-top: 10px;
+                font-size: 14px;
+            }
+
+            .ck-star {
+                color: #fbbf24;
+            }
+
+            .ck-rating-text {
+                color: #6b7280;
+                font-weight: 700;
+                margin-left: 6px;
+                font-size: 12px;
+            }
+
+            /* Footer Checkout */
+            .ck-footer {
+                background: #0f172a;
+                padding: 20px 16px;
+                text-align: center;
+                margin-top: 20px;
+            }
+
+            .ck-footer p {
+                font-size: 12px;
+                color: #64748b;
+                margin: 0 0 4px 0;
+            }
+
+            /* Error styles */
+            #checkout-page .form-input.input-error,
+            #checkout-page .form-input.is-invalid {
+                border-color: #ef4444 !important;
+                background-color: #fef2f2 !important;
+            }
+
+            #checkout-page .form-input.input-success,
+            #checkout-page .form-input.is-valid {
+                border-color: #22c55e !important;
+                background-color: #f0fdf4 !important;
+            }
+
+            #checkout-page .error-message {
+                color: #ef4444;
+                font-size: 0.7rem;
+                font-weight: 700;
+                margin-top: 3px;
+                display: block;
+            }
+
+            /* PIX Result inside checkout page */
+            #checkout-page #pix-result {
+                max-width: 500px;
+                margin: 1rem auto;
+                padding: 1.5rem 1rem;
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+
+            #checkout-page #payment-pending-view {
+                max-width: 500px;
+                margin: 1rem auto;
+                padding: 1.5rem 1rem;
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+
+            #checkout-page .hidden {
+                display: none !important;
+            }
+
+            /* Card area */
+            #checkout-page #card-area {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                padding: 12px;
+                border-radius: 10px;
+                margin-top: 12px;
+            }
+
+            /* WhatsApp link */
+            #checkout-page .ck-wpp-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: #25d366;
+                color: #fff;
+                padding: 8px 14px;
+                border-radius: 50px;
+                text-decoration: none;
+                font-size: 0.75rem;
+                font-weight: 700;
+            }
+
+            /* Tooltip */
+            #checkout-page .field-tooltip {
+                display: none;
+            }
+
+            #checkout-page .form-group {
+                position: relative;
+                margin-bottom: 12px;
+            }
+
+            /* Price summary */
+            #checkout-page .price-summary-box {
+                background: #f9fafb !important;
+                border: 1px dashed #d1d5db !important;
+                padding: 12px;
+                border-radius: 10px;
+                margin-bottom: 12px;
+            }
+
+            #checkout-page .price-summary-box span {
+                color: #1f2937 !important;
+            }
+
+            #checkout-page .pix-discount-badge {
+                color: #16a34a !important;
+                background: rgba(22, 163, 74, 0.1) !important;
+            }
+
+            /* Mobile scroll fix */
+            @media (max-width: 767px) {
+                #checkout-page {
+                    padding-bottom: 0;
+                }
+
+                .ck-main {
+                    padding: 12px;
+                }
+
+                .ck-section {
+                    padding: 14px;
+                    border-radius: 10px;
+                }
+            }
+
+            /* MOBILE CHECKOUT LINEAR FULL-WIDTH OVERRIDES */
+            @media (max-width: 768px) {
+                #checkout-page .ck-form-row {
+                    grid-template-columns: 1fr !important;
+                }
+
+                /* FORCE ORDER BUMPS TO BE SIDE-BY-SIDE ON MOBILE */
+                #checkout-page .order-bump-grid-view {
+                    display: grid !important;
+                    grid-template-columns: 1fr 1fr !important;
+                    gap: 10px !important;
+                }
+
+                #checkout-page .order-bump-grid-view .order-bump-title {
+                    font-size: 0.7rem !important;
+                    line-height: 1.1 !important;
+                }
+
+                #checkout-page .order-bump-grid-view .order-bump-description {
+                    font-size: 0.55rem !important;
+                    line-height: 1.2 !important;
+                    margin: 4px 0 !important;
+                }
+
+                #checkout-page .order-bump-grid-view .order-bump-price {
+                    font-size: 0.7rem !important;
+                }
+
+                #checkout-page .order-bump-grid-view .order-bump-old-price {
+                    font-size: 0.55rem !important;
+                }
+
+                /* PROVA SOCIAL VERTICAL E CENTRALIZADA */
+                .ck-social-proof-mobile-stack {
+                    flex-direction: column !important;
+                    text-align: center !important;
+                    padding: 20px 15px !important;
+                    gap: 12px !important;
+                }
+
+                .ck-social-proof-mobile-stack .avatar-stack {
+                    margin-right: 0 !important;
+                    justify-content: center !important;
+                    width: 100% !important;
+                }
+
+                .ck-social-proof-mobile-stack div[style*="padding-left: 15px"] {
+                    padding-left: 0 !important;
+                    margin-top: 5px !important;
+                }
+
+                /* AJUSTE GERAL DE SECOES */
+                .ck-section {
+                    padding: 12px !important;
+                }
+
+                /* AJUSTE PAYMENT METHODS MOBILE - 3 CARDS LADO A LADO SEM OVERFLOW */
+                #checkout-page .payment-methods-grid {
+                    gap: 6px !important;
+                }
+                #checkout-page .radio-item {
+                    padding: 8px 4px !important;
+                    flex-direction: column !important;
+                    gap: 6px !important;
+                    justify-content: center !important;
+                }
+                #checkout-page .radio-label {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 100%;
+                }
+                #checkout-page .radio-title {
+                    font-size: 0.75rem !important;
+                    text-align: center;
+                    width: 100%;
+                    display: block;
+                }
+                #checkout-page .radio-desc {
+                    font-size: 0.55rem !important;
+                    text-align: center;
+                    width: 100%;
+                    display: block;
+                }
+                #checkout-page .radio-item img, 
+                #checkout-page .radio-item i {
+                    height: 20px !important;
+                    font-size: 20px !important;
+                    margin: 0 !important;
+                }
+            }
+        </style>
+
+        <!-- Checkout Header -->
+        <div class="ck-header">
+            <div class="ck-header-container">
+                <button class="ck-back-btn" onclick="attemptCloseCheckout()">
+                    &#8592; Voltar
+                </button>
+                <div class="ck-logo">
+                    <span style="font-size: 24px;">&#x1F414;</span>
+                    <span>PROTOCOLO <span class="ck-logo-elite">ELITE</span></span>
+                </div>
+                <div class="ck-security-badge">
+                    <span>&#x1F512;</span>
+                    <span>Ambiente 100% Seguro</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="ck-main">
+            <!-- Timer de Urgencia -->
+            <div class="ck-urgency-banner" style="display: flex; flex-direction: column; align-items: center;">
+                <div class="ck-timer-badge">
+                    <span>&#x23F0;</span>
+                    <span>Oferta expira em: <span id="ck-timer">14:59</span></span>
+                </div>
+                <div style="font-size: 0.75rem; color: #ffffff; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; text-align: center; line-height: 1.2;">
+                    <i class="fa-solid fa-mobile-screen-button"></i> Receba o acesso na palma da sua mão imediatamente após o pagamento.
+                </div>
+            </div>
+
+            <!-- CHECKOUT MAIN VIEW -->
+
+
+            <div id="checkout-main-view">
+                <div style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;">
+
+                    <!-- 1. Header do Produto e Garantia -->
+                    <div class="ck-section">
+                        <div class="ck-product-card">
+                            <div class="ck-product-image" id="ck-product-cover">
+                                <img src="capadasdoencas.webp" alt="Capa" loading="lazy">
+                            </div>
+                            <div class="ck-product-info">
+                                <h3 id="checkout-product-name">Protocolo Elite: A Cura das Aves</h3>
+                                <p style="font-size: 0.85rem; color: #4b5563; margin-bottom: 4px;">Acesso Vitalicio +
+                                    Atualizacoes<br><span style="color: #16a34a; font-weight: 700;">+ Tabela de
+                                        vacinacao gratuita inclusa</span></p>
+                                <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 5px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                    <div style="font-size: 0.8rem; color: #64748b; font-weight: 500;">De <span id="top-checkout-card-price" style="text-decoration: line-through;">R$ 149,90</span> por apenas:</div>
+                                    <div style="display: flex; align-items: baseline; gap: 6px;">
+                                        <span id="top-checkout-card-installment" style="font-size: 1.3rem; color: #16a34a; font-weight: 900; line-height: 1;">4x de R$ 37,47</span>
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: #0f172a; font-weight: 700; margin-top: 2px;">
+                                        Ou <span id="checkout-product-price-display" style="color: #22c55e; font-weight: 800;">R$ 89,90</span> com desconto no PIX
+                                    </div>
+                                    <div style="font-size: 0.7rem; color: #64748b; margin-top: 4px; font-style: italic; border-top: 1px dashed #e2e8f0; padding-top: 6px;">
+                                        Menos de 3 reais por dia para salvar suas galinhas.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prova Social Premium (Estilo Hero) -->
+                        <div class="ck-social-proof-mobile-stack" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; margin-top: 15px; margin-bottom: 5px; padding: 15px; background: #fff; border: 1px solid #f1f5f9; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); text-align: center;">
+                            <div class="avatar-stack" style="display: flex; flex-shrink: 0; justify-content: center;">
+                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #ddd; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                    <img src="carrosel/carlos.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                </div>
+                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #ccc; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                    <img src="carrosel/maria.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                </div>
+                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #bbb; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                    <img src="carrosel/joao_new.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                </div>
+                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #aaa; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                    <img src="carrosel/ana.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                </div>
+                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #999; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                    <img src="carrosel/lucas.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                </div>
+                            </div>
+                            <div style="font-size: 0.8rem; color: #475569; line-height: 1.4; max-width: 320px;">
+                                <strong style="color: #0f172a; display: block; margin-bottom: 4px; font-size: 0.9rem;">Mais de 1600 alunos ja estao salvando suas aves.</strong>
+                                Chegou a sua vez, nao perca essa oportunidade por tempo limitado.
+                            </div>
+                        </div>
+                            <!-- Garantia -->
+                            <div class="ck-guarantee-box">
+                                <div class="ck-guarantee-icon">&#x2705;</div>
+                                <div class="ck-guarantee-content">
+                                    <p>Garantia Blindada</p>
+                                    <p>7 dias para testar. Se nao gostar, devolvemos 100% do valor.</p>
+                                </div>
+                            </div>
+
+                            <!-- WhatsApp Support Banner Junto da Garantia -->
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; margin-top: 15px; margin-bottom: 5px; cursor: pointer; transition: 0.2s;" onclick="window.open('https://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20para%20finalizar%20minha%20compra.', '_blank')">
+                                <i class="fa-brands fa-whatsapp fa-bounce" style="color: #22c55e; font-size: 1.6rem;"></i>
+                                <div style="text-align: left; line-height: 1.2;">
+                                    <span style="display: block; font-size: 0.8rem; color: #166534; font-weight: 800;">Atendimento Rápido</span>
+                                    <span style="display: block; font-size: 0.7rem; color: #15803d; font-weight: 500;">Dúvidas? Chame a gente no WhatsApp</span>
+                                </div>
+                            </div>
+
+                            <!-- Prova -->
+                        </div>
+                    </div>
+
+                    <form id="payment-form">
+                        <!-- Dados Pessoais -->
+                        <div class="ck-section">
+                            <div class="ck-section-header">
+                                <div class="ck-section-number">1</div>
+                                <h2 class="ck-section-title">Dados Pessoais</h2>
+                            </div>
+
+
+                            <div id="pix-fields">
+                                <div class="ck-form-group form-group">
+                                    <label for="payer-name">Nome Completo</label>
+                                    <input type="text" id="payer-name" name="name" autocomplete="name" class="form-input ck-input"
+                                        placeholder="Como no seu documento" required
+                                        data-tip="Digite seu nome e sobrenome completo."
+                                        oninput="if(document.getElementById('checkout-payer-firstname')) document.getElementById('checkout-payer-firstname').textContent = this.value.trim().split(' ')[0].toLowerCase()">
+                                    <div class="field-tooltip">Digite seu nome completo</div>
+                                </div>
+
+                                <div class="ck-form-row">
+                                    <div class="ck-form-group form-group">
+                                        <label for="payer-email">E-mail (Opcional)</label>
+                                        <input type="email" id="payer-email" name="email" autocomplete="email" class="form-input ck-input"
+                                            placeholder="seu@email.com (Opcional)" inputmode="email"
+                                            data-tip="Seu melhor email onde recebera o acesso ao guia.">
+                                        <div class="field-tooltip">Onde voce recebera o acesso</div>
+                                    </div>
+                                    <div class="ck-form-group form-group">
+                                        <label for="payer-phone">WhatsApp</label>
+                                        <input type="tel" id="payer-phone" name="phone" autocomplete="tel" class="form-input ck-input"
+                                            placeholder="(00) 00000-0000" required inputmode="tel"
+                                            data-tip="Para suporte e avisos importantes (DDD + Numero).">
+                                        <div class="field-tooltip">DDD + Numero</div>
+                                    </div>
+                                </div>
+
+                                <div class="ck-form-group form-group">
+                                    <label for="payer-cpf">CPF</label>
+                                    <input type="tel" id="payer-cpf" name="cpf" autocomplete="off" class="form-input ck-input"
+                                        placeholder="000.000.000-00" required inputmode="numeric" pattern="[0-9]*"
+                                        data-tip="Necessario para emitir a nota fiscal (apenas numeros).">
+                                    <div class="field-tooltip">Apenas numeros do CPF</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Ofertas Exclusivas / Order Bumps (Movido para cá) -->
+                        <div class="ck-section" style="margin-top: 24px;">
+                            <div id="order-bump-area"></div>
+                        </div>
+
+                        <!-- Pagamento -->
+
+                        <!-- 5. Forma de Pagamento e Botoes -->
+                        <!-- Pagamento -->
+                        <div class="ck-section" style="margin-top: 24px;">
+                            <div class="ck-section-header">
+                                <div class="ck-section-number">2</div>
+                                <h2 class="ck-section-title">Forma de Pagamento</h2>
+                            </div>
+
+                            <!-- Metodos -->
+                            <div class="payment-methods-grid" style="display: flex; gap: 8px; margin-bottom: 24px;">
+                                <div class="radio-item selected" onclick="selectPaymentMethod('pix')">
+                                    <input type="radio" name="paymentMethod" id="method-pix" value="pix" checked
+                                        style="display:none;">
+                                    <div class="radio-label">
+                                        <span class="radio-title">PIX</span>
+                                        <span class="radio-desc">Acesso imediato</span>
+                                    </div>
+                                    <img src="assets/pix.png"
+                                        style="height: 24px;" alt="Pix" loading="lazy">
+                                </div>
+                                <div class="radio-item" onclick="selectPaymentMethod('card')">
+                                    <input type="radio" name="paymentMethod" id="method-card" value="card"
+                                        style="display:none;">
+                                    <div class="radio-label">
+                                        <span class="radio-title">CARTAO</span>
+                                        <span class="radio-desc">Ate 4x s/ juros</span>
+                                    </div>
+                                    <div style="display: flex; gap: 5px; align-items: center;">
+                                        <img src="assets/visa.png"
+                                            style="height: 18px;" alt="Visa" loading="lazy">
+                                        <img src="assets/mastercard.png"
+                                            style="height: 18px;" alt="Mastercard" loading="lazy">
+                                    </div>
+                                </div>
+                                <div class="radio-item" onclick="selectPaymentMethod('boleto')">
+                                    <input type="radio" name="paymentMethod" id="method-boleto" value="boleto"
+                                        style="display:none;">
+                                    <div class="radio-label">
+                                        <span class="radio-title">BOLETO</span>
+                                        <span class="radio-desc" style="font-size: 0.6rem;">Até 72h</span>
+                                    </div>
+                                    <img src="assets/barcode.png" alt="Boleto" style="height: 24px;" loading="lazy">
+                                </div>
+                            </div>
+
+                            <!-- Card Area -->
+                            <!-- Card Area -->
+                            <div id="card-area" style="display: none;">
+                                <div class="ck-form-group form-group">
+                                    <label>Nome no Cartao</label>
+                                    <input type="text" id="card-holder" name="ccname" autocomplete="cc-name" class="form-input ck-input"
+                                        placeholder="Como impresso no cartao"
+                                        data-tip="Nome exatamente como impresso no cartao.">
+                                    <div class="field-tooltip">Igual impresso no cartao</div>
+                                </div>
+                                <div class="ck-form-group form-group">
+                                    <label>E-mail (Opcional)</label>
+                                    <input type="email" id="card-email" name="email" autocomplete="email" class="form-input ck-input"
+                                        placeholder="seu@email.com (Opcional)" inputmode="email">
+                                </div>
+                                <div class="ck-form-row">
+                                    <div class="ck-form-group form-group">
+                                        <label>WhatsApp</label>
+                                        <input type="tel" id="card-phone" name="phone" autocomplete="tel" class="form-input ck-input"
+                                            placeholder="(00) 00000-0000" inputmode="tel">
+                                    </div>
+                                    <div class="ck-form-group form-group">
+                                        <label>CPF do Titular</label>
+                                        <input type="tel" id="card-cpf" name="cpf" autocomplete="off" class="form-input ck-input"
+                                            placeholder="000.000.000-00" inputmode="numeric" pattern="[0-9]*">
+                                    </div>
+                                </div>
+                                <div class="ck-form-group form-group">
+                                    <label>Numero do Cartao</label>
+                                    <input type="text" id="card-number" name="cardnumber" autocomplete="cc-number" class="form-input ck-input"
+                                        placeholder="0000 0000 0000 0000" inputmode="numeric">
+                                    <div class="field-tooltip">Digite os numeros do cartao</div>
+                                </div>
+                                <div class="ck-form-row">
+                                    <div class="ck-form-group form-group">
+                                        <label>Validade</label>
+                                        <input type="text" id="card-expiration" name="cc-exp" autocomplete="cc-exp" class="form-input ck-input"
+                                            placeholder="MM/AA" inputmode="numeric">
+                                    </div>
+                                    <div class="ck-form-group form-group">
+                                        <label>CVV</label>
+                                        <input type="text" id="card-cvv" name="cvc" autocomplete="cc-csc" class="form-input ck-input" placeholder="123" inputmode="numeric">
+                                    </div>
+                                </div>
+                                <div class="ck-form-row">
+                                    <div class="ck-form-group form-group">
+                                        <label>CEP</label>
+                                        <input type="tel" id="card-cep" name="postal-code" autocomplete="postal-code" class="form-input ck-input"
+                                            placeholder="00000-000" inputmode="numeric" pattern="[0-9]*">
+                                    </div>
+                                    <div class="ck-form-group form-group">
+                                        <label>Parcelas</label>
+                                        <select id="installments-select" class="form-input ck-input"></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Order -->
+
+                            <div style="margin-top: 24px;">
+                                <!-- Total -->
+                                <div style="text-align: center; margin-top: 1.5rem;">
+                                    <div class="price-summary-box">
+                                        <div id="checkout-order-summary" style="display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 8px; text-align: left; font-size: 0.85rem; color: #4b5563;">
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; font-weight: 700;">
+                                            <span>Total a pagar:</span>
+                                            <span class="checkout-total-display">R$ --,--</span>
+                                        </div>
+                                        <div id="pix-bonus-status" style="margin-top: 4px; display: none;"></div>
+                                    </div>
+
+                                    <button type="button" id="btn-pay-pix" class="ck-btn-checkout">Finalizar meu
+                                        acesso.</button>
+                                    <button type="button" id="btn-pay-card" class="ck-btn-checkout"
+                                        style="display: none;">FINALIZAR PAGAMENTO</button>
+                                    <button type="button" id="btn-pay-boleto" class="ck-btn-checkout"
+                                        style="display: none;">GERAR BOLETO</button>
+                                </div>
+
+                            </div>
+                    </form>
+
+            <!-- 6. Prova Social -->
+                    <div style="padding-top: 5px;">
+                        <!-- Prova Social -->
+                        <div class="ck-social-proof">
+                            <p class="ck-proof-label" style="text-align: center; font-weight: 800; color: #1e293b; font-size: 0.95rem; margin-bottom: 12px; text-transform: uppercase;">O que dizem os alunos</p>
+                            
+                            <div class="ck-testimonial-box" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; margin-bottom: 15px;">
+                                <img src="carrosel/pedro.webp" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; flex-shrink: 0;" alt="Marcos" loading="lazy">
+                                <div>
+                                    <div style="color: #fbbf24; font-size: 0.65rem; margin-bottom: 2px;">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p style="margin: 0 0 6px 0; font-size: 0.85rem; color: #334155; line-height: 1.4;">"O material é excelente! Consegui curar 3 galos que já estavam no bico do corvo. Vale cada centavo."</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; color: #0f172a; border-top: none; padding-top: 0; text-align: left;">Marcos Paulo <span style="font-weight: 400; color: #64748b; font-size: 0.75rem; border-left: 1px solid #cbd5e1; padding-left: 6px; margin-left: 6px;">Goiânia - GO</span></p>
+                                </div>
+                            </div>
+                            
+                            <div class="ck-testimonial-box" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; margin-bottom: 15px;">
+                                <img src="carrosel/fernanda.webp" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; flex-shrink: 0;" alt="Ricardo" loading="lazy">
+                                <div>
+                                    <div style="color: #fbbf24; font-size: 0.65rem; margin-bottom: 2px;">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p style="margin: 0 0 6px 0; font-size: 0.85rem; color: #334155; line-height: 1.4;">"Gastava uma fortuna em remédio e as galinhas continuavam morrendo. Descobri que tava errando no básico do manejo."</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; color: #0f172a; border-top: none; padding-top: 0; text-align: left;">Silvia Lima <span style="font-weight: 400; color: #64748b; font-size: 0.75rem; border-left: 1px solid #cbd5e1; padding-left: 6px; margin-left: 6px;">Londrina - PR</span></p>
+                                </div>
+                            </div>
+
+                            <div class="ck-testimonial-box" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; margin-bottom: 15px;">
+                                <img src="carrosel/ricardo.webp" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; flex-shrink: 0;" alt="João" loading="lazy">
+                                <div>
+                                    <div style="color: #fbbf24; font-size: 0.65rem; margin-bottom: 2px;">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p style="margin: 0 0 6px 0; font-size: 0.85rem; color: #334155; line-height: 1.4;">"Entrega muito rápida. Paguei no PIX e em menos de 1 minuto o acesso chegou certinho no meu WhatsApp, recomendo!"</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; color: #0f172a; border-top: none; padding-top: 0; text-align: left;">João Batista <span style="font-weight: 400; color: #64748b; font-size: 0.75rem; border-left: 1px solid #cbd5e1; padding-left: 6px; margin-left: 6px;">Campinas - SP</span></p>
+                                </div>
+                            </div>
+
+                            <div class="ck-stars" style="margin-top: 15px;">
+                                <span class="ck-star">&#9733;</span>
+                                <span class="ck-star">&#9733;</span>
+                                <span class="ck-star">&#9733;</span>
+                                <span class="ck-star">&#9733;</span>
+                                <span class="ck-star">&#9733;</span>
+                                <span class="ck-rating-text">4.9/5 (1.647 avaliações)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PIX Result (hidden) -->
+            <div id="pix-result" class="hidden" style="text-align: center;">
+                <h3 id="pix-greeting" style="font-size: 1.5rem; font-weight: 700; color: #1f2937;">Quase lá!</h3>
+                <p style="font-size: 0.9rem; color: #6b7280; margin: 0.5rem 0;">Escaneie o QR Code ou copie o código abaixo.</p>
+
+                <div class="qr-container" style="background: #fff; padding: 1rem; border-radius: 1.2rem; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 260px; margin: 1.5rem auto; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.05); min-height: 260px; position: relative;">
+                    <div id="qr-loader" class="hidden" style="position: absolute; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-shield-halved fa-beat" style="font-size: 2.5rem; color: #10b981;"></i>
+                        <p style="font-size: 0.85rem; color: #0f172a; font-weight: 800; text-align: center;">CONECTANDO AO BANCO...<br><span style="font-size: 0.7rem; color: #64748b; font-weight: 600;">Gerando PIX com segurança</span></p>
+                    </div>
+                    <img id="qr-code-img" src="" alt="QR Code PIX" style="width: 100%; height: auto; margin: 0 auto; border-radius: 8px;" class="hidden">
+                </div>
+                
+                <div id="pix-receiver-info" class="hidden">
+                    <p style="text-align: center; margin: 0; font-size: 0.85rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Recebedor:</p>
+                    <p style="text-align: center; margin: 2px 0 10px 0; font-size: 1.1rem; color: #0f172a; font-weight: 900; text-transform: uppercase;">JOAO PAULO SANTOS CAMARGO</p>
+                </div>
+
+                <button id="btn-copy-pix" class="ck-btn-checkout" style="display: none; background: linear-gradient(135deg, #22c55e, #16a34a);">
+                    <i class="fa-regular fa-copy"></i> COPIAR CÓDIGO PIX
+                </button>
+                <textarea id="pix-copy-paste" readonly style="opacity: 0; position: absolute; z-index: -1;"></textarea>
+
+                <div style="text-align: left; font-size: 0.85rem; color: #6b7280; line-height: 1.6; background: #f8fafc; padding: 1rem; border-radius: 0.5rem; margin-top: 15px;">
+                    <p>1. Abra o app do seu banco e escolha <strong>Pix</strong>.</p>
+                    <p>2. Selecione <strong>Pix Copia e Cola</strong> ou <strong>Ler QR Code</strong>.</p>
+                    <p>3. Cole o código ou escaneie a imagem acima.</p>
+                </div>
+
+                <div style="margin-top: 1.5rem; font-size: 0.85rem;">
+                    Dúvidas? <a href="https://wa.me/5538999832950" target="_blank" style="color: #25d366; font-weight: 700;"><i class="fa-brands fa-whatsapp"></i> Chame no WhatsApp</a>
+                </div>
+
+                <div style="margin-top: 1.5rem; border-top: 1px dashed #e5e7eb; padding-top: 1.5rem;">
+                    <div style="display: flex; justify-content: center; gap: 15px; align-items: center; margin-bottom: 15px;">
+                        <i class="fa-solid fa-lock" style="color: #16a34a; font-size: 1.2rem;"></i>
+                        <img src="assets/pix.png" style="height: 24px;" alt="Pix" loading="lazy">
+                        <img src="assets/mercado-pago.png" style="height: 22px;" alt="Mercado Pago" loading="lazy">
+                    </div>
+
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                        <p style="color: #166534; font-weight: 800; font-size: 0.9rem; margin: 0 0 4px 0; text-transform: uppercase;">
+                            <i class="fa-solid fa-shield-halved"></i> 7 Dias de Garantia
+                        </p>
+                        <p style="color: #15803d; font-size: 0.8rem; line-height: 1.3; margin: 0;">
+                            Se o protocolo não funcionar, nós devolvemos 100% do seu dinheiro sem burocracia.
+                        </p>
+                    </div>
+
+                </div>
+
+                <button onclick="document.getElementById('pix-result').classList.add('hidden'); document.getElementById('checkout-main-view').classList.remove('hidden');" style="margin-top: 1rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-family: inherit;">Voltar</button>
+            </div>
+
+            <!-- BOLETO Result (hidden) -->
+            <div id="boleto-result" class="hidden" style="text-align: center; padding: 0 1rem;">
+                <div style="max-width: 480px; margin: 0 auto;">
+                    <h3 style="font-size: 1.4rem; font-weight: 700; color: #1f2937; margin-bottom: 4px;">Boleto Gerado com Sucesso!</h3>
+                    <p style="font-size: 0.85rem; color: #6b7280; margin: 0 0 1.2rem 0;">Pague até <strong>72 horas</strong> para garantir seu acesso.</p>
+
+                    <div id="boleto-img-loading" class="hidden" style="margin: 0 auto 1rem; padding: 2.5rem 1rem; max-width: min(100%, 560px); background: #f8fafc; border-radius: 10px; border: 1px dashed #cbd5e1; color: #475569; font-size: 0.9rem;">
+                        <i class="fa-solid fa-spinner fa-spin" style="margin-right: 8px;"></i> Preparando visualização…
+                    </div>
+                    <div id="boleto-img-wrap" class="hidden" style="margin: 0 auto 1rem; width: 100%; max-width: min(100%, 560px); border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 16px rgba(0,0,0,0.08); background: #fff; position: relative;">
+                        <div class="boleto-img-shield" style="position: absolute; inset: 0; z-index: 2; cursor: default;" aria-hidden="true" oncontextmenu="return false;"></div>
+                        <img id="boleto-display-img" src="" alt="Ilustração de boleto (dados genéricos)" width="682" height="407" draggable="false" style="width: 100%; height: auto; display: block; user-select: none; -webkit-user-drag: none; position: relative; z-index: 1; pointer-events: none;" loading="lazy">
+                    </div>
+
+                    <!-- Código de barras display (Removido a pedido do usuário) -->
+                    <div style="display: none; background: #f8fafc; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 1rem;">
+                        <p style="font-size: 0.7rem; color: #64748b; font-weight: 600; text-transform: uppercase; margin: 0 0 6px 0;">Linha digitável</p>
+                        <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1px dashed #cbd5e1; word-break: break-all; font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 700; color: #0f172a; letter-spacing: -0.3px;" id="boleto-barcode-display">
+                            Gerando código...
+                        </div>
+                    </div>
+
+                    <!-- Botões -->
+                    <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; margin-bottom: 1rem;">
+                        <button type="button" id="btn-download-boleto" class="ck-btn-checkout" style="width: 100%; max-width: 320px; background: linear-gradient(135deg, #22c55e, #16a34a); font-size: 0.95rem;">
+                            <i class="fa-solid fa-download"></i> BAIXAR BOLETO
+                        </button>
+                        <button type="button" id="btn-copy-boleto" class="ck-btn-checkout" style="display: none; width: 100%; max-width: 320px; background: #3b82f6; font-size: 0.95rem;">
+                            <i class="fa-solid fa-copy"></i> COPIAR LINHA DIGITÁVEL
+                        </button>
+                    </div>
+
+                    <div style="text-align: left; font-size: 0.8rem; color: #6b7280; line-height: 1.5; background: #fefce8; border: 1px solid #fef08a; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                        <p style="margin: 0;"><i class="fa-solid fa-circle-exclamation" style="color: #ca8a04;"></i> Seu acesso será enviado automaticamente para seu e-mail ou pelo whatsapp assim que o pagamento for compensado (em até <strong>72 horas úteis</strong>).</p>
+                    </div>
+
+                    <div style="font-size: 0.85rem; margin-bottom: 8px;">
+                        Dúvidas? <a href="https://wa.me/5538999832950" target="_blank" style="color: #25d366; font-weight: 700;"><i class="fa-brands fa-whatsapp"></i> Chame no WhatsApp</a>
+                    </div>
+
+                    <button onclick="document.getElementById('boleto-result').classList.add('hidden'); document.getElementById('checkout-main-view').classList.remove('hidden');" style="margin-top: 0.5rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-family: inherit;">Voltar ao Checkout</button>
+                </div>
+            </div>
+
+
+
+            <!-- Payment Pending View -->
+            <div id="payment-pending-view" class="hidden" style="text-align: center; padding: 1rem 0;">
+                <div style="font-size: 4rem; color: #f59e0b; margin-bottom: 1rem;">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 style="color: #92400e; font-size: 1.3rem; font-weight: 700;">Pagamento em Análise</h3>
+                <p style="font-size: 0.95rem; color: #6b7280; margin: 1rem 0; line-height: 1.5;">
+                    Sua transação está sendo processada com segurança pelo Mercado Pago. <br>
+                    <strong>Não se preocupe, isso é um procedimento normal.</strong>
+                </p>
+
+                <div style="background: #fffbeb; border: 1px solid #fef3c7; padding: 1rem; border-radius: 0.75rem; text-align: left; margin-bottom: 1.5rem;">
+                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: #92400e;">
+                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-envelope"></i> O acesso será enviado para o seu e-mail assim que aprovado.</li>
+                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-clock"></i> Prazo de análise: de alguns minutos até 48h.</li>
+                        <li style="color: #b91c1c; font-weight: bold;"><i class="fa-solid fa-triangle-exclamation"></i> IMPORTANTE: Verifique sempre sua pasta de SPAM.</li>
+                    </ul>
+                </div>
+
+                <a href="https://wa.me/5538999832950?text=Ol%C3%A1,%20meu%20pagamento%20ficou%20em%20an%C3%A1lise.%20Pode%20me%20ajudar?" target="_blank" class="ck-btn-checkout" style="display: inline-block; text-decoration: none; background: #25d366;">
+                    <i class="fa-brands fa-whatsapp"></i> FALAR COM SUPORTE
+                </a>
+
+                <button onclick="closeCheckout()" style="margin-top: 1.5rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-size: 0.85rem; font-family: inherit; display: block; margin-left: auto; margin-right: auto;">
+                    Entendi, fechar checkout
+                </button>
+            </div>
+
+        </div> <!-- Fim de ck-main -->
+
+        <!-- 7. Footer Geral do Checkout -->
+        <div class="ck-section" style="background-color: transparent; border: none; box-shadow: none; padding-top: 0; max-width: 600px; margin: 0 auto;">
+            <p style="text-align: center; font-size: 0.75rem; color: #6b7280; margin-bottom: 10px;">
+                <i class="fa-solid fa-lock" style="color: #22c55e;"></i> Seus dados estão protegidos com criptografia de ponta.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 10px;">
+                <img src="assets/visa.png" style="height: 22px;" alt="Visa" loading="lazy">
+                <img src="assets/mastercard.png" style="height: 22px;" alt="Mastercard" loading="lazy">
+                <img src="assets/pix.png" style="height: 18px;" alt="Pix" loading="lazy">
+                <img src="assets/mercado-pago.png" style="height: 22px;" alt="Mercado Pago" loading="lazy">
+            </div>
+            <div style="display: flex; justify-content: center; gap: 12px; align-items: center; margin-bottom: 12px;">
+                <span style="font-size: 0.7rem; color: #16a34a; font-weight: 700;"><i class="fa-solid fa-lock"></i> Compra Segura</span>
+                <span style="font-size: 0.7rem; color: #d1d5db;">|</span>
+                <span style="font-size: 0.7rem; color: #16a34a; font-weight: 700;"><i class="fa-solid fa-shield-halved"></i> SSL 256-bit</span>
+                <span style="font-size: 0.7rem; color: #d1d5db;">|</span>
+                <span style="font-size: 0.7rem; color: #16a34a; font-weight: 700;"><i class="fa-solid fa-check-double"></i> Garantia 7 dias</span>
+            </div>
+        </div>
+
+        <div class="ck-footer" style="padding-bottom: 30px;">
+            <p>&copy; 2026 PROTOCOLO ELITE - Todos os direitos reservados.</p>
+            <p>CNPJ: 63.665.824/0001-09</p>
+        </div>
+
+        <!-- Hidden spans for JS compatibility -->
+        <span id="checkout-urgency-banner" style="display:none;"></span>
+        <span id="checkout-payer-firstname" style="display:none;"></span>
+        <span id="checkout-reservation-timer" style="display:none;"></span>
+        <span id="product-icon-container" style="display:none;"></span>
+    </div>
+
+
+    <!-- Official Footer -->
+    <footer
+        style="background: var(--zinc-950); padding: 3rem 0; border-top: 1px solid var(--slate-800); text-align: center;">
+        <div class="container">
+            <div style="margin-bottom: 1.2rem;">
+                <img src="logo.webp" alt="Logo" style="height: 70px; border-radius: 12px;" loading="lazy">
+            </div>
+            <div style="display: flex; justify-content: center; gap: 22px; margin-bottom: 1.2rem;">
+                <a href="https://www.instagram.com/galosmurabrasill/" target="_blank"
+                    style="color: #6b7280; font-size: 1.3rem; transition: color 0.2s;"
+                    onmouseover="this.style.color='#E1306C'" onmouseout="this.style.color='#6b7280'"><i
+                        class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.facebook.com/profile.php?id=61578338141942" target="_blank"
+                    style="color: #6b7280; font-size: 1.3rem; transition: color 0.2s;"
+                    onmouseover="this.style.color='#1877F2'" onmouseout="this.style.color='#6b7280'"><i
+                        class="fa-brands fa-facebook"></i></a>
+                <a href="https://www.tiktok.com/@galosmurabrasil" target="_blank"
+                    style="color: #6b7280; font-size: 1.3rem; transition: color 0.2s;"
+                    onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#6b7280'"><i
+                        class="fa-brands fa-tiktok"></i></a>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--slate-400); line-height: 1.6;">
+                <p>GALOS MURA BRASIL OFICIAL</p>
+                <p>CNPJ: 63.665.824/0001-09</p>
+
+            </div>
+        </div>
+    </footer>
+
+
+
+    <!-- Hidden Helpers for script.js -->
+    <div id="secure-loading" style="display:none;"></div>
+    <div id="toast-container" class="float-toast-container"></div>
+    <div id="checkout-logo-overlay" style="display:none;"></div>
+
+
+
+
+    <div id="floating-cta" class="floating-cta-bar">
+        <div class="floating-cta-content">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                <button onclick="startCheckoutProcess('ebook-doencas')" class="floating-cta-btn">
+                    SALVAR MINHAS GALINHAS AGORA
+                </button>
+                <span class="floating-cta-subtext"><span class="dyn-cta-pix">R$ 89,90 no PIX</span> &bull; Acesso
+                    imediato &bull; Garantia de 7 dias</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll Visibility Local Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const floatingCta = document.getElementById('floating-cta');
+            const learningBtn = document.getElementById('btn-ver-aprendizado');
+            const learningSection = document.getElementById('learning');
+            
+            if (!floatingCta) return;
+
+            // Função para mostrar o CTA
+            const showCta = () => {
+                floatingCta.classList.add('visible');
+                document.body.classList.add('cta-visible');
+            };
+
+            // Função para esconder o CTA
+            const hideCta = () => {
+                floatingCta.classList.remove('visible');
+                document.body.classList.remove('cta-visible');
+            };
+
+            // 1. Mostrar se o usuário clicar no botão "VER O QUE VOU APRENDER"
+            if (learningBtn) {
+                learningBtn.addEventListener('click', function() {
+                    // Dá um pequeno delay para a rolagem começar e então mostra
+                    setTimeout(showCta, 300);
+                });
+            }
+
+            // 2. Controlar via Scroll (Usando o topo da seção de aprendizado como gatilho)
+            window.addEventListener('scroll', function () {
+                if (!learningSection) return;
+                
+                const sectionPos = learningSection.getBoundingClientRect().top;
+                
+                // Se a seção de aprendizado chegar perto do topo (ou já estiver visível), mostra o CTA
+                if (sectionPos < 400) {
+                    showCta();
+                } else {
+                    hideCta();
+                }
+            });
+        });
+    </script>
+
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script>const mp = new MercadoPago('APP_USR-73238612-450f-4fbe-9a9f-3d5f9919f2d1');</script>
+    <script src="smart_fields.js" defer></script>
+    <script src="script.js?v=30" defer></script>
+
+    <!-- Checkout Exit Intent Modal -->
+    <div id="checkout-exit-modal" class="modal-overlay" style="z-index: 1000003;">
+        <div class="modal-content"
+            style="text-align: center; max-width: 320px; padding: 25px 20px; border: 2px solid #ef4444;">
+            <div style="font-size: 3rem; color: #ef4444; margin-bottom: 10px;">
+                <i class="fa-solid fa-triangle-exclamation fa-beat"></i>
+            </div>
+            <h3
+                style="color: #ef4444; font-size: 1.3rem; margin-bottom: 15px; text-transform: uppercase; font-weight: 900;">
+                Atenção</h3>
+            <p style="font-size: 0.95rem; color: #334155; margin-bottom: 20px; line-height: 1.4; font-weight: 600;">
+                Suas galinhas precisam da sua ajuda agora,<br>não deixe para amanhã, para sua galinha amanhã pode ser
+                tarde demais
+            </p>
+            <button onclick="document.getElementById('checkout-exit-modal').classList.remove('active')"
+                class="btn-primary"
+                style="width: 100%; margin-bottom: 10px; font-size: 1rem; padding: 12px; background: #22c55e;">
+                FINALIZAR A COMPRA
+            </button>
+            <button onclick="confirmCloseCheckout()"
+                style="background: none; border: none; color: #94a3b8; text-decoration: underline; cursor: pointer; font-size: 0.85rem;">
+                Sair mesmo assim
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function attemptCloseCheckout() {
+            let exitModal = document.getElementById('checkout-exit-modal');
+            if (exitModal) exitModal.classList.add('active');
+        }
+        function confirmCloseCheckout() {
+            let exitModal = document.getElementById('checkout-exit-modal');
+            if (exitModal) exitModal.classList.remove('active');
+            if (typeof closeCheckout === 'function') {
+                closeCheckout();
+            } else {
+                document.getElementById('checkout-modal').classList.remove('active');
+            }
+        }
+    </script>
+
+    <script>
+        // === CHECKOUT PAGE TIMER ===
+        (function () {
+            var CK_TIMER_KEY = 'ck_timer_end';
+            var CK_TIMER_DURATION = 15 * 60; // 15 minutes in seconds
+            var ckTimerInterval = null;
+
+            function startCkTimer() {
+                var endTime = sessionStorage.getItem(CK_TIMER_KEY);
+                if (!endTime) {
+                    endTime = Date.now() + (CK_TIMER_DURATION * 1000);
+                    sessionStorage.setItem(CK_TIMER_KEY, endTime);
+                }
+                endTime = parseInt(endTime);
+
+                function updateCkTimer() {
+                    var now = Date.now();
+                    var remaining = Math.max(0, Math.floor((endTime - now) / 1000));
+                    var m = Math.floor(remaining / 60);
+                    var s = remaining % 60;
+                    var display = document.getElementById('ck-timer');
+                    if (display) {
+                        display.textContent = (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+                    }
+                    if (remaining <= 0) {
+                        // Reset timer
+                        endTime = Date.now() + (CK_TIMER_DURATION * 1000);
+                        sessionStorage.setItem(CK_TIMER_KEY, endTime);
+                    }
+                }
+
+                updateCkTimer();
+                if (ckTimerInterval) clearInterval(ckTimerInterval);
+                ckTimerInterval = setInterval(updateCkTimer, 1000);
+            }
+
+            // Start timer when checkout page becomes visible
+            var observer = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        var el = document.getElementById('checkout-page');
+                        if (el && el.classList.contains('active')) {
+                            startCkTimer();
+                        }
+                    }
+                });
+            });
+
+            var checkoutPage = document.getElementById('checkout-page');
+            if (checkoutPage) {
+                observer.observe(checkoutPage, { attributes: true });
+            }
+
+            // Also start if checkout is already shown
+            if (checkoutPage && checkoutPage.style.display !== 'none') {
+                startCkTimer();
+            }
+        })();
+    </script>
+
+
+
+
+
+</body>
+
+</html>
