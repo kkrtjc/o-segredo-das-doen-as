@@ -258,44 +258,54 @@
             </div>
         </div>
 
-            <!-- TAB: VSL HUB -->
-            <div id="tab-vsl" class="tab-content">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">Visitas Únicas</div>
-                        <div class="stat-value" id="val-visits-vsl">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Checkouts</div>
-                        <div class="stat-value" id="val-checkouts-vsl">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Vendas</div>
-                        <div class="stat-value" id="val-sales-vsl">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label" style="color: var(--ios-red);">Abandono</div>
-                        <div class="stat-value" id="val-abandons-vsl">0</div>
-                    </div>
-                    <div class="stat-card" style="grid-column: span 2; border: 1px solid var(--ios-green);">
-                        <div class="stat-label" style="color: var(--ios-green);">Faturamento VSL</div>
-                        <div class="stat-value" id="val-revenue-vsl" style="color: var(--ios-green);">R$ 0,00</div>
-                    </div>
-                </div>
-
-                <div class="list-group">
-                    <div class="list-item" style="padding-top: 15px;">
-                        <select id="period-filter-vsl" class="form-input" onchange="renderVslStats()" style="width: 100%; font-size: 14px; background: #f2f2f7;">
-                            <option value="today">Hoje</option>
-                            <option value="yesterday">Ontem</option>
-                            <option value="7days">Últimos 7 dias</option>
-                            <option value="all">Tudo</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="vsl-sales-list"></div>
+        <!-- TAB: VSL HUB -->
+        <div id="tab-vsl" class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; margin-top: 5px;">
+                <h2 class="section-title" style="margin: 0;">VSL Hub</h2>
+                <select id="period-filter-vsl" style="padding: 6px; border-radius: 6px; border: 1px solid var(--ios-border); background: var(--ios-bg); font-size: 13px;" onchange="renderVslStats()">
+                    <option value="today">Hoje</option>
+                    <option value="yesterday">Ontem</option>
+                    <option value="7days">7 Dias</option>
+                    <option value="all" selected>Tudo</option>
+                </select>
             </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <i class="fa-solid fa-users"></i>
+                    <div class="metric-title">Visitas Únicas</div>
+                    <div class="metric-value" id="val-visits-vsl">0</div>
+                </div>
+                <div class="metric-card">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <div class="metric-title">Checkouts</div>
+                    <div class="metric-value" id="val-checkouts-vsl">0</div>
+                </div>
+                <div class="metric-card green">
+                    <i class="fa-solid fa-money-check-dollar"></i>
+                    <div class="metric-title">Vendas VSL</div>
+                    <div class="metric-value" id="val-sales-vsl">0</div>
+                </div>
+                <div class="metric-card red">
+                    <i class="fa-solid fa-basket-shopping"></i>
+                    <div class="metric-title">Abandono VSL</div>
+                    <div class="metric-value" id="val-abandons-vsl">0</div>
+                </div>
+            </div>
+
+            <div class="list-group">
+                <div class="list-item" style="flex-direction: row; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div class="list-item-title">Faturamento VSL</div>
+                        <div class="list-item-sub">Receita total originada na VSL</div>
+                    </div>
+                    <div class="list-item-right" id="val-revenue-vsl" style="position: static; font-size: 18px; color: var(--ios-blue);">R$ 0,00</div>
+                </div>
+            </div>
+
+            <h2 class="section-title" style="margin-top: 10px;">Vendas VSL Recentes</h2>
+            <div id="vsl-sales-list"></div>
+        </div>
 
             <!-- TAB: ABANDONS -->
         <div id="tab-abandons" class="tab-content">
@@ -1036,6 +1046,15 @@
                 } else alert("Erro ao limpar.");
             } catch(e) { alert("Falha na rede.") }
         }
+
+        // Auto refresh stats when switching to VSL Hub
+        const originalSwitchTab = switchTab;
+        window.switchTab = function(tabId, el, title) {
+            originalSwitchTab(tabId, el, title);
+            if(tabId === 'vsl') {
+                renderVslStats();
+            }
+        };
 
     </script>
 </body>

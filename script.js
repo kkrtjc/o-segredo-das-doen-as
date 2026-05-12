@@ -2,7 +2,7 @@ const API_URL = window.location.hostname === 'localhost' || window.location.host
     ? 'http://localhost:10000'
     : 'https://mura-api.joaopaulojaguar.workers.dev';
 
-const PAGE_SOURCE = window.location.pathname.includes('vsl.html') ? 'vsl' : 'text';
+const PAGE_SOURCE = document.querySelector('.vsl-page') ? 'vsl' : 'text';
 
 let cart = {
     mainProduct: null,
