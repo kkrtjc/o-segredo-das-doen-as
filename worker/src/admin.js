@@ -64,9 +64,14 @@ export async function logSale(env, customer, items, paymentId, method, site = 't
     history.push({
         id: paymentId, paymentId,
         date: new Date().toISOString(),
-        name: customer.name, email: customer.email, phone: customer.phone,
-        items: items.map(i => i.title),
-        total: items.reduce((acc, i) => acc + Number(i.price), 0),
+        customer: {
+            name: customer.name,
+            email: customer.email,
+            phone: customer.phone,
+            cpf: customer.cpf
+        },
+        items: items.map(i => (typeof i === 'string' ? i : i.title)),
+        total: items.reduce((acc, i) => acc + Number(i.price || 0), 0),
         method, status: 'approved',
         site: site
     });
