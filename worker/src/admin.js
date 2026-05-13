@@ -58,7 +58,7 @@ export async function saveAnalytics(env, data) {
 }
 
 // ─── LOG SALE ────────────────────────────────────────────────
-export async function logSale(env, customer, items, paymentId, method, site = 'text') {
+export async function logSale(env, customer, items, paymentId, method, site = 'app') {
     const history = await getHistory(env);
     if (history.some(h => String(h.paymentId) === String(paymentId))) return false;
     history.push({
@@ -210,7 +210,7 @@ adminRoutes.post('/abandon', async (c) => {
         await saveAbandons(c.env, abandons);
         return c.json({ success: true });
     }
-    abandons.push({ id: Date.now().toString(), date: new Date().toISOString(), name: name || '', email: email || '', phone: phone || '', product: product || 'unknown', pixGenerated: pixGenerated || false, pixId: pixId || null, paid: false, site: site || 'text' });
+    abandons.push({ id: Date.now().toString(), date: new Date().toISOString(), name: name || '', email: email || '', phone: phone || '', product: product || 'unknown', pixGenerated: pixGenerated || false, pixId: pixId || null, paid: false, site: site || 'app' });
     await saveAbandons(c.env, abandons);
     return c.json({ success: true });
 });

@@ -33,7 +33,7 @@ function getFriendlyError(error) {
 
 // ─── PIX ────────────────────────────────────────────────────
 checkoutRoutes.post('/pix', async (c) => {
-    const { items, customer, facebookEventId, fbc, fbp, userAgent, site } = await c.req.json();
+    const { items, customer, facebookEventId, fbc, fbp, externalId, userAgent, site } = await c.req.json();
     const MP_TOKEN = c.env.MP_ACCESS_TOKEN;
     const BASE_URL = c.env.BASE_URL || 'https://mura-api.joaopaulosantoscamargo.workers.dev';
 
@@ -65,7 +65,8 @@ checkoutRoutes.post('/pix', async (c) => {
             fbc: fbc,
             fbp: fbp,
             user_agent: userAgent,
-            site: site || 'text'
+            site: site || 'app',
+            external_id: externalId
         },
     };
 
@@ -94,7 +95,7 @@ checkoutRoutes.post('/pix', async (c) => {
 
 // ─── BOLETO ────────────────────────────────────────────────
 checkoutRoutes.post('/boleto', async (c) => {
-    const { items, customer, facebookEventId, fbc, fbp, userAgent, site } = await c.req.json();
+    const { items, customer, facebookEventId, fbc, fbp, externalId, userAgent, site } = await c.req.json();
     const MP_TOKEN = c.env.MP_ACCESS_TOKEN;
     const BASE_URL = c.env.BASE_URL || 'https://mura-api.joaopaulosantoscamargo.workers.dev';
 
@@ -145,7 +146,8 @@ checkoutRoutes.post('/boleto', async (c) => {
             fbc: fbc,
             fbp: fbp,
             user_agent: userAgent,
-            site: site || 'text'
+            site: site || 'app',
+            external_id: externalId
         },
     };
 
@@ -196,7 +198,8 @@ checkoutRoutes.get('/boleto/safe-preview', async (c) => {
 checkoutRoutes.post('/card', async (c) => {
     const MP_TOKEN = c.env.MP_ACCESS_TOKEN;
     const BASE_URL = c.env.BASE_URL || 'https://mura-api.joaopaulosantoscamargo.workers.dev';
-    const { items, customer, token, installments, payment_method_id, issuer_id, deviceId, facebookEventId, fbc, fbp, userAgent } = await c.req.json();
+    const { items, customer, token, installments, payment_method_id, issuer_id, deviceId, facebookEventId, fbc, fbp, externalId, userAgent, site } = await c.req.json();
+    const clientIp = c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For')?.split(',')[0]?.trim();
 
     const totalAmount = Number(items.reduce((acc, i) => acc + Number(i.price), 0).toFixed(2));
     if (totalAmount <= 0) return c.json({ error: 'Valor inválido.' }, 400);
@@ -253,7 +256,7 @@ checkoutRoutes.post('/card', async (c) => {
             fbc: fbc,
             fbp: fbp,
             user_agent: userAgent,
-            site: site || 'text'
+            site: site || 'app'
         },
     };
 
@@ -278,9 +281,9 @@ checkoutRoutes.post('/card', async (c) => {
             // Aplica o lock imediatamente
             await c.env.HISTORY.put(lockKey, 'locked', { expirationTtl: 7200 });
             
-            const isNewSale = await logSale(c.env, customer, items, result.id, 'cartão', site || 'text');
+            const isNewSale = await logSale(c.env, customer, items, result.id, 'cartão', site || 'app');
             if (isNewSale) {
-                await sendEmail(c.env, customer, items, result.id, facebookEventId, fbc, fbp, userAgent, null, site || 'text'); 
+                await sendEmail(c.env, customer, items, result.id, facebookEventId, fbc, fbp, userAgent, clientIp, site || 'app', externalId); 
             }
         }
         
@@ -311,18 +314,20 @@ checkoutRoutes.get('/payment/:id', async (c) => {
         };
         const itemTitles = (result.description || 'Produto').split(', ');
         const items = itemTitles.map(title => ({ title, price: result.transaction_amount / itemTitles.length }));
-        const isNewSale = await logSale(c.env, customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão', metadata.site || 'text');
+        const isNewSale = await logSale(c.env, customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão', metadata.site || 'app');
         
-        if (isNewSale) {
-            await sendEmail(c.env, customer, items, result.id, 
-                metadata.facebook_event_id, 
-                metadata.fbc, 
-                metadata.fbp, 
-                metadata.user_agent,
-                null,
-                metadata.site || 'text'
-            ); 
-        }
+            if (isNewSale) {
+                const clientIpStatus = c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For')?.split(',')[0]?.trim();
+                await sendEmail(c.env, customer, items, result.id, 
+                    metadata.facebook_event_id, 
+                    metadata.fbc, 
+                    metadata.fbp, 
+                    metadata.user_agent,
+                    clientIpStatus,
+                    metadata.site || 'app',
+                    metadata.external_id
+                ); 
+            }
         
         const token = await generateDownloadToken(customer.email, items, result.id, c.env);
         return c.json({ id: result.id, status: result.status, redirectToken: token });

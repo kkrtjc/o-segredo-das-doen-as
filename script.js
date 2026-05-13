@@ -1277,6 +1277,7 @@ async function handlePayment(method) {
                     facebookEventId: currentFacebookEventId,
                     fbc: fbc,
                     fbp: fbp,
+                    externalId: sessionStorage.getItem('mura_session_id'), // Session ID para match
                     userAgent: navigator.userAgent,
                     site: PAGE_SOURCE
                 })
@@ -1402,6 +1403,7 @@ async function handlePayment(method) {
                 facebookEventId: currentFacebookEventId,
                 fbc: fbc,
                 fbp: fbp,
+                externalId: sessionStorage.getItem('mura_session_id'), // Session ID para match
                 userAgent: navigator.userAgent,
                 site: PAGE_SOURCE
             };

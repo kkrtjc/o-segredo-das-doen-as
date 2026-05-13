@@ -9,23 +9,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --ios-bg: #F2F2F7;
-            --ios-card: #FFFFFF;
-            --ios-blue: #007AFF;
-            --ios-gray: #8E8E93;
-            --ios-text: #000000;
-            --ios-border: #C6C6C8;
-            --ios-red: #FF3B30;
-            --ios-green: #34C759;
+            --bg-color: #020617;
+            --surface-color: rgba(15, 23, 42, 0.6);
+            --surface-border: rgba(255, 255, 255, 0.08);
+            --accent-primary: #10B981;
+            --accent-secondary: #3B82F6;
+            --text-main: #F8FAFC;
+            --text-muted: #64748B;
+            --ios-red: #EF4444;
+            --ios-green: #10B981;
+            --glass-bg: rgba(15, 23, 42, 0.8);
             --safe-bottom: env(safe-area-inset-bottom, 20px);
-            --nav-height: 65px;
+            --nav-height: 70px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--ios-bg);
-            color: var(--ios-text);
+            background: radial-gradient(circle at 50% 0%, #1E293B 0%, #020617 100%);
+            color: var(--text-main);
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
@@ -35,106 +37,128 @@
         /* LOGIN SCREEN */
         #login-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--ios-bg); z-index: 9999;
+            background: var(--bg-color); z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px; transition: opacity 0.3s;
+            padding: 20px;
         }
         .login-box {
-            background: var(--ios-card); width: 100%; max-width: 350px;
-            padding: 30px 20px; border-radius: 14px; text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            background: var(--surface-color); width: 100%; max-width: 350px;
+            padding: 48px 32px; border-radius: 32px; text-align: center;
+            border: 1px solid var(--surface-border);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .login-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 5px; }
-        .login-box p { color: var(--ios-gray); font-size: 14px; margin-bottom: 20px; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .login-box h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; letter-spacing: -1px; }
+        .login-box p { color: var(--text-muted); font-size: 15px; margin-bottom: 32px; }
         .ios-input {
-            width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--ios-border);
-            font-size: 16px; margin-bottom: 15px; outline: none; background: #F2F2F7;
+            width: 100%; padding: 18px; border-radius: 16px; border: 1px solid var(--surface-border);
+            font-size: 16px; margin-bottom: 20px; outline: none; background: rgba(0, 0, 0, 0.3);
+            color: #FFF; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .ios-input:focus { border-color: var(--ios-blue); background: #FFF; }
+        .ios-input:focus { border-color: var(--accent-secondary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
         .ios-btn {
-            width: 100%; background: var(--ios-blue); color: #FFF; border: none;
-            padding: 14px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer;
+            width: 100%; background: linear-gradient(135deg, var(--accent-secondary), #2563EB); color: #FFF; border: none;
+            padding: 18px; border-radius: 16px; font-size: 16px; font-weight: 700; cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+            transition: all 0.2s;
         }
-        .ios-btn:active { opacity: 0.8; }
+        .ios-btn:active { transform: scale(0.96); opacity: 0.9; }
 
         /* HEADER */
         header {
-            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            position: fixed; top: 0; left: 0; width: 100%; height: 50px; z-index: 1000;
+            background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 64px; z-index: 1000;
             display: flex; align-items: center; justify-content: center;
-            border-bottom: 1px solid rgba(0,0,0,0.1); padding-top: env(safe-area-inset-top, 0px);
+            border-bottom: 1px solid var(--surface-border); padding-top: env(safe-area-inset-top, 0px);
         }
-        header h1 { font-size: 17px; font-weight: 600; }
-        header .refresh-btn { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--ios-blue); font-size: 18px; cursor: pointer; }
+        header h1 { font-size: 17px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--text-main); }
+        header .refresh-btn { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: var(--accent-secondary); font-size: 18px; cursor: pointer; padding: 10px; }
+        header .refresh-btn.spinning { animation: spin 0.6s infinite linear; }
+        @keyframes spin { from { transform: translateY(-50%) rotate(0deg); } to { transform: translateY(-50%) rotate(360deg); } }
 
         /* MAIN CONTENT */
         main {
-            padding-top: calc(50px + env(safe-area-inset-top, 0px) + 15px);
-            padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 20px);
-            padding-inline: 16px; flex: 1; display: none;
+            padding-top: calc(84px + env(safe-area-inset-top, 0px));
+            padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 40px);
+            padding-inline: 20px; flex: 1; display: none;
+            max-width: 600px; margin: 0 auto; width: 100%;
         }
 
-        .tab-content { display: none; animation: fadeIn 0.3s; }
+        .tab-content { display: none; animation: contentFade 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
         .tab-content.active { display: block; }
+        @keyframes contentFade { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
         /* DATA CARDS */
-        .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
         .metric-card {
-            background: var(--ios-card); padding: 16px; border-radius: 14px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column;
+            background: var(--surface-color); padding: 24px; border-radius: 28px;
+            border: 1px solid var(--surface-border);
+            display: flex; flex-direction: column; position: relative; overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
         }
-        .metric-card i { font-size: 20px; color: var(--ios-blue); margin-bottom: 8px; }
-        .metric-card.green i { color: var(--ios-green); }
-        .metric-card.red i { color: var(--ios-red); }
-        .metric-title { font-size: 12px; color: var(--ios-gray); font-weight: 500; text-transform: uppercase; margin-bottom: 4px; }
-        .metric-value { font-size: 22px; font-weight: 700; color: var(--ios-text); }
+        .metric-card:active { transform: scale(0.97); background: rgba(30, 41, 59, 0.8); }
+        .metric-card::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--accent-secondary); opacity: 0.5;
+        }
+        .metric-card.green::after { background: var(--accent-primary); }
+        .metric-card.red::after { background: var(--ios-red); }
 
-        .list-group { background: var(--ios-card); border-radius: 14px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .metric-card i { font-size: 20px; color: var(--accent-secondary); margin-bottom: 12px; opacity: 0.9; }
+        .metric-card.green i { color: var(--accent-primary); }
+        .metric-card.red i { color: var(--ios-red); }
+        .metric-title { font-size: 11px; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        .metric-value { font-size: 28px; font-weight: 900; color: var(--text-main); letter-spacing: -1px; }
+
+        .list-group { background: var(--surface-color); border-radius: 28px; overflow: hidden; margin-bottom: 24px; border: 1px solid var(--surface-border); backdrop-filter: blur(8px); }
         .list-item {
-            padding: 14px 16px; border-bottom: 1px solid var(--ios-border);
+            padding: 20px 24px; border-bottom: 1px solid var(--surface-border);
             display: flex; flex-direction: column; position: relative;
+            transition: background 0.2s;
         }
+        .list-item:active { background: rgba(255, 255, 255, 0.05); }
         .list-item:last-child { border-bottom: none; }
-        .list-item-title { font-size: 15px; font-weight: 600; margin-bottom: 2px; color: var(--ios-text); }
-        .list-item-sub { font-size: 13px; color: var(--ios-gray); }
-        .list-item-right { position: absolute; right: 16px; top: 14px; font-size: 15px; font-weight: 600; color: var(--ios-green); }
+        .list-item-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+        .list-item-sub { font-size: 13px; color: var(--text-muted); line-height: 1.5; font-weight: 500; }
+        .list-item-right { position: absolute; right: 24px; top: 20px; font-size: 16px; font-weight: 800; color: var(--accent-primary); }
         
         /* Action buttons in lists */
-        .action-row { display: flex; gap: 8px; margin-top: 10px; }
-        .btn-small { padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; border: none; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; text-decoration: none; }
-        .btn-green { background: #E8F5E9; color: var(--ios-green); }
-        .btn-blue { background: #E3F2FD; color: var(--ios-blue); }
-
-        /* Product Edit */
-        .product-edit-row { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
-        .price-input-wrapper { display: flex; align-items: center; background: #F2F2F7; border-radius: 8px; padding: 4px 8px; }
-        .price-input-wrapper span { font-size: 14px; color: var(--ios-gray); font-weight: 500; margin-right: 4px; }
-        .price-input { border: none; background: transparent; width: 60px; font-size: 16px; font-weight: 600; outline: none; }
-        .save-btn { background: var(--ios-blue); color: #FFF; padding: 6px 14px; border-radius: 16px; font-size: 13px; font-weight: 600; border: none; }
+        .action-row { display: flex; gap: 10px; margin-top: 16px; }
+        .btn-small { padding: 12px 20px; border-radius: 14px; font-size: 13px; font-weight: 700; border: none; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-green { background: var(--accent-primary); color: #FFF; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); }
+        .btn-blue { background: var(--accent-secondary); color: #FFF; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2); }
+        .btn-small:active { transform: scale(0.95); opacity: 0.9; }
 
         /* Section Title */
-        .section-title { font-size: 20px; font-weight: 700; margin-bottom: 12px; margin-top: 10px; color: var(--ios-text); }
-        .empty-state { padding: 30px; text-align: center; color: var(--ios-gray); font-size: 14px; }
+        .section-title { font-size: 24px; font-weight: 900; margin-bottom: 20px; margin-top: 12px; color: var(--text-main); letter-spacing: -1px; }
+        .empty-state { padding: 50px 24px; text-align: center; color: var(--text-muted); font-size: 14px; font-weight: 500; }
 
         /* BOTTOM NAV */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; height: calc(var(--nav-height) + var(--safe-bottom));
-            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(0,0,0,0.1); display: flex; justify-content: space-around;
+            background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--surface-border); display: flex; justify-content: space-around;
             padding-bottom: var(--safe-bottom); z-index: 1000;
         }
         .nav-item {
             flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: var(--ios-gray); cursor: pointer; padding-top: 6px;
+            color: var(--text-muted); cursor: pointer; transition: all 0.3s;
+            position: relative;
         }
-        .nav-item i { font-size: 22px; margin-bottom: 3px; }
-        .nav-item span { font-size: 10px; font-weight: 500; }
-        .nav-item.active { color: var(--ios-blue); }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-item i { font-size: 20px; margin-bottom: 6px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .nav-item span { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-item.active { color: var(--accent-secondary); }
+        .nav-item.active i { transform: translateY(-4px) scale(1.1); }
+        .nav-item.active::after {
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 24px; height: 3px; background: var(--accent-secondary); border-radius: 0 0 4px 4px;
+        }
 
         /* TOAST */
-        #toast { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background: #333; color: #FFF; padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 500; z-index: 9999; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        #toast { position: fixed; bottom: calc(var(--nav-height) + var(--safe-bottom) + 20px); left: 50%; transform: translateX(-50%); background: var(--accent-primary); color: #FFF; padding: 14px 28px; border-radius: 18px; font-size: 14px; font-weight: 700; z-index: 9999; display: none; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); animation: toastPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes toastPop { from { transform: translate(-50%, 20px) scale(0.9); opacity: 0; } to { transform: translate(-50%, 0) scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -164,9 +188,9 @@
         
         <!-- TAB 1: METRICS -->
         <div id="tab-dashboard" class="tab-content active">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; margin-top: 5px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2 class="section-title" style="margin: 0;">Visão Geral</h2>
-                <select id="period-filter" style="padding: 6px; border-radius: 6px; border: 1px solid var(--ios-border); background: var(--ios-bg); font-size: 13px;" onchange="renderDashboardStats()">
+                <select id="period-filter" style="padding: 10px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-color); color: var(--text-main); font-size: 13px; font-weight: 700;" onchange="renderDashboardStats()">
                     <option value="today">Hoje</option>
                     <option value="yesterday">Ontem</option>
                     <option value="7days">Últimos 7 Dias</option>
@@ -207,9 +231,9 @@
 
         <!-- TAB 1.5: AMAZON -->
         <div id="tab-amazon" class="tab-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; margin-top: 5px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2 class="section-title" style="margin: 0;">Amazon Hub</h2>
-                <select id="period-filter-amazon" style="padding: 6px; border-radius: 6px; border: 1px solid var(--ios-border); background: var(--ios-bg); font-size: 13px;" onchange="renderAmazonStats()">
+                <select id="period-filter-amazon" style="padding: 10px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-color); color: var(--text-main); font-size: 13px; font-weight: 700;" onchange="renderAmazonStats()">
                     <option value="today">Hoje</option>
                     <option value="yesterday">Ontem</option>
                     <option value="7days">Últimos 7 Dias</option>
@@ -240,19 +264,21 @@
             </div>
             
             <div class="list-group">
-                <div class="list-item">
-                    <div class="list-item-title">Receita Total (Amazon)</div>
-                    <div class="list-item-sub">Faturamento gerado no site da Amazon</div>
-                    <div class="list-item-right" id="val-revenue-amz" style="color:var(--ios-blue);">R$ 0,00</div>
+                <div class="list-item" style="flex-direction: row; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div class="list-item-title">Receita Total (Amazon)</div>
+                        <div class="list-item-sub">Faturamento gerado via Amazon</div>
+                    </div>
+                    <div class="list-item-right" id="val-revenue-amz" style="position: static; font-size: 20px; color: var(--accent-secondary);">R$ 0,00</div>
                 </div>
             </div>
 
-            <h2 class="section-title" style="margin-top: 20px;">Vendas da Amazon</h2>
+            <h2 class="section-title">Vendas Recentes</h2>
             <div class="list-group" id="amazon-sales-list">
                  <div class="empty-state">As vendas aparecerão aqui.</div>
             </div>
 
-            <h2 class="section-title" style="margin-top: 20px;">Abandonos da Amazon</h2>
+            <h2 class="section-title">Abandonos Recentes</h2>
             <div class="list-group" id="amazon-abandons-list">
                  <div class="empty-state">Os abandonos aparecerão aqui.</div>
             </div>
@@ -260,9 +286,9 @@
 
         <!-- TAB: VSL HUB -->
         <div id="tab-vsl" class="tab-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; margin-top: 5px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2 class="section-title" style="margin: 0;">VSL Hub</h2>
-                <select id="period-filter-vsl" style="padding: 6px; border-radius: 6px; border: 1px solid var(--ios-border); background: var(--ios-bg); font-size: 13px;" onchange="renderVslStats()">
+                <select id="period-filter-vsl" style="padding: 10px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-color); color: var(--text-main); font-size: 13px; font-weight: 700;" onchange="renderVslStats()">
                     <option value="today">Hoje</option>
                     <option value="yesterday">Ontem</option>
                     <option value="7days">7 Dias</option>
@@ -299,12 +325,14 @@
                         <div class="list-item-title">Faturamento VSL</div>
                         <div class="list-item-sub">Receita total originada na VSL</div>
                     </div>
-                    <div class="list-item-right" id="val-revenue-vsl" style="position: static; font-size: 18px; color: var(--ios-blue);">R$ 0,00</div>
+                    <div class="list-item-right" id="val-revenue-vsl" style="position: static; font-size: 20px; color: var(--accent-secondary);">R$ 0,00</div>
                 </div>
             </div>
 
-            <h2 class="section-title" style="margin-top: 10px;">Vendas VSL Recentes</h2>
-            <div id="vsl-sales-list"></div>
+            <h2 class="section-title">Vendas Recentes</h2>
+            <div id="vsl-sales-list" class="list-group">
+                 <div class="empty-state">As vendas aparecerão aqui.</div>
+            </div>
         </div>
 
             <!-- TAB: ABANDONS -->
@@ -515,19 +543,34 @@
             return n;
         };
 
-        // TAB 1: METRICS
         async function loadDashboard() {
+            const refreshBtn = document.querySelector('.refresh-btn');
+            if (refreshBtn) refreshBtn.classList.add('spinning');
+            
             try {
+                // Cache busting with timestamp
+                const ts = Date.now();
                 const [resA, resH] = await Promise.all([
-                    fetch('https://mura-api.joaopaulojaguar.workers.dev/api/analytics', { headers: { 'x-admin-password': currentPass } }),
-                    fetch('https://mura-api.joaopaulojaguar.workers.dev/api/history', { headers: { 'x-admin-password': currentPass } })
+                    fetch(`${WORKER_URL}/api/analytics?t=${ts}`, { headers: { 'x-admin-password': currentPass } }),
+                    fetch(`${WORKER_URL}/api/history?t=${ts}`, { headers: { 'x-admin-password': currentPass } })
                 ]);
+                
+                if (!resA.ok || !resH.ok) throw new Error("Falha ao carregar dados do servidor");
+                
                 globalAnalytics = await resA.json();
                 globalHistory = await resH.json();
                 
                 renderDashboardStats();
+                if (currentTab === 'amazon') renderAmazonStats();
+                if (currentTab === 'vsl') renderVslStats();
+                
+                if (refreshBtn) {
+                    setTimeout(() => refreshBtn.classList.remove('spinning'), 500);
+                }
             } catch(e) {
                 console.error("Dashboard error", e);
+                showToast("Erro ao sincronizar dados");
+                if (refreshBtn) refreshBtn.classList.remove('spinning');
             }
         }
 
@@ -539,11 +582,11 @@
                 let agg = { visits: 0, checkouts: 0, sales: 0, abandons: 0, revenue: 0 };
 
                 if(filter === 'all') {
-                    agg.visits = globalAnalytics.totals?.uniqueVisits || 0;
-                    agg.checkouts = globalAnalytics.totals?.checkoutOpens || 0;
-                    agg.abandons = globalAnalytics.totals?.checkoutAbandons || 0;
+                    agg.visits = (globalAnalytics.totals?.uniqueVisits || 0) + (globalAnalytics.totals?.uniqueVisits_app || 0);
+                    agg.checkouts = (globalAnalytics.totals?.checkoutOpens || 0) + (globalAnalytics.totals?.checkoutOpens_app || 0);
+                    agg.abandons = (globalAnalytics.totals?.checkoutAbandons || 0) + (globalAnalytics.totals?.checkoutAbandons_app || 0);
                     
-                    const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0 && !(h.items || []).some(i => i.includes('[AMZ]')) && h.site !== 'vsl') : [];
+                    const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0 && !(h.items || []).some(i => i.includes('[AMZ]')) && (h.site === 'app' || h.site === 'text' || !h.site) && h.site !== 'vsl') : [];
                     agg.sales = validHistory.length;
                     agg.revenue = validHistory.reduce((a, s) => a + Number(s.total), 0);
                 } else {
@@ -574,14 +617,14 @@
                     const daily = globalAnalytics.daily || {};
                     datesToKeep.forEach(dStr => {
                         if (daily[dStr]) {
-                            agg.visits += (daily[dStr].uniqueVisits || daily[dStr].pageViews || 0);
-                            agg.checkouts += (daily[dStr].checkoutOpens || daily[dStr].checkoutStarts || 0);
-                            agg.abandons += (daily[dStr].checkoutAbandons || 0);
+                            agg.visits += (daily[dStr].uniqueVisits || daily[dStr].pageViews || 0) + (daily[dStr].uniqueVisits_app || 0);
+                            agg.checkouts += (daily[dStr].checkoutOpens || daily[dStr].checkoutStarts || 0) + (daily[dStr].checkoutOpens_app || 0);
+                            agg.abandons += (daily[dStr].checkoutAbandons || 0) + (daily[dStr].checkoutAbandons_app || 0);
                         }
                     });
 
-                    // Compute sales and revenue from history arrays (excluding Amazon and VSL)
-                    const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0 && !(h.items || []).some(i => i.includes('[AMZ]')) && h.site !== 'vsl') : [];
+                    // Compute sales and revenue from history arrays (including 'app' and excluding Amazon/VSL)
+                    const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0 && !(h.items || []).some(i => i.includes('[AMZ]')) && (h.site === 'app' || h.site === 'text' || !h.site) && h.site !== 'vsl') : [];
                     validHistory.forEach(sale => {
                         const saleDateObj = new Date(sale.date || Date.now());
                         const saleLocalDate = getLocalDate(saleDateObj);

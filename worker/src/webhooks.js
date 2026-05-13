@@ -52,7 +52,7 @@ webhookRoutes.post('/mercadopago', async (c) => {
                 // Aplica o lock imediatamente
                 await c.env.HISTORY.put(lockKey, 'locked', { expirationTtl: 7200 });
 
-                const isNewSale = await logSale(c.env, customer, items, paymentId, payment.payment_method_id === 'pix' ? 'pix' : 'cartão');
+                const isNewSale = await logSale(c.env, customer, items, paymentId, payment.payment_method_id === 'pix' ? 'pix' : 'cartão', metadata.site || 'app');
 
                 // Marcar abandono como pago
                 const abandons = await getAbandons(c.env);
@@ -65,11 +65,16 @@ webhookRoutes.post('/mercadopago', async (c) => {
 
                 // Envia e-mail e dados CAPI se for novo
                 if (isNewSale) {
+                    const clientIp = c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For')?.split(',')[0]?.trim();
+                    const { sendEmail } = await import('./email.js');
                     await sendEmail(c.env, customer, items, paymentId, 
                         metadata.facebook_event_id, 
                         metadata.fbc, 
                         metadata.fbp, 
-                        metadata.user_agent);
+                        metadata.user_agent,
+                        clientIp,
+                        metadata.site || 'app',
+                        metadata.external_id); // Passa o session_id original para match no Meta
                 }
             }
         } catch (e) {
