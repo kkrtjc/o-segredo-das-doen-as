@@ -89,34 +89,35 @@
         })();
     </script>
     <!-- End Meta Pixel Code -->
-    <!-- TikTok Pixel Code -->
+    <!-- TikTok Pixel — carregado 2s após page interactive (não impacta dados) -->
     <script>
-        !function (w, d, t) {
-            w.TiktokAnalyticsObject = t; var ttq = w[t] = w[t] || []; ttq.methods = ["page", "track", "identify", "instances", "load", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie"], ttq.setAndDefer = function (t, e) { t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }; for (var i = 0; i < ttq.methods.length; i++)ttq.setAndDefer(ttq, ttq.methods[i]); ttq.instance = function (t) { for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++)ttq.setAndDefer(e, ttq.methods[n]); return e }, ttq.load = function (e, n) { var i = "https://analytics.tiktok.com/i18n/pixel/events.js"; ttq._i = ttq._i || {}, ttq._i[e] = [], ttq._i[e]._u = i, ttq._t = ttq._t || {}, ttq._t[e] = +new Date, ttq._o = ttq._o || {}, ttq._o[e] = n || {}; var o = d.createElement("script"); o.type = "text/javascript", o.async = !0, o.src = i + "?sdkid=" + e + "&lib=" + t; var a = d.getElementsByTagName("script")[0]; a.parentNode.insertBefore(o, a) };
-            ttq.load('D4VFSO3C77U98L8KBEF0');
-            ttq.page();
-        }(window, document, 'ttq');
+        // Inicializa o objeto ttq para que chamadas ttq.track() funcionem mesmo antes do load
+        !function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","load","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=d.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=d.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+        // Delay: carrega apenas após a página estar interativa
+        function loadTikTok(){ttq.load('D4VFSO3C77U98L8KBEF0');ttq.page();}
+        if(document.readyState==='complete'){setTimeout(loadTikTok,2000);}
+        else{window.addEventListener('load',function(){setTimeout(loadTikTok,2000);});}
+        }(window,document,'ttq');
     </script>
     <!-- End TikTok Pixel Code -->
     <title>PROTOCOLO ELITE: A Cura das Aves | O Segredo das Galinhas</title>
 
-    <!-- Performance Optimizations -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Performance: preconnect only to domains actually used in this page -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://connect.facebook.net">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         media="print" onload="this.media='all'">
 
-    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="modern_enhancements.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="mobile_modal_fix.css">
+    <link rel="stylesheet" href="mobile_modal_fix.css" media="print" onload="this.media='all'">
 
-    <!-- Preload critical assets -->
+    <!-- Preload critical above-the-fold assets with high priority -->
     <link rel="preload" href="logo.webp" as="image">
-    <link rel="preload" href="capadasdoencas.webp" as="image">
+    <link rel="preload" href="capadasdoencas.webp" as="image" fetchpriority="high">
     <!-- DNS Prefetch for external payment APIs -->
     <link rel="dns-prefetch" href="https://secure.mlstatic.com">
     <link rel="dns-prefetch" href="https://api.mercadopago.com">
@@ -2853,8 +2854,18 @@
         });
     </script>
 
-    <script src="https://sdk.mercadopago.com/js/v2"></script>
-    <script>const mp = new MercadoPago('APP_USR-73238612-450f-4fbe-9a9f-3d5f9919f2d1');</script>
+    <!-- Mercado Pago SDK — carregado de forma assíncrona (não bloqueia o render) -->
+    <script>
+    // Carrega o SDK do MP de forma não-bloqueante. O 'mp' só é necessário
+    // quando o usuário abre o checkout, o que ocorre segundos após o carregamento.
+    (function() {
+        var s = document.createElement('script');
+        s.src = 'https://sdk.mercadopago.com/js/v2';
+        s.async = true;
+        s.onload = function() { window.mp = new MercadoPago('APP_USR-73238612-450f-4fbe-9a9f-3d5f9919f2d1'); };
+        document.head.appendChild(s);
+    })();
+    </script>
     <script src="smart_fields.js" defer></script>
     <script src="script.js?v=32" defer></script>
     <script>
