@@ -2421,7 +2421,32 @@
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <script>const mp = new MercadoPago('APP_USR-73238612-450f-4fbe-9a9f-3d5f9919f2d1');</script>
     <script src="smart_fields.js" defer></script>
-    <script src="script.js?v=31" defer></script>
+    <script src="script.js?v=32" defer></script>
+    <script>
+    // ─── META ADVANCED MATCHING — INPUT LISTENERS ─────────────────────────────
+    // Quando o usuário preenche email/telefone no checkout, atualiza o Pixel
+    // imediatamente para maximizar a correspondência de eventos com anúncios.
+    document.addEventListener('DOMContentLoaded', function() {
+        var emailFields = ['payer-email', 'card-email', 'customer-email'];
+        var phoneFields = ['payer-phone', 'card-phone', 'customer-phone'];
+        var nameFields  = ['payer-name',  'card-holder', 'customer-name'];
+        var cpfFields   = ['payer-cpf',   'card-cpf',   'customer-cpf'];
+        var allFields   = emailFields.concat(phoneFields).concat(nameFields).concat(cpfFields);
+        allFields.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener('blur', function() {
+                if (typeof updateMetaUserData === 'function') {
+                    var name  = (document.getElementById('payer-name')  || document.getElementById('card-holder') || {}).value  || '';
+                    var email = (document.getElementById('payer-email') || document.getElementById('card-email')  || {}).value  || '';
+                    var phone = (document.getElementById('payer-phone') || document.getElementById('card-phone')  || {}).value  || '';
+                    var cpf   = (document.getElementById('payer-cpf')   || document.getElementById('card-cpf')   || {}).value  || '';
+                    updateMetaUserData({ name: name, email: email, phone: phone, cpf: cpf });
+                }
+            });
+        });
+    });
+    </script>
 
     <!-- Checkout Exit Intent Modal -->
     <div id="checkout-exit-modal" class="modal-overlay" style="z-index: 1000003;">

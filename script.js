@@ -302,6 +302,54 @@ function trackPixel(eventName, params = {}, eventId = null) {
     }
 }
 
+/**
+ * ─── META ADVANCED MANUAL MATCHING ────────────────────────────────────────────
+ * Re-inicializa o Pixel com dados do cliente assim que os temos.
+ * Meta usa esses dados hasheados para atribuir eventos server-side (CAPI)
+ * ao clique original do anúncio — resolvendo a falta de atribuição.
+ * 
+ * Chamado: (1) ao abrir o checkout, (2) ao digitar email/telefone no formulário.
+ */
+function updateMetaUserData(customer = {}) {
+    try {
+        if (typeof fbq !== 'function') return;
+        
+        const userData = {};
+        
+        // Email — Meta aceita texto puro e faz hash SHA-256 automaticamente
+        if (customer.email && customer.email.includes('@')) {
+            userData.em = customer.email.trim().toLowerCase();
+        }
+        
+        // Telefone — Remove tudo que não é número, adiciona DDI Brasil
+        if (customer.phone) {
+            const rawPhone = customer.phone.replace(/\D/g, '');
+            // Formato Meta: E.164 sem + (ex: 5511999999999)
+            userData.ph = rawPhone.startsWith('55') ? rawPhone : '55' + rawPhone;
+        }
+        
+        // Nome dividido em primeiro e último
+        if (customer.name) {
+            const parts = customer.name.trim().split(' ');
+            if (parts[0]) userData.fn = parts[0].toLowerCase();
+            if (parts.length > 1) userData.ln = parts[parts.length - 1].toLowerCase();
+        }
+        
+        // CPF como external_id (identificador único)
+        if (customer.cpf) {
+            userData.external_id = customer.cpf.replace(/\D/g, '');
+        }
+        
+        // Só re-inicializa se tiver pelo menos um dado útil
+        if (Object.keys(userData).length > 0) {
+            fbq('init', '1346740157465853', userData);
+            console.log('[META MATCHING] Pixel re-inicializado com dados do cliente:', Object.keys(userData));
+        }
+    } catch (e) {
+        console.warn('[META MATCHING] Erro ao atualizar dados do usuário:', e);
+    }
+}
+
 // ─── CAPI SERVER-SIDE ENGINE ──────────────────────────────────────────────────────────────
 // Coleta dados do usuário do formulário e envia ao Worker,
 // que repassa ao Meta com IP e User-Agent reais do servidor.
@@ -1155,6 +1203,11 @@ async function handlePayment(method) {
 
     const isValid = validateCheckoutInputs(method);
     if (!isValid) return;
+
+    // ─── META ADVANCED MATCHING ──────────────────────────────────────────────
+    // Re-inicializa o Pixel com dados reais do cliente ANTES de disparar eventos.
+    // Isso resolve o erro de diagnóstico da Meta e permite atribuição correta.
+    updateMetaUserData(customer);
 
     // PRICING LOGIC FOR API PAYLOAD
     let mainPrice = cart.mainProduct.price;
