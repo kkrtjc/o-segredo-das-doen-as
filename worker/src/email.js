@@ -97,7 +97,7 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
                         fbp, 
                         userAgent, 
                         clientIp,
-                        externalId: customer.cpf // Usa o CPF como External ID forte para match
+                        externalId: externalId || customer.cpf // Usa o session_id correto para match no funil (externalId), CPF só como fallback
                     },
                     value: totalValue,
                     currency: 'BRL',
