@@ -188,14 +188,25 @@
         
         <!-- TAB 1: METRICS -->
         <div id="tab-dashboard" class="tab-content active">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 class="section-title" style="margin: 0;">Visão Geral</h2>
-                <select id="period-filter" style="padding: 10px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-color); color: var(--text-main); font-size: 13px; font-weight: 700;" onchange="renderDashboardStats()">
-                    <option value="today">Hoje</option>
-                    <option value="yesterday">Ontem</option>
-                    <option value="7days">Últimos 7 Dias</option>
-                    <option value="all" selected>Tudo</option>
-                </select>
+            <div style="display: flex; flex-direction: column; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 class="section-title" style="margin: 0;">Visão Geral</h2>
+                    <select id="period-filter" style="padding: 10px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-color); color: var(--text-main); font-size: 13px; font-weight: 700;" onchange="toggleCustomDate('period-filter', 'filter-custom-row'); renderDashboardStats()">
+                        <option value="today">Hoje</option>
+                        <option value="yesterday">Ontem</option>
+                        <option value="7days">Últimos 7 Dias</option>
+                        <option value="all" selected>Tudo</option>
+                        <option value="custom">Personalizado...</option>
+                    </select>
+                </div>
+                <div id="filter-custom-row" style="display: none; margin-top: 15px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border);">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="date" id="date-start" style="flex:1; padding: 8px; border-radius: 8px; border: none; background: var(--surface-color); color: var(--text-main); font-size: 13px; color-scheme: dark;">
+                        <span style="color: var(--text-muted); font-size: 12px;">até</span>
+                        <input type="date" id="date-end" style="flex:1; padding: 8px; border-radius: 8px; border: none; background: var(--surface-color); color: var(--text-main); font-size: 13px; color-scheme: dark;">
+                        <button onclick="renderDashboardStats()" class="btn-small btn-blue" style="padding: 10px;"><i class="fa-solid fa-check"></i></button>
+                    </div>
+                </div>
             </div>
             <div class="metrics-grid">
                 <div class="metric-card">
@@ -231,14 +242,25 @@
 
         <!-- TAB 1.5: AMAZON -->
         <div id="tab-amazon" class="tab-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 class="section-title" style="margin: 0;">Amazon Hub</h2>
-                <select id="period-filter-amazon" style="padding: 10px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-color); color: var(--text-main); font-size: 13px; font-weight: 700;" onchange="renderAmazonStats()">
-                    <option value="today">Hoje</option>
-                    <option value="yesterday">Ontem</option>
-                    <option value="7days">Últimos 7 Dias</option>
-                    <option value="all" selected>Tudo</option>
-                </select>
+            <div style="display: flex; flex-direction: column; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 class="section-title" style="margin: 0;">Amazon Hub</h2>
+                    <select id="period-filter-amazon" style="padding: 10px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-color); color: var(--text-main); font-size: 13px; font-weight: 700;" onchange="toggleCustomDate('period-filter-amazon', 'filter-custom-row-amz'); renderAmazonStats()">
+                        <option value="today">Hoje</option>
+                        <option value="yesterday">Ontem</option>
+                        <option value="7days">Últimos 7 Dias</option>
+                        <option value="all" selected>Tudo</option>
+                        <option value="custom">Personalizado...</option>
+                    </select>
+                </div>
+                <div id="filter-custom-row-amz" style="display: none; margin-top: 15px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border);">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="date" id="date-start-amz" style="flex:1; padding: 8px; border-radius: 8px; border: none; background: var(--surface-color); color: var(--text-main); font-size: 13px; color-scheme: dark;">
+                        <span style="color: var(--text-muted); font-size: 12px;">até</span>
+                        <input type="date" id="date-end-amz" style="flex:1; padding: 8px; border-radius: 8px; border: none; background: var(--surface-color); color: var(--text-main); font-size: 13px; color-scheme: dark;">
+                        <button onclick="renderAmazonStats()" class="btn-small btn-blue" style="padding: 10px;"><i class="fa-solid fa-check"></i></button>
+                    </div>
+                </div>
             </div>
             <div class="metrics-grid">
                 <div class="metric-card">
@@ -286,14 +308,25 @@
 
         <!-- TAB: VSL HUB -->
         <div id="tab-vsl" class="tab-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 class="section-title" style="margin: 0;">VSL Hub</h2>
-                <select id="period-filter-vsl" style="padding: 10px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-color); color: var(--text-main); font-size: 13px; font-weight: 700;" onchange="renderVslStats()">
-                    <option value="today">Hoje</option>
-                    <option value="yesterday">Ontem</option>
-                    <option value="7days">7 Dias</option>
-                    <option value="all" selected>Tudo</option>
-                </select>
+            <div style="display: flex; flex-direction: column; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 class="section-title" style="margin: 0;">VSL Hub</h2>
+                    <select id="period-filter-vsl" style="padding: 10px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-color); color: var(--text-main); font-size: 13px; font-weight: 700;" onchange="toggleCustomDate('period-filter-vsl', 'filter-custom-row-vsl'); renderVslStats()">
+                        <option value="today">Hoje</option>
+                        <option value="yesterday">Ontem</option>
+                        <option value="7days">7 Dias</option>
+                        <option value="all" selected>Tudo</option>
+                        <option value="custom">Personalizado...</option>
+                    </select>
+                </div>
+                <div id="filter-custom-row-vsl" style="display: none; margin-top: 15px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border);">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="date" id="date-start-vsl" style="flex:1; padding: 8px; border-radius: 8px; border: none; background: var(--surface-color); color: var(--text-main); font-size: 13px; color-scheme: dark;">
+                        <span style="color: var(--text-muted); font-size: 12px;">até</span>
+                        <input type="date" id="date-end-vsl" style="flex:1; padding: 8px; border-radius: 8px; border: none; background: var(--surface-color); color: var(--text-main); font-size: 13px; color-scheme: dark;">
+                        <button onclick="renderVslStats()" class="btn-small btn-blue" style="padding: 10px;"><i class="fa-solid fa-check"></i></button>
+                    </div>
+                </div>
             </div>
 
             <div class="metrics-grid">
@@ -507,6 +540,16 @@
             loadCurrentTab();
         }
 
+        function toggleCustomDate(selectId, rowId) {
+            const select = document.getElementById(selectId);
+            const row = document.getElementById(rowId);
+            if (select.value === 'custom') {
+                row.style.display = 'block';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+
         function logout() {
             localStorage.removeItem('mura_admin_pass');
             location.reload();
@@ -612,6 +655,18 @@
                             d.setDate(now.getDate() - i);
                             datesToKeep.push(getLocalDate(d));
                         }
+                    } else if (filter === 'custom') {
+                        const start = document.getElementById('date-start').value;
+                        const end = document.getElementById('date-end').value;
+                        if (start && end) {
+                            const d1 = new Date(start + 'T00:00:00');
+                            const d2 = new Date(end + 'T23:59:59');
+                            let current = new Date(d1);
+                            while(current <= d2) {
+                                datesToKeep.push(getLocalDate(current));
+                                current.setDate(current.getDate() + 1);
+                            }
+                        }
                     }
 
                     const daily = globalAnalytics.daily || {};
@@ -689,6 +744,18 @@
                             d.setDate(now.getDate() - i);
                             datesToKeep.push(getLocalDate(d));
                         }
+                    } else if (filter === 'custom') {
+                        const start = document.getElementById('date-start-amz').value;
+                        const end = document.getElementById('date-end-amz').value;
+                        if (start && end) {
+                            const d1 = new Date(start + 'T00:00:00');
+                            const d2 = new Date(end + 'T23:59:59');
+                            let current = new Date(d1);
+                            while(current <= d2) {
+                                datesToKeep.push(getLocalDate(current));
+                                current.setDate(current.getDate() + 1);
+                            }
+                        }
                     }
 
                     const daily = globalAnalytics.daily || {};
@@ -736,8 +803,8 @@
 
                         html += `
                         <div class="list-item">
-                            <div class="list-item-title">${sale.name || 'Sem Nome'} <span style="font-size: 11px; background: ${methodColor}; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${methodStr}</span></div>
-                            <div class="list-item-sub">${sale.email || ''} • ${sale.cpf || 'Sem CPF'}</div>
+                            <div class="list-item-title">${sale.name || sale.customer?.name || 'Sem Nome'} <span style="font-size: 11px; background: ${methodColor}; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${methodStr}</span></div>
+                            <div class="list-item-sub">${sale.email || sale.customer?.email || ''} • ${sale.cpf || sale.customer?.cpf || 'Sem CPF'}</div>
                             <div class="list-item-right" style="color:var(--ios-text);">${formatBRL(sale.total)}</div>
                             <div class="list-item-sub" style="margin-top: 4px; font-size:11px;">Data: ${dStr}</div>
                             <div class="list-item-sub" style="font-size:11px; color: var(--ios-blue);">Produtos: ${sale.items?.join(', ') || 'N/A'}</div>
@@ -754,7 +821,7 @@
                 if(!Array.isArray(abandonsData)) {
                     amzAbandonsList.innerHTML = '<div class="empty-state">Erro ao carregar abandonos.</div>';
                 } else {
-                    const amzAbandons = abandonsData.filter(a => a.site === 'amazon');
+                    const amzAbandons = abandonsData.filter(a => a.site === 'amazon' && !a.paid);
                     if(amzAbandons.length === 0) {
                         amzAbandonsList.innerHTML = '<div class="empty-state">Nenhum abandono da Amazon.</div>';
                     } else {
@@ -802,8 +869,8 @@
                     return;
                 }
 
-                // Filter out Amazon
-                const officialAbandons = data.filter(a => a.site !== 'amazon');
+                // Filter out Amazon and Paid
+                const officialAbandons = data.filter(a => a.site !== 'amazon' && !a.paid);
 
                 if (officialAbandons.length === 0) {
                     list.innerHTML = `<div class="empty-state">Nenhum abandono capturado ainda.</div>`;
@@ -853,7 +920,7 @@
                 }
                 
                 // Filly only with actual data generated and exclude Amazon
-                const sales = data.filter(h => h && h.name && !(h.items || []).some(i => i.includes('[AMZ]')));
+                const sales = data.filter(h => h && (h.name || h.customer?.name) && !(h.items || []).some(i => i.includes('[AMZ]')));
                 
                 if(sales.length === 0) {
                     list.innerHTML = '<div class="empty-state">Nenhuma venda/PIX gerado.</div>';
@@ -873,8 +940,8 @@
 
                     html += `
                     <div class="list-item">
-                        <div class="list-item-title">${sale.name || 'Sem Nome'} <span style="font-size: 11px; background: ${methodColor}; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${methodStr}</span></div>
-                        <div class="list-item-sub">${sale.email || ''} • ${sale.cpf || 'Sem CPF'}</div>
+                        <div class="list-item-title">${sale.name || sale.customer?.name || 'Sem Nome'} <span style="font-size: 11px; background: ${methodColor}; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${methodStr}</span></div>
+                        <div class="list-item-sub">${sale.email || sale.customer?.email || ''} • ${sale.cpf || sale.customer?.cpf || 'Sem CPF'}</div>
                         <div class="list-item-right" style="color:var(--ios-text);">${formatBRL(sale.total)}</div>
                         <div class="list-item-sub" style="margin-top: 4px; font-size:11px;">Data: ${dStr}</div>
                         <div class="list-item-sub" style="font-size:11px; color: var(--ios-blue);">Produtos: ${sale.items?.join(', ') || 'N/A'}</div>
@@ -925,6 +992,18 @@
                             d.setDate(now.getDate() - i);
                             datesToKeep.push(getLocalDate(d));
                         }
+                    } else if (filter === 'custom') {
+                        const start = document.getElementById('date-start-vsl').value;
+                        const end = document.getElementById('date-end-vsl').value;
+                        if (start && end) {
+                            const d1 = new Date(start + 'T00:00:00');
+                            const d2 = new Date(end + 'T23:59:59');
+                            let current = new Date(d1);
+                            while(current <= d2) {
+                                datesToKeep.push(getLocalDate(current));
+                                current.setDate(current.getDate() + 1);
+                            }
+                        }
                     }
 
                     const daily = globalAnalytics.daily || {};
@@ -969,8 +1048,8 @@
 
                         html += `
                         <div class="list-item">
-                            <div class="list-item-title">${sale.name || 'Sem Nome'} <span style="font-size: 11px; background: ${methodColor}; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${methodStr}</span></div>
-                            <div class="list-item-sub">${sale.email || ''} • ${sale.phone || ''}</div>
+                            <div class="list-item-title">${sale.name || sale.customer?.name || 'Sem Nome'} <span style="font-size: 11px; background: ${methodColor}; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${methodStr}</span></div>
+                            <div class="list-item-sub">${sale.email || sale.customer?.email || ''} • ${sale.phone || sale.customer?.phone || ''}</div>
                             <div class="list-item-right" style="color:var(--ios-text);">${formatBRL(sale.total)}</div>
                             <div class="list-item-sub" style="margin-top: 4px; font-size:11px;">Data: ${dStr}</div>
                             <div class="list-item-sub" style="font-size:11px; color: var(--ios-blue);">Produtos: ${sale.items?.join(', ') || 'N/A'}</div>
