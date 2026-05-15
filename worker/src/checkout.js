@@ -175,24 +175,8 @@ checkoutRoutes.post('/boleto', async (c) => {
     });
 });
 
-// PNG mascarado (Worker repassa Node se NODE_BOLETO_PREVIEW_ORIGIN estiver definido)
-checkoutRoutes.get('/boleto/safe-preview', async (c) => {
-    const origin = (c.env.NODE_BOLETO_PREVIEW_ORIGIN || '').replace(/\/$/, '');
-    if (!origin) {
-        return c.json({ error: 'Defina NODE_BOLETO_PREVIEW_ORIGIN ou use assets/boleto-ilustrativo.png no site estático.' }, 503);
-    }
-    const r = await fetch(`${origin}/api/checkout/boleto/safe-preview`, {
-        headers: { Accept: 'image/png' },
-    });
-    if (!r.ok) return c.json({ error: 'upstream' }, 502);
-    const ab = await r.arrayBuffer();
-    return new Response(ab, {
-        headers: {
-            'Content-Type': 'image/png',
-            'Cache-Control': 'private, max-age=60',
-        },
-    });
-});
+// Nota: A rota /boleto/safe-preview foi removida.
+// A imagem ilustrativa do boleto é servida diretamente pelo site estático (Cloudflare Pages).
 
 // ─── CARTÃO ─────────────────────────────────────────────────
 checkoutRoutes.post('/card', async (c) => {
@@ -256,7 +240,8 @@ checkoutRoutes.post('/card', async (c) => {
             fbc: fbc,
             fbp: fbp,
             user_agent: userAgent,
-            site: site || 'app'
+            site: site || 'app',
+            external_id: externalId
         },
     };
 
