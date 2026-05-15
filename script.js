@@ -316,15 +316,14 @@ function updateMetaUserData(customer = {}) {
         
         const userData = {};
         
-        // Email — Meta aceita texto puro e faz hash SHA-256 automaticamente
+        // Email — campo mais importante para match
         if (customer.email && customer.email.includes('@')) {
             userData.em = customer.email.trim().toLowerCase();
         }
         
-        // Telefone — Remove tudo que não é número, adiciona DDI Brasil
+        // Telefone — Formato E.164 Brasil (5511999999999)
         if (customer.phone) {
             const rawPhone = customer.phone.replace(/\D/g, '');
-            // Formato Meta: E.164 sem + (ex: 5511999999999)
             userData.ph = rawPhone.startsWith('55') ? rawPhone : '55' + rawPhone;
         }
         
@@ -335,15 +334,25 @@ function updateMetaUserData(customer = {}) {
             if (parts.length > 1) userData.ln = parts[parts.length - 1].toLowerCase();
         }
         
-        // CPF como external_id (identificador único)
+        // CPF → campo 'db' (document/tax ID) — identificador oficial para BR
+        // Documentação Meta: https://developers.facebook.com/docs/marketing-api/conversions-api/parameters/customer-information-parameters
         if (customer.cpf) {
-            userData.external_id = customer.cpf.replace(/\D/g, '');
+            const cleanCPF = customer.cpf.replace(/\D/g, '');
+            if (cleanCPF.length === 11) {
+                userData.db = cleanCPF; // Meta faz hash SHA-256 automaticamente
+            }
+        }
+        
+        // External ID = Session ID (não CPF) — é o que liga browser → CAPI no funil
+        const sessionId = sessionStorage.getItem('mura_session_id');
+        if (sessionId) {
+            userData.external_id = sessionId;
         }
         
         // Só re-inicializa se tiver pelo menos um dado útil
         if (Object.keys(userData).length > 0) {
             fbq('init', '1346740157465853', userData);
-            console.log('[META MATCHING] Pixel re-inicializado com dados do cliente:', Object.keys(userData));
+            console.log('[META MATCHING] Pixel re-inicializado. Campos:', Object.keys(userData).join(', '));
         }
     } catch (e) {
         console.warn('[META MATCHING] Erro ao atualizar dados do usuário:', e);
