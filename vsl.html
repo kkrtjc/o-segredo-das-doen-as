@@ -2418,10 +2418,18 @@
         });
     </script>
 
-    <script src="https://sdk.mercadopago.com/js/v2"></script>
-    <script>const mp = new MercadoPago('APP_USR-73238612-450f-4fbe-9a9f-3d5f9919f2d1');</script>
+    <!-- Mercado Pago SDK — carregado de forma assíncrona (não bloqueia o render) -->
+    <script>
+    (function() {
+        var s = document.createElement('script');
+        s.src = 'https://sdk.mercadopago.com/js/v2';
+        s.async = true;
+        s.onload = function() { window.mp = new MercadoPago('APP_USR-73238612-450f-4fbe-9a9f-3d5f9919f2d1'); };
+        document.head.appendChild(s);
+    })();
+    </script>
     <script src="smart_fields.js" defer></script>
-    <script src="script.js?v=32" defer></script>
+    <script src="script.js?v=33" defer></script>
     <script>
     // ─── META ADVANCED MATCHING — INPUT LISTENERS ─────────────────────────────
     // Quando o usuário preenche email/telefone no checkout, atualiza o Pixel
