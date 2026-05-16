@@ -3004,7 +3004,7 @@
     <div id="pix-upsell-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999999; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px);">
         <div id="pix-upsell-modal-box" style="background: white; border-radius: 20px; padding: 28px 20px; max-width: 380px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3); animation: fadeInUp 0.3s ease; position: relative; overflow: hidden;">
             <div style="position: relative; z-index: 2;">
-                <div style="background: #fbbf24; color: #78350f; font-size: 0.75rem; font-weight: 900; padding: 6px 14px; border-radius: 20px; display: inline-block; margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;">Espere! Não gere o PIX ainda</div>
+                <div style="background: #ef4444; color: #ffffff; font-size: 0.85rem; font-weight: 900; padding: 6px 16px; border-radius: 20px; display: inline-block; margin-bottom: 18px; letter-spacing: 1px; text-transform: uppercase; box-shadow: 0 2px 8px rgba(239,68,68,0.3);">ATENÇÃO</div>
                 <h3 style="font-size: 1.25rem; font-weight: 900; color: #0f172a; margin-top: 0; line-height: 1.3; font-family: 'Inter', sans-serif;">VEMOS QUE VOCÊ TÁ LEVANDO NOSSO EBOOK COMPLETO DAS DOENÇAS</h3>
 
                 <p style="font-size: 0.95rem; color: #334155; margin: 15px 0; line-height: 1.5; font-weight: 500;">
@@ -3012,11 +3012,11 @@
                 </p>
                 
                 <div style="border: 2px dashed #22c55e; border-radius: 16px; padding: 35px 12px 25px; margin: 20px 0; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; background: #ffffff; min-height: 180px; display: flex; align-items: center; justify-content: center;">
-                    <!-- ASSETS OVERLAPPING 3D FAN STACK (FULLY VISIBLE & ZOOMED OUT) -->
+                    <!-- ASSETS OVERLAPPING 3D FAN STACK (FULLY VISIBLE & BRIGHTENED) -->
                     <div style="position: absolute; inset: 0; z-index: 1; opacity: 1.0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
-                        <img src="capadospintinhos.webp" style="height: 80%; width: auto; transform: rotate(-8deg); margin-right: -25px; z-index: 1; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.25));">
-                        <img src="capadasdoencas.webp" style="height: 88%; width: auto; transform: rotate(0deg); z-index: 3; filter: drop-shadow(0 6px 15px rgba(0,0,0,0.3));">
-                        <img src="tabela_racao_bump.webp" style="height: 80%; width: auto; transform: rotate(8deg); margin-left: -25px; z-index: 2; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.25));">
+                        <img src="capadospintinhos.webp" style="height: 80%; width: auto; transform: rotate(-8deg); margin-right: -25px; z-index: 1; filter: brightness(1.25) contrast(1.05) drop-shadow(0 4px 10px rgba(0,0,0,0.25));">
+                        <img src="capadasdoencas.webp" style="height: 88%; width: auto; transform: rotate(0deg); z-index: 3; filter: brightness(1.25) contrast(1.05) drop-shadow(0 6px 15px rgba(0,0,0,0.3));">
+                        <img src="tabela_racao_bump.webp" style="height: 80%; width: auto; transform: rotate(8deg); margin-left: -25px; z-index: 2; filter: brightness(1.25) contrast(1.05) drop-shadow(0 4px 10px rgba(0,0,0,0.25));">
                     </div>
 
                     <!-- TEXT OVERLAY WITH HIGH-CONTRAST OUTLINES -->
@@ -3032,10 +3032,10 @@
                         </p>
                         
                         <div style="border-top: 1px solid rgba(255,255,255,0.4); padding-top: 8px; margin-top: 5px; display: inline-block; width: 90%;">
-                            <p style="font-size: 0.95rem; color: #ffffff; margin: 0; font-weight: 850;">
-                                <span style="text-decoration: line-through; -webkit-text-decoration-color: #000000; text-decoration-color: #000000; color: #ffffff; font-weight: 900; text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 0 2px 4px rgba(0,0,0,0.9);">De R$ 189,90</span> 
-                                <span style="background: #fbbf24; color: #78350f; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; margin-left: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); text-shadow: none;">ECONOMIA DE R$ 50,00</span>
-                            </p>
+                            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
+                                <span style="text-decoration: line-through; -webkit-text-decoration-color: #000000; text-decoration-color: #000000; color: #ffffff; font-weight: 900; text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 0 2px 4px rgba(0,0,0,0.9); font-size: 0.95rem;">De R$ 189,90</span> 
+                                <span style="background: #fbbf24; color: #78350f; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 900; box-shadow: 0 2px 6px rgba(0,0,0,0.3); text-shadow: none; display: inline-block;">ECONOMIA DE R$ 50,00</span>
+                            </div>
                         </div>
                     </div>
                 </div>
