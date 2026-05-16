@@ -855,8 +855,14 @@ function updateTotal() {
         }
 
         if (bump) {
-            const bumpPriceForPix = bump.price || 0;
-            const bumpPriceForCard = bump.priceCard || bump.price || 0;
+            let bumpPriceForPix = bump.price || 0;
+            let bumpPriceForCard = bump.priceCard || bump.price || 0;
+
+            // --- PIX UPSELL RECAPTURE PRICE OVERRIDE FOR DISPLAY ---
+            if (window.acceptedPixUpsell && currentPaymentMethod === 'pix') {
+                if (bump.id === 'ebook-manejo' || bump.id.includes('manejo')) bumpPriceForPix = 30.10;
+                if (bump.id === 'bump-6361') bumpPriceForPix = 19.90;
+            }
 
             console.log(`💰 Preços do bump (${id}):`, { pix: bumpPriceForPix, card: bumpPriceForCard });
 
@@ -1180,6 +1186,27 @@ function switchMethod(method) {
 
 
 
+window.bypassPixUpsell = false;
+window.acceptedPixUpsell = false;
+
+window.acceptPixUpsell = function() {
+    window.bypassPixUpsell = true;
+    window.acceptedPixUpsell = true;
+    // Inject bumps
+    if (!cart.bumps.includes('ebook-manejo')) cart.bumps.push('ebook-manejo');
+    if (!cart.bumps.includes('bump-6361')) cart.bumps.push('bump-6361');
+    document.getElementById('pix-upsell-modal').classList.add('hidden');
+    updateTotal();
+    handlePayment('pix');
+};
+
+window.rejectPixUpsell = function() {
+    window.bypassPixUpsell = true;
+    window.acceptedPixUpsell = false;
+    document.getElementById('pix-upsell-modal').classList.add('hidden');
+    handlePayment('pix');
+};
+
 async function handlePayment(method) {
     // UPSELL REMOVIDO: Fluxo direto para pagamento
     let customer = {};
@@ -1212,6 +1239,12 @@ async function handlePayment(method) {
 
     const isValid = validateCheckoutInputs(method);
     if (!isValid) return;
+
+    // --- PIX UPSELL RECAPTURE INTERCEPT ---
+    if (!window.bypassPixUpsell && method === 'pix' && cart.mainProduct && cart.mainProduct.id === 'ebook-doencas' && cart.bumps.length === 0) {
+        document.getElementById('pix-upsell-modal').classList.remove('hidden');
+        return; // Stops the generation, waits for user action
+    }
 
     // ─── META ADVANCED MATCHING ──────────────────────────────────────────────
     // Re-inicializa o Pixel com dados reais do cliente ANTES de disparar eventos.
@@ -1254,6 +1287,13 @@ async function handlePayment(method) {
 
         if (b) {
             let bumpPrice = (method === 'card' && b.priceCard) ? b.priceCard : b.price;
+            
+            // --- PIX UPSELL RECAPTURE PRICE OVERRIDE ---
+            if (window.acceptedPixUpsell && method === 'pix') {
+                if (b.id === 'ebook-manejo' || b.id.includes('manejo')) bumpPrice = 30.10; // R$ 89.90 + 30.10 + 19.90 = R$ 139.90
+                if (b.id === 'bump-6361') bumpPrice = 19.90;
+            }
+
             items.push({ id: b.id, title: b.title, price: bumpPrice });
         }
     });
