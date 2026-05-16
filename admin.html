@@ -821,7 +821,12 @@
                 if(!Array.isArray(abandonsData)) {
                     amzAbandonsList.innerHTML = '<div class="empty-state">Erro ao carregar abandonos.</div>';
                 } else {
-                    const amzAbandons = abandonsData.filter(a => a.site === 'amazon' && !a.paid);
+                    const amzAbandons = abandonsData.filter(a => {
+                        if (a.site !== 'amazon') return false;
+                        if (a.paid) return false;
+                        if (a.pixId && globalHistory && globalHistory.some(h => String(h.paymentId) === String(a.pixId))) return false;
+                        return true;
+                    });
                     if(amzAbandons.length === 0) {
                         amzAbandonsList.innerHTML = '<div class="empty-state">Nenhum abandono da Amazon.</div>';
                     } else {
@@ -869,8 +874,13 @@
                     return;
                 }
 
-                // Filter out Amazon and Paid
-                const officialAbandons = data.filter(a => a.site !== 'amazon' && !a.paid);
+                // Filter out Amazon and Paid (Cross-check with history to fix retroactively)
+                const officialAbandons = data.filter(a => {
+                    if (a.site === 'amazon') return false;
+                    if (a.paid) return false;
+                    if (a.pixId && globalHistory && globalHistory.some(h => String(h.paymentId) === String(a.pixId))) return false;
+                    return true;
+                });
 
                 if (officialAbandons.length === 0) {
                     list.innerHTML = `<div class="empty-state">Nenhum abandono capturado ainda.</div>`;

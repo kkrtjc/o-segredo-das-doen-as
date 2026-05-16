@@ -58,7 +58,7 @@ webhookRoutes.post('/mercadopago', async (c) => {
 
                     // Marcar abandono como pago
                     const abandons = await getAbandons(c.env);
-                    const idx = abandons.findIndex(a => a.pixId === String(paymentId));
+                    const idx = abandons.findIndex(a => String(a.pixId) === String(paymentId));
                     if (idx > -1 && !abandons[idx].paid) {
                         abandons[idx].paid = true;
                         abandons[idx].paidAt = new Date().toISOString();

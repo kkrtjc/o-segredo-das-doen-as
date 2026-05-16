@@ -219,7 +219,7 @@ adminRoutes.post('/abandon/convert', async (c) => {
     const { pixId } = await c.req.json();
     if (!pixId) return c.json({ error: 'pixId obrigatório' }, 400);
     const abandons = await getAbandons(c.env);
-    const idx = abandons.findIndex(a => a.pixId === String(pixId));
+    const idx = abandons.findIndex(a => String(a.pixId) === String(pixId));
     if (idx > -1) { abandons[idx].paid = true; abandons[idx].paidAt = new Date().toISOString(); }
     await saveAbandons(c.env, abandons);
     return c.json({ success: true });
