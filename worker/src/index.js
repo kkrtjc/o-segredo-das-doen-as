@@ -62,7 +62,8 @@ app.get('/api/payment/:id', async (c) => {
                     metadata.fbp,
                     metadata.user_agent,
                     null,
-                    metadata.site || 'app');
+                    metadata.site || 'app',
+                    metadata.external_id);
             }
         }
         

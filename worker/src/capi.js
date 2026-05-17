@@ -116,7 +116,7 @@ function buildUserData(customer = {}, meta = {}) {
     // External ID para match cross-device
     if (meta.externalId) {
         const h = sha256(meta.externalId);
-        if (h) ud.external_id = [h];
+        if (h) ud.external_id = h;
     }
 
     return ud;
