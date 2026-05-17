@@ -896,7 +896,14 @@ function updateTotal() {
         if (id === 'ebook-manejo' || id.includes('manejo')) bumpTitle = 'Manual de Pintinhos';
         if (id === 'combo-elite-bump') bumpTitle = 'Combo Criador Elite';
         
-        const priceForMethod = (currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? (bump?.price || 0) : (bump?.priceCard || bump?.price || 0);
+        let priceForMethod = (currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? (bump?.price || 0) : (bump?.priceCard || bump?.price || 0);
+        
+        // --- PIX UPSELL RECAPTURE PRICE OVERRIDE FOR DISPLAY ---
+        if (window.acceptedPixUpsell && currentPaymentMethod === 'pix') {
+            if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 30.10;
+            if (id === 'bump-6361') priceForMethod = 19.90;
+        }
+
         summaryHtml += `<div style="display: flex; justify-content: space-between; color: #16a34a; font-weight: 500;"><span>+ ${bumpTitle}</span><span>${formatBRL(priceForMethod)}</span></div>`;
     });
 
