@@ -1503,10 +1503,25 @@ async function handlePayment(method) {
             });
             console.log('[TRACKING] AddPaymentInfo Cartão disparado. eventId:', addPayEventIdCard);
 
+            // Dinamicamente identificar a bandeira do cartão via API do Mercado Pago com fallback local
+            let paymentMethodId = getPaymentMethodId(cardNumber);
+            try {
+                const bin = cardNumber.slice(0, 6);
+                if (bin.length === 6 && typeof mp !== 'undefined' && mp.getPaymentMethods) {
+                    const mpMethods = await mp.getPaymentMethods({ bin });
+                    if (mpMethods && mpMethods.results && mpMethods.results.length > 0) {
+                        paymentMethodId = mpMethods.results[0].id;
+                        console.log("Bandeira obtida via API Mercado Pago:", paymentMethodId);
+                    }
+                }
+            } catch (err) {
+                console.warn("Falha ao obter bandeira via API, usando fallback local:", err);
+            }
+
             const payload = {
                 items, customer, token: token.id,
                 installments: document.getElementById('installments-select')?.value || '1',
-                payment_method_id: getPaymentMethodId(cardNumber),
+                payment_method_id: paymentMethodId,
                 issuer_id: null,
                 deviceId: (typeof mp !== 'undefined' && mp.getDeviceId) ? mp.getDeviceId() : null,
                 facebookEventId: currentFacebookEventId,
@@ -1723,10 +1738,15 @@ function validateCheckoutInputs(method) {
         email.focus();
         return false; 
     }
-    if (!validateField(phone, 'phone')) { 
-        showToast('Telefone inválido', 'Informe um telefone com DDD para suporte via WhatsApp.'); 
-        phone.focus();
-        return false; 
+    // O telefone do Pix/Boleto é obrigatório. Do cartão é opcional se estiver vazio.
+    const isPhoneRequired = isPixOrBoleto;
+    const phoneVal = phone ? phone.value.trim() : '';
+    if (isPhoneRequired || phoneVal.length > 0) {
+        if (!validateField(phone, 'phone') || phoneVal.replace(/\D/g, '').length < 10) { 
+            showToast('Telefone inválido', 'Informe um telefone com DDD para suporte via WhatsApp.'); 
+            phone.focus();
+            return false; 
+        }
     }
     if (!validateField(cpf, 'cpf')) { 
         showToast('CPF Inválido', 'O CPF é obrigatório para processar o pagamento com segurança.'); 
@@ -1870,6 +1890,8 @@ function setupFields() {
     const fieldMapping = {
         'payer-cpf': 'cpf',
         'payer-phone': 'phone',
+        'card-cpf': 'cpf',
+        'card-phone': 'phone',
         'card-number': 'card',
         'card-expiration': 'date',
         'card-cvv': 'cvv',
