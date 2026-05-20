@@ -1196,6 +1196,56 @@ function switchMethod(method) {
 window.bypassPixUpsell = false;
 window.acceptedPixUpsell = false;
 
+function setupPixUpsellModal() {
+    const isScenario2 = cart.bumps.length === 1 && cart.bumps.includes('bump-6361');
+    
+    const titleEl = document.getElementById('pix-upsell-title');
+    const descEl = document.getElementById('pix-upsell-description');
+    const priceEl = document.getElementById('pix-upsell-price-offer');
+    const subtextEl = document.getElementById('pix-upsell-subtext');
+    const listEl = document.getElementById('pix-upsell-list');
+    const rejectBtn = document.getElementById('pix-upsell-reject-btn');
+    const originalPriceEl = document.getElementById('pix-upsell-original-price');
+    const savingsEl = document.getElementById('pix-upsell-savings');
+
+    if (isScenario2) {
+        if (titleEl) titleEl.innerText = 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS + TABELA DE RAÇÃO';
+        if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de completar seu combo com o Ebook de Pintinhos.';
+        if (priceEl) priceEl.innerHTML = '+ R$ 30,10';
+        if (subtextEl) subtextEl.innerText = 'PARA COMPLETAR SEU COMBO DE MATERIAIS';
+        
+        if (listEl) {
+            listEl.innerHTML = `
+                <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças (Já Incluso)</div>
+                <div style="margin-bottom: 3px; font-size: 0.85rem;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Ebook dos Pintinhos (ÚLTIMA PEÇA)</strong></div>
+                <div style="color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Tabela de Ração (Já Inclusa)</div>
+            `;
+        }
+        
+        if (rejectBtn) rejectBtn.innerText = 'Quero apenas Doenças + Tabela de Ração';
+        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 189,90';
+        if (savingsEl) savingsEl.innerText = 'COMBO COMPLETO';
+    } else {
+        // Cenário 1 (Default)
+        if (titleEl) titleEl.innerText = 'VEMOS QUE VOCÊ TÁ LEVANDO NOSSO EBOOK COMPLETO DAS DOENÇAS';
+        if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de ter as informações completas da criação.';
+        if (priceEl) priceEl.innerHTML = 'R$ 139,90';
+        if (subtextEl) subtextEl.innerText = 'VOCÊ LEVA TODOS OS MATERIAIS';
+        
+        if (listEl) {
+            listEl.innerHTML = `
+                <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças</div>
+                <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Ebook dos Pintinhos</div>
+                <div><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Tabela de Ração <span style="background: #fbbf24; color: #78350f; font-size: 0.65rem; padding: 1px 4px; border-radius: 4px; font-weight: 900; margin-left: 2px; text-shadow: none; display: inline-block; line-height: 1;">GRATUITA</span></div>
+            `;
+        }
+        
+        if (rejectBtn) rejectBtn.innerText = 'Quero apenas o guia das doenças';
+        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 189,90';
+        if (savingsEl) savingsEl.innerText = 'ECONOMIA DE R$ 50,00';
+    }
+}
+
 window.acceptPixUpsell = function() {
     window.bypassPixUpsell = true;
     window.acceptedPixUpsell = true;
@@ -1248,7 +1298,12 @@ async function handlePayment(method) {
     if (!isValid) return;
 
     // --- PIX UPSELL RECAPTURE INTERCEPT ---
-    if (!window.bypassPixUpsell && method === 'pix' && cart.mainProduct && cart.mainProduct.id === 'ebook-doencas' && cart.bumps.length === 0) {
+    const isScenario1 = cart.bumps.length === 0;
+    const isScenario2 = cart.bumps.length === 1 && cart.bumps.includes('bump-6361');
+    const shouldShowPixUpsell = !window.bypassPixUpsell && method === 'pix' && cart.mainProduct && cart.mainProduct.id === 'ebook-doencas' && (isScenario1 || isScenario2);
+
+    if (shouldShowPixUpsell) {
+        setupPixUpsellModal();
         document.getElementById('pix-upsell-modal').classList.remove('hidden');
         return; // Stops the generation, waits for user action
     }
