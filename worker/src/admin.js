@@ -239,33 +239,52 @@ adminRoutes.post('/verify-access', async (c) => {
             return c.json({
                 found: true,
                 name: 'Administrador (João Paulo)',
+                email: 'suporte@protocoloelite.com.br',
+                phone: '33999999999',
+                cpf: '144.777.516-30',
                 products: ['ebook-manejo', 'tabela-racao', 'ebook-doencas']
             });
         }
 
         const history = await getHistory(c.env);
         let foundName = null;
+        let foundEmail = null;
+        let foundPhone = null;
+        let foundCpf = null;
         let productsSet = new Set();
         
         for (const sale of history) {
-            if (sale.status === 'approved') {
-                const saleEmail = (sale.customer?.email || '').toLowerCase();
-                const saleCpf = (sale.customer?.cpf || '').replace(/\D/g, '');
-                const salePhone = (sale.customer?.phone || '').replace(/\D/g, '');
+            const isApproved = sale.status === 'approved' || !sale.status;
+            if (isApproved) {
+                const saleEmail = (sale.customer?.email || sale.email || '').toLowerCase();
+                const saleCpf = (sale.customer?.cpf || sale.cpf || '').replace(/\D/g, '');
+                const salePhone = (sale.customer?.phone || sale.phone || '').replace(/\D/g, '');
+                const saleName = sale.customer?.name || sale.name || '';
                 
                 let isMatch = false;
                 if (cleanId.includes('@')) {
                     if (saleEmail === cleanId) isMatch = true;
                 } else {
                     if (cleanNum.length === 11 && saleCpf === cleanNum) isMatch = true;
-                    if (cleanNum.length >= 10 && salePhone === cleanNum) isMatch = true;
+                    if (cleanNum.length >= 8 && salePhone.length >= 8) {
+                        if (salePhone.endsWith(cleanNum) || cleanNum.endsWith(salePhone)) {
+                            isMatch = true;
+                        }
+                    }
                 }
                 
                 if (isMatch) {
-                    if (!foundName && sale.customer?.name) foundName = sale.customer.name;
+                    if (!foundName && saleName) foundName = saleName;
+                    if (!foundEmail && saleEmail) foundEmail = saleEmail;
+                    if (!foundPhone && salePhone) foundPhone = salePhone;
+                    if (!foundCpf && saleCpf) foundCpf = saleCpf;
                     
-                    // Mapeia os títulos dos itens para os IDs de produtos do app
-                    const titleStr = (sale.items || []).map(i => (i.title || '').toLowerCase()).join(' ');
+                    // Mapeia os títulos dos itens para os IDs de produtos do app (suporta strings e objetos)
+                    const titleStr = (sale.items || []).map(i => {
+                        if (typeof i === 'string') return i.toLowerCase();
+                        if (i && typeof i === 'object') return (i.title || '').toLowerCase();
+                        return '';
+                    }).join(' ');
                     
                     if (titleStr.includes('doença') || titleStr.includes('doenca') || titleStr.includes('elite') || titleStr.includes('protocolo')) {
                         productsSet.add('ebook-doencas');
@@ -289,12 +308,131 @@ adminRoutes.post('/verify-access', async (c) => {
             productsSet.add('ebook-doencas');
         }
         
+        // Verifica bloqueio
+        const db = await getDB(c.env);
+        const blockedUsers = db.blocked_users || [];
+        // Checa se algum dos identificadores batem
+        let isBlocked = false;
+        if (blockedUsers.includes(cleanId) || blockedUsers.includes(cleanNum)) isBlocked = true;
+        if (foundEmail && blockedUsers.includes(foundEmail)) isBlocked = true;
+        if (foundCpf && blockedUsers.includes(foundCpf)) isBlocked = true;
+        if (foundPhone && blockedUsers.includes(foundPhone)) isBlocked = true;
+
+        if (isBlocked) {
+            productsSet.clear();
+        }
+        
         return c.json({
             found: foundName !== null,
+            isBlocked: isBlocked,
             name: foundName,
+            email: foundEmail,
+            phone: foundPhone,
+            cpf: foundCpf,
             products: Array.from(productsSet)
         });
     } catch (err) {
         return c.json({ error: 'Erro interno ao verificar acesso' }, 500);
+    }
+});
+
+// ─── ADMIN PANEL (APP ADMIN CONTROLS) ───────────────────────
+adminRoutes.post('/admin/search-user', async (c) => {
+    try {
+        const { identifier, password } = await c.req.json();
+        if (password !== (c.env.ADMIN_PASSWORD || 'mura2026')) return c.json({ error: 'Acesso Negado' }, 401);
+        
+        const cleanId = identifier.trim().toLowerCase();
+        const cleanNum = cleanId.replace(/\D/g, '');
+        
+        const history = await getHistory(c.env);
+        let foundName = null;
+        let foundEmail = null;
+        let foundPhone = null;
+        let foundCpf = null;
+        let productsSet = new Set();
+        
+        for (const sale of history) {
+            const isApproved = sale.status === 'approved' || !sale.status;
+            if (isApproved) {
+                const saleEmail = (sale.customer?.email || sale.email || '').toLowerCase();
+                const saleCpf = (sale.customer?.cpf || sale.cpf || '').replace(/\D/g, '');
+                const salePhone = (sale.customer?.phone || sale.phone || '').replace(/\D/g, '');
+                
+                let isMatch = false;
+                if (cleanId.includes('@') && saleEmail === cleanId) isMatch = true;
+                else if (cleanNum.length === 11 && saleCpf === cleanNum) isMatch = true;
+                else if (cleanNum.length >= 8 && salePhone.length >= 8 && (salePhone.endsWith(cleanNum) || cleanNum.endsWith(salePhone))) isMatch = true;
+                
+                if (isMatch) {
+                    if (!foundName) foundName = sale.customer?.name || sale.name || '';
+                    if (!foundEmail && saleEmail) foundEmail = saleEmail;
+                    if (!foundPhone && salePhone) foundPhone = salePhone;
+                    if (!foundCpf && saleCpf) foundCpf = saleCpf;
+                    
+                    const titleStr = (sale.items || []).map(i => {
+                        if (typeof i === 'string') return i.toLowerCase();
+                        if (i && typeof i === 'object') return (i.title || '').toLowerCase();
+                        return '';
+                    }).join(' ');
+                    
+                    if (titleStr.includes('doença') || titleStr.includes('doenca') || titleStr.includes('elite') || titleStr.includes('protocolo') || titleStr.includes('combo')) productsSet.add('ebook-doencas');
+                    if (titleStr.includes('manejo') || titleStr.includes('pintinho') || titleStr.includes('combo')) productsSet.add('ebook-manejo');
+                    if (titleStr.includes('tabela') || titleStr.includes('ração') || titleStr.includes('racao') || titleStr.includes('bump')) productsSet.add('tabela-racao');
+                }
+            }
+        }
+        
+        if (foundName && productsSet.size === 0) productsSet.add('ebook-doencas');
+
+        if (!foundName) return c.json({ found: false });
+
+        const db = await getDB(c.env);
+        const blockedUsers = db.blocked_users || [];
+        let isBlocked = false;
+        if (blockedUsers.includes(cleanId) || blockedUsers.includes(cleanNum)) isBlocked = true;
+        if (foundEmail && blockedUsers.includes(foundEmail)) isBlocked = true;
+        if (foundCpf && blockedUsers.includes(foundCpf)) isBlocked = true;
+        if (foundPhone && blockedUsers.includes(foundPhone)) isBlocked = true;
+
+        return c.json({
+            found: true,
+            isBlocked,
+            name: foundName,
+            email: foundEmail,
+            phone: foundPhone,
+            cpf: foundCpf,
+            products: Array.from(productsSet)
+        });
+    } catch (err) {
+        return c.json({ error: 'Erro interno ao buscar cliente' }, 500);
+    }
+});
+
+adminRoutes.post('/admin/toggle-block', async (c) => {
+    try {
+        const { email, cpf, phone, password, block } = await c.req.json();
+        if (password !== (c.env.ADMIN_PASSWORD || 'mura2026')) return c.json({ error: 'Acesso Negado' }, 401);
+        
+        const db = await getDB(c.env);
+        if (!db.blocked_users) db.blocked_users = [];
+        
+        const idsToProcess = [];
+        if (email) idsToProcess.push(email.trim().toLowerCase());
+        if (cpf) idsToProcess.push(cpf.replace(/\D/g, ''));
+        if (phone) idsToProcess.push(phone.replace(/\D/g, ''));
+
+        if (block) {
+            idsToProcess.forEach(id => {
+                if (id && !db.blocked_users.includes(id)) db.blocked_users.push(id);
+            });
+        } else {
+            db.blocked_users = db.blocked_users.filter(u => !idsToProcess.includes(u));
+        }
+        
+        await saveDB(c.env, db);
+        return c.json({ success: true, isBlocked: block });
+    } catch (err) {
+        return c.json({ error: 'Erro interno ao alternar bloqueio' }, 500);
     }
 });
