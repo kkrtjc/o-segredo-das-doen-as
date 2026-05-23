@@ -639,8 +639,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         
         const topCardPriceEl = document.getElementById('top-checkout-card-price');
         const topCardInstEl = document.getElementById('top-checkout-card-installment');
-        if (topCardPriceEl) topCardPriceEl.innerText = formatBRL(productData.originalPrice || (productData.price * 2));
-        if (topCardInstEl) topCardInstEl.innerText = `4x de ${formatBRL((productData.originalPrice || (productData.price * 2)) / 4)}`;
+        // REMOVIDO: O JS não deve mais sobrescrever as tags span do HTML, pois elas agora possuem formatação rica.
 
         const iconContainer = document.getElementById('product-icon-container');
         if (iconContainer) {
@@ -850,9 +849,15 @@ function updateTotal() {
             let bumpPriceForPix = bump.price || 0;
             let bumpPriceForCard = bump.price || 0; // Fixado pelo admin
 
-            if (window.acceptedPixUpsell && currentPaymentMethod === 'pix') {
-                if (bump.id === 'ebook-manejo' || bump.id.includes('manejo')) bumpPriceForPix = 30.10;
-                if (bump.id === 'bump-6361') bumpPriceForPix = 19.90;
+            if (window.acceptedPixUpsell && (currentPaymentMethod === 'pix' || currentPaymentMethod === 'card')) {
+                if (bump.id === 'ebook-manejo' || bump.id.includes('manejo')) {
+                    bumpPriceForPix = 30.10;
+                    bumpPriceForCard = 30.10;
+                }
+                if (bump.id === 'bump-6361') {
+                    bumpPriceForPix = 19.90;
+                    bumpPriceForCard = 19.90;
+                }
             }
 
             total += bumpPriceForPix;
@@ -886,7 +891,7 @@ function updateTotal() {
         let bumpTitle = bump?.title || 'Oferta Adicional';
         let priceForMethod = (currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? (bump?.price || 0) : (bump?.price || 0);
         
-        if (window.acceptedPixUpsell && currentPaymentMethod === 'pix') {
+        if (window.acceptedPixUpsell && (currentPaymentMethod === 'pix' || currentPaymentMethod === 'card')) {
             if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 30.10;
             if (id === 'bump-6361') priceForMethod = 19.90;
         }
@@ -927,11 +932,12 @@ function updateInstallments(basePrice) {
     opt1.style.color = "#fff";
     selector.appendChild(opt1);
 
-    // Adiciona as opções parceladas baseadas em R$ 109,90 (ou basePrice + 20)
-    const installmentTotal = basePrice + 20; // 89.90 + 20 = 109.90
+    // Adiciona as opções parceladas baseadas no total
+    const installmentTotal = basePrice + 20;
     
     for (let i = 2; i <= 4; i++) {
-        const val = installmentTotal / i;
+        let val = installmentTotal / i;
+        val = Math.floor(val * 100) / 100; // Força arredondamento para baixo (ex: 27.47)
         const opt = document.createElement('option');
         opt.value = i;
         opt.innerText = `${i}x de ${formatBRL(val)} (Total: ${formatBRL(installmentTotal)})`;
@@ -1001,7 +1007,7 @@ async function renderHomeProducts() {
 
         // Calculando variáveis dinâmicas
         const discountPercent = Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100);
-        const installmentPrice = "37,47"; // Baseado em 149,90 / 4 (truncado)
+        const installmentPrice = "27,47"; // Baseado no novo preço ancorado (109,90)
         const priceStr = p.price.toFixed(2).split('.');
         const priceInt = priceStr[0];
         const priceDec = priceStr[1];
@@ -1019,7 +1025,7 @@ async function renderHomeProducts() {
                         R$ ${priceInt}<small>,${priceDec}</small>
                     </span>
                     <span style="font-size: 0.75rem; color: #10b981; font-weight: 800; margin-top: 3px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 15px;">🔥 ${discountPercent}% DE DESCONTO NO PIX</span>
-                    <span style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 5px;">ou até 4x de <strong>R$ ${installmentPrice}</strong> s/ juros</span>
+                    <span style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 5px;">ou até 4x de <strong>R$ ${installmentPrice}</strong> (Total R$ 109,90)</span>
                 </div>
             </div>
 
@@ -1275,14 +1281,14 @@ window.acceptPixUpsell = function() {
     if (!cart.bumps.includes('bump-6361')) cart.bumps.push('bump-6361');
     document.getElementById('pix-upsell-modal').classList.add('hidden');
     updateTotal();
-    handlePayment('pix');
+    handlePayment(currentPaymentMethod); // Use o método atual ao invés de forçar pix
 };
 
 window.rejectPixUpsell = function() {
     window.bypassPixUpsell = true;
     window.acceptedPixUpsell = false;
     document.getElementById('pix-upsell-modal').classList.add('hidden');
-    handlePayment('pix');
+    handlePayment(currentPaymentMethod); // Use o método atual
 };
 
 async function handlePayment(method) {
@@ -1318,10 +1324,10 @@ async function handlePayment(method) {
     const isValid = validateCheckoutInputs(method);
     if (!isValid) return;
 
-    // --- PIX UPSELL RECAPTURE INTERCEPT ---
+    // --- PIX/CARD UPSELL RECAPTURE INTERCEPT ---
     const isScenario1 = cart.bumps.length === 0;
     const isScenario2 = cart.bumps.length === 1 && cart.bumps.includes('bump-6361');
-    const shouldShowPixUpsell = !window.bypassPixUpsell && method === 'pix' && cart.mainProduct && cart.mainProduct.id === 'ebook-doencas' && (isScenario1 || isScenario2);
+    const shouldShowPixUpsell = !window.bypassPixUpsell && (method === 'pix' || method === 'card') && cart.mainProduct && cart.mainProduct.id === 'ebook-doencas' && (isScenario1 || isScenario2);
 
     if (shouldShowPixUpsell) {
         setupPixUpsellModal();
@@ -1374,8 +1380,8 @@ async function handlePayment(method) {
         if (b) {
             let bumpPrice = b.price; // Fixado pelo admin para não aumentar no cartão
             
-            // --- PIX UPSELL RECAPTURE PRICE OVERRIDE ---
-            if (window.acceptedPixUpsell && method === 'pix') {
+            // --- PIX/CARD UPSELL RECAPTURE PRICE OVERRIDE ---
+            if (window.acceptedPixUpsell && (method === 'pix' || method === 'card')) {
                 if (b.id === 'ebook-manejo' || b.id.includes('manejo')) bumpPrice = 30.10; // R$ 89.90 + 30.10 + 19.90 = R$ 139.90
                 if (b.id === 'bump-6361') bumpPrice = 19.90;
             }
