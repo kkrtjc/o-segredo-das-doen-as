@@ -1,85 +1,39 @@
 const fs = require('fs');
-let file = 'Novo guia 1.0.html';
-let content = fs.readFileSync(file, 'utf8');
+let c = fs.readFileSync('index.html', 'utf8');
 
-// 1. Substituir o Select pela Scroll Bar (Nativo do iOS)
-content = content.replace(
-  /<div class="mobile-nav-wrapper">[\s\S]*?<\/select>\s*<\/div>/g, 
-  `<nav class="mobile-scroll-nav" id="mobileScrollNav">
-            <a href="#" class="scroll-tab active" data-target="apresentacao" onclick="handleMobileClick('apresentacao', null); return false;">&#128218; Início</a>
-            <a href="#" class="scroll-tab" data-target="doencas" onclick="handleMobileClick('doencas', 'all'); return false;">&#128203; Todas</a>
-            <a href="#" class="scroll-tab" data-target="bact-resp" onclick="handleMobileClick('doencas', 'bact-resp'); return false;">&#129440; Respiratórias</a>
-            <a href="#" class="scroll-tab" data-target="viral" onclick="handleMobileClick('doencas', 'viral'); return false;">&#129516; Virais</a>
-            <a href="#" class="scroll-tab" data-target="bact-sist" onclick="handleMobileClick('doencas', 'bact-sist'); return false;">&#129658; Sistêmicas</a>
-            <a href="#" class="scroll-tab" data-target="parasita" onclick="handleMobileClick('doencas', 'parasita'); return false;">&#128027; Parasitas</a>
-            <a href="#" class="scroll-tab" data-target="nutricional" onclick="handleMobileClick('doencas', 'nutricional'); return false;">&#129367; Nutricionais</a>
-            <a href="#" class="scroll-tab" data-target="peito-seco" onclick="handleMobileClick('doencas', 'peito-seco'); return false;">&#129412; Peito Seco</a>
-            <a href="#" class="scroll-tab" data-target="tabelas" onclick="handleMobileClick('tabelas', null); return false;">&#128202; Tabelas</a>
-            <a href="#" class="scroll-tab" data-target="checklist" onclick="handleMobileClick('checklist', null); return false;">&#10004; Checklist</a>
-        </nav>`
+// Correção das labels do cartão
+c = c.replace(/<label>Numero do Cartao<\/label>/g, '<label><i class="fa-regular fa-credit-card"></i> Número do Cartão</label>');
+c = c.replace(/<label>Validade<\/label>/g, '<label><i class="fa-regular fa-calendar"></i> Validade</label>');
+c = c.replace(/<label>CVV<\/label>/g, '<label><i class="fa-solid fa-lock"></i> CVV</label>');
+
+// Correção da Câmera
+c = c.replace(
+    /<div class="field-tooltip">Digite os numeros do cartao<\/div>/g,
+    '<div class="field-tooltip" style="display: flex; align-items: center; gap: 6px; color: #10b981;"><i class="fa-solid fa-camera"></i> Toque aqui para escanear o cartão com a câmera (iOS/Android)</div>'
 );
 
-// 2. Adicionar o CSS NATIVO
-let newCss = `
-        /* --- MENU SWIPE IOS --- */
-        .mobile-header { padding: 0 !important; flex-direction: column !important; height: auto !important; align-items: flex-start !important; }
-        .header-logo { padding: 15px 20px 0; width: 100%; display: block; padding-bottom:5px; }
-        .mobile-scroll-nav {
-            display: flex; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
-            gap: 10px; padding: 10px 20px 20px; scrollbar-width: none;
-        }
-        .mobile-scroll-nav::-webkit-scrollbar { display: none; /* Safari e Chrome */ }
-        .scroll-tab {
-            padding: 8px 18px; background: rgba(255,255,255,0.05); border-radius: 20px;
-            color: var(--text-secondary); font-size: 0.95rem; font-weight: 500;
-            white-space: nowrap; text-decoration: none; border: 1px solid var(--border-glass);
-            transition: all 0.2s ease;
-        }
-        .scroll-tab.active {
-            background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); border-color: rgba(56, 189, 248, 0.4);
-        }
-        .scroll-tab:active { transform: scale(0.95); opacity: 0.7; }
-    </style>`;
-content = content.replace('</style>', newCss);
+// Apresentação de Preço Principal
+c = c.replace(
+    /De R\$ 149,90 por:/g,
+    'De R$ 149,90 por apenas:'
+);
 
-// 3. Adicionar o JS de controle (links nulos que ignoram dropdown bugado)
-let jsInjection = `// --- MOBILE SWIPE EVENT (LINKS PUROS) ---
-        function handleMobileClick(sectionId, filterId) {
-            // Pequeno tempo para evitar Layout Thrashing do Webkit Mobile
-            setTimeout(function() {
-                var tabs = document.querySelectorAll('.scroll-tab');
-                for(var i=0; i<tabs.length; i++) tabs[i].classList.remove('active');
-                
-                if(filterId) {
-                    var el = document.querySelector('.scroll-tab[data-target="'+filterId+'"]');
-                    if(el) el.classList.add('active');
-                    filterByCategory(filterId);
-                } else {
-                    var el = document.querySelector('.scroll-tab[data-target="'+sectionId+'"]');
-                    if(el) el.classList.add('active');
-                    showSection(sectionId);
-                }
-            }, 50);
-        }
+c = c.replace(
+    /<strong class="dyn-installments" style="color: #fff;">4x de R\$ 37,47 sem juros<\/strong> no/g,
+    '<strong class="dyn-installments" style="color: #fff; font-size: 1.15em;">4x de R$ 27,47</strong> <span style="font-size: 0.75em; color: #94a3b8; font-weight: normal;">(Total R$ 109,90)</span><br><span style="color: #10b981; font-weight: 800; font-size: 0.9em; display: inline-block; margin-top: 4px;">Ou R$ 89,90 à vista no PIX ou Cartão</span><br><span style="display:none">'
+);
+// Adicionamos um <span style="display:none"> no final para esconder o texto " no PIX ou Boleto" original que vem depois.
 
-`;
+c = c.replace(
+    /<span id="top-checkout-card-installment" style="font-size: 1.3rem; color: #16a34a; font-weight: 900; line-height: 1;">4x de R\$ 37,47<\/span>/g,
+    '<span id="top-checkout-card-installment" style="font-size: 1.3rem; color: #16a34a; font-weight: 900; line-height: 1.1;">4x de R$ 27,47 <span style="font-size: 0.65em; color: #64748b; font-weight: 500;">(Total R$ 109,90)</span></span><br><span style="font-size: 0.85rem; color: #059669; font-weight: 800; display: block; margin-top: 3px;">ou R$ 89,90 à vista (PIX/Cartão)</span>'
+);
 
-content = content.replace('// --- NATIVE MOBILE SELECT EVENT ---', jsInjection + '// --- NATIVE MOBILE SELECT EVENT ---');
+// E para o Top Checkout do PIX/Boleto:
+c = c.replace(
+    /<span id="top-checkout-pix-price" style="font-size: 1.3rem; color: #16a34a; font-weight: 900; line-height: 1;">R\$ 149,90<\/span>/g,
+    '<span id="top-checkout-pix-price" style="font-size: 1.3rem; color: #16a34a; font-weight: 900; line-height: 1;">R$ 89,90</span>'
+);
 
-// Sync selection visual state when using other links across document
-let selectSyncReplace = `var mTabs = document.querySelectorAll('.scroll-tab');
-                for(var t=0; t<mTabs.length; t++) mTabs[t].classList.remove('active');
-                var activeTab = document.querySelector('.scroll-tab[data-target="'+id+'"]');
-                if (activeTab) activeTab.classList.add('active');`;
-
-content = content.replace(/var mSelect = document\.getElementById\('mobileNavSelect'\);\s*if \(mSelect\) mSelect\.value = id;/g, selectSyncReplace);
-
-let selectCatSyncReplace = `var mTabs = document.querySelectorAll('.scroll-tab');
-                for(var t=0; t<mTabs.length; t++) mTabs[t].classList.remove('active');
-                var activeTab = document.querySelector('.scroll-tab[data-target="'+(category === 'all' ? 'doencas' : category)+'"]');
-                if (activeTab) activeTab.classList.add('active');`;
-
-content = content.replace(/var mSelect = document\.getElementById\('mobileNavSelect'\);\s*if \(mSelect\) mSelect\.value = \(category === 'all' \? 'doencas' : 'filter:' \+ category\);/g, selectCatSyncReplace);
-
-fs.writeFileSync(file, content, 'utf8');
-console.log('Mobile swipe bar installed successfully.');
+fs.writeFileSync('index.html', c, 'utf8');
+console.log('Feito.');

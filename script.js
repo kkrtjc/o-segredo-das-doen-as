@@ -777,7 +777,7 @@ function renderOrderBumps(bumps) {
                         <div style="text-align: center; margin-top: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px;">
                             <span style="color: #a3a3a3; font-size: 0.75rem; text-decoration: line-through; text-shadow: 1px 1px 1px #000;">De R$ ${isManejo ? '99,90' : '89,90'}</span>
                             <span style="color: #4ade80; font-size: 0.85rem; font-weight: 800; text-shadow: 0 0 8px rgba(74,222,128,0.4), 1px 1px 2px #000; line-height: 1.15;">
-                                Por APENAS <span style="font-size: 1.05rem;">R$ ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.priceCard || bump.price)).replace('R$ ', '')}</span><br>
+                                Por APENAS <span style="font-size: 1.05rem;">R$ ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.price)).replace('R$ ', '')}</span><br>
                                 ${isManejo ? 'você salva seus pintinhos' : ', você economiza até 60% na ração'}
                             </span>
                         </div>
@@ -848,7 +848,7 @@ function updateTotal() {
 
         if (bump) {
             let bumpPriceForPix = bump.price || 0;
-            let bumpPriceForCard = bump.priceCard || bump.price || 0;
+            let bumpPriceForCard = bump.price || 0; // Fixado pelo admin
 
             if (window.acceptedPixUpsell && currentPaymentMethod === 'pix') {
                 if (bump.id === 'ebook-manejo' || bump.id.includes('manejo')) bumpPriceForPix = 30.10;
@@ -884,7 +884,7 @@ function updateTotal() {
         if (!bump && window.siteConfig) bump = window.siteConfig.products[id];
         
         let bumpTitle = bump?.title || 'Oferta Adicional';
-        let priceForMethod = (currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? (bump?.price || 0) : (bump?.priceCard || bump?.price || 0);
+        let priceForMethod = (currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? (bump?.price || 0) : (bump?.price || 0);
         
         if (window.acceptedPixUpsell && currentPaymentMethod === 'pix') {
             if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 30.10;
@@ -1372,7 +1372,7 @@ async function handlePayment(method) {
         }
 
         if (b) {
-            let bumpPrice = (method === 'card' && b.priceCard) ? b.priceCard : b.price;
+            let bumpPrice = b.price; // Fixado pelo admin para não aumentar no cartão
             
             // --- PIX UPSELL RECAPTURE PRICE OVERRIDE ---
             if (window.acceptedPixUpsell && method === 'pix') {
