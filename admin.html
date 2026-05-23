@@ -800,14 +800,22 @@
                         const methodColor = isPix ? 'var(--ios-green)' : 'var(--ios-blue)';
                         const dataObj = new Date(sale.date || Date.now());
                         const dStr = dataObj.toLocaleDateString() + ' ' + dataObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                        
+                        const phone = sale.phone || sale.customer?.phone || '';
+                        const cleanPhone = parsePhone(phone);
+                        const groupMsg = encodeURIComponent('Olá! Parabéns pela sua compra. Acesse o nosso grupo VIP exclusivo aqui: https://chat.whatsapp.com/JXkGitHbLd3AeY8LqiLdYB');
 
                         html += `
                         <div class="list-item">
                             <div class="list-item-title">${sale.name || sale.customer?.name || 'Sem Nome'} <span style="font-size: 11px; background: ${methodColor}; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${methodStr}</span></div>
-                            <div class="list-item-sub">${sale.email || sale.customer?.email || ''} • ${sale.cpf || sale.customer?.cpf || 'Sem CPF'}</div>
+                            <div class="list-item-sub"><i class="fa-regular fa-envelope"></i> ${sale.email || sale.customer?.email || 'Sem email'}</div>
+                            <div class="list-item-sub"><i class="fa-solid fa-phone"></i> ${phone || 'Sem celular'}</div>
                             <div class="list-item-right" style="color:var(--ios-text);">${formatBRL(sale.total)}</div>
                             <div class="list-item-sub" style="margin-top: 4px; font-size:11px;">Data: ${dStr}</div>
                             <div class="list-item-sub" style="font-size:11px; color: var(--ios-blue);">Produtos: ${sale.items?.join(', ') || 'N/A'}</div>
+                            <div class="action-row">
+                                ${cleanPhone ? \`<a href="https://wa.me/\${cleanPhone}?text=\${groupMsg}" target="_blank" class="btn-small btn-green"><i class="fa-brands fa-whatsapp"></i> Adicionar ao Grupo</a>\` : ''}
+                            </div>
                         </div>`;
                     });
                     listEl.innerHTML = html;
@@ -947,14 +955,22 @@
                     
                     const dataObj = new Date(sale.date || Date.now());
                     const dStr = dataObj.toLocaleDateString() + ' ' + dataObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    const phone = sale.phone || sale.customer?.phone || '';
+                    const cleanPhone = parsePhone(phone);
+                    const groupMsg = encodeURIComponent('Olá! Parabéns pela sua compra. Acesse o nosso grupo VIP exclusivo aqui: https://chat.whatsapp.com/JXkGitHbLd3AeY8LqiLdYB');
 
                     html += `
                     <div class="list-item">
                         <div class="list-item-title">${sale.name || sale.customer?.name || 'Sem Nome'} <span style="font-size: 11px; background: ${methodColor}; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${methodStr}</span></div>
-                        <div class="list-item-sub">${sale.email || sale.customer?.email || ''} • ${sale.cpf || sale.customer?.cpf || 'Sem CPF'}</div>
+                        <div class="list-item-sub"><i class="fa-regular fa-envelope"></i> ${sale.email || sale.customer?.email || 'Sem email'}</div>
+                        <div class="list-item-sub"><i class="fa-solid fa-phone"></i> ${phone || 'Sem celular'}</div>
                         <div class="list-item-right" style="color:var(--ios-text);">${formatBRL(sale.total)}</div>
                         <div class="list-item-sub" style="margin-top: 4px; font-size:11px;">Data: ${dStr}</div>
                         <div class="list-item-sub" style="font-size:11px; color: var(--ios-blue);">Produtos: ${sale.items?.join(', ') || 'N/A'}</div>
+                        <div class="action-row">
+                            ${cleanPhone ? \`<a href="https://wa.me/\${cleanPhone}?text=\${groupMsg}" target="_blank" class="btn-small btn-green"><i class="fa-brands fa-whatsapp"></i> Adicionar ao Grupo</a>\` : ''}
+                        </div>
                     </div>`;
                 });
                 list.innerHTML = html;
@@ -1055,14 +1071,22 @@
                         const methodColor = isPix ? 'var(--ios-green)' : 'var(--ios-blue)';
                         const dataObj = new Date(sale.date || Date.now());
                         const dStr = dataObj.toLocaleDateString() + ' ' + dataObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                        
+                        const phone = sale.phone || sale.customer?.phone || '';
+                        const cleanPhone = parsePhone(phone);
+                        const groupMsg = encodeURIComponent('Olá! Parabéns pela sua compra. Acesse o nosso grupo VIP exclusivo aqui: https://chat.whatsapp.com/JXkGitHbLd3AeY8LqiLdYB');
 
                         html += `
                         <div class="list-item">
                             <div class="list-item-title">${sale.name || sale.customer?.name || 'Sem Nome'} <span style="font-size: 11px; background: ${methodColor}; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${methodStr}</span></div>
-                            <div class="list-item-sub">${sale.email || sale.customer?.email || ''} • ${sale.phone || sale.customer?.phone || ''}</div>
+                            <div class="list-item-sub"><i class="fa-regular fa-envelope"></i> ${sale.email || sale.customer?.email || 'Sem email'}</div>
+                            <div class="list-item-sub"><i class="fa-solid fa-phone"></i> ${phone || 'Sem celular'}</div>
                             <div class="list-item-right" style="color:var(--ios-text);">${formatBRL(sale.total)}</div>
                             <div class="list-item-sub" style="margin-top: 4px; font-size:11px;">Data: ${dStr}</div>
                             <div class="list-item-sub" style="font-size:11px; color: var(--ios-blue);">Produtos: ${sale.items?.join(', ') || 'N/A'}</div>
+                            <div class="action-row">
+                                ${cleanPhone ? \`<a href="https://wa.me/\${cleanPhone}?text=\${groupMsg}" target="_blank" class="btn-small btn-green"><i class="fa-brands fa-whatsapp"></i> Adicionar ao Grupo</a>\` : ''}
+                            </div>
                         </div>`;
                     });
                     listEl.innerHTML = html;
