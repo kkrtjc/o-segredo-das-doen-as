@@ -965,19 +965,21 @@ async function renderHomeProducts() {
             return;
         }
 
-        // PIXEL + CAPI: ViewContent
-        const viewEventId = generateEventID();
-        trackPixel('ViewContent', {
-            content_ids: [mainId],
-            content_name: p.title,
-            content_type: 'product',
-            value: p.price,
-            currency: 'BRL'
-        }, viewEventId);
-        trackCAPI('ViewContent', viewEventId, {
-            value: p.price, currency: 'BRL',
-            contentIds: [mainId], contentName: p.title,
-        });
+        // PIXEL + CAPI: ViewContent (Delayed 10s para filtrar curiosos)
+        setTimeout(() => {
+            const viewEventId = generateEventID();
+            trackPixel('ViewContent', {
+                content_ids: [mainId],
+                content_name: p.title,
+                content_type: 'product',
+                value: p.price,
+                currency: 'BRL'
+            }, viewEventId);
+            trackCAPI('ViewContent', viewEventId, {
+                value: p.price, currency: 'BRL',
+                contentIds: [mainId], contentName: p.title,
+            });
+        }, 10000);
 
         const card = document.createElement('div');
         card.className = `price-card featured`;
@@ -2590,22 +2592,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ─── LEAD CAPTURE: Enriquece CAPI com e-mail do checkout ─────────────────────
-// Dispara evento 'Lead' (padrão Meta) UMA VEZ por sessão quando o cliente
-// termina de preencher o e-mail no checkout. Não interfere em nenhum outro evento.
-// O Meta usa esse e-mail hasheado para melhorar o match de Remarketing e Lookalike.
+// ─── LEAD CAPTURE VERIFICADO ─────────────────────
+// Dispara evento 'Lead' apenas quando E-mail E Telefone válidos são preenchidos
 (function initLeadCapture() {
-    const EMAIL_IDS = ['payer-email', 'card-email'];
+    const INPUT_IDS = ['payer-email', 'customer-email', 'payer-phone', 'customer-phone', 'card-email', 'card-phone'];
     const FLAG_KEY  = 'mura_lead_captured';
 
     function isValidEmail(v) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
     }
+    
+    function isValidPhone(v) {
+        const d = v.replace(/\D/g, '');
+        return d.length >= 10 && d.length <= 11;
+    }
 
-    function onEmailBlur(e) {
-        const email = (e.target.value || '').trim();
-        if (!email || !isValidEmail(email)) return;
+    function onFieldBlur() {
         if (sessionStorage.getItem(FLAG_KEY)) return;
+        
+        const email = (document.getElementById('payer-email')?.value || document.getElementById('customer-email')?.value || document.getElementById('card-email')?.value || '').trim();
+        const phone = (document.getElementById('payer-phone')?.value || document.getElementById('customer-phone')?.value || document.getElementById('card-phone')?.value || '').trim();
+        
+        if (!email || !isValidEmail(email)) return;
+        if (!phone || !isValidPhone(phone)) return;
 
         sessionStorage.setItem(FLAG_KEY, 'true');
 
@@ -2618,8 +2627,6 @@ document.addEventListener('DOMContentLoaded', () => {
             currency: 'BRL'
         }, leadEventId);
 
-        // CAPI server-side — getCurrentCustomerData() já coleta todos os campos
-        // preenchidos até o momento (nome, telefone, CPF etc.)
         trackCAPI('Lead', leadEventId, {
             value: cart.mainProduct?.price || 0,
             currency: 'BRL',
@@ -2627,14 +2634,12 @@ document.addEventListener('DOMContentLoaded', () => {
             contentName: cart.mainProduct?.title || 'Protocolo Elite',
         });
 
-        console.log('📧 [LEAD] E-mail capturado via CAPI:', email.replace(/(.{2}).*(@.*)/, '$1***$2'));
+        console.log('📧 [LEAD VERIFICADO] Capturado:', email.replace(/(.{2}).*(@.*)/, '$1***$2'));
     }
 
-    // Attach listeners — usa evento delegado para funcionar mesmo se
-    // os campos forem renderizados depois do DOMContentLoaded
     document.addEventListener('focusout', function(e) {
-        if (e.target && EMAIL_IDS.includes(e.target.id)) {
-            onEmailBlur(e);
+        if (e.target && INPUT_IDS.includes(e.target.id)) {
+            onFieldBlur();
         }
     });
 })();
