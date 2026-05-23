@@ -82,36 +82,34 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
         }
 
         // --- META CAPI SERVER-SIDE PURCHASE (10/10 EMQ) ---
-        // Dispara o CAPI Purchase com desduplicação cirúrgica usando o facebookEventId gerado no checkout
-        if (facebookEventId) {
-            try {
-                const totalValue = items.reduce((acc, i) => acc + Number(i.price), 0);
-                const contentIds = items.map(i => String(i.id || i.title));
-                
-                await sendCAPIEvent(env, {
-                    eventName: 'Purchase',
-                    eventId: facebookEventId, // EXACT MATCH with downloads.html
-                    customer: customer,       // Contains name, email, phone, cpf, cep (if card)
-                    meta: { 
-                        fbc, 
-                        fbp, 
-                        userAgent, 
-                        clientIp,
-                        externalId: externalId || customer.cpf // Usa o session_id correto para match no funil (externalId), CPF só como fallback
-                    },
-                    value: totalValue,
-                    currency: 'BRL',
-                    contentIds: contentIds,
-                    contentType: 'product',
-                    sourceUrl: env.SITE_URL || 'https://osegredodasgalinhas.pages.dev/',
-                    site: site
-                });
-                console.log(`[CAPI] Purchase server-side disparado com sucesso. EventID: ${facebookEventId}`);
-            } catch (capiErr) {
-                console.error('[CAPI ERROR]', capiErr.message);
-            }
-        } else {
-            console.warn('[CAPI WARNING] Compra aprovada mas sem facebookEventId. CAPI não enviado para evitar duplicatas.');
+        // Dispara o CAPI Purchase com desduplicação cirúrgica usando o facebookEventId gerado no checkout, ou usa o paymentId como fallback se o MP não retornar o metadado
+        const eventIdToUse = facebookEventId || ('fallback_ev_' + paymentId);
+        
+        try {
+            const totalValue = items.reduce((acc, i) => acc + Number(i.price), 0);
+            const contentIds = items.map(i => String(i.id || i.title));
+            
+            await sendCAPIEvent(env, {
+                eventName: 'Purchase',
+                eventId: eventIdToUse, // EXACT MATCH with downloads.html if available
+                customer: customer,       // Contains name, email, phone, cpf, cep (if card)
+                meta: { 
+                    fbc, 
+                    fbp, 
+                    userAgent, 
+                    clientIp,
+                    externalId: externalId || customer.cpf // Usa o session_id correto para match no funil (externalId), CPF só como fallback
+                },
+                value: totalValue,
+                currency: 'BRL',
+                contentIds: contentIds,
+                contentType: 'product',
+                sourceUrl: env.SITE_URL || 'https://osegredodasgalinhas.pages.dev/',
+                site: site
+            });
+            console.log(`[CAPI] Purchase server-side disparado com sucesso. EventID: ${eventIdToUse} (Original: ${facebookEventId})`);
+        } catch (capiErr) {
+            console.error('[CAPI ERROR]', capiErr.message);
         }
 
         return true;
