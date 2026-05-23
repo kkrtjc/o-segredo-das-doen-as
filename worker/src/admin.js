@@ -436,3 +436,50 @@ adminRoutes.post('/admin/toggle-block', async (c) => {
         return c.json({ error: 'Erro interno ao alternar bloqueio' }, 500);
     }
 });
+
+adminRoutes.post('/admin/grant-access', async (c) => {
+    try {
+        const { name, email, phone, cpf, products, password } = await c.req.json();
+        
+        if (password !== (c.env.ADMIN_PASSWORD || 'mura2026')) {
+            return c.json({ error: 'Acesso Negado' }, 401);
+        }
+        if (!cpf) {
+            return c.json({ error: 'CPF é obrigatório' }, 400);
+        }
+        if (!products || !products.length) {
+            return c.json({ error: 'Pelo menos um produto deve ser selecionado' }, 400);
+        }
+
+        const history = await getHistory(c.env);
+        const manualId = `manual-${Date.now()}`;
+        
+        history.push({
+            id: manualId,
+            paymentId: manualId,
+            date: new Date().toISOString(),
+            customer: {
+                name: name || 'Acesso Manual',
+                email: email || '',
+                phone: phone || '',
+                cpf: cpf
+            },
+            items: products.map(p => {
+                if (p === 'ebook-doencas') return 'PROTOCOLO ELITE: A Cura das Aves';
+                if (p === 'ebook-manejo') return 'Manejo de Pintinhos (Upsell)';
+                if (p === 'tabela-racao') return 'Tabela de Raçao';
+                return p;
+            }),
+            total: 0,
+            method: 'manual',
+            status: 'approved',
+            site: 'admin-panel'
+        });
+
+        await saveHistory(c.env, history);
+        return c.json({ success: true, message: 'Acesso liberado com sucesso!' });
+        
+    } catch (err) {
+        return c.json({ error: 'Erro interno ao liberar acesso manual' }, 500);
+    }
+});

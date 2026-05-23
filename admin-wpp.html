@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disparo WhatsApp - Clientes</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #f59e0b;
+            text-align: center;
+        }
+        .container {
+            background-color: #1e293b;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #cbd5e1;
+        }
+        textarea, input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #334155;
+            background-color: #0f172a;
+            color: #fff;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .contact-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #334155;
+            background: #1e293b;
+        }
+        .contact-row:last-child {
+            border-bottom: none;
+        }
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .contact-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #f8fafc;
+        }
+        .contact-number {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        .btn-wpp {
+            background-color: #25D366;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: inline-block;
+            transition: background-color 0.2s;
+        }
+        .btn-wpp:hover {
+            background-color: #128C7E;
+        }
+        .btn-wpp.clicked {
+            background-color: #475569;
+        }
+        .loading {
+            text-align: center;
+            color: #94a3b8;
+            padding: 20px;
+        }
+        .header-stats {
+            background: #334155;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📱 Disparo para Clientes</h1>
+    
+    <div class="container">
+        <div class="form-group">
+            <label for="message">Mensagem Padrão (Use [NOME] para citar o nome do cliente):</label>
+            <textarea id="message" rows="6">Olá [NOME]! Tudo bem? Passando para avisar com exclusividade que lançamos uma super novidade no Protocolo Elite! 
+
+Como você já adquiriu nossos conteúdos antes, queria te mandar o link em primeira mão para você conferir:
+[LINK_DO_APP]
+
+Qualquer dúvida estou à disposição! 🚀</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="link">Link do App (Substituirá o [LINK_DO_APP]):</label>
+            <input type="text" id="link" value="https://app.protocoloelite.com.br" placeholder="https://seu-link-aqui.com">
+        </div>
+
+        <div id="stats" class="header-stats" style="display: none;">
+            <span id="total-clients">0</span> clientes únicos encontrados
+        </div>
+
+        <div id="results">
+            <div class="loading">Carregando dados dos clientes (data/history.json)...</div>
+        </div>
+    </div>
+
+    <script>
+        async function loadClients() {
+            try {
+                // Carregar os dados de vendas
+                const response = await fetch('data/history.json');
+                const history = await response.json();
+                
+                // Extrair clientes únicos (baseado no número de telefone)
+                const clientsMap = new Map();
+                
+                history.forEach(sale => {
+                    // Ignora vendas que não foram aprovadas (se a propriedade status existir)
+                    if (sale.status && sale.status !== 'approved') return;
+                    if (!sale.phone || sale.phone === 'Recuperado') return;
+                    
+                    // Limpar número
+                    let phone = sale.phone.replace(/\D/g, '');
+                    
+                    // Ignorar números obviamente inválidos ou de teste repetido (opcional)
+                    if (phone.length < 10) return;
+                    
+                    // Ajustar DDI
+                    if (phone.length === 10 || phone.length === 11) {
+                        phone = '55' + phone;
+                    }
+                    
+                    // Usar o nome fornecido, ou "Criador" se não tiver nome
+                    let name = sale.name ? sale.name.trim() : 'Criador';
+                    // Pega só o primeiro nome
+                    let firstName = name.split(' ')[0];
+                    if (!firstName || firstName.toLowerCase() === 'cliente') firstName = 'Criador';
+                    // Primeira letra maiúscula
+                    firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+
+                    // Se o cliente já está no mapa, não substitui (mantemos a primeira compra que acharmos)
+                    if (!clientsMap.has(phone)) {
+                        clientsMap.set(phone, {
+                            phone: phone,
+                            name: firstName,
+                            originalName: name
+                        });
+                    }
+                });
+
+                const uniqueClients = Array.from(clientsMap.values());
+                
+                document.getElementById('stats').style.display = 'block';
+                document.getElementById('total-clients').textContent = uniqueClients.length;
+                
+                renderList(uniqueClients);
+                
+                // Atualizar links quando a mensagem for editada
+                document.getElementById('message').addEventListener('input', () => renderList(uniqueClients));
+                document.getElementById('link').addEventListener('input', () => renderList(uniqueClients));
+                
+            } catch (error) {
+                document.getElementById('results').innerHTML = `<p style="color: #ef4444; text-align: center;">Erro ao carregar data/history.json. Verifique se o arquivo existe e se você está rodando num servidor local.</p>`;
+                console.error(error);
+            }
+        }
+
+        function renderList(clients) {
+            const rawMessage = document.getElementById('message').value;
+            const link = document.getElementById('link').value;
+            
+            const resultsDiv = document.getElementById('results');
+            
+            if (clients.length === 0) {
+                resultsDiv.innerHTML = '<p style="color: #ef4444; text-align: center;">Nenhum cliente válido encontrado.</p>';
+                return;
+            }
+
+            let html = '';
+            
+            clients.forEach((client, index) => {
+                // Substituir as tags
+                let finalMessage = rawMessage.replace('[LINK_DO_APP]', link);
+                finalMessage = finalMessage.replace('[NOME]', client.name);
+                
+                const wppLink = `https://wa.me/${client.phone}?text=${encodeURIComponent(finalMessage)}`;
+                
+                // Formatação do número para exibição
+                let p = client.phone;
+                let displayNum = `+${p.substring(0,2)} ${p.substring(2,4)} ${p.substring(4)}`;
+
+                html += `
+                    <div class="contact-row">
+                        <div class="contact-info">
+                            <span class="contact-name">${index + 1}. ${client.originalName}</span>
+                            <span class="contact-number">${displayNum}</span>
+                        </div>
+                        <a href="${wppLink}" target="_blank" class="btn-wpp" onclick="this.classList.add('clicked'); this.innerText='Enviado ✅';">
+                            Enviar Mensagem
+                        </a>
+                    </div>
+                `;
+            });
+
+            resultsDiv.innerHTML = html;
+        }
+
+        // Iniciar
+        loadClients();
+    </script>
+</body>
+</html>
