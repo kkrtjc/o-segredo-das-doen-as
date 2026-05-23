@@ -828,28 +828,20 @@ function toggleBump(bumpId) {
 
 function updateTotal() {
     let basePrice = cart.mainProduct.price; // Preço PIX do produto principal
-    let cardPrice = cart.mainProduct.originalPrice || cart.mainProduct.price; // Preço Cartão
+    let baseCardPrice = cart.mainProduct.price; // Preço Cartão 1x (89.90)
 
     let total = basePrice;
-    let cardTotal = cardPrice;
+    let baseCardTotal = baseCardPrice;
 
     // Adiciona Bumps com preços Dinâmicos do banco de dados
     cart.bumps.forEach(id => {
-        // Busca o bump no array fullBumps do produto
         let bump = cart.mainProduct.fullBumps?.find(b => b.id === id);
 
-        // FALLBACK: Se não encontrou em fullBumps, busca na config global (se carregada) ou prefetched
         if (!bump && id.startsWith('ebook-')) {
             const configData = (window.siteConfig && window.siteConfig.products) ? window.siteConfig.products[id] : prefetchedProducts[id];
-
             if (configData) {
-                bump = {
-                    id: id,
-                    price: configData.price, // Preço PIX do banco
-                    priceCard: configData.originalPrice || configData.price // Preço Cartão do banco (ou fallback)
-                };
+                bump = { id: id, price: configData.price, priceCard: configData.originalPrice || configData.price };
             } else {
-                // Fallback de emergência (caso config não tenha carregado) - EVITAR SE POSSÍVEL
                 bump = { id: id, price: id === 'ebook-manejo' ? 49.9 : 59.9, priceCard: id === 'ebook-manejo' ? 49.9 : 99.0 };
             }
         }
@@ -858,31 +850,32 @@ function updateTotal() {
             let bumpPriceForPix = bump.price || 0;
             let bumpPriceForCard = bump.priceCard || bump.price || 0;
 
-            // --- PIX UPSELL RECAPTURE PRICE OVERRIDE FOR DISPLAY ---
             if (window.acceptedPixUpsell && currentPaymentMethod === 'pix') {
                 if (bump.id === 'ebook-manejo' || bump.id.includes('manejo')) bumpPriceForPix = 30.10;
                 if (bump.id === 'bump-6361') bumpPriceForPix = 19.90;
             }
 
-            console.log(`💰 Preços do bump (${id}):`, { pix: bumpPriceForPix, card: bumpPriceForCard });
-
             total += bumpPriceForPix;
-            cardTotal += bumpPriceForCard;
-        } else {
-            console.error('❌ Bump não encontrado em fullBumps:', id);
+            baseCardTotal += bumpPriceForCard;
         }
     });
 
     document.querySelectorAll('.pix-discount-badge').forEach(b => b.remove());
 
-    const finalDisplayPrice = (currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? total : cardTotal;
+    let finalDisplayPrice = total;
+    if (currentPaymentMethod === 'card') {
+        const installments = parseInt(document.getElementById('installments-select')?.value || '1', 10);
+        if (installments > 1) {
+            finalDisplayPrice = baseCardTotal + 20; // Aplica regra do parcelado (+20)
+        } else {
+            finalDisplayPrice = baseCardTotal; // Aplica regra do à vista (sem acrescimo)
+        }
+    }
 
-    // Atualiza Resumo Dinâmico do Pedido (Minimalista)
-    const pInstPix = formatBRL(basePrice / 4);
-    const pInstCard = formatBRL(cardPrice / 4);
+    // Atualiza Resumo Dinâmico do Pedido
     let eliteHtml = (currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto')
-        ? `<div style="display: flex; justify-content: space-between; font-weight: 500;"><span style="font-weight:700;">Protocolo Elite</span><span style="text-align: right; line-height: 1.2;"><span style="color: #64748b; font-size: 0.75rem;">4x de ${pInstCard} s/ juros</span><br><span style="font-size: 0.85rem; color: #10b981; font-weight: 800;">ou ${formatBRL(basePrice)} no ${currentPaymentMethod === 'pix' ? 'PIX' : 'Boleto'}</span></span></div>`
-        : `<div style="display: flex; justify-content: space-between; font-weight: 500;"><span style="font-weight:700;">Protocolo Elite</span><span style="text-align: right; line-height: 1.2;"><span style="color: #10b981; font-size: 0.85rem; font-weight: 800;">4x de ${pInstCard}</span><br><span style="font-size: 0.75rem; color: #64748b;">(ou ${formatBRL(cardPrice)} à vista)</span></span></div>`;
+        ? `<div style="display: flex; justify-content: space-between; font-weight: 500;"><span style="font-weight:700;">Protocolo Elite</span><span style="text-align: right; line-height: 1.2;"><span style="color: #64748b; font-size: 0.75rem;">4x de ${formatBRL((baseCardPrice + 20)/4)}</span><br><span style="font-size: 0.85rem; color: #10b981; font-weight: 800;">ou ${formatBRL(basePrice)} no PIX</span></span></div>`
+        : `<div style="display: flex; justify-content: space-between; font-weight: 500;"><span style="font-weight:700;">Protocolo Elite</span><span style="text-align: right; line-height: 1.2;"><span style="color: #10b981; font-size: 0.85rem; font-weight: 800;">4x de ${formatBRL((baseCardPrice + 20)/4)}</span><br><span style="font-size: 0.75rem; color: #64748b;">(ou ${formatBRL(baseCardPrice)} à vista)</span></span></div>`;
         
     let summaryHtml = eliteHtml;
     
@@ -891,14 +884,8 @@ function updateTotal() {
         if (!bump && window.siteConfig) bump = window.siteConfig.products[id];
         
         let bumpTitle = bump?.title || 'Oferta Adicional';
-        if (id === 'ebook-doencas' || id === 'bump-doencas') bumpTitle = 'Guia de Doenças';
-        if (id === 'bump-6361') bumpTitle = 'Tabela de Ração';
-        if (id === 'ebook-manejo' || id.includes('manejo')) bumpTitle = 'Manual de Pintinhos';
-        if (id === 'combo-elite-bump') bumpTitle = 'Combo Criador Elite';
-        
         let priceForMethod = (currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? (bump?.price || 0) : (bump?.priceCard || bump?.price || 0);
         
-        // --- PIX UPSELL RECAPTURE PRICE OVERRIDE FOR DISPLAY ---
         if (window.acceptedPixUpsell && currentPaymentMethod === 'pix') {
             if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 30.10;
             if (id === 'bump-6361') priceForMethod = 19.90;
@@ -916,24 +903,46 @@ function updateTotal() {
         el.innerText = formatBRL(finalDisplayPrice);
     });
 
-    updateInstallments(finalDisplayPrice);
+    // Passa o baseCardTotal (preço à vista) para a função construir o dropdown
+    updateInstallments(currentPaymentMethod === 'card' ? baseCardTotal : total);
 }
 
-function updateInstallments(total) {
+function updateInstallments(basePrice) {
     const selector = document.getElementById('installments-select');
     if (!selector) return;
 
+    // Preserva a seleção anterior se possível
+    const prevValue = selector.value || '1';
     selector.innerHTML = '';
 
-    // De 1x até 4x (Regra: Até 4x de 34,97 sem juros baseados no 139,90)
-    for (let i = 1; i <= 4; i++) {
-        const val = total / i;
+    // Lógica Premium de Precificação Mura
+    // 1x = R$ 89,90 (basePrice)
+    // 2x a 4x = R$ 109,90 (Baseado no novo parcelamento)
+    
+    // Adiciona a opção à vista
+    const opt1 = document.createElement('option');
+    opt1.value = 1;
+    opt1.innerText = `1x de ${formatBRL(basePrice)} (À vista)`;
+    opt1.style.background = "#151515";
+    opt1.style.color = "#fff";
+    selector.appendChild(opt1);
+
+    // Adiciona as opções parceladas baseadas em R$ 109,90 (ou basePrice + 20)
+    const installmentTotal = basePrice + 20; // 89.90 + 20 = 109.90
+    
+    for (let i = 2; i <= 4; i++) {
+        const val = installmentTotal / i;
         const opt = document.createElement('option');
         opt.value = i;
-        opt.innerText = `${i}x de ${formatBRL(val)} ${i > 1 ? 'sem juros' : '(À vista)'}`;
+        opt.innerText = `${i}x de ${formatBRL(val)} (Total: ${formatBRL(installmentTotal)})`;
         opt.style.background = "#151515";
         opt.style.color = "#fff";
         selector.appendChild(opt);
+    }
+    
+    // Restaura a seleção anterior se ainda for válida, senão cai para 1
+    if (selector.querySelector(`option[value="${prevValue}"]`)) {
+        selector.value = prevValue;
     }
 }
 
@@ -1061,6 +1070,16 @@ function showSkeletons(container, count = 3) {
     `).join('');
 }
 
+
+    // Recalcula o total sempre que o usuário muda a quantidade de parcelas no cartão
+    const installmentsSelect = document.getElementById('installments-select');
+    if (installmentsSelect) {
+        installmentsSelect.addEventListener('change', () => {
+            updateTotal();
+        });
+    }
+
+    // Input masks ------------------------------------------
 
 // --- 3. PAYMENT HANDLING ---
 
@@ -1316,9 +1335,12 @@ async function handlePayment(method) {
     updateMetaUserData(customer);
 
     // PRICING LOGIC FOR API PAYLOAD
-    let mainPrice = cart.mainProduct.price;
-    if (method === 'card' && cart.mainProduct.originalPrice) {
-        mainPrice = cart.mainProduct.originalPrice;
+    let mainPrice = cart.mainProduct.price; // 89.90 default
+    if (method === 'card') {
+        const installments = parseInt(document.getElementById('installments-select')?.value || '1', 10);
+        if (installments > 1) {
+            mainPrice = cart.mainProduct.price + 20; // 109.90
+        }
     }
 
     const items = [{ id: cart.mainProduct.id, title: cart.mainProduct.title, price: mainPrice }];
