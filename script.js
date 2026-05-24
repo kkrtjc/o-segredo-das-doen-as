@@ -1199,7 +1199,7 @@ function switchMethod(method) {
         if (btnCard) btnCard.style.display = 'block';
         if (btnBoleto) btnBoleto.style.display = 'none';
         const pixFields = document.getElementById('pix-fields');
-        if (pixFields) pixFields.style.display = 'none';
+        if (pixFields) pixFields.style.display = 'block'; // KEEP VISIBLE
 
     } else if (method === 'boleto') {
         if (pixArea) { pixArea.style.display = 'block'; }
@@ -1316,7 +1316,7 @@ async function handlePayment(method) {
         customer = {
             ...commonData,
             name: document.getElementById('card-holder').value,
-            cpf: (document.getElementById('card-cpf')?.value || '').replace(/\D/g, ''),
+            cpf: (document.getElementById('card-cpf')?.value || document.getElementById('payer-cpf')?.value || '').replace(/\D/g, ''),
             cep: (document.getElementById('card-cep')?.value || '').replace(/\D/g, '')
         };
     }

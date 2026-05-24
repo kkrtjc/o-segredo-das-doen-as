@@ -2468,22 +2468,11 @@
                                     <div class="field-tooltip">Igual impresso no cartao</div>
                                 </div>
                                 <div class="ck-form-group form-group">
-                                    <label>E-mail (Opcional)</label>
-                                    <input type="email" id="card-email" name="email" autocomplete="email" class="form-input ck-input"
-                                        placeholder="seu@email.com (Opcional)" inputmode="email">
+                                    <label>CPF do Titular</label>
+                                    <input type="tel" id="card-cpf" name="cpf" autocomplete="off" class="form-input ck-input"
+                                        placeholder="000.000.000-00" inputmode="numeric" pattern="[0-9]*">
                                 </div>
-                                <div class="ck-form-row">
-                                    <div class="ck-form-group form-group">
-                                        <label>WhatsApp</label>
-                                        <input type="tel" id="card-phone" name="phone" autocomplete="tel" class="form-input ck-input"
-                                            placeholder="(00) 00000-0000" inputmode="tel">
-                                    </div>
-                                    <div class="ck-form-group form-group">
-                                        <label>CPF do Titular</label>
-                                        <input type="tel" id="card-cpf" name="cpf" autocomplete="off" class="form-input ck-input"
-                                            placeholder="000.000.000-00" inputmode="numeric" pattern="[0-9]*">
-                                    </div>
-                                </div>
+
                                 <div class="ck-form-group form-group">
                                     <label><i class="fa-regular fa-credit-card"></i> Número do Cartão</label>
                                     <input type="text" id="card-number" name="cardnumber" autocomplete="cc-number" class="form-input ck-input"
@@ -2501,16 +2490,9 @@
                                         <input type="text" id="card-cvv" name="cvc" autocomplete="cc-csc" class="form-input ck-input" placeholder="123" inputmode="numeric">
                                     </div>
                                 </div>
-                                <div class="ck-form-row">
-                                    <div class="ck-form-group form-group">
-                                        <label>CEP</label>
-                                        <input type="tel" id="card-cep" name="postal-code" autocomplete="postal-code" class="form-input ck-input"
-                                            placeholder="00000-000" inputmode="numeric" pattern="[0-9]*">
-                                    </div>
-                                    <div class="ck-form-group form-group">
-                                        <label>Parcelas</label>
-                                        <select id="installments-select" class="form-input ck-input"></select>
-                                    </div>
+                                <div class="ck-form-group form-group">
+                                    <label>Parcelas</label>
+                                    <select id="installments-select" class="form-input ck-input"></select>
                                 </div>
                             </div>
 
