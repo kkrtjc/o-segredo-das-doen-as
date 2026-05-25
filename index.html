@@ -3045,5 +3045,39 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
     </style>
+
+    <!-- Advanced Engagement & VSL Tracking -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- VSL Video Tracking ---
+            const video = document.querySelector('video');
+            if (video) {
+                const videoMilestones = {
+                    25: false,
+                    50: false,
+                    75: false,
+                    90: false
+                };
+
+                video.addEventListener('timeupdate', () => {
+                    if (!video.duration) return;
+                    const percent = (video.currentTime / video.duration) * 100;
+
+                    Object.keys(videoMilestones).forEach(milestone => {
+                        const m = parseInt(milestone);
+                        if (percent >= m && !videoMilestones[m]) {
+                            videoMilestones[m] = true;
+                            
+                            // Dispara Custom Event pro FB
+                            if (typeof fbq === 'function') {
+                                fbq('trackCustom', `VideoPlay_${m}`);
+                                console.log(`🎥 [TRACKING] VideoPlay_${m} disparado!`);
+                            }
+                        }
+                    });
+                });
+            }
+        });
+    </script>
 </body>
 </html>

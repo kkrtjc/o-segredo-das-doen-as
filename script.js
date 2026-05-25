@@ -1809,8 +1809,8 @@ function validateCheckoutInputs(method) {
     
     const isPixOrBoleto = method === 'pix' || method === 'boleto';
     const name = document.getElementById(isPixOrBoleto ? 'payer-name' : 'card-holder');
-    const email = document.getElementById(isPixOrBoleto ? 'payer-email' : 'card-email');
-    const phone = document.getElementById(isPixOrBoleto ? 'payer-phone' : 'card-phone');
+    const email = document.getElementById('payer-email'); // SEMPRE usa o payer-email
+    const phone = document.getElementById('payer-phone'); // SEMPRE usa o payer-phone
     const cpf = document.getElementById(isPixOrBoleto ? 'payer-cpf' : 'card-cpf');
 
     if (!validateField(name, 'text')) { 
