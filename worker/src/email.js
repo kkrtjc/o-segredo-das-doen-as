@@ -87,12 +87,15 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
             html: htmlContent,
             text: `Olá ${customer.name},\n\nSeu pagamento foi confirmado! Seu acesso ao Protocolo Elite está liberado.\n\n🔑 Sua chave de acesso (CPF): ${cpfFormatted}\n\nClique no link abaixo para acessar:\n${accessLink}\n\nSe precisar de ajuda, fale no WhatsApp:\nhttps://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20com%20meu%20acesso%20ao%20Protocolo%20Elite\n\nAtt,\nGalos Mura Brasil`,
             download_link: accessLink,
-            customer_name: customer.name,
+            customer_name: customer.name || '',
+            customer_cpf: cpfFormatted,
+            access_link: accessLink,
             whatsapp_link: 'https://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20com%20meu%20acesso%20ao%20Protocolo%20Elite',
-            facebook_event_id: facebookEventId,
-            fbc: fbc,
-            fbp: fbp,
-            client_user_agent: userAgent
+            // Campos opcionais sempre como string (nunca null/undefined) para evitar erro de validação no Make
+            facebook_event_id: facebookEventId || '',
+            fbc: fbc || '',
+            fbp: fbp || '',
+            client_user_agent: userAgent || ''
         };
 
         const res = await fetch(webhookUrl, {
