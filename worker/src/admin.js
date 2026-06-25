@@ -228,7 +228,7 @@ adminRoutes.post('/abandon/convert', async (c) => {
 // ─── VERIFY ACCESS (APP LOGIN) ────────────────────────────────
 adminRoutes.post('/verify-access', async (c) => {
     try {
-        const { identifier } = await c.req.json();
+        const { identifier, password } = await c.req.json();
         if (!identifier) return c.json({ error: 'Identificador ausente' }, 400);
         
         const cleanId = identifier.trim().toLowerCase();
@@ -236,6 +236,10 @@ adminRoutes.post('/verify-access', async (c) => {
         
         // Master admin override (João Paulo)
         if (cleanId === '14477751630' || cleanId === '144.777.516-30' || cleanNum === '14477751630') {
+            const adminPW = c.env.ADMIN_PASSWORD || 'mura2026';
+            if (password && password !== adminPW) {
+                return c.json({ found: true, error: 'Senha incorreta.' }, 401);
+            }
             return c.json({
                 found: true,
                 name: 'Administrador (João Paulo)',
@@ -322,6 +326,16 @@ adminRoutes.post('/verify-access', async (c) => {
             productsSet.clear();
         }
         
+        if (foundName && !isBlocked) {
+            const cleanCpfKey = foundCpf ? foundCpf.replace(/\D/g, '') : cleanNum || 'nocpf';
+            const defaultPW = cleanCpfKey.slice(0, 4) || '1234';
+            const storedPW = await c.env.HISTORY.get('pw_' + cleanCpfKey) || defaultPW;
+            
+            if (password && password !== storedPW) {
+                return c.json({ found: true, error: 'Senha incorreta.' }, 401);
+            }
+        }
+        
         return c.json({
             found: foundName !== null,
             isBlocked: isBlocked,
@@ -333,6 +347,72 @@ adminRoutes.post('/verify-access', async (c) => {
         });
     } catch (err) {
         return c.json({ error: 'Erro interno ao verificar acesso' }, 500);
+    }
+});
+
+// ─── CHANGE PASSWORD ──────────────────────────────────────────
+adminRoutes.post('/change-password', async (c) => {
+    try {
+        const { identifier, currentPassword, newPassword } = await c.req.json();
+        if (!identifier || !currentPassword || !newPassword) {
+            return c.json({ error: 'Dados incompletos.' }, 400);
+        }
+
+        const cleanId = identifier.trim().toLowerCase();
+        const cleanNum = cleanId.replace(/\D/g, '');
+
+        // Encontra o usuário na base de dados
+        let foundCpf = null;
+        if (cleanId === '14477751630' || cleanId === '144.777.516-30' || cleanNum === '14477751630') {
+            foundCpf = '14477751630';
+        } else {
+            const history = await getHistory(c.env);
+            for (const sale of history) {
+                const isApproved = sale.status === 'approved' || !sale.status;
+                if (isApproved) {
+                    const saleEmail = (sale.customer?.email || sale.email || '').toLowerCase();
+                    const saleCpf = (sale.customer?.cpf || sale.cpf || '').replace(/\D/g, '');
+                    const salePhone = (sale.customer?.phone || sale.phone || '').replace(/\D/g, '');
+                    
+                    let isMatch = false;
+                    if (cleanId.includes('@')) {
+                        if (saleEmail === cleanId) isMatch = true;
+                    } else {
+                        if (cleanNum.length === 11 && saleCpf === cleanNum) isMatch = true;
+                        if (cleanNum.length >= 8 && salePhone.length >= 8) {
+                            if (salePhone.endsWith(cleanNum) || cleanNum.endsWith(salePhone)) {
+                                isMatch = true;
+                            }
+                        }
+                    }
+                    if (isMatch && saleCpf) {
+                        foundCpf = saleCpf;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!foundCpf) {
+            return c.json({ error: 'Usuário não encontrado.' }, 404);
+        }
+
+        const cleanCpfKey = foundCpf.replace(/\D/g, '');
+        const defaultPW = cleanCpfKey.slice(0, 4);
+        const storedPW = await c.env.HISTORY.get('pw_' + cleanCpfKey) || defaultPW;
+
+        if (currentPassword !== storedPW) {
+            return c.json({ error: 'Senha atual incorreta.' }, 401);
+        }
+
+        if (newPassword.length < 4) {
+            return c.json({ error: 'A nova senha deve ter no mínimo 4 caracteres.' }, 400);
+        }
+
+        await c.env.HISTORY.put('pw_' + cleanCpfKey, newPassword);
+        return c.json({ success: true });
+    } catch (err) {
+        return c.json({ error: 'Erro interno ao alterar senha.' }, 500);
     }
 });
 

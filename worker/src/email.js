@@ -52,8 +52,10 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
     <p>Parabéns pela sua decisão. Seu pagamento foi confirmado e seu acesso ao <strong>Protocolo Elite</strong> está pronto.</p>
 
     <div class="cpf-box">
-      <div class="cpf-label">🔑 Sua chave de acesso (CPF)</div>
+      <div class="cpf-label">🔑 Seu Login de Acesso (CPF)</div>
       <div class="cpf-value">${cpfFormatted}</div>
+      <div class="cpf-label" style="margin-top: 10px;">🔒 Sua Senha Inicial (4 primeiros dígitos do seu CPF)</div>
+      <div class="cpf-value" style="font-size: 18px; color: #D4AF37;">${cleanCPF.slice(0, 4) || '1234'}</div>
     </div>
 
     <div style="text-align:center;margin:30px 0;">
@@ -63,9 +65,10 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
 
     <div class="info-box">
       <strong>📱 Como acessar:</strong><br>
-      1. Clique no botão acima<br>
-      2. Se necessário, confirme seu CPF: <strong>${cpfFormatted}</strong><br>
-      3. Acesse todo o conteúdo do Protocolo Elite
+      1. Clique no botão acima para abrir o aplicativo.<br>
+      2. Faça login com seu CPF: <strong>${cpfFormatted}</strong> (ou com seu e-mail ou celular).<br>
+      3. Use a senha inicial (os 4 primeiros dígitos do seu CPF): <strong>${cleanCPF.slice(0, 4) || '1234'}</strong>.<br>
+      4. Você pode alterar esta senha a qualquer momento nas configurações do aplicativo.
     </div>
 
     <div style="margin-top:30px;">
@@ -85,7 +88,7 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
             to: customer.email,
             subject: '✅ Seu Acesso ao Protocolo Elite foi Liberado!',
             html: htmlContent,
-            text: `Olá ${customer.name},\n\nSeu pagamento foi confirmado! Seu acesso ao Protocolo Elite está liberado.\n\n🔑 Sua chave de acesso (CPF): ${cpfFormatted}\n\nClique no link abaixo para acessar:\n${accessLink}\n\nSe precisar de ajuda, fale no WhatsApp:\nhttps://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20com%20meu%20acesso%20ao%20Protocolo%20Elite\n\nAtt,\nGalos Mura Brasil`,
+            text: `Olá ${customer.name},\n\nSeu pagamento foi confirmado! Seu acesso ao Protocolo Elite está liberado.\n\n🔑 Seu Login (CPF): ${cpfFormatted}\n🔒 Sua Senha Inicial (4 primeiros dígitos do seu CPF): ${cleanCPF.slice(0, 4) || '1234'}\n\nVocê também pode logar com seu e-mail ou celular usando a mesma senha.\n\nClique no link abaixo para acessar:\n${accessLink}\n\nSe precisar de ajuda, fale no WhatsApp:\nhttps://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20com%20meu%20acesso%20ao%20Protocolo%20Elite\n\nAtt,\nGalos Mura Brasil`,
             download_link: accessLink,
             customer_name: customer.name || '',
             customer_cpf: cpfFormatted,
