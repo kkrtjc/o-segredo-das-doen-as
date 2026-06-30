@@ -6,18 +6,52 @@
 import { Hono } from 'hono';
 import { logSale, getAbandons, saveAbandons } from './admin.js';
 import { sendEmail } from './email.js';
+import crypto from 'node:crypto';
 
 export const webhookRoutes = new Hono();
 
 webhookRoutes.post('/mercadopago', async (c) => {
     const MP_TOKEN = c.env.MP_ACCESS_TOKEN;
+    const WEBHOOK_SECRET = c.env.MP_WEBHOOK_SECRET;
+    
     let body = {};
     try { body = await c.req.json(); } catch (_) {}
 
     const topic = c.req.query('topic') || c.req.query('type') || body.topic || body.type || body.action;
-    const paymentId = c.req.query('id') || body.data?.id || body.id;
+    const paymentId = c.req.query('data.id') || c.req.query('id') || body.data?.id || body.id;
 
     if (!paymentId) return c.text('OK', 200);
+
+    // Validação de assinatura do webhook do Mercado Pago (Segurança)
+    if (WEBHOOK_SECRET) {
+        const xSignature = c.req.header('x-signature') || '';
+        const xRequestId = c.req.header('x-request-id') || '';
+        
+        const parts = xSignature.split(',');
+        const tsPart = parts.find(p => p.trim().startsWith('ts='));
+        const v1Part = parts.find(p => p.trim().startsWith('v1='));
+        
+        if (!tsPart || !v1Part) {
+            console.error('[WEBHOOK ERROR] Cabeçalho x-signature inválido ou ausente');
+            return c.text('Assinatura ausente ou inválida', 400);
+        }
+        
+        const ts = tsPart.split('=')[1];
+        const v1 = v1Part.split('=')[1];
+        
+        const manifest = `id:${paymentId};request-id:${xRequestId};ts:${ts};`;
+        const hmac = crypto.createHmac('sha256', WEBHOOK_SECRET);
+        hmac.update(manifest);
+        const expectedSignature = hmac.digest('hex');
+        
+        if (expectedSignature !== v1) {
+            console.error(`[WEBHOOK ERROR] Assinatura inválida para o pagamento ${paymentId}`);
+            return c.text('Assinatura inválida', 403);
+        }
+        console.log(`[WEBHOOK] Assinatura validada com sucesso para o pagamento ${paymentId}`);
+    } else {
+        console.warn('[WEBHOOK WARNING] MP_WEBHOOK_SECRET não está configurado. Validação de assinatura ignorada.');
+    }
 
     if (topic && topic.includes('payment')) {
         // Processa em background para liberar o Mercado Pago em < 50ms e evitar timeouts/retries duplicados
