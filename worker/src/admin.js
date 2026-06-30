@@ -270,11 +270,6 @@ adminRoutes.post('/verify-access', async (c) => {
                     if (saleEmail === cleanId) isMatch = true;
                 } else {
                     if (cleanNum.length === 11 && saleCpf === cleanNum) isMatch = true;
-                    if (cleanNum.length >= 8 && salePhone.length >= 8) {
-                        if (salePhone.endsWith(cleanNum) || cleanNum.endsWith(salePhone)) {
-                            isMatch = true;
-                        }
-                    }
                 }
                 
                 if (isMatch) {
@@ -302,6 +297,7 @@ adminRoutes.post('/verify-access', async (c) => {
                     if (titleStr.includes('combo')) {
                         productsSet.add('ebook-doencas');
                         productsSet.add('ebook-manejo');
+                        productsSet.add('tabela-racao');
                     }
                 }
             }
@@ -442,7 +438,6 @@ adminRoutes.post('/admin/search-user', async (c) => {
                 let isMatch = false;
                 if (cleanId.includes('@') && saleEmail === cleanId) isMatch = true;
                 else if (cleanNum.length === 11 && saleCpf === cleanNum) isMatch = true;
-                else if (cleanNum.length >= 8 && salePhone.length >= 8 && (salePhone.endsWith(cleanNum) || cleanNum.endsWith(salePhone))) isMatch = true;
                 
                 if (isMatch) {
                     if (!foundName) foundName = sale.customer?.name || sale.name || '';
@@ -458,7 +453,7 @@ adminRoutes.post('/admin/search-user', async (c) => {
                     
                     if (titleStr.includes('doença') || titleStr.includes('doenca') || titleStr.includes('elite') || titleStr.includes('protocolo') || titleStr.includes('combo')) productsSet.add('ebook-doencas');
                     if (titleStr.includes('manejo') || titleStr.includes('pintinho') || titleStr.includes('combo')) productsSet.add('ebook-manejo');
-                    if (titleStr.includes('tabela') || titleStr.includes('ração') || titleStr.includes('racao') || titleStr.includes('bump')) productsSet.add('tabela-racao');
+                    if (titleStr.includes('tabela') || titleStr.includes('ração') || titleStr.includes('racao') || titleStr.includes('bump') || titleStr.includes('combo')) productsSet.add('tabela-racao');
                 }
             }
         }

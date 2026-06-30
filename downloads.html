@@ -347,6 +347,17 @@
                     acima
                     como acessar seus materiais.</p>
             </div>
+        <!-- Acesso ao Aplicativo Protocolo Elite -->
+        <div class="app-access-section" id="app-access-card" style="margin-bottom: 2rem; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05)); border: 1px dashed var(--gold-500); border-radius: 20px; padding: 1.5rem; text-align: center;">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📱</div>
+            <h3 style="font-family: var(--font-heading); font-size: 1.25rem; color: var(--gold-400); margin-bottom: 0.5rem; text-transform: uppercase;">Aplicativo Protocolo Elite</h3>
+            <p style="font-size: 0.85rem; color: #a3a3a3; margin-bottom: 1.25rem; line-height: 1.4;">
+                Seu acesso também está liberado no aplicativo! Clique no botão abaixo para entrar usando seu CPF.
+            </p>
+            <a href="https://protocolo-elite.pages.dev/" id="btn-app-access" target="_blank" class="btn-download" style="background: linear-gradient(135deg, var(--gold-500), var(--gold-600)); max-width: 320px; margin: 0 auto; text-decoration: none;">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+                <span>Acessar Aplicativo</span>
+            </a>
         </div>
 
         <div class="downloads-section">
@@ -433,11 +444,21 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             try {
-                const params = new URLSearchParams(window.location.search);
-                const itemsParam = params.get('items') || '';
-                const items = itemsParam.split(',').filter(i => i.trim());
+                 const params = new URLSearchParams(window.location.search);
+                 const itemsParam = params.get('items') || '';
+                 const items = itemsParam.split(',').filter(i => i.trim());
 
-                // Elementos
+                 // Atualiza o link do aplicativo com o CPF se disponível
+                 const cpfParam = params.get('cpf') || '';
+                 const btnApp = document.getElementById('btn-app-access');
+                 if (btnApp && cpfParam) {
+                     const cleanCpf = cpfParam.replace(/\D/g, '');
+                     if (cleanCpf) {
+                         btnApp.href = `https://protocolo-elite.pages.dev/?cpf=${encodeURIComponent(cleanCpf)}`;
+                     }
+                 }
+
+                 // Elementos
                 const itemManejo = document.getElementById('item-manejo');
                 const itemDoencas = document.getElementById('item-doencas');
                 const itemOrderbump = document.getElementById('item-orderbump');
