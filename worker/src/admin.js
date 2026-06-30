@@ -231,7 +231,17 @@ adminRoutes.post('/verify-access', async (c) => {
         const { identifier, password } = await c.req.json();
         if (!identifier) return c.json({ error: 'Identificador ausente' }, 400);
         
-        const cleanId = identifier.trim().toLowerCase();
+        let cleanId = identifier.trim().toLowerCase();
+        if (cleanId.includes('@')) {
+            const parts = cleanId.split('@');
+            if (parts.length > 0) {
+                const prefix = parts[0];
+                if (/^[\d.-]+$/.test(prefix)) {
+                    parts[0] = prefix.replace(/\D/g, '');
+                }
+            }
+            cleanId = parts.join('@');
+        }
         const cleanNum = cleanId.replace(/\D/g, '');
         
         // Master admin override (João Paulo)
