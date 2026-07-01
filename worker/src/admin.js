@@ -85,6 +85,22 @@ adminRoutes.get('/config', async (c) => {
     return c.json(await getDB(c.env));
 });
 
+// ─── PRICES (PUBLIC) ─────────────────────────────────────────
+// Retorna apenas os preços de todos os produtos — usado pelo app e pelos sites
+adminRoutes.get('/prices', async (c) => {
+    c.header('Cache-Control', 'no-store');
+    const db = await getDB(c.env);
+    const prices = {};
+    for (const [id, product] of Object.entries(db.products || {})) {
+        prices[id] = {
+            price: product.price ?? 0,
+            originalPrice: product.originalPrice ?? product.price ?? 0,
+            title: product.title,
+        };
+    }
+    return c.json(prices);
+});
+
 adminRoutes.post('/config/update', async (c) => {
     const { password, data } = await c.req.json();
     if (password !== (c.env.ADMIN_PASSWORD || 'mura2026')) return c.json({ error: 'Acesso Negado' }, 401);
