@@ -115,18 +115,26 @@ adminRoutes.post('/config/reset', async (c) => {
     const defaultDB = {
         products: {
             'ebook-doencas': {
-                title: 'PROTOCOLO ELITE: A Cura das Aves', price: 89.90, originalPrice: 149.90,
-                description: 'Protocolo Elite Doenças', isFeatured: true, badge: 'OFERTA PRINCIPAL',
-                features: ['11 Doenças Documentadas', 'Tabelas de Sintomas', 'Protocolos de Tratamento', 'Bônus: Tabela de Ração (no PIX)'],
-                cover: 'capadasdoencas.webp', orderBumps: ['combo-elite-bump']
+                title: 'O Segredo das Doenças Avícolas', price: 89.90, originalPrice: 149.90,
+                description: 'Identifique e trate mais de 10 doenças nas galinhas', isFeatured: true, badge: 'OFERTA PRINCIPAL',
+                features: ['Doenças Avícolas', 'Tabela de vacinação', 'Tabela de vermifugação', 'Protocolo de prevenção'],
+                cover: 'capadasdoencas.webp', orderBumps: []
+            },
+            'ebook-pintinhos': {
+                title: 'Manual de Manejo de Pintinhos', price: 49.90, originalPrice: 99.00, enabled: true,
+                description: 'Aprenda a melhor forma de tratar e manejar seus pintinhos', cover: 'capadospintinhos.webp', orderBumps: []
             },
             'ebook-manejo': {
-                title: 'Manejo de Pintinhos (Upsell)', price: 49.9, originalPrice: 99, enabled: true,
-                description: 'Manual de Criação', cover: 'capadospintinhos.webp', orderBumps: []
+                title: 'Manual de Manejo de Pintinhos', price: 49.90, originalPrice: 99.00, enabled: true,
+                description: 'Aprenda a melhor forma de tratar e manejar seus pintinhos', cover: 'capadospintinhos.webp', orderBumps: []
+            },
+            'combo-plataforma': {
+                title: 'Combo Completo Plataforma', price: 149.90, originalPrice: 297.00,
+                description: 'Acesso completo à plataforma de e-books avícolas', badge: 'MELHOR OFERTA', cover: 'combo', orderBumps: []
             },
             'combo-elite': {
-                title: 'COMBO CRIADOR ELITE', price: 139.80, originalPrice: 249.70,
-                description: 'O Guia Completo', badge: 'MAIS VENDIDO', cover: 'combo', orderBumps: []
+                title: 'Combo Completo Plataforma', price: 149.90, originalPrice: 297.00,
+                description: 'Acesso completo à plataforma de e-books avícolas', badge: 'MELHOR OFERTA', cover: 'combo', orderBumps: []
             }
         },
         orderBumps: {

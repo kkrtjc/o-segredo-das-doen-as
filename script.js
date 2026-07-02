@@ -493,7 +493,7 @@ function acceptEliteCombo() {
     if (eliteTimerInterval) clearInterval(eliteTimerInterval);
     const promoModal = document.getElementById('elite-promo-modal');
     if (promoModal) promoModal.classList.remove('show');
-    startCheckoutProcess('combo-elite');
+    startCheckoutProcess('combo-plataforma');
 }
 
 function declineEliteCombo() {
@@ -546,30 +546,32 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     // FALLBACK DATA (Offline Support)
     const fallbackData = {
         'ebook-doencas': {
-            title: 'Protocolo Elite: A Cura das Aves',
+            title: 'O Segredo das Doenças Avícolas',
             price: 89.90,
-            originalPrice: 149.90,
+            originalPrice: 297.00,
             cover: 'capadasdoencas.webp',
-            fullBumps: [
-                { 
-                    id: 'combo-elite-bump', 
-                    title: 'Combo Criador Elite', 
-                    price: 49.90, 
-                    priceCard: 49.90, 
-                    image: 'capadospintinhos.webp', 
-                    description: '<b>O protocolo completo</b> — doenças, pintinhos e tabela de ração em um único pacote.<br><br>• Ebook Completo de Doenças<br>• Manual Criação de Pintinhos<br>• 🎁 BÔNUS: Tabela de Rações', 
-                    tag: 'OFERTA ELITE' 
-                }
-            ]
+            fullBumps: []
+        },
+        'ebook-pintinhos': {
+            title: 'Manual de Manejo de Pintinhos',
+            price: 49.90,
+            originalPrice: 99.00,
+            cover: 'capadospintinhos.webp',
+            fullBumps: []
+        },
+        'combo-plataforma': {
+            title: 'Combo Completo Plataforma',
+            price: 149.90,
+            originalPrice: 297.00,
+            cover: 'combo',
+            fullBumps: []
         },
         'combo-elite': {
-            title: 'Combo Criador Elite',
-            price: 139.90,
-            originalPrice: 249.90,
+            title: 'Combo Completo Plataforma',
+            price: 149.90,
+            originalPrice: 297.00,
             cover: 'combo',
-            fullBumps: [
-                { id: 'bump-6361', title: 'Tabela de Ração', price: 14.90, priceCard: 19.90, image: 'tabela_racao_bump.webp', description: 'Alimentação correta em todas as fases da sua criação.', tag: 'OFERTA ÚNICA' }
-            ]
+            fullBumps: []
         }
     };
 
@@ -594,7 +596,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
 
         cart.mainProduct = { ...productData, id: productId };
 
-        // HOTFIX: Force the new Combo bump to bypass API/KV cache delays
+        // HOTFIX: Force the bumps based on productId
         if (productId === 'ebook-doencas') {
             cart.mainProduct.fullBumps = [
                 {
@@ -617,6 +619,31 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                 }
             ];
             productData.fullBumps = cart.mainProduct.fullBumps;
+        } else if (productId === 'ebook-pintinhos') {
+            cart.mainProduct.fullBumps = [
+                {
+                    id: 'ebook-doencas',
+                    title: 'O SEGREDO DAS DOENÇAS AVÍCOLAS',
+                    price: 49.90,
+                    priceCard: 49.90,
+                    image: 'capadasdoencas.webp',
+                    description: '<span style="color: #ff4444;"><strong>Aprenda a identificar e tratar mais de 10 doenças.</strong></span> Tabela de vacinação, vermifugação e protocolos passo a passo.',
+                    tag: 'OFERTA ÚNICA'
+                },
+                {
+                    id: 'bump-6361',
+                    title: 'TABELA DE RAÇÃO',
+                    price: 19.90,
+                    priceCard: 19.90,
+                    image: 'tabela_racao_bump.webp',
+                    description: '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até 60% na ração</strong>.',
+                    tag: 'OFERTA ÚNICA'
+                }
+            ];
+            productData.fullBumps = cart.mainProduct.fullBumps;
+        } else if (productId === 'combo-plataforma') {
+            cart.mainProduct.fullBumps = [];
+            productData.fullBumps = [];
         }
 
         cart.bumps = forceBumps || [];
@@ -639,15 +666,29 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         
         const topCardPriceEl = document.getElementById('top-checkout-card-price');
         const topCardInstEl = document.getElementById('top-checkout-card-installment');
-        // REMOVIDO: O JS não deve mais sobrescrever as tags span do HTML, pois elas agora possuem formatação rica.
+        
+        if (productId === 'combo-plataforma' || productId === 'combo-elite') {
+            if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 297,00';
+            if (topCardInstEl) topCardInstEl.innerHTML = `4x de R$ 37,47 <span style="font-size: 0.65em; color: #64748b; font-weight: 500;">(Total R$ 149,90)</span>`;
+            document.getElementById('checkout-product-price-display').innerText = 'R$ 149,90';
+        } else if (productId === 'ebook-pintinhos') {
+            if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 99,00';
+            if (topCardInstEl) topCardInstEl.innerHTML = `4x de R$ 17,47 <span style="font-size: 0.65em; color: #64748b; font-weight: 500;">(Total R$ 69,90)</span>`;
+            document.getElementById('checkout-product-price-display').innerText = 'R$ 49,90';
+        } else {
+            if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 149,90';
+            if (topCardInstEl) topCardInstEl.innerHTML = `4x de R$ 27,47 <span style="font-size: 0.65em; color: #64748b; font-weight: 500;">(Total R$ 109,90)</span>`;
+            document.getElementById('checkout-product-price-display').innerText = 'R$ 89,90';
+        }
 
         const iconContainer = document.getElementById('product-icon-container');
         if (iconContainer) {
             if (productData.cover === 'combo') {
                 iconContainer.innerHTML = `
                     <div style="display: flex; gap: 5px; align-items: center;">
-                        <img src="capadospintinhos.webp" alt="Manejo" style="width: 30px; height: 40px; object-fit: cover; border-radius: 4px;">
-                        <img src="capadasdoencas.webp" alt="Doenças" style="width: 30px; height: 40px; object-fit: cover; border-radius: 4px;">
+                        <img src="capadospintinhos.webp" alt="Manejo" style="width: 25px; height: 35px; object-fit: cover; border-radius: 4px;">
+                        <img src="capadasdoencas.webp" alt="Doenças" style="width: 25px; height: 35px; object-fit: cover; border-radius: 4px;">
+                        <img src="tabela_racao_bump.webp" alt="Ração" style="width: 25px; height: 35px; object-fit: cover; border-radius: 4px;">
                     </div>`;
             } else {
                 iconContainer.innerHTML = `<img src="${productData.cover}" style="width: 50px; height: 65px; object-fit: cover; border-radius: 6px;">`;
@@ -719,6 +760,7 @@ function renderOrderBumps(bumps) {
         if (!imgSrc || imgSrc.trim() === '') {
             if (bump.id === 'ebook-doencas' || bump.id === 'bump-doencas') imgSrc = 'capadasdoencas.webp';
             else if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') imgSrc = 'capadospintinhos.webp';
+            else if (bump.id === 'ebook-doencas' || bump.id === 'bump-doencas') imgSrc = 'capadasdoencas.webp';
             else if (bump.id === 'bump-6361') imgSrc = 'tabela_racao_bump.webp';
             else if (bump.title?.includes('Pintinhos') || bump.title?.includes('Manejo')) imgSrc = 'capadospintinhos.webp';
             else if (bump.title?.includes('Ração') || bump.title?.includes('Racao') || bump.title?.includes('Tabela')) imgSrc = 'tabela_racao_bump.webp';
@@ -726,8 +768,9 @@ function renderOrderBumps(bumps) {
 
         const isCombo = (bump.id === 'combo-elite-bump');
         const isManejo = (bump.id === 'ebook-manejo' || bump.title?.includes('Pintinhos'));
+        const isDoencas = (bump.id === 'ebook-doencas' || bump.title?.includes('Doenças'));
         
-        let title = isManejo ? '🐣 SALVE SEUS PINTINHOS' : '💰 CORTE SUA CONTA DE RAÇÃO';
+        let title = isManejo ? '🐣 SALVE SEUS PINTINHOS' : (isDoencas ? '💊 TRATE SUAS GALINHAS' : '💰 CORTE SUA CONTA DE RAÇÃO');
         if (isCombo) title = '<span style="color: #000; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 0 5px #fff; display: inline-block; padding: 2px 4px; border-radius: 4px; background: rgba(255,255,255,0.1);">⚠️ SEUS PINTINHOS VÃO MORRER SEM ISSO</span>';
 
         let desc = bump.description;
@@ -737,7 +780,7 @@ function renderOrderBumps(bumps) {
                 : '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até 60% na ração</strong> das suas aves.';
         }
 
-        const bumpLabel = isManejo ? 'MANUAL DE ELITE<br>DOS PINTINHOS' : 'TABELA DE RAÇÃO';
+        const bumpLabel = isManejo ? 'MANUAL DE ELITE<br>DOS PINTINHOS' : (isDoencas ? 'O SEGREDO DAS DOENÇAS' : 'TABELA DE RAÇÃO');
 
         return `
             <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
@@ -841,7 +884,7 @@ function updateTotal() {
             if (configData) {
                 bump = { id: id, price: configData.price, priceCard: configData.originalPrice || configData.price };
             } else {
-                bump = { id: id, price: id === 'ebook-manejo' ? 49.9 : 59.9, priceCard: id === 'ebook-manejo' ? 49.9 : 99.0 };
+                bump = { id: id, price: (id === 'ebook-manejo' || id === 'ebook-doencas') ? 49.90 : 59.90, priceCard: (id === 'ebook-manejo' || id === 'ebook-doencas') ? 49.90 : 99.00 };
             }
         }
 
@@ -850,9 +893,9 @@ function updateTotal() {
             let bumpPriceForCard = bump.price || 0; // Fixado pelo admin
 
             if (window.acceptedPixUpsell && (currentPaymentMethod === 'pix' || currentPaymentMethod === 'card')) {
-                if (bump.id === 'ebook-manejo' || bump.id.includes('manejo')) {
-                    bumpPriceForPix = 30.10;
-                    bumpPriceForCard = 30.10;
+                if (bump.id === 'ebook-manejo' || bump.id === 'ebook-doencas') {
+                    bumpPriceForPix = 40.10;
+                    bumpPriceForCard = 40.10;
                 }
                 if (bump.id === 'bump-6361') {
                     bumpPriceForPix = 19.90;
@@ -871,7 +914,11 @@ function updateTotal() {
     if (currentPaymentMethod === 'card') {
         const installments = parseInt(document.getElementById('installments-select')?.value || '1', 10);
         if (installments > 1) {
-            finalDisplayPrice = baseCardTotal + 20; // Aplica regra do parcelado (+20)
+            if (cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite') {
+                finalDisplayPrice = baseCardTotal; // No surcharge for Combo
+            } else {
+                finalDisplayPrice = baseCardTotal + 20; // Aplica regra do parcelado (+20)
+            }
         } else {
             finalDisplayPrice = baseCardTotal; // Aplica regra do à vista (sem acrescimo)
         }
@@ -933,7 +980,8 @@ function updateInstallments(basePrice) {
     selector.appendChild(opt1);
 
     // Adiciona as opções parceladas baseadas no total
-    const installmentTotal = basePrice + 20;
+    const isCombo = (cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite');
+    const installmentTotal = isCombo ? basePrice : (basePrice + 20);
     
     for (let i = 2; i <= 4; i++) {
         let val = installmentTotal / i;
@@ -1225,6 +1273,7 @@ window.acceptedPixUpsell = false;
 
 function setupPixUpsellModal() {
     const isScenario2 = cart.bumps.length === 1 && cart.bumps.includes('bump-6361');
+    const isPintinhos = cart.mainProduct.id === 'ebook-pintinhos';
     
     const titleEl = document.getElementById('pix-upsell-title');
     const descEl = document.getElementById('pix-upsell-description');
@@ -1236,27 +1285,51 @@ function setupPixUpsellModal() {
     const savingsEl = document.getElementById('pix-upsell-savings');
 
     if (isScenario2) {
-        if (titleEl) titleEl.innerText = 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS + TABELA DE RAÇÃO';
-        if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de completar seu combo com o Ebook de Pintinhos.';
-        if (priceEl) priceEl.innerHTML = '+ R$ 30,10';
+        if (titleEl) {
+            titleEl.innerText = isPintinhos 
+                ? 'VOCÊ JÁ ESTÁ LEVANDO O MANUAL DOS PINTINHOS + TABELA DE RAÇÃO'
+                : 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS + TABELA DE RAÇÃO';
+        }
+        if (descEl) {
+            descEl.innerHTML = isPintinhos
+                ? 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de completar seu combo com o Ebook de Doenças Avícolas.'
+                : 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de completar seu combo com o Ebook de Pintinhos.';
+        }
+        if (priceEl) priceEl.innerHTML = '+ R$ 40,10';
         if (subtextEl) subtextEl.innerText = 'PARA COMPLETAR SEU COMBO DE MATERIAIS';
         
         if (listEl) {
-            listEl.innerHTML = `
-                <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças (Já Incluso)</div>
-                <div style="margin-bottom: 3px; font-size: 0.85rem;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Ebook dos Pintinhos (ÚLTIMA PEÇA)</strong></div>
-                <div style="color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Tabela de Ração (Já Inclusa)</div>
-            `;
+            if (isPintinhos) {
+                listEl.innerHTML = `
+                    <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Manual dos Pintinhos (Já Incluso)</div>
+                    <div style="margin-bottom: 3px; font-size: 0.85rem;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Ebook das Doenças (ÚLTIMA PEÇA)</strong></div>
+                    <div style="color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Tabela de Ração (Já Inclusa)</div>
+                `;
+            } else {
+                listEl.innerHTML = `
+                    <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças (Já Incluso)</div>
+                    <div style="margin-bottom: 3px; font-size: 0.85rem;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Ebook dos Pintinhos (ÚLTIMA PEÇA)</strong></div>
+                    <div style="color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Tabela de Ração (Já Inclusa)</div>
+                `;
+            }
         }
         
-        if (rejectBtn) rejectBtn.innerText = 'Quero apenas Doenças + Tabela de Ração';
-        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 189,90';
+        if (rejectBtn) {
+            rejectBtn.innerText = isPintinhos 
+                ? 'Quero apenas Pintinhos + Tabela de Ração'
+                : 'Quero apenas Doenças + Tabela de Ração';
+        }
+        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 297,00';
         if (savingsEl) savingsEl.innerText = 'COMBO COMPLETO';
     } else {
         // Cenário 1 (Default)
-        if (titleEl) titleEl.innerText = 'VEMOS QUE VOCÊ TÁ LEVANDO NOSSO EBOOK COMPLETO DAS DOENÇAS';
+        if (titleEl) {
+            titleEl.innerText = isPintinhos
+                ? 'VEMOS QUE VOCÊ TÁ LEVANDO NOSSO MANUAL DE PINTINHOS'
+                : 'VEMOS QUE VOCÊ TÁ LEVANDO NOSSO EBOOK COMPLETO DAS DOENÇAS';
+        }
         if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de ter as informações completas da criação.';
-        if (priceEl) priceEl.innerHTML = 'R$ 139,90';
+        if (priceEl) priceEl.innerHTML = 'R$ 149,90';
         if (subtextEl) subtextEl.innerText = 'VOCÊ LEVA TODOS OS MATERIAIS';
         
         if (listEl) {
@@ -1267,18 +1340,27 @@ function setupPixUpsellModal() {
             `;
         }
         
-        if (rejectBtn) rejectBtn.innerText = 'Quero apenas o guia das doenças';
-        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 189,90';
-        if (savingsEl) savingsEl.innerText = 'ECONOMIA DE R$ 50,00';
+        if (rejectBtn) {
+            rejectBtn.innerText = isPintinhos
+                ? 'Quero apenas o manual dos pintinhos'
+                : 'Quero apenas o guia das doenças';
+        }
+        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 297,00';
+        if (savingsEl) savingsEl.innerText = 'ECONOMIA DE R$ 147,10';
     }
 }
 
 window.acceptPixUpsell = function() {
     window.bypassPixUpsell = true;
     window.acceptedPixUpsell = true;
-    // Inject bumps
-    if (!cart.bumps.includes('ebook-manejo')) cart.bumps.push('ebook-manejo');
+    // Inject bumps dynamically
+    if (cart.mainProduct.id === 'ebook-pintinhos') {
+        if (!cart.bumps.includes('ebook-doencas')) cart.bumps.push('ebook-doencas');
+    } else {
+        if (!cart.bumps.includes('ebook-manejo')) cart.bumps.push('ebook-manejo');
+    }
     if (!cart.bumps.includes('bump-6361')) cart.bumps.push('bump-6361');
+    
     document.getElementById('pix-upsell-modal').classList.add('hidden');
     updateTotal();
     handlePayment(currentPaymentMethod); // Use o método atual ao invés de forçar pix
@@ -1327,7 +1409,7 @@ async function handlePayment(method) {
     // --- PIX/CARD UPSELL RECAPTURE INTERCEPT ---
     const isScenario1 = cart.bumps.length === 0;
     const isScenario2 = cart.bumps.length === 1 && cart.bumps.includes('bump-6361');
-    const shouldShowPixUpsell = !window.bypassPixUpsell && (method === 'pix' || method === 'card') && cart.mainProduct && cart.mainProduct.id === 'ebook-doencas' && (isScenario1 || isScenario2);
+    const shouldShowPixUpsell = !window.bypassPixUpsell && (method === 'pix' || method === 'card') && cart.mainProduct && (cart.mainProduct.id === 'ebook-doencas' || cart.mainProduct.id === 'ebook-pintinhos') && (isScenario1 || isScenario2);
 
     if (shouldShowPixUpsell) {
         setupPixUpsellModal();
@@ -1345,7 +1427,11 @@ async function handlePayment(method) {
     if (method === 'card') {
         const installments = parseInt(document.getElementById('installments-select')?.value || '1', 10);
         if (installments > 1) {
-            mainPrice = cart.mainProduct.price + 20; // 109.90
+            if (cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite') {
+                mainPrice = cart.mainProduct.price; // 149.90
+            } else {
+                mainPrice = cart.mainProduct.price + 20; // 109.90
+            }
         }
     }
 
@@ -1382,7 +1468,7 @@ async function handlePayment(method) {
             
             // --- PIX/CARD UPSELL RECAPTURE PRICE OVERRIDE ---
             if (window.acceptedPixUpsell && (method === 'pix' || method === 'card')) {
-                if (b.id === 'ebook-manejo' || b.id.includes('manejo')) bumpPrice = 30.10; // R$ 89.90 + 30.10 + 19.90 = R$ 139.90
+                if (b.id === 'ebook-manejo' || b.id === 'ebook-doencas') bumpPrice = 40.10; // R$ 89.90 + 40.10 + 19.90 = R$ 149.90
                 if (b.id === 'bump-6361') bumpPrice = 19.90;
             }
 

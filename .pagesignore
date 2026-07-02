@@ -1,0 +1,19 @@
+# Pasta de upload de videos originais (arquivos grandes, nao vao pro deploy)
+Video do protocolo/
+
+# Videos originais grandes
+venda_vsl.mp4
+vsl_hero.mp4
+
+# Arquivos de desenvolvimento
+*.py
+node_modules/
+worker/
+.wrangler/
+data/
+private/
+pdfs_secure_12x9a/
+lib/
+scripts/
+boleto/
+vsl_backup_stable/

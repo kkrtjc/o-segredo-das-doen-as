@@ -1,0 +1,3244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-430QD56D2K"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-430QD56D2K');
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-WVBJNXCQ');</script>
+    <!-- End Google Tag Manager -->
+    <!-- Meta Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1346740157465853');
+        // PageView com eventID para deduplicação com CAPI server-side
+        var pvEventId = 'pv_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+        fbq('track', 'PageView', {}, { eventID: pvEventId });
+
+        // CAPI SERVER-SIDE: PageView â€” envia ao Worker com IP/UA reais
+        (function() {
+            var ck = document.cookie.split(';').reduce(function(a, c) {
+                var p = c.trim().split('=');
+                if (p[0]) a[p[0]] = p[1] || '';
+                return a;
+            }, {});
+            // Captura parâmetros de URL para fallback se cookies não existirem
+            var params = new URLSearchParams(window.location.search);
+            var fbcFromUrl = params.get('fbclid');
+            var fbcValue = ck['_fbc'] || '';
+            
+            // Se não tem cookie mas tem fbclid na URL, monta o formato padrão da Meta
+            if (!fbcValue && fbcFromUrl) {
+                fbcValue = 'fb.1.' + Date.now() + '.' + fbcFromUrl;
+            }
+
+            var sid = sessionStorage.getItem('mura_session_id');
+            if (!sid) {
+                sid = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+                sessionStorage.setItem('mura_session_id', sid);
+            }
+            
+            var testCode = params.get('testCode') || sessionStorage.getItem('mura_test_code') || null;
+            if (testCode && !sessionStorage.getItem('mura_test_code')) sessionStorage.setItem('mura_test_code', testCode);
+
+            var apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                ? 'http://localhost:10000'
+                : 'https://mura-api.joaopaulojaguar.workers.dev';
+            fetch(apiUrl + '/api/capi-event', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    eventName: 'PageView',
+                    eventId: pvEventId,
+                    sourceUrl: window.location.href,
+                    customer: {},
+                    fbc: fbcValue,
+                    fbp: ck['_fbp'] || '',
+                    externalId: sid,
+                    testCode: testCode
+                }),
+                keepalive: true
+            }).catch(function(){});
+        })();
+    </script>
+    <!-- End Meta Pixel Code -->
+    <!-- TikTok Pixel â€” carregado 2s apÃ³s page interactive (nÃ£o impacta dados) -->
+    <script>
+        // Inicializa o objeto ttq para que chamadas ttq.track() funcionem mesmo antes do load
+        !function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","load","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=d.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=d.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+        // Delay: carrega apenas após a página estar interativa
+        function loadTikTok(){ttq.load('D4VFSO3C77U98L8KBEF0');ttq.page();}
+        if(document.readyState==='complete'){setTimeout(loadTikTok,2000);}
+        else{window.addEventListener('load',function(){setTimeout(loadTikTok,2000);});}
+        }(window,document,'ttq');
+    </script>
+    <!-- End TikTok Pixel Code -->
+    <title>PROTOCOLO ELITE: A Cura das Aves | O Segredo das Galinhas</title>
+
+    <!-- Performance: preconnect only to domains actually used in this page -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://connect.facebook.net">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        media="print" onload="this.media='all'">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="modern_enhancements.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="mobile_modal_fix.css" media="print" onload="this.media='all'">
+
+    <!-- Preload critical above-the-fold assets with high priority -->
+    <link rel="preload" href="logo.webp" as="image">
+    <link rel="preload" href="capadasdoencas.webp" as="image" fetchpriority="high">
+    <!-- DNS Prefetch for external payment APIs -->
+    <link rel="dns-prefetch" href="https://secure.mlstatic.com">
+    <link rel="dns-prefetch" href="https://api.mercadopago.com">
+
+    <style>
+        /* === PERFORMANCE: Content Visibility for off-screen sections === */
+        .guarantee-section,
+        .urgency-bar,
+        .authority-section,
+        .vsl-square-section+section {
+            content-visibility: auto;
+            contain-intrinsic-size: 0 400px;
+        }
+
+        /* GPU-composited hover â€” avoids layout recalculation */
+        .btn-primary,
+        .floating-cta-btn,
+        .card {
+            will-change: transform;
+        }
+
+        /* Promoção de Elite Interstitial Re-style */
+        .elite-promo-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 21000;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .elite-promo-modal.show {
+            display: flex;
+        }
+
+        .elite-promo-content {
+            background: #0a0a0a;
+            width: 100%;
+            max-width: 480px;
+            max-height: 95vh;
+            border-radius: 20px;
+            border: 2px solid #fbbf24;
+            overflow-y: auto;
+            position: relative;
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 50px rgba(251, 191, 36, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .elite-promo-header {
+            background: #fbbf24;
+            color: #000;
+            padding: 15px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .elite-promo-header h2 {
+            margin: 0;
+            font-size: 1.35rem;
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .elite-promo-body {
+            padding: 20px 15px;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .benefit-box {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            text-align: left;
+            border: 1px solid rgba(251, 191, 36, 0.1);
+        }
+
+        .benefit-box h4 {
+            color: #fbbf24;
+            margin: 0 0 8px 0;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .benefit-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .benefit-box li {
+            color: #ccc;
+            font-size: 0.825rem;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .benefit-box li i {
+            color: #fbbf24;
+            font-size: 0.75rem;
+            margin-top: 3px;
+        }
+
+        .elite-promo-price {
+            margin: 15px 0;
+            background: rgba(251, 191, 36, 0.05);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px dashed #fbbf24;
+        }
+
+        .promo-timer-bar {
+            background: #e74c3c;
+            color: #fff;
+            font-weight: 900;
+            font-size: 0.8rem;
+            padding: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .elite-promo-btn-accept {
+            background: #22c55e;
+            color: #fff;
+            width: 100%;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 6px 15px rgba(34, 197, 94, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .elite-promo-btn-decline {
+            background: none;
+            border: none;
+            color: #555;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 0.8rem;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .elite-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #e74c3c;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-weight: 900;
+            font-size: 0.65rem;
+            z-index: 10;
+        }
+    </style>
+
+
+    <style>
+        .upsell-modal-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            align-items: center;
+            /* Center vertically on mobile */
+            justify-content: center;
+            /* Center horizontally on mobile */
+        }
+
+        .upsell-modal-container.active {
+            display: flex;
+            /* Flex to center */
+            opacity: 1;
+        }
+
+        .upsell-content {
+            background: #fff;
+            width: 90%;
+            max-width: 400px;
+            /* Standard modal width */
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateX(-50px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: left;
+            position: relative;
+        }
+
+        /* Desktop specific: Slide from left side */
+        @media (min-width: 768px) {
+            .upsell-modal-container {
+                justify-content: flex-start;
+                /* Align to left */
+            }
+
+            .upsell-content {
+                width: 400px;
+                height: 100%;
+                border-radius: 0 20px 20px 0;
+                transform: translateX(-100%);
+                /* Start fully off-screen */
+                margin: 0;
+                max-width: none;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+        }
+
+        .upsell-modal-container.active .upsell-content {
+            transform: translateX(0);
+        }
+
+        .btn-upsell-yes {
+            width: 100%;
+            padding: 10px;
+            background: var(--success);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-upsell-yes:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-upsell-no {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: var(--gray-400);
+            border: none;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .btn-upsell-no:hover {
+            color: var(--gray-600);
+        }
+    </style>
+
+    <!-- FORÃ‡AR BARRA TRANSLÃšCIDA -->
+    <style>
+        header,
+        .header,
+        .sticky,
+        header.sticky {
+            background: rgba(0, 0, 0, 0.6) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+        }
+
+        /* Garantir legibilidade do texto flutuante */
+        header h1,
+        .header h1,
+        header h1 span {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        }
+    </style>
+
+    <style>
+    </style>
+</head>
+
+
+
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WVBJNXCQ" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- UPSELL MODAL SIDE-PANEL (movido do head para body) -->
+    <div id="upsell-modal-container" class="upsell-modal-container">
+        <div class="upsell-content">
+            <!-- Tag vermelha de urgência -->
+            <div style="background: #dc2626; color: #fff; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; padding: 5px 12px; border-radius: 6px; display: inline-block; margin-bottom: 8px;">âš¡ Oferta exclusiva â€” sÃ³ enquanto vocÃª estÃ¡ aqui</div>
+
+            <h3 style="color: #111; font-size: 1.05rem; font-weight: 900; line-height: 1.3; margin-bottom: 6px;">VocÃª sabe que <span style="color: #dc2626;">8 em cada 10 pintinhos morrem</span> antes dos 20 dias â€” e o erro costuma ser seu.</h3>
+
+            <p style="font-size: 0.8rem; color: #4b5563; margin-bottom: 10px; line-height: 1.4;">
+                Temperatura errada, raÃ§Ã£o inadequada, bico molhado â€” detalhes de manejo que o guia das doenÃ§as nÃ£o cobre. <strong style="color: #111;">O Manual de Pintinhos preenche exatamente esse buraco.</strong>
+            </p>
+
+            <div style="display: flex; gap: 12px; background: #f0fdf4; padding: 10px; border-radius: 10px; border: 1px solid #86efac; margin-bottom: 10px; align-items: center;">
+                <img src="capadospintinhos.webp" style="width: 66px; height: auto; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.12);">
+                <div>
+                    <p style="font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.3px; margin: 0 0 2px;">Manual de Manejo de Pintinhos</p>
+                    <p style="font-size: 0.78rem; color: #6b7280; margin: 0;">De: <span style="text-decoration: line-through;">R$ 99,90</span></p>
+                    <div style="font-weight: 900; color: #16a34a; font-size: 1.1rem; line-height: 1;">Por: R$ 49,90 <span style="font-size: 0.65rem; color: #6b7280; font-weight: 400;">adicionado ao pedido</span></div>
+                </div>
+            </div>
+
+            <button onclick="acceptUpsell()" class="btn-upsell-yes">
+                <i class="fa-solid fa-check"></i> SIM, QUERO PROTEGER MEUS PINTINHOS
+            </button>
+            <button onclick="declineUpsell()" class="btn-upsell-no">
+                Não, prefiro arriscar perder meus pintinhos
+            </button>
+        </div>
+    </div>
+
+
+    <!-- Header -->
+    <header class="sticky">
+        <div class="container nav-content">
+            <div class="logo-area">
+                <img src="logo.webp" alt="Logo" style="height: 60px; border-radius: 8px;">
+                <h1>PROTOCOLO <span style="color: var(--amber-600)">ELITE</span> <span style="font-size: 0.75rem; font-weight: 400; color: var(--slate-400); margin-left: 8px; text-transform: none; letter-spacing: 0; opacity: 0.8; font-style: italic;">"Você vai parar de perder galinhas."</span></h1>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Social Proof Section (Continuous Marquee) -->
+    <style>
+        .testimonial-marquee-wrapper {
+            overflow: hidden;
+            width: 100%;
+            max-width: 100vw;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Gradient masks for fading edges */
+        .testimonial-marquee-wrapper::before,
+        .testimonial-marquee-wrapper::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 30px;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .testimonial-marquee-wrapper::before {
+            left: 0;
+            background: linear-gradient(to right, var(--zinc-950) 0%, transparent 100%);
+        }
+
+        .testimonial-marquee-wrapper::after {
+            right: 0;
+            background: linear-gradient(to left, var(--zinc-950) 0%, transparent 100%);
+        }
+
+        .testimonial-track-original {
+            display: flex;
+            gap: 20px;
+            width: max-content;
+            animation: marquee 60s linear infinite;
+            pointer-events: none;
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(-50%, 0, 0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .testimonial-track-original {
+                animation-duration: 120s;
+            }
+        }
+
+        /* Fix for flickering and black spots in iOS low power mode */
+        .testimonial-track-original {
+            background-color: var(--zinc-950);
+            contain: layout paint;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            perspective: 1000px;
+            -webkit-perspective: 1000px;
+        }
+
+        .testimonial-card-single {
+            flex-shrink: 0;
+            width: auto;
+            /* Allow auto width for a single row */
+            max-width: none;
+            background: transparent;
+            /* Cleaner single line look */
+            border: none;
+            /* Removing borders to look like a fluid strip */
+            padding: 0 15px;
+            /* Space between textual items */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            /* FORCE items in a single line */
+            align-items: center;
+            white-space: nowrap;
+            /* Prevent ANY line breaks */
+            pointer-events: auto;
+            /* Mantém a seleção de texto/cliques apenas nos cards se necessário, mas track previne drag */
+            gap: 15px;
+        }
+    </style>
+    <section class="bg-white"
+        style="padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); background: var(--zinc-950); overflow: hidden;">
+        <div class="testimonial-marquee-wrapper">
+            <div class="testimonial-track-original" id="testimonials-track"
+                style="color: var(--slate-100); font-family: var(--font-sans);">
+                <!-- Set 1: Pre-rendered for instant visibility -->
+                <div class="testimonial-card-single" style="background: var(--zinc-950);">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/ricardo.webp" alt="Ricardo Lima"
+                            style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    </div>
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                        <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Ricardo Lima</strong>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Londrina
+                            - PR</span>
+                    </div>
+                    <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Gastava uma
+                        fortuna em remédio e as galinhas continuavam morrendo. Descobri que tava errando no
+                        básico."</span>
+                </div>
+                <div class="testimonial-card-single" style="background: var(--zinc-950);">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/pedro.webp" alt="Marcos Paulo"
+                            style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    </div>
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                        <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Marcos Paulo</strong>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Goiânia
+                            - GO</span>
+                    </div>
+                    <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Excelente
+                        material! Consegui curar 3 galos que já estavam no bico do corvo."</span>
+                </div>
+                <div class="testimonial-card-single" style="background: var(--zinc-950);">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/isabella.webp" alt="Isabella Lima"
+                            style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    </div>
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                        <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Isabella Lima</strong>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Florianópolis
+                            - SC</span>
+                    </div>
+                    <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Tinha galo com
+                        a perna torta, achei que ia morrer. O tratamento salvou e hoje ele tá perfeito."</span>
+                </div>
+                <div class="testimonial-card-single" style="background: var(--zinc-950);">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/juliana.webp" alt="Juliana Freitas"
+                            style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    </div>
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                        <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Juliana Freitas</strong>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Rio
+                            Verde - GO</span>
+                    </div>
+                    <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Perdi 15 aves
+                        em um mês antes de comprar. Depois que aprendi o manejo certo, zerou a mortalidade."</span>
+                </div>
+                <div class="testimonial-card-single" style="background: var(--zinc-950);">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/carlos.webp" alt="Fernando Costa"
+                            style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    </div>
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                        <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Fernando Costa</strong>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Uberlândia
+                            - MG</span>
+                    </div>
+                    <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"A tabela de
+                        ração mudou meu criatório. As aves crescem mais rápido e saudáveis agora."</span>
+                </div>
+                <div class="testimonial-card-single" style="background: var(--zinc-950);">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/lucas.webp" alt="Roberto Assis"
+                            style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    </div>
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                        <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Roberto Assis</strong>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Feira
+                            de Santana - BA</span>
+                    </div>
+                    <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Recomendo
+                        muito a todos os criadores. Informação de primeira linha sem enrolação."</span>
+                </div>
+                <!-- Set 2: Clones for infinite animation -->
+                <div class="testimonial-card-single" style="background: var(--zinc-950);">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/ricardo.webp" alt="Ricardo Lima" loading="lazy"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                        <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Ricardo Lima</strong>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Londrina
+                            - PR</span>
+                    </div>
+                    <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Gastava uma
+                        fortuna em remédio e as galinhas continuavam morrendo. Descobri que tava errando no
+                        básico."</span>
+                </div>
+                <div class="testimonial-card-single" style="background: var(--zinc-950);">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/pedro.webp" alt="Marcos Paulo" loading="lazy"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                        <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Marcos Paulo</strong>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Goiânia
+                            - GO</span>
+                    </div>
+                    <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Excelente
+                        material! Consegui curar 3 galos que já estavam no bico do corvo."</span>
+                </div>
+                <div class="testimonial-card-single" style="background: var(--zinc-950);">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/isabella.webp" alt="Isabella Lima" loading="lazy"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                        <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Isabella Lima</strong>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Florianópolis
+                            - SC</span>
+                    </div>
+                    <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Tinha galo com
+                        a perna torta, achei que ia morrer. O tratamento salvou e hoje ele tá perfeito."</span>
+                </div>
+                <div class="testimonial-card-single" style="background: var(--zinc-950);">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/juliana.webp" alt="Juliana Freitas" loading="lazy"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                        <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Juliana Freitas</strong>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Rio
+                            Verde - GO</span>
+                    </div>
+                    <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Perdi 15 aves
+                        em um mês antes de comprar. Depois que aprendi o manejo certo, zerou a mortalidade."</span>
+                </div>
+                <div class="testimonial-card-single" style="background: var(--zinc-950);">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/carlos.webp" alt="Fernando Costa" loading="lazy"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                        <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Fernando Costa</strong>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Uberlândia
+                            - MG</span>
+                    </div>
+                    <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"A tabela de
+                        ração mudou meu criatório. As aves crescem mais rápido e saudáveis agora."</span>
+                </div>
+                <div class="testimonial-card-single" style="background: var(--zinc-950);">
+                    <div
+                        style="width: 24px; height: 24px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; display: inline-block; vertical-align: middle;">
+                        <img src="carrosel/lucas.webp" alt="Roberto Assis" loading="lazy"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div
+                        style="display: inline-flex; flex-direction: column; justify-content: center; vertical-align: middle; margin: 0 10px;">
+                        <strong style="color: #fff; font-size: 0.8rem; line-height: 1;">Roberto Assis</strong>
+                        <span
+                            style="color: #9ca3af; font-size: 0.55rem; line-height: 1.2; text-transform: uppercase;">Feira
+                            de Santana - BA</span>
+                    </div>
+                    <div style="font-size: 0.55rem; color: #FFD700; display: inline-block; margin-right: 8px;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                            class="fa-solid fa-star"></i>
+                    </div>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.85rem; font-style: italic;">"Recomendo
+                        muito a todos os criadores. Informação de primeira linha sem enrolação."</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <!-- Social Proof Header -->
+            <div
+                style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 2.5rem; flex-wrap: wrap;">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                    <div class="avatar-stack" style="display: flex; margin-right: 15px;">
+                        <div
+                            style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #ddd; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <img src="carrosel/carlos.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                        </div>
+                        <div
+                            style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #ccc; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <img src="carrosel/maria.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                        </div>
+                        <div
+                            style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #bbb; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <img src="carrosel/joao_new.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                        </div>
+                        <div
+                            style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #aaa; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <img src="carrosel/ana.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                        </div>
+                        <div
+                            style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #999; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                            <img src="carrosel/lucas.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                        </div>
+                    </div>
+                    <span
+                        style="font-size: 0.75rem; font-weight: 800; color: #16a34a; background: rgba(22, 163, 74, 0.15); padding: 2px 10px; border-radius: 10px; backdrop-filter: blur(5px);">+de
+                        1600 alunos</span>
+                </div>
+                <div style="max-width: 400px; text-align: left;">
+                    <span
+                        style="font-size: 1.1rem; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.2; font-family: var(--font-heading); text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
+                        MÃ‰TODO COMPROVADO POR<br>MAIS DE 1600 ALUNOS
+                    </span>
+                </div>
+            </div>
+
+            <h2>
+                <span
+                    style="color: #ff4d4d; display: block; margin-bottom: 0.5rem; font-size: 2.2rem; line-height: 1.1; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">COMECE
+                    AGORA O TRATAMENTO DA SUA GALINHA</span>
+                <span
+                    style="font-size: 1.5rem; display: block; margin-top: 0.5rem; font-weight: 600; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.8);">Sem
+                    Gastar Fortunas com Veterinários.</span>
+            </h2>
+
+            <p
+                style="font-size: 1.25rem; color: #ffffff; margin-bottom: 1rem; font-weight: 700; text-shadow: 0 2px 8px rgba(0,0,0,0.8);">
+                Descubra o tratamento certo para sua galinha.
+            </p>
+            <div
+                style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem; margin: 0 auto 2rem; max-width: 800px; backdrop-filter: blur(8px); box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+                <div class="hero-pills-container" style="display: flex; gap: 8px; justify-content: center; margin: 0 auto 0.5rem; flex-wrap: wrap; padding: 10px 0;">
+                    <style>
+                        @media (max-width: 600px) { 
+                            .hero-pill { font-size: 0.85rem !important; padding: 6px 12px !important; flex: 0 1 auto !important; } 
+                        }
+                    </style>
+                    <span class="hero-pill"
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 14px; border-radius: 20px; font-size: 0.95rem; font-weight: 800; border: 1.5px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5); white-space: nowrap; flex: 0 0 auto;"><i
+                            class="fa-solid fa-triangle-exclamation"></i> Ronqueira</span>
+                    <span class="hero-pill"
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 14px; border-radius: 20px; font-size: 0.95rem; font-weight: 800; border: 1.5px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5); white-space: nowrap; flex: 0 0 auto;"><i
+                            class="fa-solid fa-skull-crossbones"></i> Peito Seco</span>
+                    <span class="hero-pill"
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 14px; border-radius: 20px; font-size: 0.95rem; font-weight: 800; border: 1.5px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5); white-space: nowrap; flex: 0 0 auto;"><i
+                            class="fa-solid fa-notes-medical"></i> Espirro</span>
+                    <span class="hero-pill"
+                        style="background: rgba(220, 38, 38, 0.2); color: #ff6b6b; padding: 6px 14px; border-radius: 20px; font-size: 0.95rem; font-weight: 800; border: 1.5px solid rgba(220, 38, 38, 0.4); text-shadow: 0 1px 4px rgba(0,0,0,0.5); white-space: nowrap; flex: 0 0 auto;"><i
+                            class="fa-solid fa-arrow-trend-down"></i> Queda de Postura</span>
+                </div>
+
+                <p style="font-size: 0.8rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2rem; opacity: 0.7; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+                    E mais de 10 doenças que matam galinhas todos os dias no Brasil
+                </p>
+
+                <p
+                    style="font-size: 1.1rem; color: #ff4d4d; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 10px; text-shadow: 0 2px 6px rgba(0,0,0,0.8);">
+                    <i class="fa-solid fa-hand"></i> CHEGA de métodos caseiros que não funcionam.
+                </p>
+
+                <!-- Autoridade / Before and After Gallery -->
+                <!-- Authority Carousel Elite -->
+                <div class="authority-slider-wrapper">
+                    <div class="slider-track">
+                        <!-- Slide 1: Coriza -->
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_coriza.webp" alt="Coriza Infecciosa" style="object-position: center 20%;" loading="lazy">
+                                <div class="slide-label">Coriza Infecciosa</div>
+                            </div>
+                        </div>
+                        <!-- Slide 2: Bronquite -->
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_bronquite aviaria.webp" alt="Bronquite Aviária" loading="lazy">
+                                <div class="slide-label">Bronquite Aviária</div>
+                            </div>
+                        </div>
+                        <!-- Slide 3: Coccidiose -->
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_Coccidiose.webp" alt="Coccidiose" loading="lazy">
+                                <div class="slide-label">Coccidiose</div>
+                            </div>
+                        </div>
+                        <!-- Slide 4: Ronqueira -->
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_ronqueira-gogo.webp" alt="Ronqueira / Gogo" loading="lazy">
+                                <div class="slide-label">Ronqueira / Gogo</div>
+                            </div>
+                        </div>
+                        <!-- Slide 5: Vermes -->
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_vermes.webp" alt="Vermes" loading="lazy">
+                                <div class="slide-label">Verminose</div>
+                            </div>
+                        </div>
+                        <!-- Slide 6: Peito Seco -->
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_Magreza extrema-peito seco.webp" alt="Magreza Extrema / Peito Seco" loading="lazy">
+                                <div class="slide-label">Peito Seco / Magreza</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Duplicação para Loop Infinito -->
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_coriza.webp" alt="Coriza Infecciosa" style="object-position: center 20%;" loading="lazy">
+                                <div class="slide-label">Coriza Infecciosa</div>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_bronquite aviaria.webp" alt="Bronquite Aviária" loading="lazy">
+                                <div class="slide-label">Bronquite Aviária</div>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_Coccidiose.webp" alt="Coccidiose" loading="lazy">
+                                <div class="slide-label">Coccidiose</div>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_ronqueira-gogo.webp" alt="Ronqueira / Gogo" loading="lazy">
+                                <div class="slide-label">Ronqueira / Gogo</div>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_vermes.webp" alt="Vermes" loading="lazy">
+                                <div class="slide-label">Verminose</div>
+                            </div>
+                        </div>
+                        <div class="slide">
+                            <div class="image-wrapper">
+                                <img src="autoridade/proc_Magreza extrema-peito seco.webp" alt="Magreza Extrema / Peito Seco" loading="lazy">
+                                <div class="slide-label">Peito Seco / Magreza</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 2rem;">
+                <div style="text-align: center; line-height: 1.2;">
+                    <span style="display: block; font-size: 0.9rem; color: #94a3b8; text-decoration: line-through; opacity: 0.8;">De R$ 149,90</span>
+                    <span style="display: block; font-size: 1.3rem; color: #fff; font-weight: 900;">Por apenas R$ 89,90 no PIX</span>
+                </div>
+                <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; padding: 0 1rem; width: 100%;">
+                    <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary btn-large" style="margin: 0;">SALVAR MINHAS GALINHAS AGORA</button>
+                    <a id="btn-ver-aprendizado" href="#learning" class="btn-outline"
+                        style="text-decoration: none; display: flex; align-items: center; justify-content: center; min-width: 250px;">VER O QUE VOU APRENDER</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VSL Video Section (Square) -->
+    <section class="vsl-square-section">
+        <div class="container">
+            <div class="square-video-container">
+                <div class="square-video-wrapper">
+                    <video playsinline controls poster='video_cover_vsl.webp'>
+                        <source src="venda_vsl.mp4" type="video/mp4">
+                        Seu navegador não suporta vídeos.
+                    </video>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary btn-large">SALVAR MINHAS
+                    GALINHAS</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Se&#231;&#227;o: Veja um Pouco Sobre a Plataforma -->
+    <section id="plataforma-preview" style="padding: 4rem 0; background: linear-gradient(180deg, #0a0a0a 0%, #111 100%); border-top: 1px solid rgba(255,255,255,0.06);">
+        <div class="container" style="max-width: 860px;">
+
+            <!-- Titulo -->
+            <div style="text-align: center; margin-bottom: 2.5rem;">
+                <p style="font-size: 0.8rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #f59e0b; margin-bottom: 0.75rem;">&#128269; Conhe&#231;a de Perto</p>
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 900; color: #fff; line-height: 1.2; margin-bottom: 0.75rem;">
+                    Veja um Pouco Sobre <span style="color: #f59e0b;">a Plataforma</span>
+                </h2>
+                <div style="width: 60px; height: 3px; background: linear-gradient(90deg, #f59e0b, #d97706); border-radius: 2px; margin: 0 auto;"></div>
+            </div>
+
+            <!-- Video da Plataforma -->
+            <div style="position: relative; border-radius: 18px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.6); border: 1px solid rgba(245,158,11,0.2); margin-bottom: 3rem;">
+                <video controls playsinline preload="metadata"
+                    style="width: 100%; display: block; background: #000; aspect-ratio: 16/9; object-fit: contain;">
+                    <source src="video 1.webm" type="video/webm"><source src="video 1 .mp4" type="video/mp4">
+                    Seu navegador nao suporta videos HTML5.
+                </video>
+            </div>
+
+            <!-- Carrossel de Imagens -->
+            <div>
+                <p style="text-align: center; font-size: 0.85rem; color: #737373; margin-bottom: 1.5rem;">&#128248; Toque para ampliar qualquer imagem</p>
+
+                <div id="plataforma-carousel" style="position: relative; padding: 0 20px;">
+                    <div id="carousel-track" style="
+                        display: flex;
+                        gap: 12px;
+                        overflow-x: auto;
+                        scroll-snap-type: x mandatory;
+                        -webkit-overflow-scrolling: touch;
+                        scrollbar-width: none;
+                        -ms-overflow-style: none;
+                        padding-bottom: 4px;
+                    ">
+                        <div class="carousel-slide" style="flex: 0 0 80%; max-width: 400px; scroll-snap-align: center; cursor: pointer;" onclick="openLightbox('foto 1.webp')">
+                            <img src="foto 1.webp" alt="Plataforma - Foto 1" loading="lazy" style="width:100%;border-radius:14px;border:1px solid rgba(255,255,255,0.08);display:block;object-fit:cover;aspect-ratio:4/3;background:#1a1a1a;">
+                        </div>
+                        <div class="carousel-slide" style="flex: 0 0 80%; max-width: 400px; scroll-snap-align: center; cursor: pointer;" onclick="openLightbox('foto 3.webp')">
+                            <img src="foto 3.webp" alt="Plataforma - Foto 2" loading="lazy" style="width:100%;border-radius:14px;border:1px solid rgba(255,255,255,0.08);display:block;object-fit:cover;aspect-ratio:4/3;background:#1a1a1a;">
+                        </div>
+                        <div class="carousel-slide" style="flex: 0 0 80%; max-width: 400px; scroll-snap-align: center; cursor: pointer;" onclick="openLightbox('foto 5.webp')">
+                            <img src="foto 5.webp" alt="Plataforma - Foto 3" loading="lazy" style="width:100%;border-radius:14px;border:1px solid rgba(255,255,255,0.08);display:block;object-fit:cover;aspect-ratio:4/3;background:#1a1a1a;">
+                        </div>
+                        <div class="carousel-slide" style="flex: 0 0 80%; max-width: 400px; scroll-snap-align: center; cursor: pointer;" onclick="openLightbox('foto 6.webp')">
+                            <img src="foto 6.webp" alt="Plataforma - Foto 4" loading="lazy" style="width:100%;border-radius:14px;border:1px solid rgba(255,255,255,0.08);display:block;object-fit:cover;aspect-ratio:4/3;background:#1a1a1a;">
+                        </div>
+                        <div class="carousel-slide" style="flex: 0 0 80%; max-width: 400px; scroll-snap-align: center; cursor: pointer;" onclick="openLightbox('foto 7.webp')">
+                            <img src="foto 7.webp" alt="Plataforma - Foto 5" loading="lazy" style="width:100%;border-radius:14px;border:1px solid rgba(255,255,255,0.08);display:block;object-fit:cover;aspect-ratio:4/3;background:#1a1a1a;">
+                        </div>
+                        <div class="carousel-slide" style="flex: 0 0 80%; max-width: 400px; scroll-snap-align: center; cursor: pointer;" onclick="openLightbox('foto 8.webp')">
+                            <img src="foto 8.webp" alt="Plataforma - Foto 6" loading="lazy" style="width:100%;border-radius:14px;border:1px solid rgba(255,255,255,0.08);display:block;object-fit:cover;aspect-ratio:4/3;background:#1a1a1a;">
+                        </div>
+                    </div>
+
+                    <!-- Botao Anterior -->
+                    <button onclick="scrollCarousel(-1)" aria-label="Anterior" style="
+                        position:absolute;left:0;top:50%;transform:translateY(-50%);
+                        background:rgba(245,158,11,0.92);border:none;border-radius:50%;
+                        width:38px;height:38px;font-size:1.2rem;color:#000;cursor:pointer;
+                        box-shadow:0 4px 15px rgba(0,0,0,0.4);z-index:10;
+                        display:flex;align-items:center;justify-content:center;font-weight:bold;
+                    ">&#8249;</button>
+
+                    <!-- Botao Proximo -->
+                    <button onclick="scrollCarousel(1)" aria-label="Proximo" style="
+                        position:absolute;right:0;top:50%;transform:translateY(-50%);
+                        background:rgba(245,158,11,0.92);border:none;border-radius:50%;
+                        width:38px;height:38px;font-size:1.2rem;color:#000;cursor:pointer;
+                        box-shadow:0 4px 15px rgba(0,0,0,0.4);z-index:10;
+                        display:flex;align-items:center;justify-content:center;font-weight:bold;
+                    ">&#8250;</button>
+                </div>
+
+                <!-- Bolinhas indicadoras -->
+                <div id="carousel-dots" style="display:flex;justify-content:center;gap:6px;margin-top:1.25rem;">
+                    <span class="cdot" data-idx="0" style="width:20px;height:8px;border-radius:4px;background:#f59e0b;cursor:pointer;transition:all 0.3s;display:inline-block;"></span>
+                    <span class="cdot" data-idx="1" style="width:8px;height:8px;border-radius:50%;background:#444;cursor:pointer;transition:all 0.3s;display:inline-block;"></span>
+                    <span class="cdot" data-idx="2" style="width:8px;height:8px;border-radius:50%;background:#444;cursor:pointer;transition:all 0.3s;display:inline-block;"></span>
+                    <span class="cdot" data-idx="3" style="width:8px;height:8px;border-radius:50%;background:#444;cursor:pointer;transition:all 0.3s;display:inline-block;"></span>
+                    <span class="cdot" data-idx="4" style="width:8px;height:8px;border-radius:50%;background:#444;cursor:pointer;transition:all 0.3s;display:inline-block;"></span>
+                    <span class="cdot" data-idx="5" style="width:8px;height:8px;border-radius:50%;background:#444;cursor:pointer;transition:all 0.3s;display:inline-block;"></span>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div style="text-align: center; margin-top: 3rem;">
+                <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary btn-large">QUERO ACESSO AGORA</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div id="lightbox" onclick="closeLightbox()" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.93);align-items:center;justify-content:center;cursor:zoom-out;">
+        <img id="lightbox-img" src="" alt="Imagem ampliada" style="max-width:92vw;max-height:88vh;border-radius:12px;object-fit:contain;box-shadow:0 30px 80px rgba(0,0,0,0.8);">
+        <button onclick="event.stopPropagation();closeLightbox()" style="position:absolute;top:20px;right:24px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:1.5rem;border-radius:50%;width:44px;height:44px;cursor:pointer;display:flex;align-items:center;justify-content:center;">âœ•</button>
+    </div>
+
+    <script>
+        (function() {
+            var track = document.getElementById('carousel-track');
+            var dots = document.querySelectorAll('.cdot');
+            if (!track) return;
+
+            function getSlideWidth() {
+                var slide = track.querySelector('.carousel-slide');
+                return slide ? slide.offsetWidth + 12 : 0;
+            }
+
+            window.scrollCarousel = function(dir) {
+                track.scrollBy({ left: dir * getSlideWidth(), behavior: 'smooth' });
+            };
+
+            function updateDots() {
+                var sw = getSlideWidth();
+                if (!sw) return;
+                var idx = Math.round(track.scrollLeft / sw);
+                dots.forEach(function(d, i) {
+                    if (i === idx) {
+                        d.style.background = '#f59e0b';
+                        d.style.width = '20px';
+                        d.style.borderRadius = '4px';
+                    } else {
+                        d.style.background = '#444';
+                        d.style.width = '8px';
+                        d.style.borderRadius = '50%';
+                    }
+                });
+            }
+
+            track.addEventListener('scroll', updateDots);
+
+            dots.forEach(function(dot) {
+                dot.addEventListener('click', function() {
+                    var idx = parseInt(dot.getAttribute('data-idx'));
+                    track.scrollTo({ left: idx * getSlideWidth(), behavior: 'smooth' });
+                });
+            });
+
+            window.openLightbox = function(src) {
+                document.getElementById('lightbox-img').src = src;
+                var lb = document.getElementById('lightbox');
+                lb.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            };
+
+            window.closeLightbox = function() {
+                document.getElementById('lightbox').style.display = 'none';
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+            };
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') window.closeLightbox();
+            });
+        })();
+    </script>
+
+    <!-- Horizontal Learning Section -->
+
+    <section id="learning" class="bg-white"
+        style="padding: 3rem 0; border-top: 1px solid var(--slate-800); border-bottom: 1px solid var(--slate-800);">
+        <div class="container authority-grid" style="gap: 2rem;">
+            <div class="mockup-side" style="flex: 0 0 180px;">
+                <img src="capadasdoencas.webp" alt="Guia O Segredo das Galinhas"
+                    style="width: 100%; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));" loading="lazy">
+            </div>
+            <div class="learning-side"
+                style="flex: 1.5; min-width: 300px; background: rgba(30, 41, 59, 0.3); padding: 1.5rem; border-radius: 1rem; border: 1px solid var(--slate-800);">
+                <h4 style="color: var(--white); margin-bottom: 1.25rem; font-size: 1.25rem; font-weight: 900;">O Que
+                    Você Vai Aprender Hoje:</h4>
+                <ul
+                    style="list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <li style="display: flex; gap: 12px; font-size: 0.95rem; color: var(--slate-200);"><i
+                            class="fa-solid fa-circle-check" style="color: var(--green-600); margin-top: 3px;"></i>
+                        Identificar doenças em segundos</li>
+                    <li style="display: flex; gap: 12px; font-size: 0.95rem; color: var(--slate-200);"><i
+                            class="fa-solid fa-circle-check" style="color: var(--green-600); margin-top: 3px;"></i>
+                        Medicamento correto para cada doença</li>
+                    <li style="display: flex; gap: 12px; font-size: 0.95rem; color: var(--slate-200);"><i
+                            class="fa-solid fa-circle-check" style="color: var(--green-600); margin-top: 3px;"></i>
+                        Dosagem que realmente funciona</li>
+                    <li style="display: flex; gap: 12px; font-size: 0.95rem; color: var(--slate-200);"><i
+                            class="fa-solid fa-circle-check" style="color: var(--green-600); margin-top: 3px;"></i>
+                        Protocolos Passo a Passo</li>
+                    <li style="display: flex; gap: 12px; font-size: 0.95rem; color: var(--slate-200);"><i
+                            class="fa-solid fa-circle-check" style="color: var(--green-600); margin-top: 3px;"></i>
+                        Tabela de vacinação</li>
+                    <li style="display: flex; gap: 12px; font-size: 0.95rem; color: var(--slate-200);"><i
+                            class="fa-solid fa-circle-check" style="color: var(--green-600); margin-top: 3px;"></i>
+                        Tabela de vermifugação</li>
+                    <li style="display: flex; gap: 12px; font-size: 0.95rem; color: var(--slate-200);"><i
+                            class="fa-solid fa-circle-check" style="color: var(--green-600); margin-top: 3px;"></i>
+                        Prevenção</li>
+                </ul>
+
+                <div
+                    style="margin-top: 1.25rem; padding: 1.5rem; background: rgba(15, 23, 42, 0.4); border-radius: 1rem; text-align: center; border: 1px solid var(--slate-800); box-shadow: var(--shadow-xl);">
+                    <span
+                        style="display: block; font-size: 0.9rem; color: var(--slate-500); text-decoration: line-through; margin-bottom: 2px;">De R$ 149,90 por apenas:</span>
+                    <span
+                        style="display: block; font-size: 0.85rem; color: var(--slate-400); font-weight: 600; text-transform: uppercase; margin-bottom: 5px; opacity: 0.8;">APENAS</span>
+                    <span style="display: block; font-size: 1.8rem; color: var(--white); font-weight: 900;">R$ <span
+                            id="display-price-value" class="dyn-price-main">89,90</span> no pix</span>
+                    <span class="dyn-discount-badge"
+                        style="font-size: 0.75rem; color: #10b981; font-weight: 800; display: block; margin-top: 3px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 15px; display: inline-block;">ðŸ”¥
+                        <span class="dyn-discount-percent">40</span>% DE DESCONTO NO PIX</span>
+                    <span style="font-size: 0.9rem; color: var(--slate-300); display: block; margin-top: 5px;">ou em até
+                        <strong class="dyn-installments" style="color: #fff; font-size: 1.15em;">4x de R$ 27,47</strong> <span style="font-size: 0.75em; color: #94a3b8; font-weight: normal;">(Total R$ 109,90)</span><br><span style="color: #10b981; font-weight: 800; font-size: 0.9em; display: inline-block; margin-top: 4px;">Ou R$ 89,90 à vista no PIX ou Cartão</span><br><span style="display:none">
+                        cartão</span>
+                    <span
+                        style="font-size: 0.95rem; color: #fff; font-weight: 700; display: block; margin-top: 1rem; line-height: 1.3;">
+                        Por menos de 90 reais você garante a sobrevivência de todo seu plantel.
+                    </span>
+                    <span
+                        style="font-size: 1.1rem; color: var(--brand-red); font-weight: 900; display: block; margin-top: 0.5rem; text-transform: uppercase;">
+                        Sua criação vale mais que isso?
+                    </span>
+                    <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary"
+                        style="width: 100%; margin-top: 15px;">
+                        SALVAR MINHAS GALINHAS AGORA
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof Bar -->
+    <div class="social-proof-bar"
+        style="background: var(--slate-900) !important; border-top: 1px solid var(--slate-800); border-bottom: 1px solid var(--slate-800);">
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <i class="fa-solid fa-users" style="background: rgba(225,29,72,0.1); color: var(--brand-red);"></i>
+                    <div class="stat-text">
+                        <strong style="color: var(--white);">+12.000 Pessoas</strong>
+                        <span style="color: var(--slate-400);">acompanham meu trabalho</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <i class="fa-solid fa-graduation-cap"
+                        style="background: rgba(225,29,72,0.1); color: var(--brand-red);"></i>
+                    <div class="stat-text">
+                        <strong style="color: var(--white);">+1.600 Alunos</strong>
+                        <span style="color: var(--slate-400);">que já salvaram suas galinhas</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <i class="fa-solid fa-circle-check"
+                        style="background: rgba(225,29,72,0.1); color: var(--brand-red);"></i>
+                    <div class="stat-text">
+                        <strong style="color: var(--white);">Método Comprovado</strong>
+                        <span style="color: var(--slate-400);">resultados reais e garantidos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Authority Section -->
+    <section class="bg-white" style="padding: 4rem 0; border-top: 1px solid var(--slate-800);">
+        <div class="container authority-grid">
+            <img src="comparacao_pintinhos.webp" alt="Comparação Pintinhos" class="authority-img" loading="lazy">
+            <div class="authority-content">
+                <h3>Quem Sou eu ?</h3>
+                <p>
+                    Com <strong>mais de 10 anos de experiência</strong> na criação de aves, dediquei minha vida a
+                    entender
+                    os segredos por trás de um plantel saudável e produtivo.
+                </p>
+                <p>
+                    Hoje, compartilho meu conhecimento com milhares de seguidores e já ajudei diversos alunos a
+                    transformarem suas criações, eliminando prejuízos e trazendo de volta o prazer de criar.
+                </p>
+                <div class="authority-badges">
+                    <div class="auth-badge"><i class="fa-solid fa-award"></i> 10+ Anos de Experiência</div>
+                    <div class="auth-badge"><i class="fa-solid fa-users"></i> Milhares de Seguidores</div>
+                    <div class="auth-badge"><i class="fa-solid fa-graduation-cap"></i> Mentor de Diversos Alunos</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Benefits Section (Moved Down) -->
+    <section id="benefits" class="bg-white border-t-amber" style="padding: 4rem 0;">
+        <div class="container">
+            <h3
+                style="text-align: center; font-size: 1.875rem; font-weight: 900; color: var(--white); margin-bottom: 3rem; letter-spacing: -0.5px;">
+                Por Que Você Precisa Deste Ebook?
+            </h3>
+            <div class="grid-2-2">
+                <div class="card">
+                    <div class="icon-circle"><i class="fa-solid fa-syringe"></i></div>
+                    <h4>Sua galinha com ronqueira?</h4>
+                    <p>Descubra o medicamento certo em minutos â€” sem gastar R$ 300 no veterinÃ¡rio.</p>
+                </div>
+                <div class="card">
+                    <div class="icon-circle"><i class="fa-solid fa-skull-crossbones"></i></div>
+                    <h4>Chega de perder aves sem saber o porquê</h4>
+                    <p>Identifique a doença nos primeiros sintomas e salve seu plantel antes que seja tarde.</p>
+                </div>
+                <div class="card">
+                    <div class="icon-circle"><i class="fa-solid fa-book-open"></i></div>
+                    <h4>Protocolo pronto, passo a passo</h4>
+                    <p>Nada de achismo. Cada doença tem o tratamento certo descrito com clareza e dosagem exata.</p>
+                </div>
+                <div class="card">
+                    <div class="icon-circle"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h4>Teste sem risco por 7 dias</h4>
+                    <p>Se não ajudar sua criação, devolvemos 100% do seu dinheiro. Sem perguntas.</p>
+                </div>
+            </div>
+            <noscript>
+                <img height="1" width="1" style="display:none"
+                    src="https://www.facebook.com/tr?id=1346740157465853&ev=PageView&noscript=1" />
+            </noscript>
+        </div>
+    </section>
+
+    <!-- Guarantee -->
+    <section class="guarantee-section" style="background: var(--zinc-950); padding: 5rem 0;">
+        <div class="container text-center">
+            <i class="fa-solid fa-shield-halved shield-icon"
+                style="color: var(--brand-red); font-size: 4rem; margin-bottom: 1.5rem;"></i>
+            <h3
+                style="font-size: 2.25rem; font-weight: 900; color: var(--white); margin-bottom: 1.5rem; letter-spacing: -0.5px;">
+                Garantia Incondicional de 7 Dias</h3>
+            <p
+                style="color: var(--slate-400); font-size: 1.125rem; max-width: 42rem; margin: 0 auto; line-height: 1.6;">
+                Se por qualquer motivo você não ficar satisfeito com o ebook nos primeiros 7 dias, devolvemos 100% do
+                seu
+                dinheiro. Sem perguntas. Sem complicações.</p>
+            <p style="font-size: 0.875rem; color: var(--slate-500); margin-top: 1.5rem; opacity: 0.8;">Isso significa
+                que você pode
+                testar o ebook completamente sem risco. Se não gostar, recupera seu dinheiro.</p>
+        </div>
+    </section>
+
+    <!-- Urgency -->
+    <section class="urgency-bar">
+        <div class="container urgency-content">
+            <div class="urgency-pill"><i class="fa-solid fa-triangle-exclamation"></i> Oferta Por Tempo Limitado</div>
+            <p style="font-size: 1.5rem; font-weight: 700;">â° Economize R$ 60 hoje â€” preÃ§o sobe em breve!</p>
+            <p style="font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; font-family: monospace;"
+                id="urgency-countdown">23:59:59</p>
+        </div>
+    </section>
+    <script>
+        (function () {
+            var key = 'urgency_end';
+            var end = localStorage.getItem(key);
+            if (!end || Date.now() > parseInt(end)) {
+                end = Date.now() + 24 * 60 * 60 * 1000;
+                localStorage.setItem(key, end);
+            }
+            function tick() {
+                var diff = Math.max(0, parseInt(end) - Date.now());
+                var h = Math.floor(diff / 3600000);
+                var m = Math.floor((diff % 3600000) / 60000);
+                var s = Math.floor((diff % 60000) / 1000);
+                var el = document.getElementById('urgency-countdown');
+                if (el) el.textContent = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+                if (diff > 0) setTimeout(tick, 1000);
+            }
+            document.addEventListener('DOMContentLoaded', tick);
+        })();
+    </script>
+
+    <!-- FAQ Section -->
+    <section class="bg-white" style="padding: 4rem 0; border-top: 1px solid var(--slate-800);">
+        <div class="container" style="max-width: 42rem;">
+            <h3
+                style="text-align: center; font-size: 1.875rem; font-weight: 900; color: var(--white); margin-bottom: 2.5rem; letter-spacing: -0.5px;">
+                <i class="fa-solid fa-circle-question" style="color: var(--brand-red);"></i> Perguntas Frequentes
+            </h3>
+
+            <style>
+                .faq-item {
+                    border: 1px solid var(--slate-800);
+                    border-radius: 12px;
+                    margin-bottom: 10px;
+                    overflow: hidden;
+                    background: rgba(30, 41, 59, 0.3);
+                    transition: 0.3s;
+                }
+
+                .faq-item:hover {
+                    border-color: var(--slate-600);
+                }
+
+                .faq-q {
+                    padding: 14px 18px;
+                    cursor: pointer;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-weight: 700;
+                    font-size: 0.95rem;
+                    color: var(--white);
+                }
+
+                .faq-q i {
+                    font-size: 0.75rem;
+                    color: var(--slate-400);
+                    transition: transform 0.3s;
+                }
+
+                .faq-a {
+                    max-height: 0;
+                    overflow: hidden;
+                    transition: max-height 0.4s ease, padding 0.3s ease;
+                    padding: 0 18px;
+                    color: var(--slate-400);
+                    font-size: 0.9rem;
+                    line-height: 1.6;
+                }
+
+                .faq-item.open .faq-a {
+                    max-height: 300px;
+                    padding: 0 18px 14px;
+                }
+
+                .faq-item.open .faq-q i {
+                    transform: rotate(180deg);
+                }
+            </style>
+
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    Recebo o ebook na hora?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">Sim! Após a confirmação do pagamento (PIX é instantâneo), você recebe o acesso direto
+                    no seu e-mail em poucos segundos.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    Funciona para qualquer tipo de galinha?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">Sim. O protocolo cobre doenças que afetam galinhas caipiras, de granja, ornamentais,
+                    e outras aves domésticas. Os tratamentos são universais.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    Preciso ter experiência para usar?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">Não. O guia foi feito para criadores iniciantes e avançados. Tudo é explicado passo a
+                    passo, com linguagem simples e direta.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    E se eu não gostar?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">Você tem 7 dias de garantia incondicional. Se por qualquer motivo não ficar
+                    satisfeito, devolvemos 100% do seu dinheiro sem perguntas.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    O pagamento é seguro?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">Totalmente. O pagamento é processado pelo Mercado Pago, uma das maiores plataformas
+                    de pagamento do Brasil, com criptografia de ponta.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    Onde encontro os remédios indicados?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-a">Todos os medicamentos indicados são encontrados facilmente em agro-petárias ou lojas
+                    online. O guia indica nomes comerciais e genéricos.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="bg-white" style="padding: 4rem 0;">
+        <div class="container text-center">
+            <h3 style="font-size: 1.875rem; font-weight: 700; color: var(--white); margin-bottom: 1rem;">Pronto Para
+                Começar?</h3>
+            <p style="font-size: 1.125rem; color: var(--slate-300); margin-bottom: 2rem;">Acesse o ebook agora e comece
+                a
+                economizar com suas aves ainda hoje.</p>
+            <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary btn-large">SALVAR MINHAS GALINHAS
+                AGORA</button>
+            <p style="font-size: 0.875rem; color: var(--slate-400); margin-top: 1rem;">Acesso imediato â€¢ Garantia de 7
+                dias â€¢ 100% Seguro</p>
+        </div>
+    </section>
+
+
+    <!-- ============================================ -->
+    <!-- CHECKOUT INLINE (Substituiu o modal antigo) -->
+    <!-- ============================================ -->
+    <div id="checkout-page" style="display: none;">
+        <style>
+            /* === CHECKOUT PAGE - FULLSCREEN OVERLAY === */
+            #checkout-page {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #f5f5f0;
+                color: #1f2937;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                line-height: 1.5;
+                z-index: 10000;
+                overflow-y: auto;
+                overflow-x: hidden;
+                overscroll-behavior-y: contain;
+                padding-bottom: 50px;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            #checkout-page * {
+                box-sizing: border-box;
+            }
+
+            /* Header do Checkout */
+            .ck-header {
+                background: #0f172a;
+                padding: 12px 0;
+                position: sticky;
+                top: 0;
+                z-index: 200;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+
+            .ck-header-container {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 0 16px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .ck-logo {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 700;
+                font-size: 16px;
+                letter-spacing: -0.5px;
+                color: #fff;
+            }
+
+            .ck-logo-elite {
+                color: #fbbf24;
+            }
+
+            .ck-security-badge {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                color: #22c55e;
+                font-weight: 600;
+                font-size: 12px;
+            }
+
+            .ck-back-btn {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                color: #94a3b8;
+                font-size: 13px;
+                cursor: pointer;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 6px 12px;
+                border-radius: 6px;
+                font-family: inherit;
+                transition: all 0.3s ease;
+            }
+
+            .ck-back-btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: #fff;
+            }
+
+            /* Timer de Urgencia */
+            .ck-urgency-banner {
+                text-align: center;
+                padding: 10px 16px;
+                background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d);
+                animation: ckPulse 3s infinite;
+            }
+
+            .ck-timer-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                color: #fff;
+                font-size: 14px;
+                font-weight: 700;
+            }
+
+            @keyframes ckPulse {
+
+                0%,
+                100% {
+                    opacity: 1;
+                }
+
+                50% {
+                    opacity: 0.85;
+                }
+            }
+
+            /* Main Container */
+            .ck-main {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 10px;
+            }
+
+            /* Grid Layout */
+            .ck-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            @media (min-width: 768px) {
+                .ck-grid {
+                    grid-template-columns: 7fr 5fr;
+                    gap: 24px;
+                }
+            }
+
+            /* Secoes */
+            .ck-section {
+                background-color: #ffffff;
+                border-radius: 12px;
+                padding: 10px;
+                border: 1px solid #e5e7eb;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            }
+
+            @media (min-width: 768px) {
+                .ck-section {
+                    padding: 16px;
+                }
+            }
+
+            .ck-section-header {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 10px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid #f3f4f6;
+            }
+
+            .ck-section-number {
+                background: linear-gradient(135deg, #dc2626, #991b1b);
+                color: #ffffff;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                font-size: 14px;
+                flex-shrink: 0;
+            }
+
+            .ck-section-title {
+                font-size: 16px;
+                font-weight: 700;
+                color: #1f2937;
+                margin: 0;
+            }
+
+            @media (min-width: 768px) {
+                .ck-section-title {
+                    font-size: 18px;
+                }
+            }
+
+            /* Formulario */
+            #checkout-page .ck-form-group {
+                margin-bottom: 8px;
+            }
+
+            #checkout-page .ck-form-group label {
+                display: block;
+                font-size: 12px;
+                font-weight: 700;
+                color: #374151;
+                margin-bottom: 4px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            #checkout-page .form-input,
+            #checkout-page .ck-input {
+                width: 100% !important;
+                padding: 12px 14px !important;
+                border: 1.5px solid #d1d5db !important;
+                border-radius: 8px !important;
+                font-size: 16px !important;
+                font-family: inherit !important;
+                background: #ffffff !important;
+                color: #1f2937 !important;
+                height: auto !important;
+                -webkit-appearance: none !important;
+                -moz-appearance: none !important;
+                appearance: none !important;
+            }
+
+            #checkout-page .form-input:focus,
+            #checkout-page .ck-input:focus {
+                outline: none;
+                border-color: #dc2626 !important;
+                box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+            }
+
+            #checkout-page .form-input::placeholder,
+            #checkout-page .ck-input::placeholder {
+                color: #9ca3af !important;
+                font-size: 14px !important;
+            }
+
+            #checkout-page .ck-form-row {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 10px;
+            }
+
+            @media (min-width: 768px) {
+                #checkout-page .ck-form-row {
+                    grid-template-columns: 1fr 1fr !important;
+                }
+            }
+
+            #checkout-page .order-bump-grid-view {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+            }
+
+            @media (min-width: 480px) {
+                #checkout-page .order-bump-grid-view {
+                    display: grid !important;
+                    grid-template-columns: 1fr 1fr !important;
+                    gap: 8px !important;
+                }
+            }
+
+            /* Abas de Pagamento */
+            #checkout-page .radio-item {
+                flex: 1;
+                padding: 14px 10px !important;
+                font-weight: 700;
+                text-align: center;
+                background: #ffffff !important;
+                border: 2px solid #e5e7eb !important;
+                cursor: pointer;
+                color: #9ca3af !important;
+                font-size: 14px;
+                transition: all 0.2s ease;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center;
+                gap: 8px;
+                border-radius: 10px !important;
+                height: auto !important;
+            }
+
+            #checkout-page .radio-item.selected {
+                color: #dc2626 !important;
+                border-color: #dc2626 !important;
+                background: #fef2f2 !important;
+            }
+
+            #checkout-page .radio-title {
+                color: inherit !important;
+                font-weight: 800;
+                font-size: 15px;
+            }
+
+            #checkout-page .radio-desc {
+                font-size: 11px;
+                color: #6b7280 !important;
+            }
+
+            /* Order Bump - CLEAN MOBILE DESIGN */
+            #checkout-page #order-bump-area {
+                margin-top: 16px;
+            }
+
+            #checkout-page .order-bump-container {
+                position: relative;
+                overflow: hidden;
+                border: 2px solid #fbbf24 !important;
+                border-radius: 12px;
+                cursor: pointer;
+                min-height: auto !important;
+                margin-bottom: 10px;
+                background: #fffbeb !important;
+                box-shadow: none !important;
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: stretch !important;
+                padding: 0 !important;
+            }
+
+            #checkout-page .order-bump-container.selected {
+                border-color: #22c55e !important;
+                background: #000 !important; /* Base black under image */
+                box-shadow: 0 0 15px rgba(34, 197, 94, 0.4) !important;
+                border-width: 3px !important;
+            }
+
+            #checkout-page .order-bump-container:not(.selected) {
+                animation: none !important;
+            }
+
+            /* MOSTRAR imagens dos bumps no mobile com layout otimizado */
+            #checkout-page .order-bump-container img {
+                display: block !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+                z-index: 0 !important;
+                pointer-events: none !important;
+            }
+
+            /* MOSTRAR gradient overlay dos bumps para legibilidade */
+            #checkout-page .order-bump-container div[style*="linear-gradient"] {
+                display: block !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                z-index: 1 !important;
+                background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 90%) !important;
+                pointer-events: none !important;
+            }
+
+            /* Forcar layout limpo dos bumps */
+            #checkout-page .order-bump-container>div[style*="z-index: 2"] {
+                position: relative !important;
+                z-index: 1 !important;
+                padding: 12px !important;
+                width: 100% !important;
+                height: auto !important;
+                justify-content: flex-start !important;
+                background: transparent !important;
+            }
+
+            /* CORES E TIPOGRAFIA DOS ORDER BUMPS - FORCA ALTO CONTRASTE */
+            #checkout-page .order-bump-container .order-bump-title,
+            #checkout-page .order-bump-title {
+                color: #fbbf24 !important; /* Gold */
+                font-size: 1rem !important;
+                font-weight: 900 !important;
+                text-shadow: 0 2px 6px rgba(0,0,0,1) !important;
+                line-height: 1.2 !important;
+                margin-bottom: 6px !important;
+                display: block !important;
+                letter-spacing: -0.2px !important;
+                padding-right: 28px !important;
+            }
+
+            #checkout-page .order-bump-container .order-bump-description,
+            #checkout-page .order-bump-description {
+                color: #f1f5f9 !important;
+                font-size: 0.75rem !important;
+                line-height: 1.35 !important;
+                text-shadow: 0 1px 4px rgba(0,0,0,1) !important;
+            }
+
+            /* Permite cores inline (vermelho/verde) nas spans da descricao */
+            #checkout-page .order-bump-description span,
+            #checkout-page .order-bump-description strong {
+                text-shadow: 0 1px 4px rgba(0,0,0,0.9) !important;
+            }
+
+            #checkout-page .order-bump-container .order-bump-price,
+            #checkout-page .order-bump-price {
+                color: #4ade80 !important; /* Verde brilhante = ganho */
+                font-size: 1.1rem !important;
+                font-weight: 900 !important;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.9) !important;
+            }
+
+            #checkout-page .order-bump-container .order-bump-old-price {
+                color: #fca5a5 !important; /* Rosa = prejuizo evitado */
+                text-decoration: line-through !important;
+                font-size: 0.75rem !important;
+                opacity: 1 !important;
+                font-weight: 600 !important;
+            }
+
+            #checkout-page .bump-check-wrapper {
+                border-color: #fbbf24 !important;
+            }
+
+            #checkout-page .order-bump-container:not(.selected) {
+                box-shadow: 0 0 0 2px rgba(251,191,36,0.3);
+                animation: bumpPulse 2.5s ease-in-out infinite;
+            }
+
+            @keyframes bumpPulse {
+                0%, 100% { box-shadow: 0 0 0 2px rgba(251,191,36,0.2); }
+                50% { box-shadow: 0 0 0 3px rgba(251,191,36,0.6), 0 4px 16px rgba(0,0,0,0.4); }
+            }
+
+            #checkout-page .order-bump-container.selected {
+                animation: none !important;
+            }
+
+            #checkout-page .order-bump-container.selected .bump-check-wrapper {
+                background: #22c55e !important;
+                border-color: #22c55e !important;
+            }
+
+            /* GRID dos bumps - lado a lado no checkout puro */
+            #checkout-page .order-bump-grid-view {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+            }
+
+            @media (min-width: 480px) {
+                #checkout-page .order-bump-grid-view {
+                    display: grid !important;
+                    grid-template-columns: 1fr 1fr !important;
+                    gap: 8px !important;
+                }
+            }
+
+            /* Botao Principal */
+            .ck-btn-checkout {
+                width: 100%;
+                padding: 16px;
+                border-radius: 12px;
+                background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+                color: #ffffff;
+                font-weight: 800;
+                font-size: 16px;
+                border: none;
+                cursor: pointer;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                transition: all 0.2s ease;
+                box-shadow: 0 4px 15px rgba(22, 197, 94, 0.3);
+                margin-bottom: 12px;
+                font-family: inherit;
+            }
+
+            .ck-btn-checkout:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 6px 20px rgba(22, 197, 94, 0.4);
+            }
+
+            .ck-btn-checkout:active {
+                transform: translateY(0);
+            }
+
+            /* Resumo do Pedido (Sidebar) */
+            .ck-order-summary {
+                position: static;
+            }
+
+            @media (min-width: 768px) {
+                .ck-order-summary {
+                    position: sticky;
+                    top: 70px;
+                }
+            }
+
+            .ck-product-card {
+                display: flex;
+                gap: 12px;
+                margin-bottom: 16px;
+                padding-bottom: 16px;
+                border-bottom: 1px solid #f3f4f6;
+            }
+
+            .ck-product-image {
+                width: 65px;
+                height: 82px;
+                border-radius: 8px;
+                border: 1px solid #e5e7eb;
+                flex-shrink: 0;
+                overflow: hidden;
+            }
+
+            .ck-product-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .ck-product-info h3 {
+                font-size: 13px;
+                font-weight: 700;
+                margin: 0 0 2px 0;
+                line-height: 1.3;
+                color: #1f2937;
+            }
+
+            .ck-product-info p {
+                font-size: 11px;
+                color: #6b7280;
+                margin: 0 0 6px 0;
+            }
+
+            .ck-price-original {
+                text-decoration: line-through;
+                color: #9ca3af;
+                font-size: 12px;
+            }
+
+            .ck-price-current {
+                color: #dc2626;
+                font-weight: 800;
+                font-size: 16px;
+            }
+
+            /* Resumo de Precos */
+            .ck-price-breakdown {
+                font-size: 13px;
+                border-top: 1px solid #f3f4f6;
+                padding-top: 12px;
+            }
+
+            .ck-price-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+                color: #6b7280;
+            }
+
+            .ck-price-row.discount {
+                color: #16a34a;
+                font-weight: 600;
+            }
+
+            .ck-price-row.total {
+                font-size: 18px;
+                font-weight: 800;
+                color: #1f2937;
+                border-top: 2px solid #f3f4f6;
+                padding-top: 10px;
+                margin-top: 8px;
+            }
+
+            /* Garantia */
+            .ck-guarantee-box {
+                background: #f0fdf4;
+                border: 1px solid #bbf7d0;
+                border-radius: 10px;
+                padding: 12px;
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                margin-top: 20px;
+            }
+
+            .ck-guarantee-icon {
+                font-size: 24px;
+                flex-shrink: 0;
+            }
+
+            .ck-guarantee-content p:first-child {
+                font-size: 12px;
+                font-weight: 800;
+                color: #166534;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin: 0 0 2px 0;
+            }
+
+            .ck-guarantee-content p:last-child {
+                font-size: 11px;
+                color: #15803d;
+                margin: 0;
+                line-height: 1.4;
+            }
+
+            /* Prova Social */
+            .ck-social-proof {
+                margin-top: 20px;
+            }
+
+            .ck-proof-label {
+                font-size: 11px;
+                font-weight: 700;
+                color: #9ca3af;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+
+            .ck-testimonial-box {
+                background: #f9fafb;
+                padding: 12px;
+                border-radius: 8px;
+                font-size: 12px;
+                color: #4b5563;
+                font-style: italic;
+                margin-bottom: 8px;
+                border-left: 3px solid #22c55e;
+                line-height: 1.4;
+            }
+
+            .ck-testimonial-author {
+                margin-top: 6px;
+                font-weight: 700;
+                color: #1f2937;
+                font-style: normal;
+                font-size: 11px;
+            }
+
+            .ck-stars {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 2px;
+                margin-top: 10px;
+                font-size: 14px;
+            }
+
+            .ck-star {
+                color: #fbbf24;
+            }
+
+            .ck-rating-text {
+                color: #6b7280;
+                font-weight: 700;
+                margin-left: 6px;
+                font-size: 12px;
+            }
+
+            /* Footer Checkout */
+            .ck-footer {
+                background: #0f172a;
+                padding: 20px 16px;
+                text-align: center;
+                margin-top: 20px;
+            }
+
+            .ck-footer p {
+                font-size: 12px;
+                color: #64748b;
+                margin: 0 0 4px 0;
+            }
+
+            /* Error styles */
+            #checkout-page .form-input.input-error,
+            #checkout-page .form-input.is-invalid {
+                border-color: #ef4444 !important;
+                background-color: #fef2f2 !important;
+            }
+
+            #checkout-page .form-input.input-success,
+            #checkout-page .form-input.is-valid {
+                border-color: #22c55e !important;
+                background-color: #f0fdf4 !important;
+            }
+
+            #checkout-page .error-message {
+                color: #ef4444;
+                font-size: 0.7rem;
+                font-weight: 700;
+                margin-top: 3px;
+                display: block;
+            }
+
+            /* PIX Result inside checkout page */
+            #checkout-page #pix-result {
+                max-width: 500px;
+                margin: 1rem auto;
+                padding: 1.5rem 1rem;
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+
+            #checkout-page #payment-pending-view {
+                max-width: 500px;
+                margin: 1rem auto;
+                padding: 1.5rem 1rem;
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+
+            #checkout-page .hidden {
+                display: none !important;
+            }
+
+            /* Card area */
+            #checkout-page #card-area {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                padding: 12px;
+                border-radius: 10px;
+                margin-top: 12px;
+            }
+
+            /* WhatsApp link */
+            #checkout-page .ck-wpp-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: #25d366;
+                color: #fff;
+                padding: 8px 14px;
+                border-radius: 50px;
+                text-decoration: none;
+                font-size: 0.75rem;
+                font-weight: 700;
+            }
+
+            /* Tooltip */
+            #checkout-page .field-tooltip {
+                display: none;
+            }
+
+            #checkout-page .form-group {
+                position: relative;
+                margin-bottom: 12px;
+            }
+
+            /* Price summary */
+            #checkout-page .price-summary-box {
+                background: #f9fafb !important;
+                border: 1px dashed #d1d5db !important;
+                padding: 12px;
+                border-radius: 10px;
+                margin-bottom: 12px;
+            }
+
+            #checkout-page .price-summary-box span {
+                color: #1f2937 !important;
+            }
+
+            #checkout-page .pix-discount-badge {
+                color: #16a34a !important;
+                background: rgba(22, 163, 74, 0.1) !important;
+            }
+
+            /* Mobile scroll fix */
+            @media (max-width: 767px) {
+                #checkout-page {
+                    padding-bottom: 0;
+                }
+
+                .ck-main {
+                    padding: 12px;
+                }
+
+                .ck-section {
+                    padding: 14px;
+                    border-radius: 10px;
+                }
+            }
+
+            /* MOBILE CHECKOUT LINEAR FULL-WIDTH OVERRIDES */
+            @media (max-width: 768px) {
+                #checkout-page .ck-form-row {
+                    grid-template-columns: 1fr !important;
+                }
+
+                /* FORCE ORDER BUMPS TO BE SIDE-BY-SIDE ON MOBILE */
+                #checkout-page .order-bump-grid-view {
+                    display: grid !important;
+                    grid-template-columns: 1fr 1fr !important;
+                    gap: 10px !important;
+                }
+
+                #checkout-page .order-bump-grid-view .order-bump-title {
+                    font-size: 0.7rem !important;
+                    line-height: 1.1 !important;
+                }
+
+                #checkout-page .order-bump-grid-view .order-bump-description {
+                    font-size: 0.55rem !important;
+                    line-height: 1.2 !important;
+                    margin: 4px 0 !important;
+                }
+
+                #checkout-page .order-bump-grid-view .order-bump-price {
+                    font-size: 0.7rem !important;
+                }
+
+                #checkout-page .order-bump-grid-view .order-bump-old-price {
+                    font-size: 0.55rem !important;
+                }
+
+                /* PROVA SOCIAL VERTICAL E CENTRALIZADA */
+                .ck-social-proof-mobile-stack {
+                    flex-direction: column !important;
+                    text-align: center !important;
+                    padding: 20px 15px !important;
+                    gap: 12px !important;
+                }
+
+                .ck-social-proof-mobile-stack .avatar-stack {
+                    margin-right: 0 !important;
+                    justify-content: center !important;
+                    width: 100% !important;
+                }
+
+                .ck-social-proof-mobile-stack div[style*="padding-left: 15px"] {
+                    padding-left: 0 !important;
+                    margin-top: 5px !important;
+                }
+
+                /* AJUSTE GERAL DE SECOES */
+                .ck-section {
+                    padding: 12px !important;
+                }
+
+                /* AJUSTE PAYMENT METHODS MOBILE - 3 CARDS LADO A LADO SEM OVERFLOW */
+                #checkout-page .payment-methods-grid {
+                    gap: 6px !important;
+                }
+                #checkout-page .radio-item {
+                    padding: 8px 4px !important;
+                    flex-direction: column !important;
+                    gap: 6px !important;
+                    justify-content: center !important;
+                }
+                #checkout-page .radio-label {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 100%;
+                }
+                #checkout-page .radio-title {
+                    font-size: 0.75rem !important;
+                    text-align: center;
+                    width: 100%;
+                    display: block;
+                }
+                #checkout-page .radio-desc {
+                    font-size: 0.55rem !important;
+                    text-align: center;
+                    width: 100%;
+                    display: block;
+                }
+                #checkout-page .radio-item img, 
+                #checkout-page .radio-item i {
+                    height: 20px !important;
+                    font-size: 20px !important;
+                    margin: 0 !important;
+                }
+            }
+        </style>
+
+        <!-- Checkout Header -->
+        <div class="ck-header">
+            <div class="ck-header-container">
+                <button class="ck-back-btn" onclick="attemptCloseCheckout()">
+                    &#8592; Voltar
+                </button>
+                <div class="ck-logo">
+                    <span style="font-size: 24px;">&#x1F414;</span>
+                    <span>PROTOCOLO <span class="ck-logo-elite">ELITE</span></span>
+                </div>
+                <div class="ck-security-badge">
+                    <span>&#x1F512;</span>
+                    <span>Ambiente 100% Seguro</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="ck-main">
+            <!-- Timer de Urgencia -->
+            <div class="ck-urgency-banner" style="display: flex; flex-direction: column; align-items: center;">
+                <div class="ck-timer-badge">
+                    <span>&#x23F0;</span>
+                    <span>Oferta expira em: <span id="ck-timer">14:59</span></span>
+                </div>
+                <div style="font-size: 0.75rem; color: #ffffff; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; text-align: center; line-height: 1.2;">
+                    <i class="fa-solid fa-mobile-screen-button"></i> Receba o acesso na palma da sua mão imediatamente após o pagamento.
+                </div>
+            </div>
+
+            <!-- CHECKOUT MAIN VIEW -->
+
+
+            <div id="checkout-main-view">
+                <div style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;">
+
+                    <!-- 1. Header do Produto e Garantia -->
+                    <div class="ck-section">
+                        <div class="ck-product-card">
+                            <div class="ck-product-image" id="ck-product-cover">
+                                <img src="capadasdoencas.webp" alt="Capa" loading="lazy">
+                            </div>
+                            <div class="ck-product-info">
+                                <h3 id="checkout-product-name">Protocolo Elite: A Cura das Aves</h3>
+                                <p style="font-size: 0.85rem; color: #4b5563; margin-bottom: 4px;">Acesso Vitalicio +
+                                    Atualizacoes<br><span style="color: #16a34a; font-weight: 700;">+ Tabela de
+                                        vacinacao gratuita inclusa</span></p>
+                                <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 5px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                    <div style="font-size: 0.8rem; color: #64748b; font-weight: 500;">De <span id="top-checkout-card-price" style="text-decoration: line-through;">R$ 149,90</span> por apenas:</div>
+                                    <div style="display: flex; align-items: baseline; gap: 6px;">
+                                        <span id="top-checkout-card-installment" style="font-size: 1.3rem; color: #16a34a; font-weight: 900; line-height: 1.1;">4x de R$ 27,47 <span style="font-size: 0.65em; color: #64748b; font-weight: 500;">(Total R$ 109,90)</span></span>
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: #0f172a; font-weight: 700; margin-top: 6px;">
+                                        Ou A vista <span id="checkout-product-price-display" style="color: #22c55e; font-weight: 800;">R$ 89,90</span> com desconto no PIX ou Cartao
+                                    </div>
+                                    <div style="font-size: 0.7rem; color: #64748b; margin-top: 4px; font-style: italic; border-top: 1px dashed #e2e8f0; padding-top: 6px;">
+                                        Menos de 3 reais por dia para salvar suas galinhas.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prova Social Premium (Estilo Hero) -->
+                        <div class="ck-social-proof-mobile-stack" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; margin-top: 15px; margin-bottom: 5px; padding: 15px; background: #fff; border: 1px solid #f1f5f9; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); text-align: center;">
+                            <div class="avatar-stack" style="display: flex; flex-shrink: 0; justify-content: center;">
+                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #ddd; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                    <img src="carrosel/carlos.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                </div>
+                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #ccc; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                    <img src="carrosel/maria.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                </div>
+                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #bbb; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                    <img src="carrosel/joao_new.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                </div>
+                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #aaa; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                    <img src="carrosel/ana.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                </div>
+                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #999; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+                                    <img src="carrosel/lucas.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                </div>
+                            </div>
+                            <div style="font-size: 0.8rem; color: #475569; line-height: 1.4; max-width: 320px;">
+                                <strong style="color: #0f172a; display: block; margin-bottom: 4px; font-size: 0.9rem;">Mais de 1600 alunos ja estao salvando suas aves.</strong>
+                                Chegou a sua vez, nao perca essa oportunidade por tempo limitado.
+                            </div>
+                        </div>
+                            <!-- Garantia -->
+                            <div class="ck-guarantee-box">
+                                <div class="ck-guarantee-icon">&#x2705;</div>
+                                <div class="ck-guarantee-content">
+                                    <p>Garantia Blindada</p>
+                                    <p>7 dias para testar. Se nao gostar, devolvemos 100% do valor.</p>
+                                </div>
+                            </div>
+
+                            <!-- WhatsApp Support Banner Junto da Garantia -->
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; margin-top: 15px; margin-bottom: 5px; cursor: pointer; transition: 0.2s;" onclick="window.open('https://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20para%20finalizar%20minha%20compra.', '_blank')">
+                                <i class="fa-brands fa-whatsapp fa-bounce" style="color: #22c55e; font-size: 1.6rem;"></i>
+                                <div style="text-align: left; line-height: 1.2;">
+                                    <span style="display: block; font-size: 0.8rem; color: #166534; font-weight: 800;">Atendimento Rápido</span>
+                                    <span style="display: block; font-size: 0.7rem; color: #15803d; font-weight: 500;">Dúvidas? Chame a gente no WhatsApp</span>
+                                </div>
+                            </div>
+
+                            <!-- Prova -->
+                        </div>
+                    </div>
+
+                    <form id="payment-form">
+                        <!-- Dados Pessoais -->
+                        <div class="ck-section">
+                            <div class="ck-section-header">
+                                <div class="ck-section-number">1</div>
+                                <h2 class="ck-section-title">Dados Pessoais</h2>
+                            </div>
+
+
+                            <div id="pix-fields">
+                                <div class="ck-form-group form-group">
+                                    <label for="payer-name">Nome Completo</label>
+                                    <input type="text" id="payer-name" name="name" autocomplete="name" class="form-input ck-input"
+                                        placeholder="Como no seu documento" required
+                                        data-tip="Digite seu nome e sobrenome completo."
+                                        oninput="if(document.getElementById('checkout-payer-firstname')) document.getElementById('checkout-payer-firstname').textContent = this.value.trim().split(' ')[0].toLowerCase()">
+                                    <div class="field-tooltip">Digite seu nome completo</div>
+                                </div>
+
+                                <div class="ck-form-row">
+                                    <div class="ck-form-group form-group">
+                                        <label for="payer-email">E-mail (Opcional)</label>
+                                        <input type="email" id="payer-email" name="email" autocomplete="email" class="form-input ck-input"
+                                            placeholder="seu@email.com (Opcional)" inputmode="email"
+                                            data-tip="Seu melhor email onde recebera o acesso ao guia.">
+                                        <div class="field-tooltip">Onde voce recebera o acesso</div>
+                                    </div>
+                                    <div class="ck-form-group form-group">
+                                        <label for="payer-phone">WhatsApp</label>
+                                        <input type="tel" id="payer-phone" name="phone" autocomplete="tel" class="form-input ck-input"
+                                            placeholder="(00) 00000-0000" required inputmode="tel"
+                                            data-tip="Para suporte e avisos importantes (DDD + Numero).">
+                                        <div class="field-tooltip">DDD + Numero</div>
+                                    </div>
+                                </div>
+
+                                <div class="ck-form-group form-group">
+                                    <label for="payer-cpf">CPF</label>
+                                    <input type="tel" id="payer-cpf" name="cpf" autocomplete="off" class="form-input ck-input"
+                                        placeholder="000.000.000-00" required inputmode="numeric" pattern="[0-9]*"
+                                        data-tip="Necessario para emitir a nota fiscal (apenas numeros).">
+                                    <div class="field-tooltip">Apenas numeros do CPF</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Ofertas Exclusivas / Order Bumps (Movido para cá) -->
+                        <div class="ck-section" style="margin-top: 24px;">
+                            <div id="order-bump-area"></div>
+                        </div>
+
+                        <!-- 5. Forma de Pagamento e Botoes -->
+                        <!-- Pagamento -->
+                        <div class="ck-section" style="margin-top: 24px;">
+                            <div class="ck-section-header">
+                                <div class="ck-section-number">2</div>
+                                <h2 class="ck-section-title">Forma de Pagamento</h2>
+                            </div>
+
+                            <!-- Metodos -->
+                            <div class="payment-methods-grid" style="display: flex; gap: 8px; margin-bottom: 24px;">
+                                <div class="radio-item selected" onclick="selectPaymentMethod('pix')">
+                                    <input type="radio" name="paymentMethod" id="method-pix" value="pix" checked
+                                        style="display:none;">
+                                    <div class="radio-label">
+                                        <span class="radio-title">PIX</span>
+                                        <span class="radio-desc">Acesso imediato</span>
+                                    </div>
+                                    <img src="assets/pix.png"
+                                        style="height: 24px;" alt="Pix" loading="lazy">
+                                </div>
+                                <div class="radio-item" onclick="selectPaymentMethod('card')">
+                                    <input type="radio" name="paymentMethod" id="method-card" value="card"
+                                        style="display:none;">
+                                    <div class="radio-label">
+                                        <span class="radio-title">CARTAO</span>
+                                        <span class="radio-desc">Ate 4x s/ juros</span>
+                                    </div>
+                                    <div style="display: flex; gap: 5px; align-items: center;">
+                                        <img src="assets/visa.png"
+                                            style="height: 18px;" alt="Visa" loading="lazy">
+                                        <img src="assets/mastercard.png"
+                                            style="height: 18px;" alt="Mastercard" loading="lazy">
+                                    </div>
+                                </div>
+                                <div class="radio-item" onclick="selectPaymentMethod('boleto')">
+                                    <input type="radio" name="paymentMethod" id="method-boleto" value="boleto"
+                                        style="display:none;">
+                                    <div class="radio-label">
+                                        <span class="radio-title">BOLETO</span>
+                                        <span class="radio-desc" style="font-size: 0.6rem;">Até 72h</span>
+                                    </div>
+                                    <img src="assets/barcode.png" alt="Boleto" style="height: 24px;" loading="lazy">
+                                </div>
+                            </div>
+
+                            <!-- Card Area -->
+                            <!-- Card Area -->
+                            <div id="card-area" style="display: none;">
+                                <div class="ck-form-group form-group">
+                                    <label>Nome no Cartao</label>
+                                    <input type="text" id="card-holder" name="ccname" autocomplete="cc-name" class="form-input ck-input"
+                                        placeholder="Como impresso no cartao"
+                                        data-tip="Nome exatamente como impresso no cartao.">
+                                    <div class="field-tooltip">Igual impresso no cartao</div>
+                                </div>
+                                <div class="ck-form-group form-group">
+                                    <label>CPF do Titular</label>
+                                    <input type="tel" id="card-cpf" name="cpf" autocomplete="off" class="form-input ck-input"
+                                        placeholder="000.000.000-00" inputmode="numeric" pattern="[0-9]*">
+                                </div>
+
+                                <div class="ck-form-group form-group">
+                                    <label><i class="fa-regular fa-credit-card"></i> Número do Cartão</label>
+                                    <input type="text" id="card-number" name="cardnumber" autocomplete="cc-number" class="form-input ck-input"
+                                        placeholder="0000 0000 0000 0000" inputmode="numeric">
+                                    <div class="field-tooltip" style="display: flex; align-items: center; gap: 6px; color: #10b981;"><i class="fa-solid fa-camera"></i> Toque aqui para escanear o cartão com a câmera (iOS/Android)</div>
+                                </div>
+                                <div class="ck-form-row">
+                                    <div class="ck-form-group form-group">
+                                        <label><i class="fa-regular fa-calendar"></i> Validade</label>
+                                        <input type="text" id="card-expiration" name="cc-exp" autocomplete="cc-exp" class="form-input ck-input"
+                                            placeholder="MM/AA" inputmode="numeric">
+                                    </div>
+                                    <div class="ck-form-group form-group">
+                                        <label><i class="fa-solid fa-lock"></i> CVV</label>
+                                        <input type="text" id="card-cvv" name="cvc" autocomplete="cc-csc" class="form-input ck-input" placeholder="123" inputmode="numeric">
+                                    </div>
+                                </div>
+                                <div class="ck-form-group form-group">
+                                    <label>Parcelas</label>
+                                    <select id="installments-select" class="form-input ck-input"></select>
+                                </div>
+                            </div>
+
+                            <!-- Order -->
+
+                            <div style="margin-top: 24px;">
+                                <!-- Total -->
+                                <div style="text-align: center; margin-top: 1.5rem;">
+                                    <div class="price-summary-box">
+                                        <div id="checkout-order-summary" style="display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 8px; text-align: left; font-size: 0.85rem; color: #4b5563;">
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; font-weight: 700;">
+                                            <span>Total a pagar:</span>
+                                            <span class="checkout-total-display">R$ --,--</span>
+                                        </div>
+                                        <div id="pix-bonus-status" style="margin-top: 4px; display: none;"></div>
+                                    </div>
+
+                                    <button type="button" id="btn-pay-pix" class="ck-btn-checkout">Finalizar meu
+                                        acesso.</button>
+                                    <button type="button" id="btn-pay-card" class="ck-btn-checkout"
+                                        style="display: none;">FINALIZAR PAGAMENTO</button>
+                                    <button type="button" id="btn-pay-boleto" class="ck-btn-checkout"
+                                        style="display: none;">GERAR BOLETO</button>
+                                </div>
+
+                            </div>
+                    </form>
+
+            <!-- 6. Prova Social -->
+                    <div style="padding-top: 5px;">
+                        <!-- Prova Social -->
+                        <div class="ck-social-proof">
+                            <p class="ck-proof-label" style="text-align: center; font-weight: 800; color: #1e293b; font-size: 0.95rem; margin-bottom: 12px; text-transform: uppercase;">O que dizem os alunos</p>
+                            
+                            <div class="ck-testimonial-box" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; margin-bottom: 15px;">
+                                <img src="carrosel/pedro.webp" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; flex-shrink: 0;" alt="Marcos" loading="lazy">
+                                <div>
+                                    <div style="color: #fbbf24; font-size: 0.65rem; margin-bottom: 2px;">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p style="margin: 0 0 6px 0; font-size: 0.85rem; color: #334155; line-height: 1.4;">"O material é excelente! Consegui curar 3 galos que já estavam no bico do corvo. Vale cada centavo."</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; color: #0f172a; border-top: none; padding-top: 0; text-align: left;">Marcos Paulo <span style="font-weight: 400; color: #64748b; font-size: 0.75rem; border-left: 1px solid #cbd5e1; padding-left: 6px; margin-left: 6px;">Goiânia - GO</span></p>
+                                </div>
+                            </div>
+                            
+                            <div class="ck-testimonial-box" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; margin-bottom: 15px;">
+                                <img src="carrosel/fernanda.webp" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; flex-shrink: 0;" alt="Ricardo" loading="lazy">
+                                <div>
+                                    <div style="color: #fbbf24; font-size: 0.65rem; margin-bottom: 2px;">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p style="margin: 0 0 6px 0; font-size: 0.85rem; color: #334155; line-height: 1.4;">"Gastava uma fortuna em remédio e as galinhas continuavam morrendo. Descobri que tava errando no básico do manejo."</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; color: #0f172a; border-top: none; padding-top: 0; text-align: left;">Silvia Lima <span style="font-weight: 400; color: #64748b; font-size: 0.75rem; border-left: 1px solid #cbd5e1; padding-left: 6px; margin-left: 6px;">Londrina - PR</span></p>
+                                </div>
+                            </div>
+
+                            <div class="ck-testimonial-box" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; margin-bottom: 15px;">
+                                <img src="carrosel/ricardo.webp" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; flex-shrink: 0;" alt="João" loading="lazy">
+                                <div>
+                                    <div style="color: #fbbf24; font-size: 0.65rem; margin-bottom: 2px;">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p style="margin: 0 0 6px 0; font-size: 0.85rem; color: #334155; line-height: 1.4;">"Entrega muito rápida. Paguei no PIX e em menos de 1 minuto o acesso chegou certinho no meu WhatsApp, recomendo!"</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; color: #0f172a; border-top: none; padding-top: 0; text-align: left;">João Batista <span style="font-weight: 400; color: #64748b; font-size: 0.75rem; border-left: 1px solid #cbd5e1; padding-left: 6px; margin-left: 6px;">Campinas - SP</span></p>
+                                </div>
+                            </div>
+
+                            <div class="ck-stars" style="margin-top: 15px;">
+                                <span class="ck-star">&#9733;</span>
+                                <span class="ck-star">&#9733;</span>
+                                <span class="ck-star">&#9733;</span>
+                                <span class="ck-star">&#9733;</span>
+                                <span class="ck-star">&#9733;</span>
+                                <span class="ck-rating-text">4.9/5 (1.647 avaliações)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PIX Result (hidden) -->
+            <div id="pix-result" class="hidden" style="text-align: center;">
+                <h3 id="pix-greeting" style="font-size: 1.5rem; font-weight: 700; color: #1f2937;">Quase lá!</h3>
+                <p style="font-size: 0.9rem; color: #6b7280; margin: 0.5rem 0;">Escaneie o QR Code ou copie o código abaixo.</p>
+
+                <div class="qr-container" style="background: #fff; padding: 1rem; border-radius: 1.2rem; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 260px; margin: 1.5rem auto; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.05); min-height: 260px; position: relative;">
+                    <div id="qr-loader" class="hidden" style="position: absolute; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-shield-halved fa-beat" style="font-size: 2.5rem; color: #10b981;"></i>
+                        <p style="font-size: 0.85rem; color: #0f172a; font-weight: 800; text-align: center;">CONECTANDO AO BANCO...<br><span style="font-size: 0.7rem; color: #64748b; font-weight: 600;">Gerando PIX com segurança</span></p>
+                    </div>
+                    <img id="qr-code-img" src="" alt="QR Code PIX" style="width: 100%; height: auto; margin: 0 auto; border-radius: 8px;" class="hidden">
+                </div>
+                
+                <div id="pix-receiver-info" class="hidden">
+                    <p style="text-align: center; margin: 0; font-size: 0.85rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Recebedor:</p>
+                    <p style="text-align: center; margin: 2px 0 10px 0; font-size: 1.1rem; color: #0f172a; font-weight: 900; text-transform: uppercase;">JOAO PAULO SANTOS CAMARGO</p>
+                </div>
+
+                <button id="btn-copy-pix" class="ck-btn-checkout" style="display: none; background: linear-gradient(135deg, #22c55e, #16a34a);">
+                    <i class="fa-regular fa-copy"></i> COPIAR CÃ“DIGO PIX
+                </button>
+                <textarea id="pix-copy-paste" readonly style="opacity: 0; position: absolute; z-index: -1;"></textarea>
+
+                <div style="text-align: left; font-size: 0.85rem; color: #6b7280; line-height: 1.6; background: #f8fafc; padding: 1rem; border-radius: 0.5rem; margin-top: 15px;">
+                    <p>1. Abra o app do seu banco e escolha <strong>Pix</strong>.</p>
+                    <p>2. Selecione <strong>Pix Copia e Cola</strong> ou <strong>Ler QR Code</strong>.</p>
+                    <p>3. Cole o código ou escaneie a imagem acima.</p>
+                </div>
+
+                <div style="margin-top: 1.5rem; font-size: 0.85rem;">
+                    Dúvidas? <a href="https://wa.me/5538999832950" target="_blank" style="color: #25d366; font-weight: 700;"><i class="fa-brands fa-whatsapp"></i> Chame no WhatsApp</a>
+                </div>
+
+                <div style="margin-top: 1.5rem; border-top: 1px dashed #e5e7eb; padding-top: 1.5rem;">
+                    <div style="display: flex; justify-content: center; gap: 15px; align-items: center; margin-bottom: 15px;">
+                        <i class="fa-solid fa-lock" style="color: #16a34a; font-size: 1.2rem;"></i>
+                        <img src="assets/pix.png" style="height: 24px;" alt="Pix" loading="lazy">
+                        <img src="assets/mercado-pago.png" style="height: 22px;" alt="Mercado Pago" loading="lazy">
+                    </div>
+
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                        <p style="color: #166534; font-weight: 800; font-size: 0.9rem; margin: 0 0 4px 0; text-transform: uppercase;">
+                            <i class="fa-solid fa-shield-halved"></i> 7 Dias de Garantia
+                        </p>
+                        <p style="color: #15803d; font-size: 0.8rem; line-height: 1.3; margin: 0;">
+                            Se o protocolo não funcionar, nós devolvemos 100% do seu dinheiro sem burocracia.
+                        </p>
+                    </div>
+
+                </div>
+
+                <button onclick="document.getElementById('pix-result').classList.add('hidden'); document.getElementById('checkout-main-view').classList.remove('hidden');" style="margin-top: 1rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-family: inherit;">Voltar</button>
+            </div>
+
+            <!-- BOLETO Result (hidden) -->
+            <div id="boleto-result" class="hidden" style="text-align: center; padding: 0 1rem;">
+                <div style="max-width: 480px; margin: 0 auto;">
+                    <h3 style="font-size: 1.4rem; font-weight: 700; color: #1f2937; margin-bottom: 4px;">Boleto Gerado com Sucesso!</h3>
+                    <p style="font-size: 0.85rem; color: #6b7280; margin: 0 0 1.2rem 0;">Pague até <strong>72 horas</strong> para garantir seu acesso.</p>
+
+                    <div id="boleto-img-loading" class="hidden" style="margin: 0 auto 1rem; padding: 2.5rem 1rem; max-width: min(100%, 560px); background: #f8fafc; border-radius: 10px; border: 1px dashed #cbd5e1; color: #475569; font-size: 0.9rem;">
+                        <i class="fa-solid fa-spinner fa-spin" style="margin-right: 8px;"></i> Preparando visualizaÃ§Ã£oâ€¦
+                    </div>
+                    <div id="boleto-img-wrap" class="hidden" style="margin: 0 auto 1rem; width: 100%; max-width: min(100%, 560px); border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 16px rgba(0,0,0,0.08); background: #fff; position: relative;">
+                        <div class="boleto-img-shield" style="position: absolute; inset: 0; z-index: 2; cursor: default;" aria-hidden="true" oncontextmenu="return false;"></div>
+                        <img id="boleto-display-img" src="" alt="Ilustração de boleto (dados genéricos)" width="682" height="407" draggable="false" style="width: 100%; height: auto; display: block; user-select: none; -webkit-user-drag: none; position: relative; z-index: 1; pointer-events: none;" loading="lazy">
+                    </div>
+
+                    <!-- Código de barras display (Removido a pedido do usuário) -->
+                    <div style="display: none; background: #f8fafc; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 1rem;">
+                        <p style="font-size: 0.7rem; color: #64748b; font-weight: 600; text-transform: uppercase; margin: 0 0 6px 0;">Linha digitável</p>
+                        <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1px dashed #cbd5e1; word-break: break-all; font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 700; color: #0f172a; letter-spacing: -0.3px;" id="boleto-barcode-display">
+                            Gerando código...
+                        </div>
+                    </div>
+
+                    <!-- Botões -->
+                    <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; margin-bottom: 1rem;">
+                        <button type="button" id="btn-download-boleto" class="ck-btn-checkout" style="width: 100%; max-width: 320px; background: linear-gradient(135deg, #22c55e, #16a34a); font-size: 0.95rem;">
+                            <i class="fa-solid fa-download"></i> BAIXAR BOLETO
+                        </button>
+                        <button type="button" id="btn-copy-boleto" class="ck-btn-checkout" style="display: none; width: 100%; max-width: 320px; background: #3b82f6; font-size: 0.95rem;">
+                            <i class="fa-solid fa-copy"></i> COPIAR LINHA DIGITÁVEL
+                        </button>
+                    </div>
+
+                    <div style="text-align: left; font-size: 0.8rem; color: #6b7280; line-height: 1.5; background: #fefce8; border: 1px solid #fef08a; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                        <p style="margin: 0;"><i class="fa-solid fa-circle-exclamation" style="color: #ca8a04;"></i> Seu acesso será enviado automaticamente para seu e-mail ou pelo whatsapp assim que o pagamento for compensado (em até <strong>72 horas úteis</strong>).</p>
+                    </div>
+
+                    <div style="font-size: 0.85rem; margin-bottom: 8px;">
+                        Dúvidas? <a href="https://wa.me/5538999832950" target="_blank" style="color: #25d366; font-weight: 700;"><i class="fa-brands fa-whatsapp"></i> Chame no WhatsApp</a>
+                    </div>
+
+                    <button onclick="document.getElementById('boleto-result').classList.add('hidden'); document.getElementById('checkout-main-view').classList.remove('hidden');" style="margin-top: 0.5rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-family: inherit;">Voltar ao Checkout</button>
+                </div>
+            </div>
+
+
+
+            <!-- Payment Pending View -->
+            <div id="payment-pending-view" class="hidden" style="text-align: center; padding: 1rem 0;">
+                <div style="font-size: 4rem; color: #f59e0b; margin-bottom: 1rem;">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 style="color: #92400e; font-size: 1.3rem; font-weight: 700;">Pagamento em Análise</h3>
+                <p style="font-size: 0.95rem; color: #6b7280; margin: 1rem 0; line-height: 1.5;">
+                    Sua transação está sendo processada com segurança pelo Mercado Pago. <br>
+                    <strong>Não se preocupe, isso é um procedimento normal.</strong>
+                </p>
+
+                <div style="background: #fffbeb; border: 1px solid #fef3c7; padding: 1rem; border-radius: 0.75rem; text-align: left; margin-bottom: 1.5rem;">
+                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: #92400e;">
+                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-envelope"></i> O acesso será enviado para o seu e-mail assim que aprovado.</li>
+                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-clock"></i> Prazo de análise: de alguns minutos até 48h.</li>
+                        <li style="color: #b91c1c; font-weight: bold;"><i class="fa-solid fa-triangle-exclamation"></i> IMPORTANTE: Verifique sempre sua pasta de SPAM.</li>
+                    </ul>
+                </div>
+
+                <a href="https://wa.me/5538999832950?text=Ol%C3%A1,%20meu%20pagamento%20ficou%20em%20an%C3%A1lise.%20Pode%20me%20ajudar?" target="_blank" class="ck-btn-checkout" style="display: inline-block; text-decoration: none; background: #25d366;">
+                    <i class="fa-brands fa-whatsapp"></i> FALAR COM SUPORTE
+                </a>
+
+                <button onclick="closeCheckout()" style="margin-top: 1.5rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-size: 0.85rem; font-family: inherit; display: block; margin-left: auto; margin-right: auto;">
+                    Entendi, fechar checkout
+                </button>
+            </div>
+
+        </div> <!-- Fim de ck-main -->
+
+        <!-- 7. Footer Geral do Checkout -->
+        <div class="ck-section" style="background-color: transparent; border: none; box-shadow: none; padding-top: 0; max-width: 600px; margin: 0 auto;">
+            <p style="text-align: center; font-size: 0.75rem; color: #6b7280; margin-bottom: 10px;">
+                <i class="fa-solid fa-lock" style="color: #22c55e;"></i> Seus dados estão protegidos com criptografia de ponta.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 10px;">
+                <img src="assets/visa.png" style="height: 22px;" alt="Visa" loading="lazy">
+                <img src="assets/mastercard.png" style="height: 22px;" alt="Mastercard" loading="lazy">
+                <img src="assets/pix.png" style="height: 18px;" alt="Pix" loading="lazy">
+                <img src="assets/mercado-pago.png" style="height: 22px;" alt="Mercado Pago" loading="lazy">
+            </div>
+            <div style="display: flex; justify-content: center; gap: 12px; align-items: center; margin-bottom: 12px;">
+                <span style="font-size: 0.7rem; color: #16a34a; font-weight: 700;"><i class="fa-solid fa-lock"></i> Compra Segura</span>
+                <span style="font-size: 0.7rem; color: #d1d5db;">|</span>
+                <span style="font-size: 0.7rem; color: #16a34a; font-weight: 700;"><i class="fa-solid fa-shield-halved"></i> SSL 256-bit</span>
+                <span style="font-size: 0.7rem; color: #d1d5db;">|</span>
+                <span style="font-size: 0.7rem; color: #16a34a; font-weight: 700;"><i class="fa-solid fa-check-double"></i> Garantia 7 dias</span>
+            </div>
+        </div>
+
+        <div class="ck-footer" style="padding-bottom: 30px;">
+            <p>&copy; 2026 PROTOCOLO ELITE - Todos os direitos reservados.</p>
+            <p>CNPJ: 63.665.824/0001-09</p>
+        </div>
+
+        <!-- Hidden spans for JS compatibility -->
+        <span id="checkout-urgency-banner" style="display:none;"></span>
+        <span id="checkout-payer-firstname" style="display:none;"></span>
+        <span id="checkout-reservation-timer" style="display:none;"></span>
+        <span id="product-icon-container" style="display:none;"></span>
+    </div>
+
+
+    <!-- Official Footer -->
+    <footer
+        style="background: var(--zinc-950); padding: 3rem 0; border-top: 1px solid var(--slate-800); text-align: center;">
+        <div class="container">
+            <div style="margin-bottom: 1.2rem;">
+                <img src="logo.webp" alt="Logo" style="height: 70px; border-radius: 12px;" loading="lazy">
+            </div>
+            <div style="display: flex; justify-content: center; gap: 22px; margin-bottom: 1.2rem;">
+                <a href="https://www.instagram.com/galosmurabrasill/" target="_blank"
+                    style="color: #6b7280; font-size: 1.3rem; transition: color 0.2s;"
+                    onmouseover="this.style.color='#E1306C'" onmouseout="this.style.color='#6b7280'"><i
+                        class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.facebook.com/profile.php?id=61578338141942" target="_blank"
+                    style="color: #6b7280; font-size: 1.3rem; transition: color 0.2s;"
+                    onmouseover="this.style.color='#1877F2'" onmouseout="this.style.color='#6b7280'"><i
+                        class="fa-brands fa-facebook"></i></a>
+                <a href="https://www.tiktok.com/@galosmurabrasil" target="_blank"
+                    style="color: #6b7280; font-size: 1.3rem; transition: color 0.2s;"
+                    onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#6b7280'"><i
+                        class="fa-brands fa-tiktok"></i></a>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--slate-400); line-height: 1.6;">
+                <p>GALOS MURA BRASIL OFICIAL</p>
+                <p>CNPJ: 63.665.824/0001-09</p>
+                <p style="margin-top: 1rem; font-size: 0.7rem; opacity: 0.7;">
+                    Este site não é afiliado ao Facebook ou a qualquer entidade do Facebook. <br>
+                    Depois que você sair do Facebook, a responsabilidade não é deles e sim do nosso site.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+
+
+    <!-- Hidden Helpers for script.js -->
+    <div id="secure-loading" style="display:none;"></div>
+    <div id="toast-container" class="float-toast-container"></div>
+    <div id="checkout-logo-overlay" style="display:none;"></div>
+
+
+
+
+    <div id="floating-cta" class="floating-cta-bar">
+        <div class="floating-cta-content">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                <button onclick="startCheckoutProcess('ebook-doencas')" class="floating-cta-btn">
+                    SALVAR MINHAS GALINHAS AGORA
+                </button>
+                <span class="floating-cta-subtext"><span class="dyn-cta-pix">R$ 89,90 no PIX</span> &bull; Acesso
+                    imediato &bull; Garantia de 7 dias</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll Visibility Local Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const floatingCta = document.getElementById('floating-cta');
+            const learningBtn = document.getElementById('btn-ver-aprendizado');
+            const learningSection = document.getElementById('learning');
+            
+            if (!floatingCta) return;
+
+            // Função para mostrar o CTA
+            const showCta = () => {
+                floatingCta.classList.add('visible');
+                document.body.classList.add('cta-visible');
+            };
+
+            // Função para esconder o CTA
+            const hideCta = () => {
+                floatingCta.classList.remove('visible');
+                document.body.classList.remove('cta-visible');
+            };
+
+            // 1. Mostrar se o usuário clicar no botão "VER O QUE VOU APRENDER"
+            if (learningBtn) {
+                learningBtn.addEventListener('click', function() {
+                    // Dá um pequeno delay para a rolagem começar e então mostra
+                    setTimeout(showCta, 300);
+                });
+            }
+
+            // 2. Controlar via Scroll (Usando o topo da seção de aprendizado como gatilho)
+            window.addEventListener('scroll', function () {
+                if (!learningSection) return;
+                
+                const sectionPos = learningSection.getBoundingClientRect().top;
+                
+                // Se a seção de aprendizado chegar perto do topo (ou já estiver visível), mostra o CTA
+                if (sectionPos < 400) {
+                    showCta();
+                } else {
+                    hideCta();
+                }
+            });
+        });
+    </script>
+
+    <!-- Mercado Pago SDK â€” carregado de forma assÃ­ncrona (nÃ£o bloqueia o render) -->
+    <script>
+    // Carrega o SDK do MP de forma não-bloqueante. O 'mp' só é necessário
+    // quando o usuário abre o checkout, o que ocorre segundos após o carregamento.
+    (function() {
+        var s = document.createElement('script');
+        s.src = 'https://sdk.mercadopago.com/js/v2';
+        s.async = true;
+        s.onload = function() { window.mp = new MercadoPago('APP_USR-2502a3c7-5f59-45b0-8365-1cfcad7b0fa5'); };
+        document.head.appendChild(s);
+    })();
+    </script>
+    <script src="smart_fields.js" defer></script>
+    <script src="script.js?v=33" defer></script>
+    <script>
+    // â”€â”€â”€ META ADVANCED MATCHING â€” INPUT LISTENERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // Quando o usuário preenche email/telefone no checkout, atualiza o Pixel
+    // imediatamente para maximizar a correspondência de eventos com anúncios.
+    document.addEventListener('DOMContentLoaded', function() {
+        var emailFields = ['payer-email', 'card-email', 'customer-email'];
+        var phoneFields = ['payer-phone', 'card-phone', 'customer-phone'];
+        var nameFields  = ['payer-name',  'card-holder', 'customer-name'];
+        var cpfFields   = ['payer-cpf',   'card-cpf',   'customer-cpf'];
+        var allFields   = emailFields.concat(phoneFields).concat(nameFields).concat(cpfFields);
+        allFields.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener('blur', function() {
+                if (typeof updateMetaUserData === 'function') {
+                    var name  = (document.getElementById('payer-name')  || document.getElementById('card-holder') || {}).value  || '';
+                    var email = (document.getElementById('payer-email') || document.getElementById('card-email')  || {}).value  || '';
+                    var phone = (document.getElementById('payer-phone') || document.getElementById('card-phone')  || {}).value  || '';
+                    var cpf   = (document.getElementById('payer-cpf')   || document.getElementById('card-cpf')   || {}).value  || '';
+                    updateMetaUserData({ name: name, email: email, phone: phone, cpf: cpf });
+                }
+            });
+        });
+    });
+    </script>
+
+    <!-- Checkout Exit Intent Modal -->
+    <div id="checkout-exit-modal" class="modal-overlay" style="z-index: 1000003;">
+        <div class="modal-content"
+            style="text-align: center; max-width: 320px; padding: 25px 20px; border: 2px solid #ef4444;">
+            <div style="font-size: 3rem; color: #ef4444; margin-bottom: 10px;">
+                <i class="fa-solid fa-triangle-exclamation fa-beat"></i>
+            </div>
+            <h3
+                style="color: #ef4444; font-size: 1.3rem; margin-bottom: 15px; text-transform: uppercase; font-weight: 900;">
+                Atenção</h3>
+            <p style="font-size: 0.95rem; color: #334155; margin-bottom: 20px; line-height: 1.4; font-weight: 600;">
+                Suas galinhas precisam da sua ajuda agora,<br>não deixe para amanhã, para sua galinha amanhã pode ser
+                tarde demais
+            </p>
+            <button onclick="document.getElementById('checkout-exit-modal').classList.remove('active')"
+                class="btn-primary"
+                style="width: 100%; margin-bottom: 10px; font-size: 1rem; padding: 12px; background: #22c55e;">
+                FINALIZAR A COMPRA
+            </button>
+            <button onclick="confirmCloseCheckout()"
+                style="background: none; border: none; color: #94a3b8; text-decoration: underline; cursor: pointer; font-size: 0.85rem;">
+                Sair mesmo assim
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function attemptCloseCheckout() {
+            let exitModal = document.getElementById('checkout-exit-modal');
+            if (exitModal) exitModal.classList.add('active');
+        }
+        function confirmCloseCheckout() {
+            let exitModal = document.getElementById('checkout-exit-modal');
+            if (exitModal) exitModal.classList.remove('active');
+            if (typeof closeCheckout === 'function') {
+                closeCheckout();
+            } else {
+                document.getElementById('checkout-modal').classList.remove('active');
+            }
+        }
+    </script>
+
+    <script>
+        // === CHECKOUT PAGE TIMER ===
+        (function () {
+            var CK_TIMER_KEY = 'ck_timer_end';
+            var CK_TIMER_DURATION = 15 * 60; // 15 minutes in seconds
+            var ckTimerInterval = null;
+
+            function startCkTimer() {
+                var endTime = sessionStorage.getItem(CK_TIMER_KEY);
+                if (!endTime) {
+                    endTime = Date.now() + (CK_TIMER_DURATION * 1000);
+                    sessionStorage.setItem(CK_TIMER_KEY, endTime);
+                }
+                endTime = parseInt(endTime);
+
+                function updateCkTimer() {
+                    var now = Date.now();
+                    var remaining = Math.max(0, Math.floor((endTime - now) / 1000));
+                    var m = Math.floor(remaining / 60);
+                    var s = remaining % 60;
+                    var display = document.getElementById('ck-timer');
+                    if (display) {
+                        display.textContent = (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+                    }
+                    if (remaining <= 0) {
+                        // Reset timer
+                        endTime = Date.now() + (CK_TIMER_DURATION * 1000);
+                        sessionStorage.setItem(CK_TIMER_KEY, endTime);
+                    }
+                }
+
+                updateCkTimer();
+                if (ckTimerInterval) clearInterval(ckTimerInterval);
+                ckTimerInterval = setInterval(updateCkTimer, 1000);
+            }
+
+            // Start timer when checkout page becomes visible
+            var observer = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        var el = document.getElementById('checkout-page');
+                        if (el && el.classList.contains('active')) {
+                            startCkTimer();
+                        }
+                    }
+                });
+            });
+
+            var checkoutPage = document.getElementById('checkout-page');
+            if (checkoutPage) {
+                observer.observe(checkoutPage, { attributes: true });
+            }
+
+            // Also start if checkout is already shown
+            if (checkoutPage && checkoutPage.style.display !== 'none') {
+                startCkTimer();
+            }
+        })();
+    </script>
+
+
+
+
+
+    <!-- PIX UPSELL RECAPTURE MODAL (FULLY SCROLLABLE & RESPONSIVE ON ALL MOBILE SCREENS) -->
+    <div id="pix-upsell-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999999; display: block; overflow-y: auto; padding: 20px 10px; backdrop-filter: blur(5px); -webkit-overflow-scrolling: touch; box-sizing: border-box;">
+        <div id="pix-upsell-modal-box" style="background: white; border-radius: 20px; padding: 22px 16px; max-width: 380px; width: 100%; margin: 10px auto; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3); animation: fadeInUp 0.3s ease; position: relative; overflow: hidden; box-sizing: border-box;">
+            <div style="position: relative; z-index: 2;">
+                <div style="background: #ef4444; color: #ffffff; font-size: 0.85rem; font-weight: 900; padding: 6px 16px; border-radius: 20px; display: inline-block; margin-bottom: 10px; letter-spacing: 1px; text-transform: uppercase; box-shadow: 0 2px 8px rgba(239,68,68,0.3);">ATENÃ‡ÃƒO</div>
+                <h3 id="pix-upsell-title" style="font-size: 1.15rem; font-weight: 900; color: #0f172a; margin-top: 0; line-height: 1.3; font-family: 'Inter', sans-serif;">VEMOS QUE VOCÃŠ TÃ LEVANDO NOSSO EBOOK COMPLETO DAS DOENÃ‡AS</h3>
+
+                <p id="pix-upsell-description" style="font-size: 0.9rem; color: #334155; margin: 10px 0; line-height: 1.45; font-weight: 500;">
+                    Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de ter as informações completas da criação.
+                </p>
+                
+                <div style="border: 2px dashed #22c55e; border-radius: 16px; padding: 24px 8px 18px; margin: 12px 0; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
+                    <!-- ASSETS OVERLAPPING 3D FAN STACK (FULLY VISIBLE & BRIGHTENED) -->
+                    <div style="position: absolute; inset: 0; z-index: 1; opacity: 1.0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+                        <img src="capadospintinhos.webp" style="height: 72%; width: auto; transform: rotate(-8deg); margin-right: -45px; z-index: 1; filter: brightness(1.25) contrast(1.05) drop-shadow(0 4px 10px rgba(0,0,0,0.25));">
+                        <img src="capadasdoencas.webp" style="height: 80%; width: auto; transform: rotate(0deg); z-index: 3; filter: brightness(1.25) contrast(1.05) drop-shadow(0 6px 15px rgba(0,0,0,0.3));">
+                        <img src="tabela_racao_bump.webp" style="height: 72%; width: auto; transform: rotate(8deg); margin-left: -45px; z-index: 2; filter: brightness(1.25) contrast(1.05) drop-shadow(0 4px 10px rgba(0,0,0,0.25));">
+                    </div>
+
+                    <!-- TEXT OVERLAY WITH HIGH-CONTRAST OUTLINES & FROSTED GLASS BACKGROUND -->
+                    <div style="position: relative; z-index: 2; width: 92%; margin: 0 auto; text-align: center; padding: 18px 10px 14px; background: rgba(255, 255, 255, 0.22); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.35); box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+                        <div style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #fbbf24; color: #78350f; padding: 4px 14px; border-radius: 10px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.3); text-shadow: none; z-index: 10;">Oferta Especial</div>
+                        
+                        <p style="font-size: 1.2rem; color: #ffffff; font-weight: 900; margin: 0; line-height: 1.2; text-transform: uppercase; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 8px rgba(0,0,0,0.9);">
+                            POR APENAS <span id="pix-upsell-price-offer" style="color: #fbbf24; font-size: 1.55rem; display: block; margin-top: 5px; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 8px rgba(0,0,0,0.9);">R$ 139,90</span>
+                        </p>
+                        
+                        <p id="pix-upsell-subtext" style="font-size: 0.85rem; color: #ffffff; font-weight: 850; margin: 5px 0 6px 0; letter-spacing: 0.5px; text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 0 2px 4px rgba(0,0,0,0.9);">
+                            VOCÃŠ LEVA TODOS OS MATERIAIS
+                        </p>
+
+                        <!-- DYNAMIC LIST OF BUMPS/EBOOKS -->
+                        <div id="pix-upsell-list" style="text-align: left; display: inline-block; font-size: 0.78rem; color: #ffffff; font-weight: 850; margin: 0px 0 10px 0; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; line-height: 1.45; font-family: 'Inter', sans-serif;">
+                            <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">âœ“</span> Ebook das DoenÃ§as</div>
+                            <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">âœ“</span> Ebook dos Pintinhos</div>
+                            <div><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">âœ“</span> Tabela de RaÃ§Ã£o <span style="background: #fbbf24; color: #78350f; font-size: 0.65rem; padding: 1px 4px; border-radius: 4px; font-weight: 900; margin-left: 2px; text-shadow: none; display: inline-block; line-height: 1;">GRATUITA</span></div>
+                        </div>
+                        
+                        <div style="border-top: 1px solid rgba(255,255,255,0.4); padding-top: 8px; margin-top: 5px; display: inline-block; width: 90%;">
+                            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
+                                <span id="pix-upsell-original-price" style="text-decoration: line-through; -webkit-text-decoration-color: #000000; text-decoration-color: #000000; color: #ffffff; font-weight: 900; text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 0 2px 4px rgba(0,0,0,0.9); font-size: 0.95rem;">De R$ 189,90</span> 
+                                <span id="pix-upsell-savings" style="background: #fbbf24; color: #78350f; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 900; box-shadow: 0 2px 6px rgba(0,0,0,0.3); text-shadow: none; display: inline-block;">ECONOMIA DE R$ 50,00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <p style="font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase; margin: 8px 0 0 0;"><i class="fa-solid fa-clock" style="color: #ef4444; margin-right: 4px;"></i> Promoção válida por tempo indeterminado</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 18px;">
+                <button onclick="acceptPixUpsell()" style="background: linear-gradient(135deg, #10b981, #059669); font-size: 1.05rem; padding: 14px; border-radius: 12px; font-weight: 900; border: none; color: white; width: 100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); cursor: pointer; text-transform: uppercase; transition: transform 0.2s;"><i class="fa-solid fa-check" style="margin-right: 8px;"></i> Aceito a Oferta</button>
+                <button id="pix-upsell-reject-btn" onclick="rejectPixUpsell()" style="background: transparent; border: none; color: #94a3b8; font-size: 0.85rem; text-decoration: underline; padding: 6px; font-weight: 600; cursor: pointer; transition: color 0.2s;">Quero apenas o guia das doenças</button>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
+
+    <!-- Advanced Engagement & VSL Tracking -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- VSL Video Tracking ---
+            const video = document.querySelector('video');
+            if (video) {
+                const videoMilestones = {
+                    25: false,
+                    50: false,
+                    75: false,
+                    90: false
+                };
+
+                video.addEventListener('timeupdate', () => {
+                    if (!video.duration) return;
+                    const percent = (video.currentTime / video.duration) * 100;
+
+                    Object.keys(videoMilestones).forEach(milestone => {
+                        const m = parseInt(milestone);
+                        if (percent >= m && !videoMilestones[m]) {
+                            videoMilestones[m] = true;
+                            
+                            // Dispara Custom Event pro FB
+                            if (typeof fbq === 'function') {
+                                fbq('trackCustom', `VideoPlay_${m}`);
+                                console.log(`ðŸŽ¥ [TRACKING] VideoPlay_${m} disparado!`);
+                            }
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
