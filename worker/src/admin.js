@@ -592,3 +592,43 @@ adminRoutes.post('/admin/grant-access', async (c) => {
         return c.json({ error: 'Erro interno ao liberar acesso manual' }, 500);
     }
 });
+
+// ─── USER PROFILE PERSISTENCE (AVATAR & DISPLAY NAME) ───────────
+adminRoutes.post('/profile', async (c) => {
+    try {
+        const { identifier, displayName, avatarUrl } = await c.req.json();
+        if (!identifier) return c.json({ error: 'Identificador obrigatório' }, 400);
+        
+        const cleanId = identifier.trim().toLowerCase().replace(/\D/g, ''); // se for CPF, remove pontuação
+        const key = `profile_${cleanId || identifier.trim().toLowerCase()}`;
+        
+        const profileData = {
+            displayName: displayName || null,
+            avatarUrl: avatarUrl || null,
+            updatedAt: new Date().toISOString()
+        };
+        
+        await c.env.CONFIG.put(key, JSON.stringify(profileData));
+        return c.json({ success: true });
+    } catch (err) {
+        return c.json({ error: 'Erro ao salvar perfil no servidor' }, 500);
+    }
+});
+
+adminRoutes.get('/profile/:identifier', async (c) => {
+    try {
+        const iden = c.req.param('identifier');
+        if (!iden) return c.json({ error: 'Identificador obrigatório' }, 400);
+        
+        const cleanId = iden.trim().toLowerCase().replace(/\D/g, '');
+        const key = `profile_${cleanId || iden.trim().toLowerCase()}`;
+        
+        const raw = await c.env.CONFIG.get(key);
+        if (!raw) return c.json({ found: false });
+        
+        const data = JSON.parse(raw);
+        return c.json({ found: true, ...data });
+    } catch (err) {
+        return c.json({ error: 'Erro ao obter perfil do servidor' }, 500);
+    }
+});
