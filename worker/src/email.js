@@ -43,7 +43,7 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
 </head>
 <body>
   <div class="header">
-    <img src="https://teste-dl7.pages.dev/logo.webp" alt="Logo" style="max-width:180px;height:auto;margin-bottom:15px;">
+    <img src="${env.SITE_URL || 'https://osegredodasgalinhas.pages.dev'}/logo.webp" alt="Logo" style="max-width:180px;height:auto;margin-bottom:15px;">
     <h1 style="color:#FFD700;margin:0;font-size:26px;">ACESSO LIBERADO! 🚀</h1>
     <p style="color:#ccc;margin:8px 0 0;font-size:14px;">Protocolo Elite — A Cura das Aves</p>
   </div>

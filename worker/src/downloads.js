@@ -42,7 +42,7 @@ downloadRoutes.get('/download/:type', async (c) => {
     }
 
     // Busca o PDF diretamente do frontend (novo método que dispensa o R2 / cartão)
-    const frontendUrl = `https://teste-dl7.pages.dev/pdfs_secure_12x9a/${file.key}`;
+    const frontendUrl = `${c.env.SITE_URL || 'https://osegredodasgalinhas.pages.dev'}/pdfs_secure_12x9a/${file.key}`;
     const pdfResponse = await fetch(frontendUrl);
     
     if (!pdfResponse.ok) {
@@ -69,7 +69,7 @@ downloadRoutes.get('/download/:type', async (c) => {
 // ─── ACCESS TOKEN REDIRECT (link do e-mail) ──────────────────
 downloadRoutes.get('/api/access/:token', async (c) => {
     const token = c.req.param('token');
-    const BASE_URL = 'https://teste-dl7.pages.dev';
+    const BASE_URL = c.env.SITE_URL || 'https://osegredodasgalinhas.pages.dev';
     try {
         const decoded = atob(token);
         const parts = decoded.split('|');

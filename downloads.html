@@ -451,11 +451,21 @@
                  // Atualiza o link do aplicativo com o CPF se disponível
                  const cpfParam = params.get('cpf') || '';
                  const btnApp = document.getElementById('btn-app-access');
-                 if (btnApp && cpfParam) {
-                     const cleanCpf = cpfParam.replace(/\D/g, '');
-                     if (cleanCpf) {
+                 const cpfEl = document.getElementById('user-cpf');
+                 
+                 const cleanCpf = cpfParam.replace(/\D/g, '');
+                 if (cleanCpf) {
+                     if (btnApp) {
                          btnApp.href = `https://protocolo-elite.pages.dev/?cpf=${encodeURIComponent(cleanCpf)}`;
                      }
+                     if (cpfEl) {
+                         const formattedCpf = cleanCpf.length === 11 
+                            ? `${cleanCpf.slice(0, 3)}.${cleanCpf.slice(3, 6)}.${cleanCpf.slice(6, 9)}-${cleanCpf.slice(9)}`
+                            : cleanCpf;
+                         cpfEl.textContent = formattedCpf;
+                     }
+                 } else {
+                     if (cpfEl) cpfEl.textContent = "Seu CPF digitado na compra";
                  }
 
                  // Elementos
