@@ -2419,6 +2419,75 @@
                 font-size: 1.5rem;
             }
         }
+
+        .checkout-row {
+            display: flex;
+            gap: 1.5rem;
+            width: 100%;
+            margin: 1rem auto 0;
+            justify-content: center;
+            align-items: stretch;
+            padding: 10px 0;
+        }
+        .checkout-card {
+            flex: 1;
+            max-width: 340px;
+            background: linear-gradient(145deg, #0f172a, #111827);
+            border: 1.5px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .checkout-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        }
+        .checkout-card.combo-card {
+            border: 2px solid #f59e0b;
+            box-shadow: 0 25px 50px rgba(245, 158, 11, 0.12);
+        }
+        .checkout-card.doencas-card {
+            border-color: rgba(220, 38, 38, 0.5);
+        }
+        .checkout-card.pintinhos-card {
+            border-color: rgba(245, 158, 11, 0.5);
+        }
+        .card-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #000;
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 4px 16px;
+            border-radius: 20px;
+            white-space: nowrap;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+        }
+        @media (max-width: 991px) {
+            .checkout-row {
+                justify-content: flex-start;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                padding: 1.5rem 1rem;
+                -webkit-overflow-scrolling: touch;
+                gap: 1.25rem;
+            }
+            .checkout-card {
+                width: 82%;
+                max-width: 310px;
+                flex-shrink: 0;
+                scroll-snap-align: center;
+            }
+        }
     </style>
     <section id="learning" style="padding: 5rem 0; background: linear-gradient(180deg, #080808 0%, #0d1117 100%); border-top: 1px solid rgba(255,255,255,0.06); position: relative;">
         <div class="container" style="max-width: 1040px; position: relative;">
@@ -2432,198 +2501,127 @@
                 <div style="width: 60px; height: 3px; background: linear-gradient(90deg, #f59e0b, #d97706); border-radius: 2px; margin: 1rem auto 0;"></div>
             </div>
 
-            <!-- Navegação de estados (abas superiores) -->
-            <div id="offer-nav" style="display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 3rem;">
-                <button onclick="setOfferState('doencas')" id="nav-doencas"
-                    style="padding: 10px 22px; font-size: 0.8rem; font-weight: 700; border: 1px solid rgba(220,38,38,0.5); background: transparent; color: #f87171; border-radius: 12px 0 0 12px; cursor: pointer; transition: all 0.25s; letter-spacing: 0.5px;">
-                    O SEGREDO DAS DOENÇAS
-                </button>
-                <button onclick="setOfferState('combo')" id="nav-combo"
-                    style="padding: 10px 28px; font-size: 0.85rem; font-weight: 800; border: 2px solid #f59e0b; background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; border-radius: 0; cursor: pointer; transition: all 0.25s; letter-spacing: 0.5px;">
-                    ⭐ COMBO COMPLETO
-                </button>
-                <button onclick="setOfferState('pintinhos')" id="nav-pintinhos"
-                    style="padding: 10px 22px; font-size: 0.8rem; font-weight: 700; border: 1px solid rgba(245,158,11,0.5); background: transparent; color: #fbbf24; border-radius: 0 12px 12px 0; cursor: pointer; transition: all 0.25s; letter-spacing: 0.5px;">
-                    MANUAL DE MANEJO DE PINTINHOS
-                </button>
-            </div>
-
             <!-- Container com margem lateral para setas flutuantes -->
-            <div style="position: relative; padding: 0 50px;">
+            <div style="position: relative; padding: 0 40px;">
 
                 <!-- Seta Esquerda -->
-                <button onclick="prevOfferState()" aria-label="Oferta Anterior" class="offer-arrow-btn"
-                    style="left: -10px; top: 50%; transform: translateY(-50%);">
+                <button onclick="scrollOffers(-1)" aria-label="Oferta Anterior" class="offer-arrow-btn"
+                    style="left: -15px; top: 50%; transform: translateY(-50%);">
                     &#8249;
                 </button>
 
                 <!-- Seta Direita -->
-                <button onclick="nextOfferState()" aria-label="Próxima Oferta" class="offer-arrow-btn"
-                    style="right: -10px; top: 50%; transform: translateY(-50%);">
+                <button onclick="scrollOffers(1)" aria-label="Próxima Oferta" class="offer-arrow-btn"
+                    style="right: -15px; top: 50%; transform: translateY(-50%);">
                     &#8250;
                 </button>
 
-                <!-- ===== ESTADO: COMBO (padrão, 3 cards) ===== -->
-                <div id="state-combo" class="offer-state">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+                <div class="checkout-row">
 
-                        <!-- Card Doenças -->
-                        <div style="background: linear-gradient(145deg, #0f172a, #1e293b); border: 1px solid rgba(220,38,38,0.3); border-radius: 20px; padding: 1.75rem; position: relative; overflow: hidden;">
-                            <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100px; background: radial-gradient(circle, rgba(220,38,38,0.15) 0%, transparent 70%);"></div>
-                            <span style="display: inline-block; background: rgba(220,38,38,0.15); color: #f87171; font-size: 0.65rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(220,38,38,0.3); margin-bottom: 1rem;">E-book 1</span>
-                            <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.25rem;">
+                    <!-- CARD 1: O SEGREDO DAS DOENÇAS -->
+                    <div class="checkout-card doencas-card">
+                        <div style="width: 100%;">
+                            <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.25rem;">
                                 <img src="capadasdoencas.webp" alt="E-book Segredo das Doenças" loading="lazy" style="width: 65px; flex-shrink: 0; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                                 <div>
-                                    <h3 style="font-size: 0.95rem; font-weight: 900; color: #fff; line-height: 1.3; margin: 0 0 4px;">O Segredo das Doenças Avícolas</h3>
-                                    <span style="font-size: 0.72rem; color: #94a3b8;">Identifique e trate + de 10 doenças</span>
+                                    <span style="display: inline-block; background: rgba(220,38,38,0.15); color: #f87171; font-size: 0.6rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; border: 1px solid rgba(220,38,38,0.2); margin-bottom: 4px;">Opção 1</span>
+                                    <h3 style="font-size: 0.95rem; font-weight: 900; color: #fff; line-height: 1.2; margin: 0;">O Segredo das Doenças</h3>
                                 </div>
                             </div>
-                            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.55rem;">
-                                <li style="display: flex; gap: 8px; font-size: 0.85rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f87171; margin-top: 2px; flex-shrink: 0;"></i>Identificar + de 10 doenças em segundos</li>
-                                <li style="display: flex; gap: 8px; font-size: 0.85rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f87171; margin-top: 2px; flex-shrink: 0;"></i>Como centenas de criadores tratam suas aves doentes</li>
-                                <li style="display: flex; gap: 8px; font-size: 0.85rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f87171; margin-top: 2px; flex-shrink: 0;"></i>Tabela completa de vacinação</li>
-                                <li style="display: flex; gap: 8px; font-size: 0.85rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f87171; margin-top: 2px; flex-shrink: 0;"></i>Tabela de vermifugação atualizada</li>
-                                <li style="display: flex; gap: 8px; font-size: 0.85rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f87171; margin-top: 2px; flex-shrink: 0;"></i>Protocolo de prevenção passo a passo</li>
+                            <ul style="list-style: none; padding: 0; margin: 0 0 1.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                                <li style="display: flex; gap: 8px; font-size: 0.8rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f87171; margin-top: 2px; flex-shrink: 0;"></i>Identificar + de 10 doenças em segundos</li>
+                                <li style="display: flex; gap: 8px; font-size: 0.8rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f87171; margin-top: 2px; flex-shrink: 0;"></i>Como criadores tratam suas aves doentes</li>
+                                <li style="display: flex; gap: 8px; font-size: 0.8rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f87171; margin-top: 2px; flex-shrink: 0;"></i>Tabela completa de vacinação</li>
+                                <li style="display: flex; gap: 8px; font-size: 0.8rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f87171; margin-top: 2px; flex-shrink: 0;"></i>Tabela de vermifugação atualizada</li>
+                                <li style="display: flex; gap: 8px; font-size: 0.8rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f87171; margin-top: 2px; flex-shrink: 0;"></i>Protocolo de prevenção passo a passo</li>
                             </ul>
                         </div>
+                        <div style="width: 100%; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; text-align: center;">
+                            <p style="font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin: 0.75rem 0 0.15rem;">Apenas o e-book das doenças</p>
+                            <p style="font-size: 0.85rem; color: #64748b; text-decoration: line-through; margin-bottom: 0.15rem;">De R$ 147,00</p>
+                            <div style="margin: 0.25rem 0 0.75rem;">
+                                <div style="font-size: 2.2rem; font-weight: 900; color: #fff; line-height: 1; margin: 0.15rem 0;">R$ 89<span style="font-size: 1.1rem;">,90</span></div>
+                                <span style="display: inline-block; background: rgba(16,185,129,0.12); color: #10b981; font-size: 0.65rem; font-weight: 800; padding: 2px 10px; border-radius: 20px; border: 1px solid rgba(16,185,129,0.2); margin-top: 3px;">&#128293; NO PIX</span>
+                            </div>
+                            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0.4rem 0 0.15rem;">ou em até <strong style="color: #fff;">4x de R$ 22,47</strong></p>
+                            <p style="font-size: 0.7rem; color: #64748b; margin-bottom: 1rem;">(Total R$ 89,90)</p>
+                            <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary" style="width: 100%; font-size: 0.9rem; padding: 0.85rem 1rem; background: linear-gradient(135deg,#dc2626,#b91c1c); border-radius:14px;">
+                                COMPRAR SÓ DOENÇAS
+                            </button>
+                        </div>
+                    </div>
 
-                        <!-- Card Pintinhos -->
-                        <div style="background: linear-gradient(145deg, #0f172a, #1e293b); border: 1px solid rgba(245,158,11,0.3); border-radius: 20px; padding: 1.75rem; position: relative; overflow: hidden;">
-                            <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100px; background: radial-gradient(circle, rgba(245,158,11,0.15) 0%, transparent 70%);"></div>
-                            <span style="display: inline-block; background: rgba(245,158,11,0.15); color: #fbbf24; font-size: 0.65rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(245,158,11,0.3); margin-bottom: 1rem;">E-book 2</span>
-                            <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.25rem;">
+                    <!-- CARD 2: COMBO COMPLETO -->
+                    <div class="checkout-card combo-card">
+                        <span class="card-badge">⭐ RECOMENDADO - 50% OFF</span>
+                        <div style="width: 100%;">
+                            <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.25rem; margin-top: 0.5rem;">
+                                <div style="display: flex; position: relative;">
+                                    <img src="capadasdoencas.webp" alt="Doenças" loading="lazy" style="width: 45px; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 3;">
+                                    <img src="capadospintinhos.webp" alt="Pintinhos" loading="lazy" style="width: 45px; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); margin-left: -20px; z-index: 2;">
+                                    <img src="tabela_racao_bump.webp" alt="Ração" loading="lazy" style="width: 45px; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); margin-left: -20px; z-index: 1;">
+                                </div>
+                                <div style="margin-left: 5px;">
+                                    <span style="display: inline-block; background: rgba(245,158,11,0.15); color: #fbbf24; font-size: 0.6rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; border: 1px solid rgba(245,158,11,0.2); margin-bottom: 4px;">Melhor Oferta</span>
+                                    <h3 style="font-size: 0.95rem; font-weight: 900; color: #fff; line-height: 1.2; margin: 0;">Combo Completo</h3>
+                                </div>
+                            </div>
+                            <ul style="list-style: none; padding: 0; margin: 0 0 1.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                                <li style="display: flex; gap: 8px; font-size: 0.8rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f59e0b; margin-top: 2px; flex-shrink: 0;"></i><strong style="color:#fff;">Acesso à maior plataforma do Brasil</strong></li>
+                                <li style="display: flex; gap: 8px; font-size: 0.8rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f59e0b; margin-top: 2px; flex-shrink: 0;"></i>E-book O Segredo das Doenças</li>
+                                <li style="display: flex; gap: 8px; font-size: 0.8rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f59e0b; margin-top: 2px; flex-shrink: 0;"></i>Manual de Manejo de Pintinhos</li>
+                                <li style="display: flex; gap: 8px; font-size: 0.8rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f59e0b; margin-top: 2px; flex-shrink: 0;"></i>Bônus: Tabela de Ração Completa</li>
+                                <li style="display: flex; gap: 8px; font-size: 0.8rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f59e0b; margin-top: 2px; flex-shrink: 0;"></i>Atualizações gratuitas e vitalícias</li>
+                            </ul>
+                        </div>
+                        <div style="width: 100%; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; text-align: center;">
+                            <p style="font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin: 0.75rem 0 0.15rem;">Valor total dos 3 materiais</p>
+                            <p style="font-size: 0.85rem; color: #64748b; text-decoration: line-through; margin-bottom: 0.15rem;">De R$ 297,00</p>
+                            <div style="margin: 0.25rem 0 0.75rem;">
+                                <div style="font-size: 2.2rem; font-weight: 900; color: #fff; line-height: 1; margin: 0.15rem 0;">R$ 149<span style="font-size: 1.1rem;">,90</span></div>
+                                <span style="display: inline-block; background: rgba(16,185,129,0.12); color: #10b981; font-size: 0.65rem; font-weight: 800; padding: 2px 10px; border-radius: 20px; border: 1px solid rgba(16,185,129,0.2); margin-top: 3px;">&#128293; NO PIX COM DESCONTO</span>
+                            </div>
+                            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0.4rem 0 0.15rem;">ou em até <strong style="color: #fff;">4x de R$ 37,47</strong></p>
+                            <p style="font-size: 0.7rem; color: #64748b; margin-bottom: 1rem;">(Total R$ 149,90)</p>
+                            <button onclick="startCheckoutProcess('combo-plataforma')" class="btn-primary" style="width: 100%; font-size: 0.9rem; padding: 0.85rem 1rem; border-radius:14px; background: linear-gradient(135deg, #f59e0b, #d97706); color:#000;">
+                                GARANTIR COMBO AGORA
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- CARD 3: MANUAL DE MANEJO DE PINTINHOS -->
+                    <div class="checkout-card pintinhos-card">
+                        <div style="width: 100%;">
+                            <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.25rem;">
                                 <img src="capadospintinhos.webp" alt="E-book Manual dos Pintinhos" loading="lazy" style="width: 65px; flex-shrink: 0; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                                 <div>
-                                    <h3 style="font-size: 0.95rem; font-weight: 900; color: #fff; line-height: 1.3; margin: 0 0 4px;">Manual de Manejo de Pintinhos</h3>
-                                    <span style="font-size: 0.72rem; color: #94a3b8;">Previna até 89% das mortes nos 1ºs dias</span>
+                                    <span style="display: inline-block; background: rgba(245,158,11,0.15); color: #fbbf24; font-size: 0.6rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; border: 1px solid rgba(245,158,11,0.2); margin-bottom: 4px;">Opção 2</span>
+                                    <h3 style="font-size: 0.95rem; font-weight: 900; color: #fff; line-height: 1.2; margin: 0;">Manejo de Pintinhos</h3>
                                 </div>
                             </div>
-                            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.55rem;">
-                                <li style="display: flex; gap: 8px; font-size: 0.85rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #fbbf24; margin-top: 2px; flex-shrink: 0;"></i>Melhor manejo dos primeiros dias de vida</li>
-                                <li style="display: flex; gap: 8px; font-size: 0.85rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #fbbf24; margin-top: 2px; flex-shrink: 0;"></i>Temperatura correta em cada phase de crescimento</li>
-                                <li style="display: flex; gap: 8px; font-size: 0.85rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #fbbf24; margin-top: 2px; flex-shrink: 0;"></i>Prevenção de doenças desde o nascimento</li>
-                                <li style="display: flex; gap: 8px; font-size: 0.85rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #fbbf24; margin-top: 2px; flex-shrink: 0;"></i>Desenvolvimento saudável garantido</li>
-                                <li style="display: flex; gap: 8px; font-size: 0.85rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #fbbf24; margin-top: 2px; flex-shrink: 0;"></i><strong style="color: #fbbf24;">Reduz até 89% das mortes</strong> nos primeiros dias</li>
+                            <ul style="list-style: none; padding: 0; margin: 0 0 1.5rem; display: flex; flex-direction: column; gap: 0.55rem;">
+                                <li style="display: flex; gap: 8px; font-size: 0.8rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #fbbf24; margin-top: 2px; flex-shrink: 0;"></i>Manejo correto nos primeiros 28 dias</li>
+                                <li style="display: flex; gap: 8px; font-size: 0.8rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #fbbf24; margin-top: 2px; flex-shrink: 0;"></i>Temperatura e ambiente adequados</li>
+                                <li style="display: flex; gap: 8px; font-size: 0.8rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #fbbf24; margin-top: 2px; flex-shrink: 0;"></i>Prevenção de doenças iniciais</li>
+                                <li style="display: flex; gap: 8px; font-size: 0.8rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #fbbf24; margin-top: 2px; flex-shrink: 0;"></i>Crescimento saudável e robusto</li>
+                                <li style="display: flex; gap: 8px; font-size: 0.8rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #fbbf24; margin-top: 2px; flex-shrink: 0;"></i>Reduz até 89% da mortalidade inicial</li>
                             </ul>
                         </div>
-
-                        <!-- Card Ração -->
-                        <div style="background: linear-gradient(145deg, #0f172a, #1e293b); border: 1px solid rgba(16,185,129,0.3); border-radius: 20px; padding: 1.75rem; position: relative; overflow: hidden;">
-                            <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100px; background: radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%);"></div>
-                            <span style="display: inline-block; background: rgba(16,185,129,0.15); color: #34d399; font-size: 0.65rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(16,185,129,0.3); margin-bottom: 1rem;">Bônus Exclusivo</span>
-                            <div style="display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.25rem;">
-                                <img src="tabela_racao_bump.webp" alt="Tabela de Ração" loading="lazy" style="width: 65px; flex-shrink: 0; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-                                <div>
-                                    <h3 style="font-size: 0.95rem; font-weight: 900; color: #fff; line-height: 1.3; margin: 0 0 4px;">Tabela de Ração Completa</h3>
-                                    <span style="font-size: 0.72rem; color: #94a3b8;">Economize até 65% na alimentação</span>
-                                </div>
+                        <div style="width: 100%; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; text-align: center;">
+                            <p style="font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin: 0.75rem 0 0.15rem;">Apenas o manual dos pintinhos</p>
+                            <p style="font-size: 0.85rem; color: #64748b; text-decoration: line-through; margin-bottom: 0.15rem;">De R$ 99,00</p>
+                            <div style="margin: 0.25rem 0 0.75rem;">
+                                <div style="font-size: 2.2rem; font-weight: 900; color: #fff; line-height: 1; margin: 0.15rem 0;">R$ 49<span style="font-size: 1.1rem;">,90</span></div>
+                                <span style="display: inline-block; background: rgba(16,185,129,0.12); color: #10b981; font-size: 0.65rem; font-weight: 800; padding: 2px 10px; border-radius: 20px; border: 1px solid rgba(16,185,129,0.2); margin-top: 3px;">&#128293; NO PIX</span>
                             </div>
-                            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.55rem;">
-                                <li style="display: flex; gap: 8px; font-size: 0.85rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #34d399; margin-top: 2px; flex-shrink: 0;"></i>Ração para postura, crescimento e engorda</li>
-                                <li style="display: flex; gap: 8px; font-size: 0.85rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #34d399; margin-top: 2px; flex-shrink: 0;"></i>Produza sua própria ração em casa</li>
-                                <li style="display: flex; gap: 8px; font-size: 0.85rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #34d399; margin-top: 2px; flex-shrink: 0;"></i>Sem depender de ração pronta no mercado</li>
-                                <li style="display: flex; gap: 8px; font-size: 0.85rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #34d399; margin-top: 2px; flex-shrink: 0;"></i><strong style="color: #34d399;">Economize até 65%</strong> na alimentação do plantel</li>
-                            </ul>
+                            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0.4rem 0 0.15rem;">ou em até <strong style="color: #fff;">4x de R$ 17,47</strong></p>
+                            <p style="font-size: 0.7rem; color: #64748b; margin-bottom: 1rem;">(Total R$ 69,90)</p>
+                            <button onclick="startCheckoutProcess('ebook-pintinhos')" class="btn-primary" style="width: 100%; font-size: 0.9rem; padding: 0.85rem 1rem; background: linear-gradient(135deg,#d97706,#b45309); border-radius:14px;">
+                                COMPRAR SÓ PINTINHOS
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Preço Combo -->
-                    <div style="background: linear-gradient(145deg, #0f172a, #111827); border: 2px solid rgba(245,158,11,0.4); border-radius: 24px; padding: 2.5rem; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.5); max-width: 520px; margin: 0 auto; position: relative;">
-                        <span style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg,#f59e0b,#d97706); color: #000; font-size: 0.7rem; font-weight: 800; padding: 4px 18px; border-radius: 20px; white-space: nowrap; letter-spacing: 1px;">⭐ COMBO COMPLETO COM DESCONTO</span>
-                        <p style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 2px; margin: 0.75rem 0 0.25rem;">Valor total dos 3 materiais</p>
-                        <p style="font-size: 1rem; color: #64748b; text-decoration: line-through; margin-bottom: 0.25rem;">De R$ 297,00</p>
-                        <div style="margin: 0.5rem 0 1rem;">
-                            <span style="font-size: 0.8rem; color: #94a3b8; font-weight: 600; text-transform: uppercase;">Acesso completo por apenas</span>
-                            <div style="font-size: 3rem; font-weight: 900; color: #fff; line-height: 1; margin: 0.25rem 0;">R$ 149<span style="font-size: 1.5rem;">,90</span></div>
-                            <span style="display: inline-block; background: rgba(16,185,129,0.15); color: #10b981; font-size: 0.72rem; font-weight: 800; padding: 3px 12px; border-radius: 20px; border: 1px solid rgba(16,185,129,0.3); margin-top: 4px;">&#128293; NO PIX COM DESCONTO</span>
-                        </div>
-                        <p style="font-size: 0.9rem; color: #94a3b8; margin: 0.5rem 0 0.15rem;">ou em até <strong style="color: #fff; font-size: 1.05em;">4x de R$ 37,47</strong> no cartão</p>
-                        <p style="font-size: 0.75rem; color: #64748b; margin-bottom: 1.5rem;">(Total R$ 149,90)</p>
-                        <button onclick="startCheckoutProcess('combo-plataforma')" class="btn-primary" style="width: 100%; font-size: 1.05rem; padding: 1rem 2rem;">
-                            GARANTIR COMBO COMPLETO AGORA
-                        </button>
-                        <p style="font-size: 0.75rem; color: #64748b; margin-top: 0.75rem;">&#128274; Pagamento seguro &nbsp;&middot;&nbsp; &#9989; 7 dias de garantia</p>
-                    </div>
-                </div>
-
-                <!-- ===== ESTADO: SÓ DOENÇAS ===== -->
-                <div id="state-doencas" class="offer-state" style="display:none;">
-                    <div style="max-width: 520px; margin: 0 auto 2.5rem;">
-                        <div style="background: linear-gradient(145deg, #0f172a, #1e293b); border: 1px solid rgba(220,38,38,0.4); border-radius: 20px; padding: 2rem;">
-                            <div style="display: flex; gap: 1.25rem; align-items: center; margin-bottom: 1.5rem;">
-                                <img src="capadasdoencas.webp" alt="E-book Segredo das Doenças" loading="lazy" style="width: 90px; flex-shrink: 0; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
-                                <div>
-                                    <span style="display: inline-block; background: rgba(220,38,38,0.15); color: #f87171; font-size: 0.65rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(220,38,38,0.3); margin-bottom: 0.5rem;">E-book 1</span>
-                                    <h3 style="font-size: 1.1rem; font-weight: 900; color: #fff; line-height: 1.3; margin: 0;">O Segredo das Doenças Avícolas</h3>
-                                </div>
-                            </div>
-                            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.65rem;">
-                                <li style="display: flex; gap: 10px; font-size: 0.9rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f87171; margin-top: 2px; flex-shrink: 0;"></i>Identificar + de 10 doenças em segundos</li>
-                                <li style="display: flex; gap: 10px; font-size: 0.9rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f87171; margin-top: 2px; flex-shrink: 0;"></i>Como centenas de criadores tratam suas aves doentes</li>
-                                <li style="display: flex; gap: 10px; font-size: 0.9rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f87171; margin-top: 2px; flex-shrink: 0;"></i>Tabela completa de vacinação</li>
-                                <li style="display: flex; gap: 10px; font-size: 0.9rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f87171; margin-top: 2px; flex-shrink: 0;"></i>Tabela de vermifugação atualizada</li>
-                                <li style="display: flex; gap: 10px; font-size: 0.9rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #f87171; margin-top: 2px; flex-shrink: 0;"></i>Protocolo de prevenção passo a passo</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- Preço Doenças -->
-                    <div style="background: linear-gradient(145deg, #0f172a, #111827); border: 1px solid rgba(220,38,38,0.3); border-radius: 24px; padding: 2.5rem; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.5); max-width: 520px; margin: 0 auto;">
-                        <p style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.25rem;">Apenas o e-book das doenças</p>
-                        <p style="font-size: 1rem; color: #64748b; text-decoration: line-through; margin-bottom: 0.25rem;">De R$ 147,00</p>
-                        <div style="margin: 0.5rem 0 1rem;">
-                            <div style="font-size: 3rem; font-weight: 900; color: #fff; line-height: 1; margin: 0.25rem 0;">R$ 89<span style="font-size: 1.5rem;">,90</span></div>
-                            <span style="display: inline-block; background: rgba(16,185,129,0.15); color: #10b981; font-size: 0.72rem; font-weight: 800; padding: 3px 12px; border-radius: 20px; border: 1px solid rgba(16,185,129,0.3); margin-top: 4px;">&#128293; NO PIX</span>
-                        </div>
-                        <p style="font-size: 0.9rem; color: #94a3b8; margin: 0.5rem 0 0.15rem;">ou em até <strong style="color: #fff; font-size: 1.05em;">4x de R$ 22,47</strong> no cartão</p>
-                        <p style="font-size: 0.75rem; color: #64748b; margin-bottom: 1.5rem;">(Total R$ 89,90)</p>
-                        <button onclick="startCheckoutProcess('ebook-doencas')" class="btn-primary" style="width: 100%; font-size: 1.05rem; padding: 1rem 2rem; background: linear-gradient(135deg,#dc2626,#b91c1c);">
-                            QUERO SÓ O EBOOK DE DOENÇAS
-                        </button>
-                        <p style="font-size: 0.8rem; color: #f59e0b; font-weight: 700; margin-top: 1rem; cursor: pointer;" onclick="setOfferState('combo')">
-                            ⭐ Ver o Combo Completo por R$ 149,90 →
-                        </p>
-                        <p style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">&#128274; Pagamento seguro &nbsp;&middot;&nbsp; &#9989; 7 dias de garantia</p>
-                    </div>
-                </div>
-
-                <!-- ===== ESTADO: SÓ PINTINHOS ===== -->
-                <div id="state-pintinhos" class="offer-state" style="display:none;">
-                    <div style="max-width: 520px; margin: 0 auto 2.5rem;">
-                        <div style="background: linear-gradient(145deg, #0f172a, #1e293b); border: 1px solid rgba(245,158,11,0.4); border-radius: 20px; padding: 2rem;">
-                            <div style="display: flex; gap: 1.25rem; align-items: center; margin-bottom: 1.5rem;">
-                                <img src="capadospintinhos.webp" alt="E-book Manual dos Pintinhos" loading="lazy" style="width: 90px; flex-shrink: 0; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);">
-                                <div>
-                                    <span style="display: inline-block; background: rgba(245,158,11,0.15); color: #fbbf24; font-size: 0.65rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(245,158,11,0.3); margin-bottom: 0.5rem;">E-book 2</span>
-                                    <h3 style="font-size: 1.1rem; font-weight: 900; color: #fff; line-height: 1.3; margin: 0;">Manual de Manejo de Pintinhos</h3>
-                                </div>
-                            </div>
-                            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.65rem;">
-                                <li style="display: flex; gap: 10px; font-size: 0.9rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #fbbf24; margin-top: 2px; flex-shrink: 0;"></i>Melhor manejo dos primeiros dias de vida</li>
-                                <li style="display: flex; gap: 10px; font-size: 0.9rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #fbbf24; margin-top: 2px; flex-shrink: 0;"></i>Temperatura correta em cada phase de crescimento</li>
-                                <li style="display: flex; gap: 10px; font-size: 0.9rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #fbbf24; margin-top: 2px; flex-shrink: 0;"></i>Prevenção de doenças desde o nascimento</li>
-                                <li style="display: flex; gap: 10px; font-size: 0.9rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #fbbf24; margin-top: 2px; flex-shrink: 0;"></i>Desenvolvimento saudável garantido</li>
-                                <li style="display: flex; gap: 10px; font-size: 0.9rem; color: #cbd5e1; align-items: flex-start;"><i class="fa-solid fa-circle-check" style="color: #fbbf24; margin-top: 2px; flex-shrink: 0;"></i><strong style="color: #fbbf24;">Reduz até 89% das mortes</strong> nos primeiros dias</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- Preço Pintinhos -->
-                    <div style="background: linear-gradient(145deg, #0f172a, #111827); border: 1px solid rgba(245,158,11,0.3); border-radius: 24px; padding: 2.5rem; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.5); max-width: 520px; margin: 0 auto;">
-                        <p style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.25rem;">Apenas o manual dos pintinhos</p>
-                        <p style="font-size: 1rem; color: #64748b; text-decoration: line-through; margin-bottom: 0.25rem;">De R$ 99,00</p>
-                        <div style="margin: 0.5rem 0 1rem;">
-                            <div style="font-size: 3rem; font-weight: 900; color: #fff; line-height: 1; margin: 0.25rem 0;">R$ 49<span style="font-size: 1.5rem;">,90</span></div>
-                            <span style="display: inline-block; background: rgba(16,185,129,0.15); color: #10b981; font-size: 0.72rem; font-weight: 800; padding: 3px 12px; border-radius: 20px; border: 1px solid rgba(16,185,129,0.3); margin-top: 4px;">&#128293; NO PIX</span>
-                        </div>
-                        <p style="font-size: 0.9rem; color: #94a3b8; margin: 0.5rem 0 0.15rem;">ou em até <strong style="color: #fff; font-size: 1.05em;">4x de R$ 17,47</strong> no cartão</p>
-                        <p style="font-size: 0.75rem; color: #64748b; margin-bottom: 1.5rem;">(Total R$ 69,90)</p>
-                        <button onclick="startCheckoutProcess('ebook-pintinhos')" class="btn-primary" style="width: 100%; font-size: 1.05rem; padding: 1rem 2rem; background: linear-gradient(135deg,#d97706,#b45309);">
-                            QUERO SÓ O MANUAL DOS PINTINHOS
-                        </button>
-                        <p style="font-size: 0.8rem; color: #f59e0b; font-weight: 700; margin-top: 1rem; cursor: pointer;" onclick="setOfferState('combo')">
-                            ⭐ Ver o Combo Completo por R$ 149,90 →
-                        </p>
-                        <p style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">&#128274; Pagamento seguro &nbsp;&middot;&nbsp; &#9989; 7 dias de garantia</p>
-                    </div>
                 </div>
 
             </div>
@@ -2632,69 +2630,24 @@
     </section>
 
     <script>
-    var states = ['doencas', 'combo', 'pintinhos'];
-    var currentStateIndex = 1; // Default is 'combo'
-
-    function setOfferState(state) {
-        var idx = states.indexOf(state);
-        if (idx !== -1) {
-            currentStateIndex = idx;
+    function scrollOffers(direction) {
+        const row = document.querySelector('.checkout-row');
+        if (row) {
+            const cardWidth = row.querySelector('.checkout-card').offsetWidth + 24; // width + gap
+            row.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
         }
-
-        // Hide all states
-        document.querySelectorAll('.offer-state').forEach(function(el) {
-            el.style.display = 'none';
-        });
-        // Show selected state
-        var target = document.getElementById('state-' + state);
-        if (target) {
-            target.style.display = 'block';
-            // Animate in
-            target.style.opacity = '0';
-            target.style.transform = 'translateY(10px)';
-            target.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-            setTimeout(function() {
-                target.style.opacity = '1';
-                target.style.transform = 'translateY(0)';
-            }, 10);
-        }
-        // Update nav buttons
-        var styles = {
-            doencas:   { bg: 'rgba(220,38,38,0.2)',  color: '#f87171', border: '2px solid rgba(220,38,38,0.7)' },
-            combo:     { bg: 'linear-gradient(135deg,#f59e0b,#d97706)', color: '#000', border: '2px solid #f59e0b' },
-            pintinhos: { bg: 'rgba(245,158,11,0.2)', color: '#fbbf24', border: '2px solid rgba(245,158,11,0.7)' }
-        };
-        ['doencas','combo','pintinhos'].forEach(function(s) {
-            var btn = document.getElementById('nav-' + s);
-            if (!btn) return;
-            if (s === state) {
-                btn.style.background = styles[s].bg;
-                btn.style.color = styles[s].color;
-                btn.style.border = styles[s].border;
-                btn.style.transform = 'scale(1.05)';
-            } else {
-                btn.style.background = 'transparent';
-                btn.style.transform = 'scale(1)';
-                if (s === 'doencas')   { btn.style.color = '#f87171'; btn.style.border = '1px solid rgba(220,38,38,0.4)'; }
-                if (s === 'combo')     { btn.style.color = '#f59e0b'; btn.style.border = '1px solid rgba(245,158,11,0.5)'; }
-                if (s === 'pintinhos') { btn.style.color = '#fbbf24'; btn.style.border = '1px solid rgba(245,158,11,0.4)'; }
-            }
-        });
     }
-
-    function prevOfferState() {
-        currentStateIndex = (currentStateIndex - 1 + states.length) % states.length;
-        setOfferState(states[currentStateIndex]);
-    }
-
-    function nextOfferState() {
-        currentStateIndex = (currentStateIndex + 1) % states.length;
-        setOfferState(states[currentStateIndex]);
-    }
-
-    // Default state
+    
+    // Auto-scroll to center combo-card on page load on mobile
     document.addEventListener('DOMContentLoaded', function() {
-        setOfferState('combo');
+        if (window.innerWidth <= 991) {
+            const row = document.querySelector('.checkout-row');
+            const comboCard = document.querySelector('.combo-card');
+            if (row && comboCard) {
+                const scrollLeft = comboCard.offsetLeft - (row.offsetWidth - comboCard.offsetWidth) / 2;
+                row.scrollLeft = scrollLeft;
+            }
+        }
     });
     </script>
 
