@@ -896,12 +896,12 @@ function updateTotal() {
 
             if (window.acceptedPixUpsell && (currentPaymentMethod === 'pix' || currentPaymentMethod === 'card')) {
                 if (bump.id === 'ebook-manejo' || bump.id === 'ebook-doencas') {
-                    bumpPriceForPix = 40.10;
-                    bumpPriceForCard = 40.10;
+                    bumpPriceForPix = window.originalHadRacao ? 30.10 : (window.originalHadManejo ? 49.90 : 50.00);
+                    bumpPriceForCard = window.originalHadRacao ? 30.10 : (window.originalHadManejo ? 49.90 : 50.00);
                 }
                 if (bump.id === 'bump-6361') {
-                    bumpPriceForPix = 19.90;
-                    bumpPriceForCard = 19.90;
+                    bumpPriceForPix = window.originalHadManejo ? 9.90 : 0.00;
+                    bumpPriceForCard = window.originalHadManejo ? 9.90 : 0.00;
                 }
             }
 
@@ -916,8 +916,8 @@ function updateTotal() {
     if (currentPaymentMethod === 'card') {
         const installments = parseInt(document.getElementById('installments-select')?.value || '1', 10);
         if (installments > 1) {
-            if (cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite') {
-                finalDisplayPrice = baseCardTotal; // No surcharge for Combo
+            if (cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite' || window.acceptedPixUpsell) {
+                finalDisplayPrice = baseCardTotal; // No surcharge for Combo / Upsell Combo
             } else {
                 finalDisplayPrice = baseCardTotal + 20; // Aplica regra do parcelado (+20)
             }
@@ -1283,58 +1283,61 @@ function setupPixUpsellModal() {
     const originalPriceEl = document.getElementById('pix-upsell-original-price');
     const savingsEl = document.getElementById('pix-upsell-savings');
 
-    const hasManejo = cart.bumps.includes('ebook-manejo');
-    const hasRacao = cart.bumps.includes('bump-6361');
+    const isScenario2 = cart.bumps.length === 1 && cart.bumps.includes('bump-6361');
+    const isScenario3 = cart.bumps.length === 1 && cart.bumps.includes('ebook-manejo');
 
-    if (cart.bumps.length === 1) {
-        // Scenario 2: User chose 1 order bump (Chicks or Feed Table)
-        if (hasRacao) {
-            if (titleEl) titleEl.innerText = 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS + TABELA DE RAÇÃO';
-            if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de completar seu combo com o Ebook de Pintinhos.';
-            if (priceEl) priceEl.innerHTML = '+ R$ 40,10';
-            if (subtextEl) subtextEl.innerText = 'PARA COMPLETAR SEU COMBO DE MATERIAIS';
-            if (listEl) {
-                listEl.innerHTML = `
-                    <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças (Já Incluso)</div>
-                    <div style="margin-bottom: 3px; font-size: 0.85rem;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Ebook dos Pintinhos (ÚLTIMA PEÇA)</strong></div>
-                    <div style="color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Tabela de Ração (Já Inclusa)</div>
-                `;
-            }
-            if (rejectBtn) rejectBtn.innerText = 'Quero apenas Doenças + Tabela de Ração';
-        } else if (hasManejo) {
-            if (titleEl) titleEl.innerText = 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS + MANUAL DE PINTINHOS';
-            if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de completar seu combo com a Tabela de Ração.';
-            if (priceEl) priceEl.innerHTML = '+ R$ 10,10';
-            if (subtextEl) subtextEl.innerText = 'PARA COMPLETAR SEU COMBO DE MATERIAIS';
-            if (listEl) {
-                listEl.innerHTML = `
-                    <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças (Já Incluso)</div>
-                    <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Manual de Pintinhos (Já Incluso)</div>
-                    <div style="font-size: 0.85rem;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Tabela de Ração (ÚLTIMA PEÇA)</strong></div>
-                `;
-            }
-            if (rejectBtn) rejectBtn.innerText = 'Quero apenas Doenças + Manual de Pintinhos';
+    if (isScenario2) {
+        // Scenario 2: User chose only Tabela de Ração bump
+        if (titleEl) titleEl.innerText = 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS + TABELA DE RAÇÃO';
+        if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de desbloquear toda a plataforma e ter acesso completo.';
+        if (priceEl) priceEl.innerHTML = '+ R$ 30,10';
+        if (subtextEl) subtextEl.innerText = 'PARA VOCÊ DESBLOQUEAR TODA A PLATAFORMA E TODAS AS FERRAMENTAS COM ACESSO A TODOS OS NOSSOS MATERIAIS';
+        if (listEl) {
+            listEl.innerHTML = `
+                <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças (Já Incluso)</div>
+                <div style="margin-bottom: 3px; font-size: 0.85rem;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Ebook dos Pintinhos (ÚLTIMA PEÇA)</strong></div>
+                <div style="color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Tabela de Ração + Calculadora (Já Inclusa - GRATUITA)</div>
+            `;
         }
-        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 297,00';
-        if (savingsEl) savingsEl.innerText = 'COMBO COMPLETO';
+        if (rejectBtn) rejectBtn.innerText = 'Quero apenas Doenças + Tabela de Ração';
+        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 265,90';
+        if (savingsEl) savingsEl.innerText = 'ECONOMIA DE R$ 126,00';
+    } else if (isScenario3) {
+        // Scenario 3: User chose only Manual de Pintinhos bump
+        if (titleEl) titleEl.innerText = 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS + MANUAL DE PINTINHOS';
+        if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de levar a Tabela de Ração para ter a plataforma completa.';
+        if (priceEl) priceEl.innerHTML = '+ R$ 9,90';
+        if (subtextEl) subtextEl.innerText = 'DE R$ 19,90 POR APENAS R$ 9,90 PARA COMPLETAR SUA PLATAFORMA';
+        if (listEl) {
+            listEl.innerHTML = `
+                <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças (Já Incluso)</div>
+                <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Manual de Pintinhos (Já Incluso)</div>
+                <div style="font-size: 0.85rem;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Tabela de Ração (ÚLTIMA PEÇA - DESCONTO DE 50%)</strong></div>
+            `;
+        }
+        if (rejectBtn) rejectBtn.innerText = 'Quero apenas Doenças + Manual de Pintinhos';
+        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 265,90';
+        if (savingsEl) savingsEl.innerText = 'ECONOMIA DE R$ 116,20';
     } else {
         // Scenario 1: User chose no order bumps (0 bumps)
         if (titleEl) titleEl.innerText = 'VEMOS QUE VOCÊ TÁ LEVANDO NOSSO EBOOK COMPLETO DAS DOENÇAS';
         if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de ter as informações completas da criação.';
-        if (priceEl) priceEl.innerHTML = 'R$ 149,90';
-        if (subtextEl) subtextEl.innerText = 'VOCÊ LEVA TODOS OS MATERIAIS';
+        if (priceEl) priceEl.innerHTML = 'R$ 139,90';
+        if (subtextEl) subtextEl.innerText = 'PARA VOCÊ DESBLOQUEAR TODA A PLATAFORMA E TODAS AS FERRAMENTAS COM ACESSO A TODOS OS NOSSOS MATERIAIS, ATUALIZAÇÕES GRATUITAS E ACESSO VITALÍCIO. E AINDA GANHA A TABELA DE RAÇÃO GRATUITA!';
         
         if (listEl) {
             listEl.innerHTML = `
                 <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças</div>
                 <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Ebook dos Pintinhos</div>
-                <div><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Tabela de Ração <span style="background: #fbbf24; color: #78350f; font-size: 0.65rem; padding: 1px 4px; border-radius: 4px; font-weight: 900; margin-left: 2px; text-shadow: none; display: inline-block; line-height: 1;">GRATUITA</span></div>
+                <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Tabela de Ração <span style="background: #fbbf24; color: #78350f; font-size: 0.65rem; padding: 1px 4px; border-radius: 4px; font-weight: 900; margin-left: 2px; text-shadow: none; display: inline-block; line-height: 1;">GRATUITA</span></div>
+                <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Atualização Gratuita da Plataforma <span style="background: #fbbf24; color: #78350f; font-size: 0.65rem; padding: 1px 4px; border-radius: 4px; font-weight: 900; margin-left: 2px; text-shadow: none; display: inline-block; line-height: 1;">GRÁTIS</span></div>
+                <div><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Acesso Vitalício Liberado</div>
             `;
         }
         
         if (rejectBtn) rejectBtn.innerText = 'Quero apenas o guia das doenças';
-        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 297,00';
-        if (savingsEl) savingsEl.innerText = 'ECONOMIA DE R$ 147,10';
+        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 265,90';
+        if (savingsEl) savingsEl.innerText = 'ECONOMIA DE R$ 126,00';
     }
 }
 
@@ -1342,6 +1345,8 @@ function setupPixUpsellModal() {
 window.acceptPixUpsell = function() {
     window.bypassPixUpsell = true;
     window.acceptedPixUpsell = true;
+    window.originalHadRacao = cart.bumps.includes('bump-6361');
+    window.originalHadManejo = cart.bumps.includes('ebook-manejo');
     // Inject bumps dynamically
     if (cart.mainProduct.id === 'ebook-pintinhos') {
         if (!cart.bumps.includes('ebook-doencas')) cart.bumps.push('ebook-doencas');
@@ -1396,12 +1401,12 @@ async function handlePayment(method) {
     if (!isValid) return;
 
     // --- PIX/CARD UPSELL RECAPTURE INTERCEPT ---
-    // Show upsell if they are buying ebook-doencas and have chosen less than both bumps (i.e. bumps.length < 2)
     console.log('[UPSELL DEBUG] bypass:', window.bypassPixUpsell);
     console.log('[UPSELL DEBUG] method:', method);
     console.log('[UPSELL DEBUG] product:', cart.mainProduct ? cart.mainProduct.id : 'none');
     console.log('[UPSELL DEBUG] bumps:', cart.bumps);
     
+    // Show upsell if they have chosen less than both bumps (i.e. bumps.length < 2)
     const shouldShowPixUpsell = !window.bypassPixUpsell && (method === 'pix' || method === 'card') && cart.mainProduct && cart.mainProduct.id === 'ebook-doencas' && cart.bumps.length < 2;
     
     console.log('[UPSELL DEBUG] shouldShowPixUpsell:', shouldShowPixUpsell);
