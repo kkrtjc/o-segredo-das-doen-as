@@ -1272,9 +1272,6 @@ window.bypassPixUpsell = false;
 window.acceptedPixUpsell = false;
 
 function setupPixUpsellModal() {
-    const isScenario2 = cart.bumps.length === 1 && cart.bumps.includes('bump-6361');
-    const isPintinhos = cart.mainProduct.id === 'ebook-pintinhos';
-    
     const titleEl = document.getElementById('pix-upsell-title');
     const descEl = document.getElementById('pix-upsell-description');
     const priceEl = document.getElementById('pix-upsell-price-offer');
@@ -1284,50 +1281,43 @@ function setupPixUpsellModal() {
     const originalPriceEl = document.getElementById('pix-upsell-original-price');
     const savingsEl = document.getElementById('pix-upsell-savings');
 
-    if (isScenario2) {
-        if (titleEl) {
-            titleEl.innerText = isPintinhos 
-                ? 'VOCÊ JÁ ESTÁ LEVANDO O MANUAL DOS PINTINHOS + TABELA DE RAÇÃO'
-                : 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS + TABELA DE RAÇÃO';
-        }
-        if (descEl) {
-            descEl.innerHTML = isPintinhos
-                ? 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de completar seu combo com o Ebook de Doenças Avícolas.'
-                : 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de completar seu combo com o Ebook de Pintinhos.';
-        }
-        if (priceEl) priceEl.innerHTML = '+ R$ 40,10';
-        if (subtextEl) subtextEl.innerText = 'PARA COMPLETAR SEU COMBO DE MATERIAIS';
-        
-        if (listEl) {
-            if (isPintinhos) {
-                listEl.innerHTML = `
-                    <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Manual dos Pintinhos (Já Incluso)</div>
-                    <div style="margin-bottom: 3px; font-size: 0.85rem;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Ebook das Doenças (ÚLTIMA PEÇA)</strong></div>
-                    <div style="color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Tabela de Ração (Já Inclusa)</div>
-                `;
-            } else {
+    const hasManejo = cart.bumps.includes('ebook-manejo');
+    const hasRacao = cart.bumps.includes('bump-6361');
+
+    if (cart.bumps.length === 1) {
+        // Scenario 2: User chose 1 order bump (Chicks or Feed Table)
+        if (hasRacao) {
+            if (titleEl) titleEl.innerText = 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS + TABELA DE RAÇÃO';
+            if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de completar seu combo com o Ebook de Pintinhos.';
+            if (priceEl) priceEl.innerHTML = '+ R$ 40,10';
+            if (subtextEl) subtextEl.innerText = 'PARA COMPLETAR SEU COMBO DE MATERIAIS';
+            if (listEl) {
                 listEl.innerHTML = `
                     <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças (Já Incluso)</div>
                     <div style="margin-bottom: 3px; font-size: 0.85rem;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Ebook dos Pintinhos (ÚLTIMA PEÇA)</strong></div>
                     <div style="color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Tabela de Ração (Já Inclusa)</div>
                 `;
             }
-        }
-        
-        if (rejectBtn) {
-            rejectBtn.innerText = isPintinhos 
-                ? 'Quero apenas Pintinhos + Tabela de Ração'
-                : 'Quero apenas Doenças + Tabela de Ração';
+            if (rejectBtn) rejectBtn.innerText = 'Quero apenas Doenças + Tabela de Ração';
+        } else if (hasManejo) {
+            if (titleEl) titleEl.innerText = 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS + MANUAL DE PINTINHOS';
+            if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de completar seu combo com a Tabela de Ração.';
+            if (priceEl) priceEl.innerHTML = '+ R$ 10,10';
+            if (subtextEl) subtextEl.innerText = 'PARA COMPLETAR SEU COMBO DE MATERIAIS';
+            if (listEl) {
+                listEl.innerHTML = `
+                    <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças (Já Incluso)</div>
+                    <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Manual de Pintinhos (Já Incluso)</div>
+                    <div style="font-size: 0.85rem;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Tabela de Ração (ÚLTIMA PEÇA)</strong></div>
+                `;
+            }
+            if (rejectBtn) rejectBtn.innerText = 'Quero apenas Doenças + Manual de Pintinhos';
         }
         if (originalPriceEl) originalPriceEl.innerText = 'De R$ 297,00';
         if (savingsEl) savingsEl.innerText = 'COMBO COMPLETO';
     } else {
-        // Cenário 1 (Default)
-        if (titleEl) {
-            titleEl.innerText = isPintinhos
-                ? 'VEMOS QUE VOCÊ TÁ LEVANDO NOSSO MANUAL DE PINTINHOS'
-                : 'VEMOS QUE VOCÊ TÁ LEVANDO NOSSO EBOOK COMPLETO DAS DOENÇAS';
-        }
+        // Scenario 1: User chose no order bumps (0 bumps)
+        if (titleEl) titleEl.innerText = 'VEMOS QUE VOCÊ TÁ LEVANDO NOSSO EBOOK COMPLETO DAS DOENÇAS';
         if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de ter as informações completas da criação.';
         if (priceEl) priceEl.innerHTML = 'R$ 149,90';
         if (subtextEl) subtextEl.innerText = 'VOCÊ LEVA TODOS OS MATERIAIS';
@@ -1340,15 +1330,12 @@ function setupPixUpsellModal() {
             `;
         }
         
-        if (rejectBtn) {
-            rejectBtn.innerText = isPintinhos
-                ? 'Quero apenas o manual dos pintinhos'
-                : 'Quero apenas o guia das doenças';
-        }
+        if (rejectBtn) rejectBtn.innerText = 'Quero apenas o guia das doenças';
         if (originalPriceEl) originalPriceEl.innerText = 'De R$ 297,00';
         if (savingsEl) savingsEl.innerText = 'ECONOMIA DE R$ 147,10';
     }
 }
+
 
 window.acceptPixUpsell = function() {
     window.bypassPixUpsell = true;
@@ -1407,9 +1394,8 @@ async function handlePayment(method) {
     if (!isValid) return;
 
     // --- PIX/CARD UPSELL RECAPTURE INTERCEPT ---
-    const isScenario1 = cart.bumps.length === 0;
-    const isScenario2 = cart.bumps.length === 1 && cart.bumps.includes('bump-6361');
-    const shouldShowPixUpsell = !window.bypassPixUpsell && (method === 'pix' || method === 'card') && cart.mainProduct && (cart.mainProduct.id === 'ebook-doencas' || cart.mainProduct.id === 'ebook-pintinhos') && (isScenario1 || isScenario2);
+    // Show upsell if they are buying ebook-doencas and have chosen less than both bumps (i.e. bumps.length < 2)
+    const shouldShowPixUpsell = !window.bypassPixUpsell && (method === 'pix' || method === 'card') && cart.mainProduct && cart.mainProduct.id === 'ebook-doencas' && cart.bumps.length < 2;
 
     if (shouldShowPixUpsell) {
         setupPixUpsellModal();
