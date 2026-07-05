@@ -504,6 +504,9 @@ function declineEliteCombo() {
 }
 
 async function startCheckoutProcess(productId, forceBumps = []) {
+    window.bypassPixUpsell = false;
+    window.acceptedPixUpsell = false;
+    console.log('[CHECKOUT] Resetting upsell bypass flags.');
     // trackEvent('checkout_open') modificado: removido o limite de 1 por sessão 
     // e o trackEvent('click') redundante para evitar "Race Conditions" no banco de dados KV
     trackEvent('checkout_open');
@@ -1395,7 +1398,14 @@ async function handlePayment(method) {
 
     // --- PIX/CARD UPSELL RECAPTURE INTERCEPT ---
     // Show upsell if they are buying ebook-doencas and have chosen less than both bumps (i.e. bumps.length < 2)
+    console.log('[UPSELL DEBUG] bypass:', window.bypassPixUpsell);
+    console.log('[UPSELL DEBUG] method:', method);
+    console.log('[UPSELL DEBUG] product:', cart.mainProduct ? cart.mainProduct.id : 'none');
+    console.log('[UPSELL DEBUG] bumps:', cart.bumps);
+    
     const shouldShowPixUpsell = !window.bypassPixUpsell && (method === 'pix' || method === 'card') && cart.mainProduct && cart.mainProduct.id === 'ebook-doencas' && cart.bumps.length < 2;
+    
+    console.log('[UPSELL DEBUG] shouldShowPixUpsell:', shouldShowPixUpsell);
 
     if (shouldShowPixUpsell) {
         setupPixUpsellModal();
