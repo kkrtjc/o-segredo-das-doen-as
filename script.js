@@ -1320,18 +1320,16 @@ function setupPixUpsellModal() {
         if (savingsEl) savingsEl.innerText = 'ECONOMIA DE R$ 116,20';
     } else {
         // Scenario 1: User chose no order bumps (0 bumps)
-        if (titleEl) titleEl.innerText = 'VEMOS QUE VOCÊ TÁ LEVANDO NOSSO EBOOK COMPLETO DAS DOENÇAS';
-        if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de ter as informações completas da criação.';
-        if (priceEl) priceEl.innerHTML = 'R$ 139,90';
-        if (subtextEl) subtextEl.innerText = 'PARA VOCÊ DESBLOQUEAR TODA A PLATAFORMA E TODAS AS FERRAMENTAS COM ACESSO A TODOS OS NOSSOS MATERIAIS, ATUALIZAÇÕES GRATUITAS E ACESSO VITALÍCIO. E AINDA GANHA A TABELA DE RAÇÃO GRATUITA!';
+        if (titleEl) titleEl.innerText = 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS';
+        if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de se tornar um criador completo e ter acesso completo.';
+        if (priceEl) priceEl.innerHTML = '+ R$ 50,00';
+        if (subtextEl) subtextEl.innerText = 'PARA VOCÊ DESBLOQUEAR TODA A PLATAFORMA E TODAS AS FERRAMENTAS COM ACESSO A TODOS OS NOSSOS MATERIAIS';
         
         if (listEl) {
             listEl.innerHTML = `
-                <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças</div>
-                <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Ebook dos Pintinhos</div>
-                <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Tabela de Ração <span style="background: #fbbf24; color: #78350f; font-size: 0.65rem; padding: 1px 4px; border-radius: 4px; font-weight: 900; margin-left: 2px; text-shadow: none; display: inline-block; line-height: 1;">GRATUITA</span></div>
-                <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Atualização Gratuita da Plataforma <span style="background: #fbbf24; color: #78350f; font-size: 0.65rem; padding: 1px 4px; border-radius: 4px; font-weight: 900; margin-left: 2px; text-shadow: none; display: inline-block; line-height: 1;">GRÁTIS</span></div>
-                <div><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Acesso Vitalício Liberado</div>
+                <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças (Já Incluso)</div>
+                <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Ebook dos Pintinhos (ÚLTIMA PEÇA)</strong></div>
+                <div><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Tabela de Ração + Calculadora (GRATUITA)</strong></div>
             `;
         }
         
