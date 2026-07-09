@@ -7,7 +7,7 @@
 
 import { createHash } from 'node:crypto';
 
-const GRAPH_API_VERSION = 'v21.0';
+const GRAPH_API_VERSION = 'v22.0';
 
 // ─── UTILITÁRIOS ─────────────────────────────────────────────
 

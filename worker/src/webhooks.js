@@ -7,6 +7,7 @@ import { Hono } from 'hono';
 import { logSale, getAbandons, saveAbandons } from './admin.js';
 import { sendEmail } from './email.js';
 import crypto from 'node:crypto';
+import { FALLBACK_EMAIL } from './constants.js';
 
 export const webhookRoutes = new Hono();
 
@@ -66,7 +67,7 @@ webhookRoutes.post('/mercadopago', async (c) => {
                     const metadata = payment.metadata || {};
                     const customer = {
                         name: metadata.customer_name || `${payment.payer?.first_name || ''} ${payment.payer?.last_name || ''}`.trim() || 'Cliente',
-                        email: metadata.customer_email || payment.payer?.email || 'galosmurabrasill@gmail.com',
+                        email: metadata.customer_email || payment.payer?.email || FALLBACK_EMAIL,
                         phone: metadata.customer_phone || 'Sem Telefone',
                         cpf: metadata.customer_cpf || payment.payer?.identification?.number || 'Sem CPF',
                     };

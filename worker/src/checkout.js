@@ -5,9 +5,10 @@
 // ============================================================
 
 import { Hono } from 'hono';
+import { logSale } from './admin.js';
 import { sendEmail } from './email.js';
-import { logSale, getAbandons, saveAbandons } from './admin.js';
 import { generateDownloadToken } from './utils.js';
+import { FALLBACK_EMAIL } from './constants.js';
 
 export const checkoutRoutes = new Hono();
 
@@ -47,13 +48,13 @@ checkoutRoutes.post('/pix', async (c) => {
         transaction_amount: totalAmount,
         description: items.map(i => i.title).join(', '),
         payment_method_id: 'pix',
-        external_reference: `ORDER-${Date.now()}`,
+        external_reference: `${cleanCPF}-PIX-${Date.now()}`,
         notification_url: `${BASE_URL}/api/webhooks/mercadopago`,
         statement_descriptor: 'GALOS MURA BRASIL',
         payer: {
-            email: customer.email || 'contatogalosmura@gmail.com',
+            email: customer.email || FALLBACK_EMAIL,
             first_name: customer.name.split(' ')[0],
-            last_name: customer.name.split(' ').slice(1).join(' ') || 'User',
+            last_name: customer.name.split(' ').slice(1).join(' ') || 'Cliente',
             identification: { type: 'CPF', number: cleanCPF },
         },
         metadata: {
@@ -75,7 +76,8 @@ checkoutRoutes.post('/pix', async (c) => {
         headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${MP_TOKEN}`,
-            'X-Idempotency-Key': `pix-${Date.now()}-${cleanCPF}`,
+            // Estável por janela de 30min — evita dupla cobrança por clique duplo
+            'X-Idempotency-Key': `pix-${cleanCPF}-${Math.floor(Date.now() / 1800000)}`,
         },
         body: JSON.stringify(body),
     });
@@ -119,23 +121,25 @@ checkoutRoutes.post('/boleto', async (c) => {
         description: items.map(i => i.title).join(', '),
         payment_method_id: 'bolbradesco',
         date_of_expiration: expirationStr,
-        external_reference: `ORDER-${Date.now()}`,
+        external_reference: `${cleanCPF}-BOLETO-${Date.now()}`,
         notification_url: `${BASE_URL}/api/webhooks/mercadopago`,
         statement_descriptor: 'GALOS MURA BRASIL',
         payer: {
-            email: customer.email || 'contatogalosmura@gmail.com',
+            email: customer.email || FALLBACK_EMAIL,
             first_name: customer.name.split(' ')[0],
             last_name: customer.name.split(' ').slice(1).join(' ') || 'Cliente',
             identification: { type: 'CPF', number: cleanCPF },
-            // MOCK ADDRESS - Simplicidade máxima
-            address: {
-                zip_code: '01001000',
-                street_name: 'Pça. da Sé',
-                street_number: '1',
-                neighborhood: 'Sé',
-                city: 'São Paulo',
-                federal_unit: 'SP'
-            }
+            // Endereço real do cliente via CEP (se fornecido) ou omitido para não falhar
+            ...(customer.zip_code ? {
+                address: {
+                    zip_code: customer.zip_code.replace(/\D/g, ''),
+                    street_name: customer.street_name || 'Não informado',
+                    street_number: customer.street_number || 'S/N',
+                    neighborhood: customer.neighborhood || '',
+                    city: customer.city || '',
+                    federal_unit: customer.state || 'SP'
+                }
+            } : {})
         },
         metadata: {
             customer_name: customer.name,
@@ -156,7 +160,8 @@ checkoutRoutes.post('/boleto', async (c) => {
         headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${MP_TOKEN}`,
-            'X-Idempotency-Key': `boleto-${Date.now()}-${cleanCPF}`,
+            // Estável por janela de 30min — evita dupla cobrança por clique duplo
+            'X-Idempotency-Key': `boleto-${cleanCPF}-${Math.floor(Date.now() / 1800000)}`,
         },
         body: JSON.stringify(body),
     });
@@ -202,11 +207,11 @@ checkoutRoutes.post('/card', async (c) => {
         issuer_id: issuer_id || null,
         binary_mode: false,
         capture: true,
-        external_reference: `ORDER-${Date.now()}`,
+        external_reference: `${cleanCPF}-CARD-${Date.now()}`,
         notification_url: `${BASE_URL}/api/webhooks/mercadopago`,
         statement_descriptor: 'GALOSMURA',
         payer: {
-            email: customer.email || 'contatogalosmura@gmail.com',
+            email: customer.email || FALLBACK_EMAIL,
             first_name: customer.name.split(' ')[0],
             last_name: customer.name.split(' ').slice(1).join(' ') || 'Cliente',
             identification: { type: 'CPF', number: cleanCPF },
@@ -250,7 +255,8 @@ checkoutRoutes.post('/card', async (c) => {
         headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${MP_TOKEN}`,
-            'X-Idempotency-Key': `card-${Date.now()}-${cleanCPF}`,
+            // Estável por janela de 30min — evita dupla cobrança por clique duplo
+            'X-Idempotency-Key': `card-${cleanCPF}-${Math.floor(Date.now() / 1800000)}`,
         },
         body: JSON.stringify(body),
     });

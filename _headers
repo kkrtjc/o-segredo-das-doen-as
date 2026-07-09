@@ -1,0 +1,11 @@
+﻿# Block direct access to secured PDF directory
+# PDFs are served exclusively via the authenticated Worker proxy (downloads.js).
+/pdfs_secure_12x9a/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+
+# Global security headers for all pages
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
