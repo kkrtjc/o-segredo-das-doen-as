@@ -481,15 +481,9 @@
                 // Lógica de Detecção
                 const hasKeyword = (k) => items.some(i => i.toLowerCase().includes(k.toLowerCase()));
 
-                let showManejo = hasKeyword('manejo') || hasKeyword('pintinho') || hasKeyword('ebook-manejo');
-                let showDoencas = hasKeyword('doenca') || hasKeyword('saude') || hasKeyword('protocolo') || hasKeyword('elite') || hasKeyword('ebook-doencas');
-                let showBump = hasKeyword('bump') || hasKeyword('racao') || hasKeyword('tabela');
-
-                // Lógica de Combo: Se houver a palavra "combo", libera ambos os e-books principais
-                if (hasKeyword('combo')) {
-                    showManejo = true;
-                    showDoencas = true;
-                }
+                let showManejo = hasKeyword('manejo') || hasKeyword('pintinho') || hasKeyword('ebook-manejo') || hasKeyword('combo-elite');
+                let showDoencas = hasKeyword('doenca') || hasKeyword('saude') || hasKeyword('protocolo') || hasKeyword('elite') || hasKeyword('ebook-doencas') || hasKeyword('combo');
+                let showBump = hasKeyword('bump') || hasKeyword('racao') || hasKeyword('tabela') || hasKeyword('combo');
 
                 // 🚨 SEGURANÇA: Se nenhum item for detectado, libera APENAS o principal (Doenças)
                 if (!showManejo && !showDoencas && !showBump) {

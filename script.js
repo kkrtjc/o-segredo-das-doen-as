@@ -97,13 +97,13 @@ function applyDynamicPrices(productData) {
         }
 
         // 4. PRE-FETCH
-        const productsToPreload = ['ebook-doencas', 'combo-elite', 'ebook-manejo'];
+        const productsToPreload = ['ebook-doencas', 'combo-elite', 'ebook-manejo', 'combo-plataforma'];
         productsToPreload.forEach(async (id) => {
             try {
                 const response = await fetch(`${API_URL}/api/products/${id}`);
                 if (response.ok) {
                     prefetchedProducts[id] = await response.json();
-                    if (id === 'ebook-doencas') {
+                    if (id === 'combo-plataforma') {
                         const resp = prefetchedProducts[id];
                         if (typeof applyDynamicPrices === 'function') applyDynamicPrices(resp);
                     }
@@ -564,15 +564,15 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         },
         'combo-plataforma': {
             title: 'Combo Completo Plataforma',
-            price: 149.90,
-            originalPrice: 297.00,
+            price: 109.90,
+            originalPrice: 266.70,
             cover: 'combo',
             fullBumps: []
         },
         'combo-elite': {
             title: 'Combo Completo Plataforma',
-            price: 149.90,
-            originalPrice: 297.00,
+            price: 109.90,
+            originalPrice: 266.70,
             cover: 'combo',
             fullBumps: []
         }
@@ -608,16 +608,16 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                     price: 49.90,
                     priceCard: 49.90,
                     image: 'capadospintinhos.webp',
-                    description: '<span style="color: #ff4444;"><strong>8 em cada 10 pintinhos morrem antes dos 20 dias.</strong></span> Temperatura errada, ração imprópria, ambiente inapropriado. <span style="color: #4ade80;"><strong>O manual te ensina o passo a passo completo</strong></span> do nascimento à fase adulta.',
+                    description: '<span style="color: #ff4444;"><strong>⚠️ ALERTA: 80% dos pintinhos morrem antes dos 20 dias</strong></span> por pequenos erros de manejo (frio, vento, bico molhado) que o guia das doenças não cobre. <span style="color: #4ade80;"><strong>Adicione o manual completo de sobrevivência</strong></span> e proteja suas aves na fase mais frágil de vida.',
                     tag: 'OFERTA ÚNICA'
                 },
                 {
                     id: 'bump-6361',
-                    title: 'TABELA DE RAÇÃO',
+                    title: 'TABELA DE RAÇÃO PRÁTICA',
                     price: 19.90,
                     priceCard: 19.90,
                     image: 'tabela_racao_bump.webp',
-                    description: '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até 60% na ração</strong> das suas aves.',
+                    description: '<span style="color: #ff4444;"><strong>💸 Pare de jogar dinheiro fora com rações caras de marca.</strong></span> Aprenda a formular sua própria ração balanceada usando grãos locais e economize <strong style="color:#fbbf24;">até 60% no custo mensal</strong> do seu plantel.',
                     tag: 'OFERTA ÚNICA'
                 }
             ];
@@ -630,16 +630,16 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                     price: 49.90,
                     priceCard: 49.90,
                     image: 'capadasdoencas.webp',
-                    description: '<span style="color: #ff4444;"><strong>Aprenda a identificar e tratar mais de 10 doenças.</strong></span> Tabela de vacinação, vermifugação e protocolos passo a passo.',
+                    description: '<span style="color: #ff4444;"><strong>🛡️ O Guia de Proteção Definitivo:</strong></span> Aprenda a identificar, tratar e curar mais de 10 doenças graves em minutos. <span style="color: #4ade80;"><strong>Não espere a primeira ave adoecer para agir.</strong></span> Leve com 50% de desconto nesta tela.',
                     tag: 'OFERTA ÚNICA'
                 },
                 {
                     id: 'bump-6361',
-                    title: 'TABELA DE RAÇÃO',
+                    title: 'TABELA DE RAÇÃO PRÁTICA',
                     price: 19.90,
                     priceCard: 19.90,
                     image: 'tabela_racao_bump.webp',
-                    description: '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até 60% na ração</strong>.',
+                    description: '<span style="color: #ff4444;"><strong>💸 Economia Inteligente:</strong></span> Monte sua própria ração balanceada e forte, reduzindo seus gastos mensais com ração <strong style="color:#fbbf24;">em até 60%</strong>.',
                     tag: 'OFERTA ÚNICA'
                 }
             ];
@@ -671,17 +671,26 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         const topCardInstEl = document.getElementById('top-checkout-card-installment');
         
         if (productId === 'combo-plataforma' || productId === 'combo-elite') {
-            if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 297,00';
-            if (topCardInstEl) topCardInstEl.innerHTML = `4x de R$ 37,47 <span style="font-size: 0.65em; color: #64748b; font-weight: 500;">(Total R$ 149,90)</span>`;
-            document.getElementById('checkout-product-price-display').innerText = 'R$ 149,90';
+            if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 266,70';
+            if (topCardInstEl) topCardInstEl.innerHTML = `ou 4x de R$ 27,47 sem juros`;
+            document.getElementById('checkout-product-price-display').innerText = 'R$ 109,90';
         } else if (productId === 'ebook-pintinhos') {
             if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 99,00';
-            if (topCardInstEl) topCardInstEl.innerHTML = `4x de R$ 17,47 <span style="font-size: 0.65em; color: #64748b; font-weight: 500;">(Total R$ 69,90)</span>`;
+            if (topCardInstEl) topCardInstEl.innerHTML = `ou 4x de R$ 12,47 sem juros`;
             document.getElementById('checkout-product-price-display').innerText = 'R$ 49,90';
         } else {
             if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 149,90';
-            if (topCardInstEl) topCardInstEl.innerHTML = `4x de R$ 27,47 <span style="font-size: 0.65em; color: #64748b; font-weight: 500;">(Total R$ 109,90)</span>`;
+            if (topCardInstEl) topCardInstEl.innerHTML = `ou 4x de R$ 22,47 sem juros`;
             document.getElementById('checkout-product-price-display').innerText = 'R$ 89,90';
+        }
+
+        const itemListEl = document.getElementById('checkout-item-list');
+        if (itemListEl) {
+            if (productId === 'combo-plataforma' || productId === 'combo-elite') {
+                itemListEl.style.display = 'flex';
+            } else {
+                itemListEl.style.display = 'none';
+            }
         }
 
         const iconContainer = document.getElementById('product-icon-container');
@@ -872,8 +881,8 @@ function toggleBump(bumpId) {
 
 function updateTotal() {
     let basePrice = cart.mainProduct.price; // Preço PIX do produto principal
-    let baseCardPrice = cart.mainProduct.price; // Preço Cartão 1x (89.90)
-
+    let baseCardPrice = cart.mainProduct.price; // Preço Cartão 1x
+    
     let total = basePrice;
     let baseCardTotal = baseCardPrice;
 
@@ -895,13 +904,21 @@ function updateTotal() {
             let bumpPriceForCard = bump.price || 0; // Fixado pelo admin
 
             if (window.acceptedPixUpsell && (currentPaymentMethod === 'pix' || currentPaymentMethod === 'card')) {
-                if (bump.id === 'ebook-manejo' || bump.id === 'ebook-doencas') {
-                    bumpPriceForPix = window.originalHadRacao ? 30.10 : (window.originalHadManejo ? 49.90 : 50.00);
-                    bumpPriceForCard = window.originalHadRacao ? 30.10 : (window.originalHadManejo ? 49.90 : 50.00);
-                }
-                if (bump.id === 'bump-6361') {
-                    bumpPriceForPix = window.originalHadManejo ? 9.90 : 0.00;
-                    bumpPriceForCard = window.originalHadManejo ? 9.90 : 0.00;
+                const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
+                if (isCombo) {
+                    if (bump.id === 'ebook-manejo') {
+                        bumpPriceForPix = 49.90;
+                        bumpPriceForCard = 49.90;
+                    }
+                } else {
+                    if (bump.id === 'ebook-manejo' || bump.id === 'ebook-doencas') {
+                        bumpPriceForPix = window.originalHadRacao ? 30.10 : (window.originalHadManejo ? 49.90 : 50.00);
+                        bumpPriceForCard = window.originalHadRacao ? 30.10 : (window.originalHadManejo ? 49.90 : 50.00);
+                    }
+                    if (bump.id === 'bump-6361') {
+                        bumpPriceForPix = window.originalHadManejo ? 9.90 : 0.00;
+                        bumpPriceForCard = window.originalHadManejo ? 9.90 : 0.00;
+                    }
                 }
             }
 
@@ -913,36 +930,38 @@ function updateTotal() {
     document.querySelectorAll('.pix-discount-badge').forEach(b => b.remove());
 
     let finalDisplayPrice = total;
+    let hasSurcharge = false;
+
     if (currentPaymentMethod === 'card') {
-        const installments = parseInt(document.getElementById('installments-select')?.value || '1', 10);
-        if (installments > 1) {
-            if (cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite' || window.acceptedPixUpsell) {
-                finalDisplayPrice = baseCardTotal; // No surcharge for Combo / Upsell Combo
-            } else {
-                finalDisplayPrice = baseCardTotal + 20; // Aplica regra do parcelado (+20)
-            }
-        } else {
-            finalDisplayPrice = baseCardTotal; // Aplica regra do à vista (sem acrescimo)
-        }
+        finalDisplayPrice = baseCardTotal; // Always charge base total, merchant absorbs surcharge fee
+        hasSurcharge = false;
     }
+
+    const mainCardPriceForInst = baseCardPrice;
 
     // Atualiza Resumo Dinâmico do Pedido
     let eliteHtml = (currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto')
-        ? `<div style="display: flex; justify-content: space-between; font-weight: 500;"><span style="font-weight:700;">Protocolo Elite</span><span style="text-align: right; line-height: 1.2;"><span style="color: #64748b; font-size: 0.75rem;">4x de ${formatBRL((baseCardPrice + 20)/4)}</span><br><span style="font-size: 0.85rem; color: #10b981; font-weight: 800;">ou ${formatBRL(basePrice)} no PIX</span></span></div>`
-        : `<div style="display: flex; justify-content: space-between; font-weight: 500;"><span style="font-weight:700;">Protocolo Elite</span><span style="text-align: right; line-height: 1.2;"><span style="color: #10b981; font-size: 0.85rem; font-weight: 800;">4x de ${formatBRL((baseCardPrice + 20)/4)}</span><br><span style="font-size: 0.75rem; color: #64748b;">(ou ${formatBRL(baseCardPrice)} à vista)</span></span></div>`;
+        ? `<div style="display: flex; justify-content: space-between; font-weight: 500;"><span style="font-weight:700;">Protocolo Elite</span><span style="text-align: right; line-height: 1.2;"><span style="font-size: 0.85rem; color: #10b981; font-weight: 800;">${formatBRL(basePrice)}</span><br><span style="color: #cbd5e1; font-size: 0.72rem;">ou 4x de ${formatBRL(mainCardPriceForInst/4)} sem juros</span></span></div>`
+        : `<div style="display: flex; justify-content: space-between; font-weight: 500;"><span style="font-weight:700;">Protocolo Elite</span><span style="text-align: right; line-height: 1.2;"><span style="color: #10b981; font-size: 0.85rem; font-weight: 800;">4x de ${formatBRL(mainCardPriceForInst/4)} sem juros</span><br><span style="font-size: 0.72rem; color: #94a3b8;">(Total: ${formatBRL(baseCardPrice)})</span></span></div>`;
         
     let summaryHtml = eliteHtml;
     
     cart.bumps.forEach(id => {
         let bump = cart.mainProduct.fullBumps?.find(b => b.id === id);
         if (!bump && window.siteConfig) bump = window.siteConfig.products[id];
+        if (!bump) bump = prefetchedProducts[id];
         
         let bumpTitle = bump?.title || 'Oferta Adicional';
-        let priceForMethod = (currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? (bump?.price || 0) : (bump?.price || 0);
+        let priceForMethod = bump?.price || 49.90;
         
         if (window.acceptedPixUpsell && (currentPaymentMethod === 'pix' || currentPaymentMethod === 'card')) {
-            if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 30.10;
-            if (id === 'bump-6361') priceForMethod = 19.90;
+            const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
+            if (isCombo) {
+                if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 49.90;
+            } else {
+                if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 30.10;
+                if (id === 'bump-6361') priceForMethod = 19.90;
+            }
         }
 
         summaryHtml += `<div style="display: flex; justify-content: space-between; color: #16a34a; font-weight: 500;"><span>+ ${bumpTitle}</span><span>${formatBRL(priceForMethod)}</span></div>`;
@@ -982,8 +1001,7 @@ function updateInstallments(basePrice) {
     selector.appendChild(opt1);
 
     // Adiciona as opções parceladas baseadas no total
-    const isCombo = (cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite');
-    const installmentTotal = isCombo ? basePrice : (basePrice + 20);
+    const installmentTotal = basePrice;
     
     for (let i = 2; i <= 4; i++) {
         let val = installmentTotal / i;
@@ -1283,10 +1301,27 @@ function setupPixUpsellModal() {
     const originalPriceEl = document.getElementById('pix-upsell-original-price');
     const savingsEl = document.getElementById('pix-upsell-savings');
 
+    const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
     const isScenario2 = cart.bumps.length === 1 && cart.bumps.includes('bump-6361');
     const isScenario3 = cart.bumps.length === 1 && cart.bumps.includes('ebook-manejo');
 
-    if (isScenario2) {
+    if (isCombo) {
+        // Custom Upsell: Offer Manual de Manejo de Pintinhos for R$ 49,90 (was R$ 89,90)
+        if (titleEl) titleEl.innerText = '⚠️ OPORTUNIDADE ÚNICA E EXCLUSIVA';
+        if (descEl) descEl.innerHTML = 'Você garantiu o acesso ao Protocolo Elite. Mas você sabia que <strong>80% dos pintinhos morrem antes dos 20 dias</strong> por erros simples de temperatura e manejo? Proteja a fase mais frágil de vida das suas aves com o <strong>Manual de Elite dos Pintinhos</strong>.';
+        if (priceEl) priceEl.innerHTML = '+ R$ 49,90';
+        if (subtextEl) subtextEl.innerText = 'OFERTA ÚNICA: DE R$ 89,90 POR APENAS R$ 49,90 NESTA TELA!';
+        if (listEl) {
+            listEl.innerHTML = `
+                <div style="margin-bottom: 5px;"><span style="color: #fbbf24; margin-right: 6px; font-weight: 900;">🐤</span> <b>Blindagem da Fase Crítica:</b> Como evitar mortes súbitas no pinteiro.</div>
+                <div style="margin-bottom: 5px;"><span style="color: #fbbf24; margin-right: 6px; font-weight: 900;">🌡️</span> <b>Controle de Temperatura:</b> Tabela térmica exata dia após dia.</div>
+                <div><span style="color: #fbbf24; margin-right: 6px; font-weight: 900;">🥛</span> <b>Nutrição e Soro Caseiro:</b> Fórmulas secretas que salvam vidas na primeira semana.</div>
+            `;
+        }
+        if (rejectBtn) rejectBtn.innerText = 'Não, prefiro correr o risco de perder meus pintinhos';
+        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 89,90';
+        if (savingsEl) savingsEl.innerText = 'ECONOMIA DE R$ 40,00';
+    } else if (isScenario2) {
         // Scenario 2: User chose only Tabela de Ração bump
         if (titleEl) titleEl.innerText = 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS + TABELA DE RAÇÃO';
         if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de desbloquear toda a plataforma e ter acesso completo.';
@@ -1405,7 +1440,7 @@ async function handlePayment(method) {
     console.log('[UPSELL DEBUG] bumps:', cart.bumps);
     
     // Show upsell if they have chosen less than both bumps (i.e. bumps.length < 2)
-    const shouldShowPixUpsell = !window.bypassPixUpsell && (method === 'pix' || method === 'card') && cart.mainProduct && cart.mainProduct.id === 'ebook-doencas' && cart.bumps.length < 2;
+    const shouldShowPixUpsell = !window.bypassPixUpsell && (method === 'pix' || method === 'card') && cart.mainProduct && (cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite' || cart.mainProduct.id === 'ebook-doencas') && !cart.bumps.includes('ebook-manejo');
     
     console.log('[UPSELL DEBUG] shouldShowPixUpsell:', shouldShowPixUpsell);
 

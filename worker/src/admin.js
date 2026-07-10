@@ -319,18 +319,13 @@ adminRoutes.post('/verify-access', async (c) => {
                         return '';
                     }).join(' ');
                     
-                    if (titleStr.includes('doença') || titleStr.includes('doenca') || titleStr.includes('elite') || titleStr.includes('protocolo')) {
+                    if (titleStr.includes('doença') || titleStr.includes('doenca') || titleStr.includes('elite') || titleStr.includes('protocolo') || titleStr.includes('combo')) {
                         productsSet.add('ebook-doencas');
                     }
-                    if (titleStr.includes('manejo') || titleStr.includes('pintinho')) {
+                    if (titleStr.includes('manejo') || titleStr.includes('pintinho') || titleStr.includes('combo-elite')) {
                         productsSet.add('ebook-manejo');
                     }
-                    if (titleStr.includes('tabela') || titleStr.includes('ração') || titleStr.includes('racao') || titleStr.includes('bump')) {
-                        productsSet.add('tabela-racao');
-                    }
-                    if (titleStr.includes('combo')) {
-                        productsSet.add('ebook-doencas');
-                        productsSet.add('ebook-manejo');
+                    if (titleStr.includes('tabela') || titleStr.includes('ração') || titleStr.includes('racao') || titleStr.includes('bump') || titleStr.includes('combo')) {
                         productsSet.add('tabela-racao');
                     }
                 }
@@ -486,7 +481,7 @@ adminRoutes.post('/admin/search-user', async (c) => {
                     }).join(' ');
                     
                     if (titleStr.includes('doença') || titleStr.includes('doenca') || titleStr.includes('elite') || titleStr.includes('protocolo') || titleStr.includes('combo')) productsSet.add('ebook-doencas');
-                    if (titleStr.includes('manejo') || titleStr.includes('pintinho') || titleStr.includes('combo')) productsSet.add('ebook-manejo');
+                    if (titleStr.includes('manejo') || titleStr.includes('pintinho') || titleStr.includes('combo-elite')) productsSet.add('ebook-manejo');
                     if (titleStr.includes('tabela') || titleStr.includes('ração') || titleStr.includes('racao') || titleStr.includes('bump') || titleStr.includes('combo')) productsSet.add('tabela-racao');
                 }
             }
