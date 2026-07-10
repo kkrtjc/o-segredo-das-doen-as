@@ -684,6 +684,15 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             document.getElementById('checkout-product-price-display').innerText = 'R$ 89,90';
         }
 
+        const savingsBadgeEl = document.getElementById('checkout-savings-badge');
+        if (savingsBadgeEl) {
+            if (productId === 'combo-plataforma' || productId === 'combo-elite') {
+                savingsBadgeEl.style.display = 'inline-block';
+            } else {
+                savingsBadgeEl.style.display = 'none';
+            }
+        }
+
         const itemListEl = document.getElementById('checkout-item-list');
         if (itemListEl) {
             if (productId === 'combo-plataforma' || productId === 'combo-elite') {
