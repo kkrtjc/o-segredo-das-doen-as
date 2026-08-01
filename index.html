@@ -4858,6 +4858,12 @@
             #checkout-page .ck-product-card-pricing-box {
                 background: rgba(15, 23, 42, 0.6) !important;
                 border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                box-sizing: border-box !important;
+                width: 100% !important;
+                overflow: hidden !important;
+            }
+            #checkout-page .ck-product-info {
+                min-width: 0;
             }
 
             /* Payment Tabs (PIX / CARD / BOLETO) */
@@ -4928,11 +4934,13 @@
             /* Item list chips in pricing box */
             #checkout-page .ck-item-chip {
                 display: flex;
-                align-items: center;
+                align-items: baseline;
                 justify-content: space-between;
                 gap: 8px;
                 padding: 5px 0;
                 border-bottom: 1px solid rgba(255,255,255,0.05);
+                min-width: 0;
+                overflow: hidden;
             }
             #checkout-page .ck-item-chip:last-child {
                 border-bottom: none;
@@ -4942,10 +4950,9 @@
                 color: #cbd5e1;
                 flex: 1;
                 min-width: 0;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
                 font-weight: 500;
+                line-height: 1.35;
+                word-break: break-word;
             }
             #checkout-page .ck-item-chip-price {
                 font-size: 0.7rem;
@@ -4954,6 +4961,7 @@
                 white-space: nowrap;
                 flex-shrink: 0;
                 font-weight: 600;
+                margin-left: 4px;
             }
             /* Premium CTA button pulse */
             @keyframes ck-pulse {
@@ -5155,60 +5163,59 @@
 
                     <div class="ck-section">
 
-                        <div class="ck-product-card">
+                        <!-- Produto: Header (logo + titulo + subtitulo) -->
+                        <div class="ck-product-card" style="margin-bottom: 12px; padding-bottom: 12px;">
 
-                            <div class="ck-product-image" id="ck-product-cover" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; overflow: hidden;">
+                            <div class="ck-product-image" id="ck-product-cover" style="width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; overflow: hidden;">
                                 <img src="logo.webp" alt="Logo" style="width: 85%; height: 85%; object-fit: contain;">
                             </div>
 
-                            <div class="ck-product-info" style="flex: 1;">
-
-                                <h3 id="checkout-product-name" style="font-size: 1.05rem; font-weight: 800; color: #fff; margin-bottom: 2px;">Combo Completo Plataforma</h3>
-
-                                <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 6px; line-height: 1.35;">
+                            <div class="ck-product-info" style="flex: 1; min-width: 0;">
+                                <h3 id="checkout-product-name" style="font-size: 1rem; font-weight: 800; color: #fff; margin-bottom: 2px; line-height: 1.2;">Combo Completo Plataforma</h3>
+                                <p style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 0; line-height: 1.3;">
                                     Acesso Vitalicio + Atualizacoes<br>
                                     <span style="color: #10b981; font-weight: 700;">+ Tabela de vacinacao gratuita inclusa</span>
                                 </p>
+                            </div>
 
-                                <div class="ck-product-card-pricing-box" style="display: flex; flex-direction: column; gap: 4px; margin-top: 8px; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.08);">
-                                    
-                                    <!-- Struck-out list of what they are getting -->
-                                    <div id="checkout-item-list" style="border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 2px;">
-                                        <div class="ck-item-chip">
-                                            <span class="ck-item-chip-name">📋 Guia O Segredo das Doenças</span>
-                                            <span class="ck-item-chip-price">R$ 147,00</span>
-                                        </div>
-                                        <div class="ck-item-chip">
-                                            <span class="ck-item-chip-name">💉 Protocolo Vacinação e Vermifugação</span>
-                                            <span class="ck-item-chip-price">R$ 39,90</span>
-                                        </div>
-                                        <div class="ck-item-chip">
-                                            <span class="ck-item-chip-name">🌾 Tabela de Ração Completa</span>
-                                            <span class="ck-item-chip-price">R$ 29,90</span>
-                                        </div>
-                                        <div class="ck-item-chip">
-                                            <span class="ck-item-chip-name">🔄 Acesso Vitalício + Atualizações</span>
-                                            <span class="ck-item-chip-price">R$ 49,90</span>
-                                        </div>
-                                    </div>
+                        </div>
 
-                                    <div style="font-size: 0.8rem; color: #94a3b8; font-weight: 500;">De <span id="top-checkout-card-price" style="text-decoration: line-through; color: #ef4444; font-weight: bold;">R$ 266,70</span> por apenas:</div>
-                                    
-                                    <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 4px;">
-                                        <span id="checkout-product-price-display" style="font-size: 1.6rem; color: #10b981; font-weight: 900; line-height: 1.1;">R$ 109,90</span>
-                                        <span id="top-checkout-card-installment" style="font-size: 0.9rem; color: #cbd5e1; font-weight: 600;">ou 4x de R$ 27,47 sem juros</span>
-                                    </div>
-                                    
-                                    <div id="checkout-savings-badge" style="margin-top: 6px; display: inline-block;">
-                                        <span style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.72rem; font-weight: 900; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.25); text-transform: uppercase; letter-spacing: 0.5px;">💰 VOCÊ ECONOMIZA: R$ 146,80 (57% OFF)</span>
-                                    </div>
-                                    
-                                    <div style="font-size: 0.72rem; color: #fbbf24; margin-top: 6px; font-style: italic; border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 6px; font-weight: 600;">
-                                        Menos de 3 reais por dia para salvar suas galinhas.
-                                    </div>
-                                    
+                        <!-- Pricing Box: full-width, fora do flex row do card -->
+                        <div class="ck-product-card-pricing-box" style="display: flex; flex-direction: column; gap: 4px; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.08); box-sizing: border-box; width: 100%; overflow: hidden;">
+
+                            <!-- Lista de itens -->
+                            <div id="checkout-item-list" style="border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 2px;">
+                                <div class="ck-item-chip">
+                                    <span class="ck-item-chip-name">📋 Guia O Segredo das Doenças</span>
+                                    <span class="ck-item-chip-price">R$ 147,00</span>
                                 </div>
+                                <div class="ck-item-chip">
+                                    <span class="ck-item-chip-name">💉 Protocolo Vacinação e Vermifugação</span>
+                                    <span class="ck-item-chip-price">R$ 39,90</span>
+                                </div>
+                                <div class="ck-item-chip">
+                                    <span class="ck-item-chip-name">🌾 Tabela de Ração Completa</span>
+                                    <span class="ck-item-chip-price">R$ 29,90</span>
+                                </div>
+                                <div class="ck-item-chip">
+                                    <span class="ck-item-chip-name">🔄 Acesso Vitalício + Atualizações</span>
+                                    <span class="ck-item-chip-price">R$ 49,90</span>
+                                </div>
+                            </div>
 
+                            <div style="font-size: 0.78rem; color: #94a3b8; font-weight: 500;">De <span id="top-checkout-card-price" style="text-decoration: line-through; color: #ef4444; font-weight: bold;">R$ 266,70</span> por apenas:</div>
+
+                            <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 4px;">
+                                <span id="checkout-product-price-display" style="font-size: 1.6rem; color: #10b981; font-weight: 900; line-height: 1.1;">R$ 109,90</span>
+                                <span id="top-checkout-card-installment" style="font-size: 0.85rem; color: #cbd5e1; font-weight: 600;">ou 4x de R$ 27,47 sem juros</span>
+                            </div>
+
+                            <div id="checkout-savings-badge" style="margin-top: 6px; display: inline-block;">
+                                <span style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.72rem; font-weight: 900; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.25); text-transform: uppercase; letter-spacing: 0.5px;">💰 VOCÊ ECONOMIZA: R$ 146,80 (57% OFF)</span>
+                            </div>
+
+                            <div style="font-size: 0.72rem; color: #fbbf24; margin-top: 6px; font-style: italic; border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 6px; font-weight: 600;">
+                                Menos de 3 reais por dia para salvar suas galinhas.
                             </div>
 
                         </div>
