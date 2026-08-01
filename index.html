@@ -4793,8 +4793,15 @@
                 color: #10b981 !important;
             }
             #checkout-page .ck-social-proof-mobile-stack {
-                background: rgba(17, 24, 39, 0.5) !important;
-                border: 1px solid rgba(255, 255, 255, 0.06) !important;
+                background: rgba(17, 24, 39, 0.7) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                backdrop-filter: blur(8px) !important;
+            }
+            #checkout-page .ck-social-proof-mobile-stack strong {
+                color: #ffffff !important;
+            }
+            #checkout-page .ck-social-proof-mobile-stack div[style] {
+                color: #cbd5e1 !important;
             }
             #checkout-page .payment-method-btn {
                 background: rgba(17, 24, 39, 0.6) !important;
@@ -4894,24 +4901,89 @@
 
             /* Testimonial Boxes inside Checkout */
             #checkout-page .ck-testimonial-box {
-                background: rgba(255, 255, 255, 0.02) !important;
-                border: 1px solid rgba(255, 255, 255, 0.06) !important;
+                background: rgba(255, 255, 255, 0.03) !important;
+                border: 1px solid rgba(255, 255, 255, 0.07) !important;
                 border-left: 3px solid #10b981 !important;
-                padding: 14px !important;
-                border-radius: 12px !important;
+                padding: 12px !important;
+                border-radius: 10px !important;
             }
             #checkout-page .ck-testimonial-box p {
                 color: #cbd5e1 !important;
+                font-size: 0.78rem !important;
+                line-height: 1.45 !important;
             }
             #checkout-page .ck-testimonial-box .ck-testimonial-author {
                 color: #ffffff !important;
+                font-size: 0.78rem !important;
             }
             #checkout-page .ck-testimonial-box .ck-testimonial-author span {
                 color: #94a3b8 !important;
                 border-left-color: rgba(255, 255, 255, 0.15) !important;
+                font-size: 0.7rem !important;
             }
             #checkout-page .ck-proof-label {
                 color: #fbbf24 !important;
+                font-size: 0.78rem !important;
+            }
+            /* Item list chips in pricing box */
+            #checkout-page .ck-item-chip {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+                padding: 5px 0;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+            }
+            #checkout-page .ck-item-chip:last-child {
+                border-bottom: none;
+            }
+            #checkout-page .ck-item-chip-name {
+                font-size: 0.73rem;
+                color: #cbd5e1;
+                flex: 1;
+                min-width: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-weight: 500;
+            }
+            #checkout-page .ck-item-chip-price {
+                font-size: 0.7rem;
+                color: #ef4444;
+                text-decoration: line-through;
+                white-space: nowrap;
+                flex-shrink: 0;
+                font-weight: 600;
+            }
+            /* Premium CTA button pulse */
+            @keyframes ck-pulse {
+                0%   { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+                70%  { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+            }
+            #checkout-page .ck-btn-checkout {
+                animation: ck-pulse 2s infinite !important;
+                font-size: 1rem !important;
+                font-weight: 800 !important;
+                letter-spacing: 0.3px !important;
+                padding: 16px 24px !important;
+                border-radius: 14px !important;
+            }
+            /* Form labels and inputs – compactos */
+            #checkout-page .ck-form-group label {
+                font-size: 0.72rem !important;
+                font-weight: 600 !important;
+                letter-spacing: 0.3px !important;
+                text-transform: uppercase !important;
+                color: #94a3b8 !important;
+                margin-bottom: 4px !important;
+                display: block !important;
+            }
+            #checkout-page .form-input,
+            #checkout-page .ck-input {
+                font-size: 0.9rem !important;
+                padding: 10px 12px !important;
+                border-radius: 8px !important;
             }
 
             /* Card Input Area */
@@ -5101,22 +5173,22 @@
                                 <div class="ck-product-card-pricing-box" style="display: flex; flex-direction: column; gap: 4px; margin-top: 8px; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.08);">
                                     
                                     <!-- Struck-out list of what they are getting -->
-                                    <div id="checkout-item-list" style="font-size: 0.78rem; color: #cbd5e1; border-bottom: 1px dashed rgba(255, 255, 255, 0.1); padding-bottom: 8px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 4px;">
-                                        <div style="display: flex; justify-content: space-between;">
-                                            <span>📋 Guia O Segredo das Doenças</span>
-                                            <span style="text-decoration: line-through; color: #ef4444;">R$ 147,00</span>
+                                    <div id="checkout-item-list" style="border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 2px;">
+                                        <div class="ck-item-chip">
+                                            <span class="ck-item-chip-name">📋 Guia O Segredo das Doenças</span>
+                                            <span class="ck-item-chip-price">R$ 147,00</span>
                                         </div>
-                                        <div style="display: flex; justify-content: space-between;">
-                                            <span>💉 Protocolo de Vacinação e Vermifugação Completo</span>
-                                            <span style="text-decoration: line-through; color: #ef4444;">R$ 39,90</span>
+                                        <div class="ck-item-chip">
+                                            <span class="ck-item-chip-name">💉 Protocolo Vacinação e Vermifugação</span>
+                                            <span class="ck-item-chip-price">R$ 39,90</span>
                                         </div>
-                                        <div style="display: flex; justify-content: space-between;">
-                                            <span>🌾 Tabela de Ração Completa</span>
-                                            <span style="text-decoration: line-through; color: #ef4444;">R$ 29,90</span>
+                                        <div class="ck-item-chip">
+                                            <span class="ck-item-chip-name">🌾 Tabela de Ração Completa</span>
+                                            <span class="ck-item-chip-price">R$ 29,90</span>
                                         </div>
-                                        <div style="display: flex; justify-content: space-between;">
-                                            <span>🔄 Acesso Vitalício + Atualizações</span>
-                                            <span style="text-decoration: line-through; color: #ef4444;">R$ 49,90</span>
+                                        <div class="ck-item-chip">
+                                            <span class="ck-item-chip-name">🔄 Acesso Vitalício + Atualizações</span>
+                                            <span class="ck-item-chip-price">R$ 49,90</span>
                                         </div>
                                     </div>
 
@@ -5145,50 +5217,28 @@
 
                         <!-- Prova Social Premium (Estilo Hero) -->
 
-                        <div class="ck-social-proof-mobile-stack" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; margin-top: 15px; margin-bottom: 5px; padding: 15px; background: #fff; border: 1px solid #f1f5f9; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); text-align: center;">
-
-                            <div class="avatar-stack" style="display: flex; flex-shrink: 0; justify-content: center;">
-
-                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #ddd; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
-
+                        <div class="ck-social-proof-mobile-stack" style="display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin-top: 14px; margin-bottom: 5px; padding: 12px 14px; border-radius: 12px; text-align: left;">
+                            <div class="avatar-stack" style="display: flex; flex-shrink: 0;">
+                                <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; margin-right: -12px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
                                     <img src="carrosel/carlos.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
-
                                 </div>
-
-                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #ccc; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
-
+                                <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; margin-right: -12px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
                                     <img src="carrosel/maria.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
-
                                 </div>
-
-                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #bbb; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
-
+                                <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; margin-right: -12px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
                                     <img src="carrosel/joao_new.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
-
                                 </div>
-
-                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #aaa; overflow: hidden; margin-right: -15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
-
+                                <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; margin-right: -12px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
                                     <img src="carrosel/ana.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
-
                                 </div>
-
-                                <div style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid #fff; background: #999; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
-
+                                <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
                                     <img src="carrosel/lucas.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
-
                                 </div>
-
                             </div>
-
-                            <div style="font-size: 0.8rem; color: #475569; line-height: 1.4; max-width: 320px;">
-
-                                <strong style="color: #0f172a; display: block; margin-bottom: 4px; font-size: 0.9rem;">Mais de 1600 usuários já estão salvando suas aves.</strong>
-
-                                Chegou a sua vez, nao perca essa oportunidade por tempo limitado.
-
+                            <div style="flex: 1; min-width: 0;">
+                                <strong style="color: #ffffff; display: block; margin-bottom: 2px; font-size: 0.78rem; font-weight: 800; line-height: 1.3;">+1.600 criadores já salvando suas aves 🐔</strong>
+                                <span style="color: #94a3b8; font-size: 0.7rem; font-weight: 500; line-height: 1.3; display: block;">Não perca essa oferta por tempo limitado.</span>
                             </div>
-
                         </div>
 
                             <!-- Garantia -->
@@ -5533,17 +5583,11 @@
 
 
 
-                                    <button type="button" id="btn-pay-pix" class="ck-btn-checkout">Finalizar meu
+                                    <button type="button" id="btn-pay-pix" class="ck-btn-checkout" style="width: 100%; margin-top: 12px;">🔒 GARANTIR MEU ACESSO AGORA</button>
 
-                                        acesso.</button>
+                                    <button type="button" id="btn-pay-card" class="ck-btn-checkout" style="display: none; width: 100%; margin-top: 12px;">🔒 FINALIZAR PAGAMENTO</button>
 
-                                    <button type="button" id="btn-pay-card" class="ck-btn-checkout"
-
-                                        style="display: none;">FINALIZAR PAGAMENTO</button>
-
-                                    <button type="button" id="btn-pay-boleto" class="ck-btn-checkout"
-
-                                        style="display: none;">GERAR BOLETO</button>
+                                    <button type="button" id="btn-pay-boleto" class="ck-btn-checkout" style="display: none; width: 100%; margin-top: 12px;">📄 GERAR BOLETO BANCÁRIO</button>
 
                                 </div>
 
@@ -5563,72 +5607,41 @@
 
                         <div class="ck-social-proof">
 
-                            <p class="ck-proof-label" style="text-align: center; font-weight: 800; color: #1e293b; font-size: 0.95rem; margin-bottom: 12px; text-transform: uppercase;">O que dizem os alunos</p>
+                            <p class="ck-proof-label" style="text-align: center; font-weight: 800; font-size: 0.72rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">⭐ O que dizem os alunos</p>
 
 
 
-                            <div class="ck-testimonial-box" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; margin-bottom: 15px;">
-
-                                <img src="carrosel/pedro.webp" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; flex-shrink: 0;" alt="Marcos" loading="lazy">
-
+                            <div class="ck-testimonial-box" style="display: flex; gap: 10px; align-items: flex-start; text-align: left; margin-bottom: 8px;">
+                                <img src="carrosel/pedro.webp" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0;" alt="Marcos" loading="lazy">
                                 <div>
-
-                                    <div style="color: #fbbf24; font-size: 0.65rem; margin-bottom: 2px;">
-
+                                    <div style="color: #fbbf24; font-size: 0.6rem; margin-bottom: 2px;">
                                         <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-
                                     </div>
-
-                                    <p style="margin: 0 0 6px 0; font-size: 0.85rem; color: #334155; line-height: 1.4;">"O material é excelente! Consegui curar 3 galos que já estavam no bico do corvo. Vale cada centavo."</p>
-
-                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; color: #0f172a; border-top: none; padding-top: 0; text-align: left;">Marcos Paulo <span style="font-weight: 400; color: #64748b; font-size: 0.75rem; border-left: 1px solid #cbd5e1; padding-left: 6px; margin-left: 6px;">Goiânia - GO</span></p>
-
+                                    <p style="margin: 0 0 4px 0; line-height: 1.4;">"Consegui curar 3 galos que já estavam no bico do corvo. Vale cada centavo."</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; border-top: none; padding-top: 0; text-align: left;">Marcos Paulo <span style="font-weight: 400; border-left: 1px solid rgba(255,255,255,0.12); padding-left: 6px; margin-left: 6px;">Goiânia - GO</span></p>
                                 </div>
-
                             </div>
 
-
-
-                            <div class="ck-testimonial-box" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; margin-bottom: 15px;">
-
-                                <img src="carrosel/fernanda.webp" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; flex-shrink: 0;" alt="Ricardo" loading="lazy">
-
+                            <div class="ck-testimonial-box" style="display: flex; gap: 10px; align-items: flex-start; text-align: left; margin-bottom: 8px;">
+                                <img src="carrosel/fernanda.webp" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0;" alt="Silvia" loading="lazy">
                                 <div>
-
-                                    <div style="color: #fbbf24; font-size: 0.65rem; margin-bottom: 2px;">
-
+                                    <div style="color: #fbbf24; font-size: 0.6rem; margin-bottom: 2px;">
                                         <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-
                                     </div>
-
-                                    <p style="margin: 0 0 6px 0; font-size: 0.85rem; color: #334155; line-height: 1.4;">"Gastava uma fortuna em remédio e as galinhas continuavam morrendo. Descobri que tava errando no básico do manejo."</p>
-
-                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; color: #0f172a; border-top: none; padding-top: 0; text-align: left;">Silvia Lima <span style="font-weight: 400; color: #64748b; font-size: 0.75rem; border-left: 1px solid #cbd5e1; padding-left: 6px; margin-left: 6px;">Londrina - PR</span></p>
-
+                                    <p style="margin: 0 0 4px 0; line-height: 1.4;">"Gastava fortuna em remédio e as galinhas continuavam morrendo. Descobri que errava no básico."</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; border-top: none; padding-top: 0; text-align: left;">Silvia Lima <span style="font-weight: 400; border-left: 1px solid rgba(255,255,255,0.12); padding-left: 6px; margin-left: 6px;">Londrina - PR</span></p>
                                 </div>
-
                             </div>
 
-
-
-                            <div class="ck-testimonial-box" style="display: flex; gap: 12px; align-items: flex-start; text-align: left; margin-bottom: 15px;">
-
-                                <img src="carrosel/ricardo.webp" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; flex-shrink: 0;" alt="João" loading="lazy">
-
+                            <div class="ck-testimonial-box" style="display: flex; gap: 10px; align-items: flex-start; text-align: left; margin-bottom: 8px;">
+                                <img src="carrosel/ricardo.webp" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0;" alt="João" loading="lazy">
                                 <div>
-
-                                    <div style="color: #fbbf24; font-size: 0.65rem; margin-bottom: 2px;">
-
+                                    <div style="color: #fbbf24; font-size: 0.6rem; margin-bottom: 2px;">
                                         <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-
                                     </div>
-
-                                    <p style="margin: 0 0 6px 0; font-size: 0.85rem; color: #334155; line-height: 1.4;">"Entrega muito rápida. Paguei no PIX e em menos de 1 minuto o acesso chegou certinho no meu WhatsApp, recomendo!"</p>
-
-                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; color: #0f172a; border-top: none; padding-top: 0; text-align: left;">João Batista <span style="font-weight: 400; color: #64748b; font-size: 0.75rem; border-left: 1px solid #cbd5e1; padding-left: 6px; margin-left: 6px;">Campinas - SP</span></p>
-
+                                    <p style="margin: 0 0 4px 0; line-height: 1.4;">"Paguei no PIX e em menos de 1 minuto o acesso chegou no meu WhatsApp. Recomendo!"</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; border-top: none; padding-top: 0; text-align: left;">João Batista <span style="font-weight: 400; border-left: 1px solid rgba(255,255,255,0.12); padding-left: 6px; margin-left: 6px;">Campinas - SP</span></p>
                                 </div>
-
                             </div>
 
 
