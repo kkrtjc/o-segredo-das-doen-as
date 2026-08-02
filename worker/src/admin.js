@@ -304,6 +304,11 @@ adminRoutes.post('/verify-access', async (c) => {
                     if (saleEmail === cleanId) isMatch = true;
                 } else {
                     if (cleanNum.length === 11 && saleCpf === cleanNum) isMatch = true;
+                    if (cleanNum.length >= 8 && salePhone.length >= 8) {
+                        if (salePhone.endsWith(cleanNum) || cleanNum.endsWith(salePhone)) {
+                            isMatch = true;
+                        }
+                    }
                 }
                 
                 if (isMatch) {
