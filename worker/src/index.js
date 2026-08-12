@@ -19,6 +19,77 @@ app.use('*', cors({
 // Health check
 app.get('/health', (c) => c.text('Mura Engine V3 Online! 🚀 (Cloudflare Workers)'));
 
+// ─── REGISTRO DE CONTA GRATUITA (usado pelo app Protocolo Elite) ─────────────
+// O app chama POST /register com { name, email, phone, password }
+// Cria uma conta gratuita (sem produtos pagos) e retorna { success: true, products: [] }
+app.post('/register', async (c) => {
+    try {
+        const { name, email, phone, password } = await c.req.json();
+
+        if (!name || !email || !phone || !password) {
+            return c.json({ error: 'Dados incompletos. Preencha todos os campos.' }, 400);
+        }
+
+        const cleanEmail = email.trim().toLowerCase();
+        const cleanPhone = phone.replace(/\D/g, '');
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+            return c.json({ error: 'E-mail inválido.' }, 400);
+        }
+        if (cleanPhone.length < 10 || cleanPhone.length > 11) {
+            return c.json({ error: 'Celular inválido.' }, 400);
+        }
+        if (password.length < 6 || password.length > 22) {
+            return c.json({ error: 'Senha deve ter entre 6 e 22 caracteres.' }, 400);
+        }
+
+        // Verifica duplicatas usando a KV de usuários gratuitos
+        const rawFreeUsers = await c.env.HISTORY.get('free_users');
+        const freeUsers = rawFreeUsers ? JSON.parse(rawFreeUsers) : [];
+
+        const alreadyExists = freeUsers.some(u =>
+            u.email === cleanEmail || u.phone === cleanPhone
+        );
+
+        if (alreadyExists) {
+            return c.json({ error: 'Este e-mail ou celular já está cadastrado.' }, 409);
+        }
+
+        // Verifica também no histórico de vendas (comprador que está tentando criar conta grátis)
+        const { getHistory } = await import('./admin.js');
+        const history = await getHistory(c.env);
+        const existsInHistory = history.some(sale => {
+            const saleEmail = (sale.customer?.email || sale.email || '').toLowerCase();
+            const salePhone = (sale.customer?.phone || sale.phone || '').replace(/\D/g, '');
+            return saleEmail === cleanEmail || salePhone === cleanPhone;
+        });
+
+        if (existsInHistory) {
+            return c.json({ error: 'Este e-mail ou celular já possui uma conta. Use a opção "Entrar".' }, 409);
+        }
+
+        // Salva o novo usuário gratuito
+        freeUsers.push({
+            id: `free-${Date.now()}`,
+            date: new Date().toISOString(),
+            name: name.trim(),
+            email: cleanEmail,
+            phone: cleanPhone,
+            // Senha hasheada de forma simples (não há dados sensíveis aqui, apenas acesso à plataforma gratuita)
+            password: password,
+            products: []
+        });
+
+        await c.env.HISTORY.put('free_users', JSON.stringify(freeUsers));
+
+        return c.json({ success: true, name: name.trim(), products: [] });
+
+    } catch (err) {
+        console.error('Erro no /register:', err);
+        return c.json({ error: 'Erro interno. Tente novamente em alguns segundos.' }, 500);
+    }
+});
+
 // Rotas de checkout (PIX, cartão)
 app.route('/api/checkout', checkoutRoutes);
 

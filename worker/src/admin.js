@@ -284,6 +284,34 @@ adminRoutes.post('/verify-access', async (c) => {
             });
         }
 
+        // ─── VERIFICA USUÁRIOS GRATUITOS (conta criada via /register) ───
+        try {
+            const rawFreeUsers = await c.env.HISTORY.get('free_users');
+            if (rawFreeUsers) {
+                const freeUsers = JSON.parse(rawFreeUsers);
+                const freeUser = freeUsers.find(u =>
+                    u.email === cleanId ||
+                    (u.phone && u.phone === cleanNum)
+                );
+                if (freeUser) {
+                    if (password && password !== freeUser.password) {
+                        return c.json({ found: true, error: 'Senha incorreta.' }, 401);
+                    }
+                    return c.json({
+                        found: true,
+                        isBlocked: false,
+                        name: freeUser.name,
+                        email: freeUser.email,
+                        phone: freeUser.phone,
+                        cpf: null,
+                        products: freeUser.products || []
+                    });
+                }
+            }
+        } catch (freeErr) {
+            console.error('Erro ao verificar usuários gratuitos:', freeErr);
+        }
+
         const history = await getHistory(c.env);
         let foundName = null;
         let foundEmail = null;
