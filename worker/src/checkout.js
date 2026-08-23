@@ -283,7 +283,13 @@ checkoutRoutes.post('/card', async (c) => {
     } else if (result.status === 'in_process' || result.status === 'pending') {
         return c.json({ status: result.status, status_detail: result.status_detail, id: result.id });
     } else {
-        return c.json({ status: result.status, status_detail: result.status_detail }, 400);
+        const errorMsg = getFriendlyError(result);
+        return c.json({ 
+            status: result.status || 'rejected', 
+            status_detail: result.status_detail || errorMsg, 
+            error: errorMsg,
+            message: result.message || errorMsg
+        }, 400);
     }
 });
 
