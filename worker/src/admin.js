@@ -290,8 +290,7 @@ adminRoutes.post('/verify-access', async (c) => {
             if (rawFreeUsers) {
                 const freeUsers = JSON.parse(rawFreeUsers);
                 const freeUser = freeUsers.find(u =>
-                    u.email === cleanId ||
-                    (u.phone && u.phone === cleanNum)
+                    u.email === cleanId
                 );
                 if (freeUser) {
                     if (password && password !== freeUser.password) {
@@ -332,11 +331,6 @@ adminRoutes.post('/verify-access', async (c) => {
                     if (saleEmail === cleanId) isMatch = true;
                 } else {
                     if (cleanNum.length === 11 && saleCpf === cleanNum) isMatch = true;
-                    if (cleanNum.length >= 8 && salePhone.length >= 8) {
-                        if (salePhone.endsWith(cleanNum) || cleanNum.endsWith(salePhone)) {
-                            isMatch = true;
-                        }
-                    }
                 }
                 
                 if (isMatch) {
@@ -437,11 +431,6 @@ adminRoutes.post('/change-password', async (c) => {
                         if (saleEmail === cleanId) isMatch = true;
                     } else {
                         if (cleanNum.length === 11 && saleCpf === cleanNum) isMatch = true;
-                        if (cleanNum.length >= 8 && salePhone.length >= 8) {
-                            if (salePhone.endsWith(cleanNum) || cleanNum.endsWith(salePhone)) {
-                                isMatch = true;
-                            }
-                        }
                     }
                     if (isMatch && saleCpf) {
                         foundCpf = saleCpf;
