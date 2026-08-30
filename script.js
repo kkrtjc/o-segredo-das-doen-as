@@ -564,15 +564,15 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         },
         'combo-plataforma': {
             title: 'Combo Completo Plataforma',
-            price: 109.90,
-            originalPrice: 266.70,
+            price: 89.90,
+            originalPrice: 256.70,
             cover: 'combo',
             fullBumps: []
         },
         'combo-elite': {
             title: 'Combo Completo Plataforma',
-            price: 109.90,
-            originalPrice: 266.70,
+            price: 89.90,
+            originalPrice: 256.70,
             cover: 'combo',
             fullBumps: []
         }
@@ -671,9 +671,9 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         const topCardInstEl = document.getElementById('top-checkout-card-installment');
         
         if (productId === 'combo-plataforma' || productId === 'combo-elite') {
-            if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 266,70';
-            if (topCardInstEl) topCardInstEl.innerHTML = `ou 4x de R$ 27,47 sem juros`;
-            document.getElementById('checkout-product-price-display').innerText = 'R$ 109,90';
+            if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 256,70';
+            if (topCardInstEl) topCardInstEl.innerHTML = `ou 4x de R$ 22,47 sem juros`;
+            document.getElementById('checkout-product-price-display').innerText = 'R$ 89,90';
         } else if (productId === 'ebook-pintinhos') {
             if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 99,00';
             if (topCardInstEl) topCardInstEl.innerHTML = `ou 4x de R$ 12,47 sem juros`;
@@ -1084,7 +1084,7 @@ async function renderHomeProducts() {
 
         // Calculando variáveis dinâmicas
         const discountPercent = Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100);
-        const installmentPrice = "27,47"; // Baseado no novo preço ancorado (109,90)
+        const installmentPrice = "22,47"; // Baseado no preço ancorado (89,90)
         const priceStr = p.price.toFixed(2).split('.');
         const priceInt = priceStr[0];
         const priceDec = priceStr[1];
@@ -1756,17 +1756,16 @@ async function handlePayment(method) {
             console.log("Resposta API:", result);
 
             if (result.status === 'approved') {
-                const totalVal = document.querySelector('.checkout-total-display').innerText.replace(/[^\d,]/g, '').replace(',', '.');
-                
-                // Purchase é disparado APENAS no downloads.html para evitar duplicação
-                // O eventID é passado via URL para deduplicação com o CAPI server-side
-                const evid = currentFacebookEventId || generateEventID();
-                const { fbc: purchFbc, fbp: purchFbp } = getMetaCookies();
+                const c = getCurrentCustomerData();
+                // Salva dados no sessionStorage para a página de obrigado
+                sessionStorage.setItem('obrigado_name', c.name || '');
+                sessionStorage.setItem('obrigado_email', c.email || '');
+                sessionStorage.setItem('obrigado_cpf', c.cpf || '');
+                sessionStorage.setItem('obrigado_senha', result.senha || '');
+                sessionStorage.setItem('obrigado_method', 'cartao');
 
-                // Timeout para garantir que AddPaymentInfo dispare antes de sair da página
                 setTimeout(() => {
-                    const c = getCurrentCustomerData();
-                    window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}&evid=${encodeURIComponent(evid)}&fbc=${encodeURIComponent(purchFbc)}&fbp=${encodeURIComponent(purchFbp)}&email=${encodeURIComponent(c.email||'')}&name=${encodeURIComponent(c.name||'')}&cpf=${encodeURIComponent(c.cpf||'')}&phone=${encodeURIComponent(c.phone||'')}`;
+                    window.location.href = 'obrigado.html';
                 }, 1500);
             } else if (result.status === 'in_process' || result.status === 'pending') {
                 // NOVO: Pagamento em análise - Tela Profissional
@@ -2269,17 +2268,16 @@ function showPixResult(data, items) {
                     });
                 } catch(e) { /* Silencioso — não bloqueia o redirect */ }
 
-                const totalVal = document.querySelector('.checkout-total-display').innerText.replace(/[^\d,]/g, '').replace(',', '.');
+                // Salva dados no sessionStorage para a página de obrigado
+                const cust = getCurrentCustomerData();
+                sessionStorage.setItem('obrigado_name', cust.name || '');
+                sessionStorage.setItem('obrigado_email', cust.email || '');
+                sessionStorage.setItem('obrigado_cpf', cust.cpf || '');
+                sessionStorage.setItem('obrigado_senha', sd.senha || '');
+                sessionStorage.setItem('obrigado_method', 'pix');
 
-                // Purchase é disparado APENAS no downloads.html para evitar duplicação
-                // O eventID é passado via URL para deduplicação com o CAPI server-side
-                const evid = currentFacebookEventId || generateEventID();
-                const { fbc: pixFbc, fbp: pixFbp } = getMetaCookies();
-
-                // Timeout mais longo para garantir que o navegador processe tudo
                 setTimeout(() => {
-                    const cust = getCurrentCustomerData();
-                    window.location.href = `downloads.html?items=${items.map(i => i.id).join(',')}&total=${totalVal}&evid=${encodeURIComponent(evid)}&fbc=${encodeURIComponent(pixFbc)}&fbp=${encodeURIComponent(pixFbp)}&email=${encodeURIComponent(cust.email||'')}&name=${encodeURIComponent(cust.name||'')}&cpf=${encodeURIComponent(cust.cpf||'')}&phone=${encodeURIComponent(cust.phone||'')}`;
+                    window.location.href = 'obrigado.html';
                 }, 1500);
             } else {
                 // If not approved yet, schedule next poll

@@ -14,6 +14,28 @@ export const checkoutRoutes = new Hono();
 
 const MP_API = 'https://api.mercadopago.com/v1/payments';
 
+// Gera uma senha aleatória segura de 8 caracteres para novos clientes
+function generatePassword() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+    let pwd = '';
+    const arr = new Uint8Array(8);
+    crypto.getRandomValues(arr);
+    arr.forEach(b => { pwd += chars[b % chars.length]; });
+    return pwd;
+}
+
+// Salva a senha na KV e retorna ela
+async function saveAndGetPassword(env, cleanCPF) {
+    const key = 'pw_' + cleanCPF;
+    // Só gera nova senha se não existir ainda (preserva senha de clientes antigos)
+    let existing = await env.HISTORY.get(key);
+    if (!existing) {
+        existing = generatePassword();
+        await env.HISTORY.put(key, existing);
+    }
+    return existing;
+}
+
 // Mapeia erros técnicos do MP para mensagens amigáveis
 function getFriendlyError(error) {
     const causeMap = {
@@ -268,18 +290,21 @@ checkoutRoutes.post('/card', async (c) => {
         const lockKey = `lock_${result.id}`;
         const isLocked = await c.env.HISTORY.get(lockKey);
         
+        // Gera/recupera senha do cliente
+        const senha = await saveAndGetPassword(c.env, cleanCPF);
+
         if (!isLocked) {
             // Aplica o lock imediatamente
             await c.env.HISTORY.put(lockKey, 'locked', { expirationTtl: 7200 });
             
             const isNewSale = await logSale(c.env, customer, items, result.id, 'cartão', site || 'app');
             if (isNewSale) {
-                await sendEmail(c.env, customer, items, result.id, facebookEventId, fbc, fbp, userAgent, clientIp, site || 'app', externalId); 
+                await sendEmail(c.env, customer, items, result.id, facebookEventId, fbc, fbp, userAgent, clientIp, site || 'app', externalId, senha); 
             }
         }
         
         const dlToken = await generateDownloadToken(customer.email, items, result.id, c.env);
-        return c.json({ status: 'approved', id: result.id, redirectToken: dlToken });
+        return c.json({ status: 'approved', id: result.id, redirectToken: dlToken, senha });
     } else if (result.status === 'in_process' || result.status === 'pending') {
         return c.json({ status: result.status, status_detail: result.status_detail, id: result.id });
     } else {
@@ -303,16 +328,20 @@ checkoutRoutes.get('/payment/:id', async (c) => {
 
     if (result.status === 'approved') {
         const metadata = result.metadata || {};
+        const cleanCPF = (metadata.customer_cpf || result.payer?.identification?.number || '').replace(/\D/g, '');
         const customer = {
             name: metadata.customer_name || `${result.payer?.first_name || ''} ${result.payer?.last_name || ''}`.trim() || 'Cliente',
             email: metadata.customer_email || result.payer?.email || 'galosmurabrasill@gmail.com',
             phone: metadata.customer_phone || 'Sem Telefone',
-            cpf: metadata.customer_cpf || result.payer?.identification?.number || 'Sem CPF',
+            cpf: cleanCPF || 'Sem CPF',
         };
         const itemTitles = (result.description || 'Produto').split(', ');
         const items = itemTitles.map(title => ({ title, price: result.transaction_amount / itemTitles.length }));
         const isNewSale = await logSale(c.env, customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão', metadata.site || 'app');
         
+        // Gera/recupera senha do cliente
+        const senha = cleanCPF ? await saveAndGetPassword(c.env, cleanCPF) : null;
+
             if (isNewSale) {
                 const clientIpStatus = c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For')?.split(',')[0]?.trim();
                 await sendEmail(c.env, customer, items, result.id, 
@@ -322,12 +351,13 @@ checkoutRoutes.get('/payment/:id', async (c) => {
                     metadata.user_agent,
                     clientIpStatus,
                     metadata.site || 'app',
-                    metadata.external_id
+                    metadata.external_id,
+                    senha
                 ); 
             }
         
         const token = await generateDownloadToken(customer.email, items, result.id, c.env);
-        return c.json({ id: result.id, status: result.status, redirectToken: token });
+        return c.json({ id: result.id, status: result.status, redirectToken: token, senha });
     }
 
     return c.json({ id: result.id, status: result.status, status_detail: result.status_detail });

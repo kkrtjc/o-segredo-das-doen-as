@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Compra Confirmada - Protocolo Elite</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{background:#0a0a0a;font-family:'Inter',sans-serif;color:#fff;min-height:100vh;display:flex;flex-direction:column}
+        .header{background:linear-gradient(135deg,#000,#111);border-bottom:2px solid #D4AF37;padding:16px 24px;text-align:center}
+        .header img{height:52px;border-radius:8px}
+        .header h1{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:#D4AF37;margin-top:6px;letter-spacing:1px;text-transform:uppercase}
+        main{flex:1;max-width:700px;margin:0 auto;padding:32px 20px 60px;width:100%}
+        .success-badge{display:flex;align-items:center;justify-content:center;gap:10px;background:rgba(16,185,129,0.12);border:1.5px solid rgba(16,185,129,0.3);border-radius:50px;padding:10px 24px;margin:0 auto 28px;width:fit-content}
+        .success-badge i{color:#10b981;font-size:1.1rem}
+        .success-badge span{font-size:.9rem;font-weight:700;color:#10b981;text-transform:uppercase;letter-spacing:1px}
+        .headline{text-align:center;margin-bottom:32px}
+        .headline h2{font-family:'Outfit',sans-serif;font-size:clamp(1.7rem,5vw,2.4rem);font-weight:900;line-height:1.15;margin-bottom:10px}
+        .headline h2 .gold{color:#D4AF37}
+        .headline p{font-size:1rem;color:#94a3b8;line-height:1.6}
+        .video-wrapper{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:12px;margin-bottom:28px;box-shadow:0 20px 40px rgba(0,0,0,0.4)}
+        .video-wrapper video{width:100%;border-radius:12px;display:block;background:#000}
+        .video-label{text-align:center;margin-top:10px;font-size:.8rem;color:#94a3b8;font-weight:500}
+        .video-label i{color:#D4AF37;margin-right:4px}
+        .access-card{background:linear-gradient(145deg,#0f172a,#1e293b);border:2px solid #D4AF37;border-radius:24px;padding:28px 24px;margin-bottom:24px;box-shadow:0 20px 50px rgba(212,175,55,0.12)}
+        .access-card h3{font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:900;text-align:center;margin-bottom:20px;color:#D4AF37;text-transform:uppercase;letter-spacing:.5px}
+        .credential-row{display:flex;flex-direction:column;gap:14px}
+        .credential-item{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 18px}
+        .credential-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#94a3b8;margin-bottom:4px}
+        .credential-value{font-size:1.3rem;font-weight:900;color:#fff;letter-spacing:1px;font-family:'Outfit',sans-serif}
+        .credential-item.senha-item{border-color:rgba(212,175,55,0.3);background:rgba(212,175,55,0.05)}
+        .credential-item.senha-item .credential-value{color:#D4AF37;font-size:1.6rem;letter-spacing:4px}
+        .save-warning{display:flex;align-items:flex-start;gap:10px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:12px 14px;margin-top:16px}
+        .save-warning i{color:#ef4444;margin-top:2px;flex-shrink:0}
+        .save-warning p{font-size:.82rem;color:#fca5a5;line-height:1.5}
+        .btn-access{display:block;width:100%;background:linear-gradient(135deg,#FFD700,#D4AF37);color:#000;font-family:'Outfit',sans-serif;font-size:1.15rem;font-weight:900;text-align:center;text-decoration:none;padding:20px 28px;border-radius:18px;border:none;cursor:pointer;box-shadow:0 10px 30px rgba(212,175,55,0.35);transition:transform .15s ease,box-shadow .15s ease;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+        .btn-access:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(212,175,55,0.5)}
+        .access-note{text-align:center;font-size:.8rem;color:#94a3b8;margin-bottom:32px}
+        .steps-title{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:800;color:#fff;margin-bottom:14px;text-transform:uppercase;letter-spacing:.5px}
+        .steps-list{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+        .step-item{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px 14px}
+        .step-num{width:28px;height:28px;border-radius:50%;background:rgba(212,175,55,0.15);color:#D4AF37;font-size:.85rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .step-text{font-size:.9rem;color:#cbd5e1;line-height:1.5}
+        .step-text strong{color:#fff}
+        .whatsapp-box{display:flex;align-items:center;gap:14px;background:rgba(37,211,102,0.07);border:1px solid rgba(37,211,102,0.2);border-radius:14px;padding:16px 18px}
+        .whatsapp-box i{font-size:1.6rem;color:#25D366;flex-shrink:0}
+        .whatsapp-box div p:first-child{font-weight:700;font-size:.9rem;margin-bottom:4px}
+        .whatsapp-box div p:last-child{font-size:.8rem;color:#94a3b8}
+        .whatsapp-box a{margin-left:auto;background:#25D366;color:#fff;font-weight:800;font-size:.82rem;text-decoration:none;padding:8px 14px;border-radius:8px;white-space:nowrap;flex-shrink:0}
+        footer{text-align:center;padding:20px;border-top:1px solid rgba(255,255,255,0.06);font-size:.75rem;color:#94a3b8}
+        @media(max-width:480px){.whatsapp-box{flex-wrap:wrap}.whatsapp-box a{margin-left:0;width:100%;text-align:center;padding:10px}}
+    </style>
+</head>
+<body>
+<div class="header">
+    <img src="logo.webp" alt="Protocolo Elite">
+    <h1>Protocolo Elite - A Cura das Aves</h1>
+</div>
+<main>
+    <div class="success-badge">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Pagamento Confirmado</span>
+    </div>
+    <div class="headline">
+        <h2>Parabens, <span class="gold" id="client-name">amigo</span>!<br>Seu acesso esta <span class="gold">liberado</span> &#127881;</h2>
+        <p>Assista ao video abaixo para saber como acessar seu material e comecar agora mesmo.</p>
+    </div>
+    <div class="video-wrapper">
+        <video controls playsinline preload="metadata" poster="video_cover_obrigado.webp" style="aspect-ratio:16/9;object-fit:contain">
+            <source src="obrigado_instrucao.mp4" type="video/mp4">
+        </video>
+        <p class="video-label"><i class="fa-solid fa-play"></i> Assista antes de acessar - sao menos de 2 minutos!</p>
+    </div>
+    <div class="access-card">
+        <h3>&#128273; Seus Dados de Acesso</h3>
+        <div class="credential-row">
+            <div class="credential-item">
+                <div class="credential-label">Login (CPF / E-mail / Celular)</div>
+                <div class="credential-value" id="display-login">-</div>
+            </div>
+            <div class="credential-item senha-item">
+                <div class="credential-label">&#128274; Sua Senha Exclusiva</div>
+                <div class="credential-value" id="display-senha">-</div>
+            </div>
+        </div>
+        <div class="save-warning">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <p>Salve esta senha agora! Ela tambem foi enviada para o seu e-mail cadastrado. Esta pagina sera limpa ao fechar o navegador.</p>
+        </div>
+    </div>
+    <a href="#" id="btn-access" class="btn-access">
+        <i class="fa-solid fa-rocket"></i> ACESSAR O PROTOCOLO ELITE AGORA
+    </a>
+    <p class="access-note">&#128274; Acesso seguro - seu CPF ou e-mail ja estara pre-preenchido</p>
+    <p class="steps-title">&#128203; Proximos Passos</p>
+    <div class="steps-list">
+        <div class="step-item"><div class="step-num">1</div><div class="step-text">Clique no botao acima para abrir a plataforma Protocolo Elite.</div></div>
+        <div class="step-item"><div class="step-num">2</div><div class="step-text">Faca login com seu <strong>CPF, e-mail ou celular</strong> e a <strong>senha exclusiva</strong> exibida acima.</div></div>
+        <div class="step-item"><div class="step-num">3</div><div class="step-text">Acesse o <strong>Guia das Doencas</strong>, a <strong>Tabela de Racao</strong> e todas as ferramentas da plataforma.</div></div>
+        <div class="step-item"><div class="step-num">4</div><div class="step-text">Verifique seu e-mail - enviamos todas as instrucoes de acesso para <strong id="display-email">seu e-mail</strong>.</div></div>
+    </div>
+    <div class="whatsapp-box">
+        <i class="fa-brands fa-whatsapp"></i>
+        <div><p>Precisa de ajuda?</p><p>Nossa equipe esta disponivel para te apoiar</p></div>
+        <a href="https://wa.me/5538999832950?text=Ol%C3%A1,%20acabei%20de%20comprar%20o%20Protocolo%20Elite%20e%20preciso%20de%20ajuda%20com%20o%20acesso" target="_blank">Falar agora</a>
+    </div>
+</main>
+<footer>&#169; 2026 Galos Mura Brasil - Todos os direitos reservados.</footer>
+<script>
+(function(){
+    var PROTOCOLO_URL='https://protocolo-elite.pages.dev';
+    var nome=sessionStorage.getItem('obrigado_name')||'';
+    var email=sessionStorage.getItem('obrigado_email')||'';
+    var cpf=sessionStorage.getItem('obrigado_cpf')||'';
+    var senha=sessionStorage.getItem('obrigado_senha')||'';
+    if(nome)document.getElementById('client-name').textContent=nome.split(' ')[0];
+    var loginEl=document.getElementById('display-login');
+    var cleanCPF=cpf.replace(/\D/g,'');
+    if(cleanCPF.length===11){loginEl.textContent=cleanCPF.slice(0,3)+'.'+cleanCPF.slice(3,6)+'.'+cleanCPF.slice(6,9)+'-'+cleanCPF.slice(9);}
+    else if(email){loginEl.textContent=email;}
+    else{loginEl.textContent='Seu CPF ou e-mail cadastrado';}
+    var senhaEl=document.getElementById('display-senha');
+    if(senha){senhaEl.textContent=senha;}
+    else{senhaEl.textContent='Verifique seu e-mail';senhaEl.style.fontSize='1rem';senhaEl.style.color='#94a3b8';}
+    if(email)document.getElementById('display-email').textContent=email;
+    var btn=document.getElementById('btn-access');
+    if(cleanCPF.length===11){btn.href=PROTOCOLO_URL+'/?cpf='+cleanCPF;}
+    else if(email){btn.href=PROTOCOLO_URL+'/?email='+encodeURIComponent(email);}
+    else{btn.href=PROTOCOLO_URL;}
+})();
+</script>
+</body>
+</html>

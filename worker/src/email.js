@@ -2,7 +2,7 @@ import { sendCAPIEvent } from './capi.js';
 
 // Envia os dados para o webhook do Make.com que disparará o e-mail via Gmail
 // E dispara o Purchase server-side via Meta CAPI para atribuição confiável (Desduplicado cirurgicamente)
-export async function sendEmail(env, customer, items, paymentId = null, facebookEventId = null, fbc = null, fbp = null, userAgent = null, clientIp = null, site = 'app', externalId = null) {
+export async function sendEmail(env, customer, items, paymentId = null, facebookEventId = null, fbc = null, fbp = null, userAgent = null, clientIp = null, site = 'app', externalId = null, senha = null) {
     try {
         // Validação rigorosa de e-mail para evitar erro no Make/Gmail
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -52,10 +52,14 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
     <p>Parabéns pela sua decisão. Seu pagamento foi confirmado e seu acesso ao <strong>Protocolo Elite</strong> está pronto.</p>
 
     <div class="cpf-box">
-      <div class="cpf-label">🔑 Seu Login de Acesso (CPF)</div>
+      <div class="cpf-label">🔑 Seu Login de Acesso</div>
       <div class="cpf-value">${cpfFormatted}</div>
-      <div class="cpf-label" style="margin-top: 10px;">🔒 Sua Senha Inicial (4 primeiros dígitos do seu CPF)</div>
-      <div class="cpf-value" style="font-size: 18px; color: #D4AF37;">${cleanCPF.slice(0, 4) || '1234'}</div>
+      <div class="cpf-label" style="margin-top: 6px; font-size: 11px; color: #888;">Você também pode entrar com seu e-mail ou celular</div>
+      <div style="margin-top: 14px; border-top: 1px solid #e5e7eb; padding-top: 12px;">
+        <div class="cpf-label">🔒 Sua Senha de Acesso</div>
+        <div class="cpf-value" style="font-size: 26px; color: #D4AF37; letter-spacing: 3px;">${senha || cleanCPF.slice(0, 4) || '1234'}</div>
+        <div class="cpf-label" style="margin-top: 4px; font-size: 11px;">Guarde esta senha com segurança</div>
+      </div>
     </div>
 
     <div style="text-align:center;margin:30px 0;">
@@ -67,7 +71,7 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
       <strong>📱 Como acessar:</strong><br>
       1. Clique no botão acima para abrir o aplicativo.<br>
       2. Faça login com seu CPF: <strong>${cpfFormatted}</strong> (ou com seu e-mail ou celular).<br>
-      3. Use a senha inicial (os 4 primeiros dígitos do seu CPF): <strong>${cleanCPF.slice(0, 4) || '1234'}</strong>.<br>
+      3. Use a sua senha: <strong>${senha || cleanCPF.slice(0, 4) || '1234'}</strong>.<br>
       4. Você pode alterar esta senha a qualquer momento nas configurações do aplicativo.
     </div>
 
@@ -88,7 +92,7 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
             to: customer.email,
             subject: '✅ Seu Acesso ao Protocolo Elite foi Liberado!',
             html: htmlContent,
-            text: `Olá ${customer.name},\n\nSeu pagamento foi confirmado! Seu acesso ao Protocolo Elite está liberado.\n\n🔑 Seu Login (CPF): ${cpfFormatted}\n🔒 Sua Senha Inicial (4 primeiros dígitos do seu CPF): ${cleanCPF.slice(0, 4) || '1234'}\n\nVocê também pode logar com seu e-mail ou celular usando a mesma senha.\n\nClique no link abaixo para acessar:\n${accessLink}\n\nSe precisar de ajuda, fale no WhatsApp:\nhttps://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20com%20meu%20acesso%20ao%20Protocolo%20Elite\n\nAtt,\nGalos Mura Brasil`,
+            text: `Olá ${customer.name},\n\nSeu pagamento foi confirmado! Seu acesso ao Protocolo Elite está liberado.\n\n🔑 Seu Login (CPF): ${cpfFormatted}\n🔒 Sua Senha de Acesso: ${senha || cleanCPF.slice(0, 4) || '1234'}\n\nVocê também pode logar com seu e-mail ou celular usando a mesma senha.\n\nClique no link abaixo para acessar:\n${accessLink}\n\nSe precisar de ajuda, fale no WhatsApp:\nhttps://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20com%20meu%20acesso%20ao%20Protocolo%20Elite\n\nAtt,\nGalos Mura Brasil`,
             download_link: accessLink,
             customer_name: customer.name || '',
             customer_cpf: cpfFormatted,
