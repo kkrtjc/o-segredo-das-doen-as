@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -112,24 +112,45 @@
 <script>
 (function(){
     var PROTOCOLO_URL='https://protocolo-elite.pages.dev';
-    var nome=sessionStorage.getItem('obrigado_name')||'';
-    var email=sessionStorage.getItem('obrigado_email')||'';
-    var cpf=sessionStorage.getItem('obrigado_cpf')||'';
-    var senha=sessionStorage.getItem('obrigado_senha')||'';
-    if(nome)document.getElementById('client-name').textContent=nome.split(' ')[0];
-    var loginEl=document.getElementById('display-login');
-    var cleanCPF=cpf.replace(/\D/g,'');
-    if(cleanCPF.length===11){loginEl.textContent=cleanCPF.slice(0,3)+'.'+cleanCPF.slice(3,6)+'.'+cleanCPF.slice(6,9)+'-'+cleanCPF.slice(9);}
-    else if(email){loginEl.textContent=email;}
-    else{loginEl.textContent='Seu CPF ou e-mail cadastrado';}
-    var senhaEl=document.getElementById('display-senha');
-    if(senha){senhaEl.textContent=senha;}
-    else{senhaEl.textContent='Verifique seu e-mail';senhaEl.style.fontSize='1rem';senhaEl.style.color='#94a3b8';}
-    if(email)document.getElementById('display-email').textContent=email;
-    var btn=document.getElementById('btn-access');
-    if(cleanCPF.length===11){btn.href=PROTOCOLO_URL+'/?cpf='+cleanCPF;}
-    else if(email){btn.href=PROTOCOLO_URL+'/?email='+encodeURIComponent(email);}
-    else{btn.href=PROTOCOLO_URL;}
+    var params = new URLSearchParams(window.location.search);
+    var nome = sessionStorage.getItem('obrigado_name') || params.get('name') || params.get('nome') || '';
+    var email = sessionStorage.getItem('obrigado_email') || params.get('email') || '';
+    var cpf = sessionStorage.getItem('obrigado_cpf') || params.get('cpf') || '';
+    var senha = sessionStorage.getItem('obrigado_senha') || params.get('senha') || params.get('password') || '';
+
+    if(nome) document.getElementById('client-name').textContent = nome.split(' ')[0];
+    
+    var loginEl = document.getElementById('display-login');
+    var cleanCPF = cpf.replace(/\D/g,'');
+    if(cleanCPF.length === 11){
+        loginEl.textContent = cleanCPF.slice(0,3)+'.'+cleanCPF.slice(3,6)+'.'+cleanCPF.slice(6,9)+'-'+cleanCPF.slice(9);
+    } else if(email){
+        loginEl.textContent = email;
+    } else {
+        loginEl.textContent = 'Seu CPF ou E-mail cadastrado';
+        loginEl.style.fontSize = '1.05rem';
+    }
+
+    var senhaEl = document.getElementById('display-senha');
+    if(senha){
+        senhaEl.textContent = senha;
+    } else {
+        senhaEl.textContent = 'Enviada para seu e-mail';
+        senhaEl.style.fontSize = '1.05rem';
+        senhaEl.style.color = '#fbbf24';
+        senhaEl.style.letterSpacing = '1px';
+    }
+
+    if(email) document.getElementById('display-email').textContent = email;
+
+    var btn = document.getElementById('btn-access');
+    if(cleanCPF.length === 11){
+        btn.href = PROTOCOLO_URL + '/?cpf=' + cleanCPF;
+    } else if(email){
+        btn.href = PROTOCOLO_URL + '/?email=' + encodeURIComponent(email);
+    } else {
+        btn.href = PROTOCOLO_URL;
+    }
 })();
 </script>
 </body>
