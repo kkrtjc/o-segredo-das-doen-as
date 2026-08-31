@@ -160,6 +160,7 @@ adminRoutes.get('/products/:id', async (c) => {
 
 // ─── HISTORY ─────────────────────────────────────────────────
 adminRoutes.get('/history', async (c) => {
+    c.header('Cache-Control', 'no-store');
     const pw = c.req.header('x-admin-password') || c.req.query('password');
     if (pw !== (c.env.ADMIN_PASSWORD || 'mura2026')) return c.json({ error: 'Acesso Negado' }, 401);
     return c.json(await getHistory(c.env));
@@ -187,6 +188,7 @@ adminRoutes.post('/history/resend-email', async (c) => {
 
 // ─── ANALYTICS ───────────────────────────────────────────────
 adminRoutes.get('/analytics', async (c) => {
+    c.header('Cache-Control', 'no-store');
     const analytics = await getAnalytics(c.env);
     const history = await getHistory(c.env);
     const approved = history.filter(h => h.total > 0);
