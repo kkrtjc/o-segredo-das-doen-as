@@ -348,22 +348,26 @@ adminRoutes.post('/verify-access', async (c) => {
                         return '';
                     }).join(' ');
                     
-                    if (titleStr.includes('doença') || titleStr.includes('doenca') || titleStr.includes('elite') || titleStr.includes('protocolo') || titleStr.includes('combo')) {
+                    // Compra principal (Protocolo Elite / Doenças) sempre inclui Doenças + Tabela de Ração
+                    if (titleStr.includes('doença') || titleStr.includes('doenca') || titleStr.includes('elite') || titleStr.includes('protocolo') || titleStr.includes('combo') || titleStr.includes('completo') || titleStr.includes('acesso')) {
                         productsSet.add('ebook-doencas');
+                        productsSet.add('tabela-racao');
                     }
+                    if (titleStr.includes('tabela') || titleStr.includes('ração') || titleStr.includes('racao') || titleStr.includes('bump')) {
+                        productsSet.add('tabela-racao');
+                    }
+                    // Manejo de Pintinhos apenas se comprou o upsell de pintinhos
                     if (titleStr.includes('manejo') || titleStr.includes('pintinho') || titleStr.includes('combo-elite')) {
                         productsSet.add('ebook-manejo');
-                    }
-                    if (titleStr.includes('tabela') || titleStr.includes('ração') || titleStr.includes('racao') || titleStr.includes('bump') || titleStr.includes('combo')) {
-                        productsSet.add('tabela-racao');
                     }
                 }
             }
         }
         
-        // Se encontrou a pessoa mas não identificou o produto (compras antigas), libera o principal
+        // Se encontrou a pessoa mas não identificou o produto (compras antigas), libera os dois produtos base
         if (foundName && productsSet.size === 0) {
             productsSet.add('ebook-doencas');
+            productsSet.add('tabela-racao');
         }
         
         // Verifica bloqueio
