@@ -916,8 +916,8 @@ function updateTotal() {
                 const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
                 if (isCombo) {
                     if (bump.id === 'ebook-manejo') {
-                        bumpPriceForPix = 49.90;
-                        bumpPriceForCard = 49.90;
+                        bumpPriceForPix = 40.00;
+                        bumpPriceForCard = 40.00;
                     }
                 } else {
                     if (bump.id === 'ebook-manejo' || bump.id === 'ebook-doencas') {
@@ -1315,21 +1315,34 @@ function setupPixUpsellModal() {
     const isScenario3 = cart.bumps.length === 1 && cart.bumps.includes('ebook-manejo');
 
     if (isCombo) {
-        // Custom Upsell: Offer Manual de Manejo de Pintinhos for R$ 49,90 (was R$ 89,90)
-        if (titleEl) titleEl.innerText = '⚠️ OPORTUNIDADE ÚNICA E EXCLUSIVA';
-        if (descEl) descEl.innerHTML = 'Você garantiu o acesso ao Protocolo Elite. Mas você sabia que <strong>80% dos pintinhos morrem antes dos 20 dias</strong> por erros simples de temperatura e manejo? Proteja a fase mais frágil de vida das suas aves com o <strong>Manual de Elite dos Pintinhos</strong>.';
-        if (priceEl) priceEl.innerHTML = '+ R$ 49,90';
-        if (subtextEl) subtextEl.innerText = 'OFERTA ÚNICA: DE R$ 89,90 POR APENAS R$ 49,90 NESTA TELA!';
+        // Custom Upsell: Offer Manual de Manejo de Pintinhos for + R$ 40,00 (was R$ 99,90) -> Total R$ 129,90
+        if (titleEl) titleEl.innerText = '⚠️ ESPERE! NÃO FINALIZE ANTES DE VER ISSO...';
+        if (descEl) descEl.innerHTML = 'Você garantiu a cura das suas aves adultas. Mas você sabia que <strong style="color: #f87171;">8 em cada 10 pintinhos morrem</strong> antes dos 20 dias por erros simples de calor e manejo?';
+        if (priceEl) priceEl.innerHTML = 'Por + R$ 40,00';
+        if (subtextEl) subtextEl.innerHTML = 'Leve tudo junto por apenas <strong style="color: #10b981; font-size: 1.12rem;">R$ 129,90</strong>';
         if (listEl) {
             listEl.innerHTML = `
-                <div style="margin-bottom: 5px;"><span style="color: #fbbf24; margin-right: 6px; font-weight: 900;">🐤</span> <b>Blindagem da Fase Crítica:</b> Como evitar mortes súbitas no pinteiro.</div>
-                <div style="margin-bottom: 5px;"><span style="color: #fbbf24; margin-right: 6px; font-weight: 900;">🌡️</span> <b>Controle de Temperatura:</b> Tabela térmica exata dia após dia.</div>
-                <div><span style="color: #fbbf24; margin-right: 6px; font-weight: 900;">🥛</span> <b>Nutrição e Soro Caseiro:</b> Fórmulas secretas que salvam vidas na primeira semana.</div>
+                <div style="margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px;">
+                    <span style="color: #10b981; font-weight: 900;">✓</span>
+                    <span><strong>Mortalidade Zero no Pinteiro:</strong> O manejo do 1º até o 90º dia.</span>
+                </div>
+                <div style="margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px;">
+                    <span style="color: #10b981; font-weight: 900;">✓</span>
+                    <span><strong>Tabela Térmica:</strong> O calor exato para não matar de frio nem calor.</span>
+                </div>
+                <div style="margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px;">
+                    <span style="color: #10b981; font-weight: 900;">✓</span>
+                    <span><strong>Ambiente ideal</strong> de criação dos seus pintinhos.</span>
+                </div>
+                <div style="display: flex; align-items: flex-start; gap: 6px;">
+                    <span style="color: #10b981; font-weight: 900;">✓</span>
+                    <span><strong>Reduza drasticamente as chances</strong> de seus pintinhos adoecerem com o melhor manejo.</span>
+                </div>
             `;
         }
-        if (rejectBtn) rejectBtn.innerText = 'Não, prefiro correr o risco de perder meus pintinhos';
-        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 89,90';
-        if (savingsEl) savingsEl.innerText = 'ECONOMIA DE R$ 40,00';
+        if (rejectBtn) rejectBtn.innerText = 'Não obrigado, prefiro arriscar o manejo dos pintinhos sozinho';
+        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 99,90';
+        if (savingsEl) savingsEl.innerText = '🔥 ECONOMIA DE R$ 59,90 NESTA TELA';
     } else if (isScenario2) {
         // Scenario 2: User chose only Tabela de Ração bump
         if (titleEl) titleEl.innerText = 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS + TABELA DE RAÇÃO';
@@ -1510,8 +1523,14 @@ async function handlePayment(method) {
             
             // --- PIX/CARD UPSELL RECAPTURE PRICE OVERRIDE ---
             if (window.acceptedPixUpsell && (method === 'pix' || method === 'card')) {
-                if (b.id === 'ebook-manejo' || b.id === 'ebook-doencas') bumpPrice = 40.10; // R$ 89.90 + 40.10 + 19.90 = R$ 149.90
-                if (b.id === 'bump-6361') bumpPrice = 19.90;
+                const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
+                if (isCombo) {
+                    if (b.id === 'ebook-manejo') bumpPrice = 40.00;
+                    if (b.id === 'bump-6361') bumpPrice = 0.00;
+                } else {
+                    if (b.id === 'ebook-manejo' || b.id === 'ebook-doencas') bumpPrice = 40.00;
+                    if (b.id === 'bump-6361') bumpPrice = 0.00;
+                }
             }
 
             items.push({ id: b.id, title: b.title, price: bumpPrice });

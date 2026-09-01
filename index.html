@@ -6468,124 +6468,128 @@
 
     <!-- PIX UPSELL RECAPTURE MODAL (FULLY SCROLLABLE & RESPONSIVE ON ALL MOBILE SCREENS) -->
 
-    <div id="pix-upsell-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999999; display: block; overflow-y: auto; padding: 20px 10px; backdrop-filter: blur(5px); -webkit-overflow-scrolling: touch; box-sizing: border-box;">
-
-        <div id="pix-upsell-modal-box" style="background: linear-gradient(145deg, #0b0f19, #1e293b); border: 2.5px solid #fbbf24; border-radius: 24px; padding: 25px 18px; max-width: 400px; width: 100%; margin: 15px auto; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.6); animation: fadeInUp 0.3s ease; position: relative; overflow: hidden; box-sizing: border-box;">
-
-            <div style="position: relative; z-index: 2;">
-
-                <div style="background: #fbbf24; color: #000000; font-size: 0.72rem; font-weight: 900; padding: 5px 16px; border-radius: 20px; display: inline-block; margin-bottom: 12px; letter-spacing: 1.5px; text-transform: uppercase; box-shadow: 0 4px 10px rgba(251,191,36,0.3);">⚠️ OFERTA ÚNICA</div>
-
-                <h3 id="pix-upsell-title" style="font-size: 1.25rem; font-weight: 900; color: #ffffff; margin-top: 0; line-height: 1.3; font-family: 'Outfit', sans-serif;">OPORTUNIDADE ÚNICA E EXCLUSIVA</h3>
-
-                <p id="pix-upsell-description" style="font-size: 0.88rem; color: #cbd5e1; margin: 12px 0; line-height: 1.45; font-weight: 500;">
-                    Você garantiu o acesso ao Protocolo Elite. Mas você sabia que <strong>80% dos pintinhos morrem antes dos 20 dias</strong> por erros simples de temperatura e manejo? Proteja a fase mais frágil de vida das suas aves com o <strong>Manual de Elite dos Pintinhos</strong>.
-                </p>
-
-
-
-                <div style="border: 2px dashed #22c55e; border-radius: 16px; padding: 24px 8px 18px; margin: 12px 0; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
-
-                    <!-- ASSETS OVERLAPPING 3D FAN STACK (FULLY VISIBLE & BRIGHTENED) -->
-
-                    <div style="position: absolute; inset: 0; z-index: 1; opacity: 1.0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
-
-                        <img src="capadospintinhos.webp" style="height: 72%; width: auto; transform: rotate(-8deg); margin-right: -45px; z-index: 1; filter: brightness(1.25) contrast(1.05) drop-shadow(0 4px 10px rgba(0,0,0,0.25));">
-
-                        <img src="capadasdoencas.webp" style="height: 80%; width: auto; transform: rotate(0deg); z-index: 3; filter: brightness(1.25) contrast(1.05) drop-shadow(0 6px 15px rgba(0,0,0,0.3));">
-
-                        <img src="tabela_racao_bump.webp" style="height: 72%; width: auto; transform: rotate(8deg); margin-left: -45px; z-index: 2; filter: brightness(1.25) contrast(1.05) drop-shadow(0 4px 10px rgba(0,0,0,0.25));">
-
-                    </div>
-
-
-
-                    <!-- TEXT OVERLAY WITH HIGH-CONTRAST OUTLINES & FROSTED GLASS BACKGROUND -->
-
-                    <div style="position: relative; z-index: 2; width: 92%; margin: 0 auto; text-align: center; padding: 18px 10px 14px; background: rgba(255, 255, 255, 0.22); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.35); box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
-
-                        <div style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: #fbbf24; color: #78350f; padding: 4px 14px; border-radius: 10px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.3); text-shadow: none; z-index: 10;">Oferta Especial</div>
-
-
-
-                        <p style="font-size: 1.2rem; color: #ffffff; font-weight: 900; margin: 0; line-height: 1.2; text-transform: uppercase; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 8px rgba(0,0,0,0.9);">
-
-                            POR APENAS <span id="pix-upsell-price-offer" style="color: #fbbf24; font-size: 1.55rem; display: block; margin-top: 5px; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 8px rgba(0,0,0,0.9);">R$ 139,90</span>
-
-                        </p>
-
-
-
-                        <p id="pix-upsell-subtext" style="font-size: 0.85rem; color: #ffffff; font-weight: 850; margin: 5px 0 6px 0; letter-spacing: 0.5px; text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 0 2px 4px rgba(0,0,0,0.9);">
-
-                            VOCÊ LEVA TODOS OS MATERIAIS
-
-                        </p>
-
-
-
-                        <!-- DYNAMIC LIST OF BUMPS/EBOOKS -->
-
-                        <div id="pix-upsell-list" style="text-align: left; display: inline-block; font-size: 0.78rem; color: #ffffff; font-weight: 850; margin: 0px 0 10px 0; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; line-height: 1.45; font-family: 'Inter', sans-serif;">
-
-                            <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças</div>
-
-                            <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Ebook dos Pintinhos</div>
-
-                            <div><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">✓</span> Tabela de Ração <span style="background: #fbbf24; color: #78350f; font-size: 0.65rem; padding: 1px 4px; border-radius: 4px; font-weight: 900; margin-left: 2px; text-shadow: none; display: inline-block; line-height: 1;">GRATUITA</span></div>
-
-                        </div>
-
-
-
-                        <div style="border-top: 1px solid rgba(255,255,255,0.4); padding-top: 8px; margin-top: 5px; display: inline-block; width: 90%;">
-
-                            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
-
-                                <span id="pix-upsell-original-price" style="text-decoration: line-through; -webkit-text-decoration-color: #000000; text-decoration-color: #000000; color: #ffffff; font-weight: 900; text-shadow: -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000, 0 2px 4px rgba(0,0,0,0.9); font-size: 0.95rem;">De R$ 265,90</span>
-
-                                <span id="pix-upsell-savings" style="background: #fbbf24; color: #78350f; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 900; box-shadow: 0 2px 6px rgba(0,0,0,0.3); text-shadow: none; display: inline-block;">ECONOMIA DE R$ 126,10</span>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
+    <!-- PIX UPSELL RECAPTURE MODAL (100% RESPONSIVE ON ALL MOBILE & DESKTOP SCREENS) -->
+    <div id="pix-upsell-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 999999; display: flex; align-items: center; justify-content: center; overflow-y: auto; padding: max(16px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); -webkit-overflow-scrolling: touch; box-sizing: border-box;">
+        <div id="pix-upsell-modal-box" style="background: linear-gradient(165deg, #0b1120 0%, #1e293b 100%); border: 2px solid #f59e0b; border-radius: 20px; padding: 20px 15px; max-width: 430px; width: 100%; margin: auto; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.85); animation: fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: relative; box-sizing: border-box;">
+            
+            <!-- Badge Superior -->
+            <div style="background: linear-gradient(90deg, #ef4444, #dc2626); color: #ffffff; font-size: 0.72rem; font-weight: 900; padding: 4px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 10px; letter-spacing: 0.8px; text-transform: uppercase; box-shadow: 0 4px 12px rgba(239,68,68,0.35);">
+                <span>⚡</span> OFERTA ÚNICA DE BALCÃO
             </div>
 
+            <!-- Título Principal -->
+            <h3 id="pix-upsell-title" class="upsell-responsive-title" style="font-size: 1.2rem; font-weight: 900; color: #ffffff; margin: 0 0 8px 0; line-height: 1.25; font-family: 'Outfit', sans-serif; letter-spacing: -0.3px;">
+                ⚠️ ESPERE! NÃO FINALIZE ANTES DE VER ISSO...
+            </h3>
 
+            <!-- Texto de Gancho / Dor -->
+            <p id="pix-upsell-description" style="font-size: 0.84rem; color: #cbd5e1; margin: 0 0 12px 0; line-height: 1.45; font-weight: 500;">
+                Você garantiu a cura das suas aves adultas. Mas você sabia que <strong style="color: #f87171;">8 em cada 10 pintinhos morrem</strong> antes dos 20 dias por erros simples de calor e manejo?
+            </p>
 
-            <p style="font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase; margin: 8px 0 0 0;"><i class="fa-solid fa-clock" style="color: #ef4444; margin-right: 4px;"></i> Promoção válida por tempo indeterminado</p>
+            <!-- Card Central do Produto -->
+            <div style="background: rgba(15, 23, 42, 0.85); border: 1.5px solid rgba(245, 158, 11, 0.35); border-radius: 14px; padding: 12px 10px; margin-bottom: 12px; text-align: left;">
+                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+                    <img src="capadospintinhos.webp" alt="Manual de Pintinhos" class="upsell-responsive-img" style="width: 66px; height: auto; border-radius: 8px; box-shadow: 0 6px 15px rgba(0,0,0,0.5); flex-shrink: 0;">
+                    <div style="min-width: 0; flex: 1;">
+                        <div style="color: #f59e0b; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Manual Completo</div>
+                        <h4 style="color: #ffffff; font-size: 0.94rem; font-weight: 800; margin: 2px 0 4px 0; line-height: 1.2; word-break: break-word;">Manejo de Elite dos Pintinhos</h4>
+                        <div style="display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap;">
+                            <span id="pix-upsell-original-price" style="color: #94a3b8; font-size: 0.78rem; text-decoration: line-through;">De R$ 99,90</span>
+                            <span id="pix-upsell-price-offer" style="color: #10b981; font-size: 1.12rem; font-weight: 900;">Por + R$ 40,00</span>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Lista de Benefícios Chave -->
+                <div id="pix-upsell-list" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px; font-size: 0.78rem; color: #e2e8f0; line-height: 1.45;">
+                    <div style="margin-bottom: 5px; display: flex; align-items: flex-start; gap: 6px;">
+                        <span style="color: #10b981; font-weight: 900; line-height: 1.2;">✓</span>
+                        <span><strong>Mortalidade Zero no Pinteiro:</strong> O manejo do 1º até o 90º dia.</span>
+                    </div>
+                    <div style="margin-bottom: 5px; display: flex; align-items: flex-start; gap: 6px;">
+                        <span style="color: #10b981; font-weight: 900; line-height: 1.2;">✓</span>
+                        <span><strong>Tabela Térmica:</strong> O calor exato para não matar de frio nem calor.</span>
+                    </div>
+                    <div style="margin-bottom: 5px; display: flex; align-items: flex-start; gap: 6px;">
+                        <span style="color: #10b981; font-weight: 900; line-height: 1.2;">✓</span>
+                        <span><strong>Ambiente ideal</strong> de criação dos seus pintinhos.</span>
+                    </div>
+                    <div style="display: flex; align-items: flex-start; gap: 6px;">
+                        <span style="color: #10b981; font-weight: 900; line-height: 1.2;">✓</span>
+                        <span><strong>Reduza drasticamente as chances</strong> de seus pintinhos adoecerem com o melhor manejo.</span>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Box de Destaque da Economia / Total -->
+            <div style="background: rgba(245, 158, 11, 0.1); border: 1px dashed #f59e0b; border-radius: 12px; padding: 10px; margin-bottom: 14px; text-align: left;">
+                <div id="pix-upsell-savings" style="color: #fbbf24; font-size: 0.78rem; font-weight: 900; text-transform: uppercase; margin-bottom: 3px;">
+                    🔥 ECONOMIA DE R$ 59,90 NESTA TELA
+                </div>
+                <div id="pix-upsell-subtext" style="color: #ffffff; font-size: 0.86rem; font-weight: 700; margin-bottom: 5px;">
+                    Leve tudo junto por apenas <strong style="color: #10b981; font-size: 1.08rem;">R$ 129,90</strong>
+                </div>
+                <div style="font-size: 0.74rem; color: #cbd5e1; line-height: 1.35; border-top: 1px solid rgba(245, 158, 11, 0.25); padding-top: 5px; margin-top: 3px;">
+                    Com isso você estará levando o conhecimento completo desde o nascimento até a fase adulta das suas aves:
+                    <div style="margin-top: 3px; color: #94a3b8; font-size: 0.72rem;">
+                        • Protocolo Elite: <strong>R$ 89,90</strong><br>
+                        • Manejo de Pintinhos: <strong>R$ 40,00</strong> (De <span style="text-decoration: line-through;">R$ 99,90</span>)<br>
+                        • <strong>Total: R$ 129,90</strong>
+                    </div>
+                </div>
+            </div>
 
-            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 18px;">
+            <!-- Botões de Ação -->
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button onclick="acceptPixUpsell()" class="btn-upsell-cta" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); font-size: 0.96rem; padding: 14px 10px; border-radius: 12px; font-weight: 900; border: none; color: #ffffff; width: 100%; box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4); cursor: pointer; text-transform: uppercase; letter-spacing: 0.3px; transition: transform 0.15s, opacity 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fa-solid fa-check"></i> Sim! Quero proteger meus pintinhos.
+                </button>
 
-                <button onclick="acceptPixUpsell()" style="background: linear-gradient(135deg, #10b981, #059669); font-size: 1.05rem; padding: 14px; border-radius: 12px; font-weight: 900; border: none; color: white; width: 100%; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); cursor: pointer; text-transform: uppercase; transition: transform 0.2s;"><i class="fa-solid fa-check" style="margin-right: 8px;"></i> Aceito a Oferta</button>
-
-                <button id="pix-upsell-reject-btn" onclick="rejectPixUpsell()" style="background: transparent; border: none; color: #94a3b8; font-size: 0.85rem; text-decoration: underline; padding: 6px; font-weight: 600; cursor: pointer; transition: color 0.2s;">Quero apenas o guia das doenças</button>
-
+                <button id="pix-upsell-reject-btn" onclick="rejectPixUpsell()" style="background: transparent; border: none; color: #94a3b8; font-size: 0.8rem; text-decoration: underline; padding: 6px; font-weight: 600; cursor: pointer; transition: color 0.2s; line-height: 1.3;">
+                    Não obrigado, prefiro arriscar o manejo dos pintinhos sozinho
+                </button>
             </div>
 
         </div>
-
     </div>
 
-
-
     <style>
-
         @keyframes fadeInUp {
-
-            from { opacity: 0; transform: translateY(20px) scale(0.95); }
-
+            from { opacity: 0; transform: translateY(18px) scale(0.96); }
             to { opacity: 1; transform: translateY(0) scale(1); }
-
         }
-
+        .btn-upsell-cta:active {
+            transform: scale(0.97);
+            opacity: 0.92;
+        }
+        /* Responsividade para telas muito pequenas (iPhone SE / telas < 375px) */
+        @media (max-width: 374px) {
+            #pix-upsell-modal-box {
+                padding: 16px 10px !important;
+                border-radius: 16px !important;
+            }
+            .upsell-responsive-title {
+                font-size: 1.05rem !important;
+            }
+            .upsell-responsive-img {
+                width: 54px !important;
+            }
+            .btn-upsell-cta {
+                font-size: 0.88rem !important;
+                padding: 12px 8px !important;
+            }
+        }
+        /* Ajuste para telas em modo paisagem (Landscape) */
+        @media (max-height: 600px) {
+            #pix-upsell-modal {
+                align-items: flex-start !important;
+            }
+            #pix-upsell-modal-box {
+                margin-top: 10px !important;
+                margin-bottom: 20px !important;
+            }
+        }
     </style>
 
 
