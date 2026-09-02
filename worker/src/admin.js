@@ -163,7 +163,16 @@ adminRoutes.get('/history', async (c) => {
     c.header('Cache-Control', 'no-store');
     const pw = c.req.header('x-admin-password') || c.req.query('password');
     if (pw !== (c.env.ADMIN_PASSWORD || 'mura2026')) return c.json({ error: 'Acesso Negado' }, 401);
-    return c.json(await getHistory(c.env));
+    const list = await getHistory(c.env);
+    const enriched = await Promise.all(list.map(async (item) => {
+        const cpf = (item.cpf || item.customer?.cpf || '').replace(/\D/g, '');
+        if (cpf && cpf.length >= 4) {
+            const storedPw = await c.env.HISTORY.get('pw_' + cpf);
+            return { ...item, password: storedPw || cpf.slice(0, 4) };
+        }
+        return item;
+    }));
+    return c.json(enriched);
 });
 
 adminRoutes.post('/history/clear', async (c) => {
