@@ -1319,7 +1319,7 @@ function setupPixUpsellModal() {
         if (titleEl) titleEl.innerText = '⚠️ ESPERE! NÃO FINALIZE ANTES DE VER ISSO...';
         if (descEl) descEl.innerHTML = 'Você garantiu a cura das suas aves adultas. Mas você sabia que <strong style="color: #f87171;">8 em cada 10 pintinhos morrem</strong> antes dos 20 dias por erros simples de calor e manejo?';
         if (priceEl) priceEl.innerHTML = 'Por + R$ 40,00';
-        if (subtextEl) subtextEl.innerHTML = 'Leve tudo junto por apenas <strong style="color: #10b981; font-size: 1.12rem;">R$ 129,90</strong>';
+        if (subtextEl) subtextEl.innerHTML = 'Leve tudo junto por apenas <strong style="color: #10b981; font-size: 1.08rem;">R$ 129,90</strong> à vista no PIX ou em até 4x sem juros no cartão';
         if (listEl) {
             listEl.innerHTML = `
                 <div style="margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px;">
