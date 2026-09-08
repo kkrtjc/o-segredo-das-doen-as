@@ -14,11 +14,9 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
         // CPF limpo para construir o link do Protocolo Elite
         const cleanCPF = (customer.cpf || '').replace(/\D/g, '');
 
-        // Link do Protocolo Elite com CPF pré-vinculado
+        // Link do Protocolo Elite — ?login=1 abre o modal de login direto (funciona no iOS)
         const PROTOCOLO_ELITE_URL = 'https://protocolo-elite.pages.dev';
-        const accessLink = cleanCPF
-            ? `${PROTOCOLO_ELITE_URL}/?cpf=${cleanCPF}`
-            : PROTOCOLO_ELITE_URL;
+        const accessLink = `${PROTOCOLO_ELITE_URL}/?login=1`;
 
         // CPF formatado para exibição no e-mail (XXX.XXX.XXX-XX)
         const cpfFormatted = cleanCPF.length === 11
