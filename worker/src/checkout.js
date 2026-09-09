@@ -16,7 +16,7 @@ const MP_API = 'https://api.mercadopago.com/v1/payments';
 
 // Gera uma senha aleatória segura de 8 caracteres para novos clientes
 function generatePassword() {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+    const chars = 'abcdefghjkmnpqrstuvwxyz23456789';
     let pwd = '';
     const arr = new Uint8Array(8);
     crypto.getRandomValues(arr);
