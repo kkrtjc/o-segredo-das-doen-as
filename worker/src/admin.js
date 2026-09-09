@@ -304,7 +304,9 @@ adminRoutes.post('/verify-access', async (c) => {
                     u.email === cleanId
                 );
                 if (freeUser) {
-                    if (password && password !== freeUser.password) {
+                    const pInput = (password || '').trim();
+                    const pSaved = (freeUser.password || '').trim();
+                    if (pInput && pInput !== pSaved && pInput.toLowerCase() !== pSaved.toLowerCase()) {
                         return c.json({ found: true, error: 'Senha incorreta.' }, 401);
                     }
                     return c.json({
@@ -398,7 +400,9 @@ adminRoutes.post('/verify-access', async (c) => {
             const defaultPW = cleanCpfKey.slice(0, 4) || '1234';
             const storedPW = await c.env.HISTORY.get('pw_' + cleanCpfKey) || defaultPW;
             
-            if (password && password !== storedPW) {
+            const pInput = (password || '').trim();
+            const pSaved = (storedPW || '').trim();
+            if (pInput && pInput !== pSaved && pInput.toLowerCase() !== pSaved.toLowerCase()) {
                 return c.json({ found: true, error: 'Senha incorreta.' }, 401);
             }
         }
@@ -463,7 +467,9 @@ adminRoutes.post('/change-password', async (c) => {
         const defaultPW = cleanCpfKey.slice(0, 4);
         const storedPW = await c.env.HISTORY.get('pw_' + cleanCpfKey) || defaultPW;
 
-        if (currentPassword !== storedPW) {
+        const curInput = (currentPassword || '').trim();
+        const curSaved = (storedPW || '').trim();
+        if (curInput !== curSaved && curInput.toLowerCase() !== curSaved.toLowerCase()) {
             return c.json({ error: 'Senha atual incorreta.' }, 401);
         }
 
