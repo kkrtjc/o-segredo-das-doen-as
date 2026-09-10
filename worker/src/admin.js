@@ -598,6 +598,12 @@ adminRoutes.post('/admin/grant-access', async (c) => {
             return c.json({ error: 'Pelo menos um produto deve ser selecionado' }, 400);
         }
 
+        const cleanCPF = (cpf || '').replace(/\D/g, '');
+        const clientPassword = cleanCPF.slice(0, 4) || '1234';
+
+        // Salva a senha explicitamente no KV vinculada ao CPF (primeiros 4 dígitos)
+        await c.env.HISTORY.put('pw_' + cleanCPF, clientPassword);
+
         const history = await getHistory(c.env);
         const manualId = `manual-${Date.now()}`;
         
@@ -609,7 +615,7 @@ adminRoutes.post('/admin/grant-access', async (c) => {
                 name: name || 'Acesso Manual',
                 email: email || '',
                 phone: phone || '',
-                cpf: cpf
+                cpf: cleanCPF
             },
             items: products.map(p => {
                 if (p === 'ebook-doencas') return 'PROTOCOLO ELITE: A Cura das Aves';
@@ -624,7 +630,15 @@ adminRoutes.post('/admin/grant-access', async (c) => {
         });
 
         await saveHistory(c.env, history);
-        return c.json({ success: true, message: 'Acesso liberado com sucesso!' });
+        return c.json({ 
+            success: true, 
+            message: 'Acesso liberado com sucesso!',
+            login: cleanCPF,
+            name: name || 'Cliente',
+            email: email || '',
+            phone: phone || '',
+            password: clientPassword
+        });
         
     } catch (err) {
         return c.json({ error: 'Erro interno ao liberar acesso manual' }, 500);
