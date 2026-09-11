@@ -109,6 +109,31 @@ checkoutRoutes.post('/pix', async (c) => {
         return c.json({ error: getFriendlyError(data) }, 500);
     }
 
+    // Registra o lead/PIX imediatamente na lista de abandonos
+    try {
+        const { getAbandons, saveAbandons } = await import('./admin.js');
+        const abandons = await getAbandons(c.env);
+        abandons.unshift({
+            id: `pix-${data.id}`,
+            date: new Date().toISOString(),
+            name: customer.name || '',
+            email: customer.email || '',
+            phone: customer.phone || '',
+            cpf: cleanCPF,
+            product: items.map(i => i.title).join(', '),
+            total: totalAmount,
+            type: 'pix_pending',
+            reason: 'PIX Gerado (Aguardando Pagamento)',
+            pixGenerated: true,
+            pixId: data.id,
+            paid: false,
+            site: site || 'app'
+        });
+        await saveAbandons(c.env, abandons.slice(0, 500));
+    } catch (e) {
+        console.error('Erro ao registrar abandono PIX', e);
+    }
+
     return c.json({
         qr_code: data.point_of_interaction.transaction_data.qr_code,
         qr_code_base64: data.point_of_interaction.transaction_data.qr_code_base64,
@@ -306,8 +331,53 @@ checkoutRoutes.post('/card', async (c) => {
         const dlToken = await generateDownloadToken(customer.email, items, result.id, c.env);
         return c.json({ status: 'approved', id: result.id, redirectToken: dlToken, senha });
     } else if (result.status === 'in_process' || result.status === 'pending') {
+        // Registra cartão em análise/pendente
+        try {
+            const { getAbandons, saveAbandons } = await import('./admin.js');
+            const abandons = await getAbandons(c.env);
+            abandons.unshift({
+                id: `card-pending-${Date.now()}`,
+                date: new Date().toISOString(),
+                name: customer.name || '',
+                email: customer.email || '',
+                phone: customer.phone || '',
+                cpf: cleanCPF,
+                product: items.map(i => i.title).join(', '),
+                total: totalAmount,
+                type: 'card_pending',
+                reason: result.status_detail || 'Pagamento em análise',
+                paid: false,
+                site: site || 'app'
+            });
+            await saveAbandons(c.env, abandons.slice(0, 500));
+        } catch (e) {
+            console.error('Erro ao registrar abandono cartão pendente', e);
+        }
         return c.json({ status: result.status, status_detail: result.status_detail, id: result.id });
     } else {
+        // CARTÃO RECUSADO! Salva imediatamente em ABANDONS com todos os dados do cliente
+        try {
+            const { getAbandons, saveAbandons } = await import('./admin.js');
+            const abandons = await getAbandons(c.env);
+            abandons.unshift({
+                id: `card-fail-${Date.now()}`,
+                date: new Date().toISOString(),
+                name: customer.name || '',
+                email: customer.email || '',
+                phone: customer.phone || '',
+                cpf: cleanCPF,
+                product: items.map(i => i.title).join(', '),
+                total: totalAmount,
+                type: 'card_declined',
+                reason: result.status_detail || result.status || 'Cartão Recusado',
+                paid: false,
+                site: site || 'app'
+            });
+            await saveAbandons(c.env, abandons.slice(0, 500));
+        } catch (e) {
+            console.error('Erro ao registrar abandono cartão recusado', e);
+        }
+
         const errorMsg = getFriendlyError(result);
         return c.json({ 
             status: result.status || 'rejected', 

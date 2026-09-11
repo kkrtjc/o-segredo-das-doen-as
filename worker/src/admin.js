@@ -234,19 +234,43 @@ adminRoutes.get('/abandons', async (c) => {
 });
 
 adminRoutes.post('/abandon', async (c) => {
-    const { name, email, phone, product, pixGenerated, pixId, site } = await c.req.json();
-    if (!phone && !email) return c.json({ error: 'Contato não fornecido' }, 400);
+    const { name, email, phone, cpf, product, total, pixGenerated, pixId, site, type, reason } = await c.req.json();
+    if (!phone && !email && !cpf) return c.json({ error: 'Contato não fornecido' }, 400);
     const abandons = await getAbandons(c.env);
     const todayStr = today();
-    const existing = abandons.find(a => (a.phone === phone || (a.email && a.email === email)) && a.date.startsWith(todayStr));
+    const existing = abandons.find(a => (
+        (phone && a.phone === phone) || 
+        (email && a.email && a.email === email) ||
+        (cpf && a.cpf && a.cpf === cpf)
+    ) && a.date.startsWith(todayStr));
+
     if (existing) {
         if (name && !existing.name) existing.name = name;
+        if (cpf && !existing.cpf) existing.cpf = cpf;
+        if (total && !existing.total) existing.total = total;
+        if (type) existing.type = type;
+        if (reason) existing.reason = reason;
         if (pixGenerated && !existing.pixGenerated) { existing.pixGenerated = true; existing.pixId = pixId; }
         await saveAbandons(c.env, abandons);
         return c.json({ success: true });
     }
-    abandons.push({ id: Date.now().toString(), date: new Date().toISOString(), name: name || '', email: email || '', phone: phone || '', product: product || 'unknown', pixGenerated: pixGenerated || false, pixId: pixId || null, paid: false, site: site || 'app' });
-    await saveAbandons(c.env, abandons);
+    abandons.unshift({ 
+        id: Date.now().toString(), 
+        date: new Date().toISOString(), 
+        name: name || '', 
+        email: email || '', 
+        phone: phone || '', 
+        cpf: cpf || '',
+        product: product || 'unknown', 
+        total: total || 0,
+        pixGenerated: pixGenerated || false, 
+        pixId: pixId || null, 
+        type: type || (pixGenerated ? 'pix_pending' : 'checkout_abandon'),
+        reason: reason || '',
+        paid: false, 
+        site: site || 'app' 
+    });
+    await saveAbandons(c.env, abandons.slice(0, 500));
     return c.json({ success: true });
 });
 

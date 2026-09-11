@@ -1798,6 +1798,14 @@ async function handlePayment(method) {
                 btn.disabled = false;
                 btn.innerText = originalText;
             } else {
+                // Captura abandono por cartão recusado
+                captureAbandonedLead({
+                    type: 'card_declined',
+                    reason: result.status_detail || result.error || 'Cartão Recusado',
+                    cpf: customer?.cpf || document.getElementById('card-cpf')?.value,
+                    total: items.reduce((acc, i) => acc + Number(i.price), 0)
+                });
+
                 let msg = 'Pagamento Recusado.';
                 if (result.status_detail) msg += ` Motivo: ${result.status_detail}`;
 
@@ -2008,14 +2016,16 @@ function interceptPaymentButton(callback) {
 }
 
 async function captureAbandonedLead(extra = {}) {
-    const name = document.getElementById('payer-name')?.value?.trim() || document.getElementById('card-holder')?.value?.trim();
-    const email = document.getElementById('payer-email')?.value?.trim() || document.getElementById('card-email')?.value?.trim();
-    const phone = document.getElementById('payer-phone')?.value?.trim() || document.getElementById('card-phone')?.value?.trim();
-    const productId = (cart && cart.id) || (cart && cart.mainProduct && cart.mainProduct.id) || 'unknown';
+    const name = extra.name || document.getElementById('payer-name')?.value?.trim() || document.getElementById('card-holder')?.value?.trim();
+    const email = extra.email || document.getElementById('payer-email')?.value?.trim() || document.getElementById('card-email')?.value?.trim();
+    const phone = extra.phone || document.getElementById('payer-phone')?.value?.trim() || document.getElementById('card-phone')?.value?.trim();
+    const cpf = extra.cpf || document.getElementById('payer-cpf')?.value?.trim() || document.getElementById('card-cpf')?.value?.trim();
+    const productId = extra.product || (cart && cart.id) || (cart && cart.mainProduct && cart.mainProduct.id) || 'unknown';
+    const total = extra.total || (cart ? getCartTotal() : 0);
 
-    // Só captura se tiver pelo menos o telefone ou e-mail preenchido
-    if ((phone && phone.length > 5) || (email && email.length > 5)) {
-        console.log("🛒 [ABANDON] Capturando lead abandonado...", extra.pixGenerated ? '(PIX gerado)' : '(saída do modal)');
+    // Só captura se tiver pelo menos o telefone, e-mail ou CPF preenchido
+    if ((phone && phone.length > 5) || (email && email.length > 5) || (cpf && cpf.length > 5)) {
+        console.log("🛒 [ABANDON] Capturando lead abandonado...", extra.type || (extra.pixGenerated ? 'PIX gerado' : 'saída modal'));
         try {
             await fetch(`${API_URL}/api/abandon`, {
                 method: 'POST',
@@ -2024,9 +2034,13 @@ async function captureAbandonedLead(extra = {}) {
                     name,
                     email,
                     phone,
+                    cpf,
                     product: productId,
+                    total,
                     pixGenerated: extra.pixGenerated || false,
                     pixId: extra.pixId || null,
+                    type: extra.type || (extra.pixGenerated ? 'pix_pending' : 'checkout_abandon'),
+                    reason: extra.reason || '',
                     site: PAGE_SOURCE
                 })
             });
