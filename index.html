@@ -6317,6 +6317,12 @@
     <script>
 
         function attemptCloseCheckout() {
+            if (typeof captureAbandonedLead === 'function') {
+                captureAbandonedLead({
+                    type: 'checkout_closed',
+                    reason: 'Clicou no botão voltar do checkout'
+                });
+            }
 
             let exitModal = document.getElementById('checkout-exit-modal');
 
@@ -6325,6 +6331,12 @@
         }
 
         function confirmCloseCheckout() {
+            if (typeof captureAbandonedLead === 'function') {
+                captureAbandonedLead({
+                    type: 'checkout_closed',
+                    reason: 'Confirmou saída do checkout'
+                });
+            }
 
             let exitModal = document.getElementById('checkout-exit-modal');
 
@@ -6336,13 +6348,15 @@
 
             } else {
 
-                document.getElementById('checkout-modal').classList.remove('active');
+                const cp = document.getElementById('checkout-page') || document.getElementById('checkout-modal');
+                if (cp) cp.classList.remove('active');
 
             }
 
         }
 
     </script>
+
 
 
 

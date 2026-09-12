@@ -899,26 +899,37 @@
 
                 let html = '';
                 officialAbandons.forEach(item => {
-                    const nome = item.name || 'Desconhecido';
+                    const nome = item.name || 'Cliente';
                     const email = item.email || 'Sem email';
                     const phone = item.phone || 'Sem celular';
                     const dataObj = new Date(item.date || Date.now());
                     const dStr = dataObj.toLocaleDateString() + ' às ' + dataObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                     const cleanPhone = parsePhone(phone);
+                    const motivo = item.reason || (item.pixGenerated ? 'PIX Gerado (Aguardando Pagamento)' : (item.type || 'Abandono de Checkout'));
+                    const valorTotal = item.total ? formatBRL(item.total) : 'R$ 89,90';
+                    const primeiroNome = nome.split(' ')[0] || 'amigo';
+                    const msgWpp = encodeURIComponent(`Olá ${primeiroNome}, tudo bem? Vi que você iniciou seu pedido no Protocolo de Elite das Aves, mas não concluiu. Ficou com alguma dúvida ou precisa de ajuda para liberar seu acesso?`);
                     
                     html += `
                     <div class="list-item">
-                        <div class="list-item-title">${nome}</div>
+                        <div class="list-item-title" style="display:flex; justify-content:space-between; align-items:center;">
+                            <span><strong>${nome}</strong></span>
+                            <span style="color:#10b981; font-weight:800; font-size:13px;">${valorTotal}</span>
+                        </div>
                         <div class="list-item-sub"><i class="fa-regular fa-envelope"></i> ${email}</div>
                         <div class="list-item-sub"><i class="fa-solid fa-phone"></i> ${phone}</div>
-                        <div class="list-item-sub" style="margin-top: 4px; font-size:11px;">Capturado em: ${dStr}</div>
+                        <div class="list-item-sub" style="margin-top: 5px; color:#f59e0b; font-weight:600; font-size:12px;">
+                            <i class="fa-solid fa-circle-info"></i> ${motivo}
+                        </div>
+                        <div class="list-item-sub" style="margin-top: 2px; font-size:11px; color:#94a3b8;">Capturado em: ${dStr}</div>
                         
-                        <div class="action-row">
-                            ${cleanPhone ? `<a href="https://wa.me/${cleanPhone}" target="_blank" class="btn-small btn-green"><i class="fa-brands fa-whatsapp"></i> Chamar Admin</a>` : ''}
+                        <div class="action-row" style="margin-top: 10px;">
+                            ${cleanPhone ? `<a href="https://wa.me/${cleanPhone}?text=${msgWpp}" target="_blank" class="btn-small btn-green" style="display:inline-flex; align-items:center; gap:6px; padding:8px 14px; text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> Chamar no WhatsApp</a>` : ''}
                         </div>
                     </div>`;
                 });
                 list.innerHTML = html;
+
             } catch(e) {
                 list.innerHTML = `<div class="empty-state" style="color:var(--ios-red);">Erro: ${e.message}</div>`;
             }

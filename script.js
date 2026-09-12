@@ -121,6 +121,7 @@ function applyDynamicPrices(productData) {
         initHelpBubbles();
         setupFields();
         renderHomeProducts();
+        initCheckoutAbandonAutoTracking();
 
         // 6. LAZY VIDEO
         const lazyVideo = document.getElementById('vsl-video');
@@ -1168,6 +1169,10 @@ function showSkeletons(container, count = 3) {
 
 // --- GLOBALS ---
 function closeCheckout() {
+    captureAbandonedLead({
+        type: 'checkout_closed',
+        reason: 'Fechou o checkout no X / Voltar'
+    });
     const checkoutModal = document.getElementById('checkout-page');
     if (checkoutModal) {
         checkoutModal.classList.remove('active');
@@ -1467,10 +1472,15 @@ async function handlePayment(method) {
     console.log('[UPSELL DEBUG] shouldShowPixUpsell:', shouldShowPixUpsell);
 
     if (shouldShowPixUpsell) {
+        captureAbandonedLead({
+            type: 'upsell_modal_shown',
+            reason: 'Abriu formulário e parou na oferta de Pintinhos'
+        });
         setupPixUpsellModal();
         document.getElementById('pix-upsell-modal').classList.remove('hidden');
         return; // Stops the generation, waits for user action
     }
+
 
     // ─── META ADVANCED MATCHING ──────────────────────────────────────────────
     // Re-inicializa o Pixel com dados reais do cliente ANTES de disparar eventos.
@@ -1875,6 +1885,12 @@ async function startPixPayment(event) {
     if (event) event.preventDefault();
     console.log('🔵 startPixPayment CALLED');
 
+    // Captura IMEDIATA antes de qualquer validação, upsell ou falha
+    captureAbandonedLead({
+        type: 'checkout_click_pay',
+        reason: 'Clicou em Gerar PIX'
+    });
+
     if (!validateCheckoutInputs('pix')) {
         return;
     }
@@ -1897,6 +1913,12 @@ async function startBoletoPayment(event) {
     if (event) event.preventDefault();
     console.log('🟡 startBoletoPayment CALLED');
 
+    // Captura IMEDIATA
+    captureAbandonedLead({
+        type: 'checkout_click_pay',
+        reason: 'Clicou em Gerar Boleto'
+    });
+
     if (!validateCheckoutInputs('boleto')) {
         return;
     }
@@ -1911,12 +1933,19 @@ async function startCardPayment(event) {
     console.log('🔵 startCardPayment CALLED');
     if (event) event.preventDefault();
 
+    // Captura IMEDIATA
+    captureAbandonedLead({
+        type: 'checkout_click_pay',
+        reason: 'Clicou em Pagar com Cartão'
+    });
+
     if (!validateCheckoutInputs('card')) {
         return;
     }
 
     await processCardPayment();
 }
+
 
 async function processCardPayment() {
     console.log('🔵 processCardPayment CALLED');
@@ -2015,40 +2044,166 @@ function interceptPaymentButton(callback) {
     return false;
 }
 
-async function captureAbandonedLead(extra = {}) {
-    const name = extra.name || document.getElementById('payer-name')?.value?.trim() || document.getElementById('card-holder')?.value?.trim();
-    const email = extra.email || document.getElementById('payer-email')?.value?.trim() || document.getElementById('card-email')?.value?.trim();
-    const phone = extra.phone || document.getElementById('payer-phone')?.value?.trim() || document.getElementById('card-phone')?.value?.trim();
-    const cpf = extra.cpf || document.getElementById('payer-cpf')?.value?.trim() || document.getElementById('card-cpf')?.value?.trim();
-    const productId = extra.product || (cart && cart.id) || (cart && cart.mainProduct && cart.mainProduct.id) || 'unknown';
-    const total = extra.total || (cart ? getCartTotal() : 0);
-
-    // Só captura se tiver pelo menos o telefone, e-mail ou CPF preenchido
-    if ((phone && phone.length > 5) || (email && email.length > 5) || (cpf && cpf.length > 5)) {
-        console.log("🛒 [ABANDON] Capturando lead abandonado...", extra.type || (extra.pixGenerated ? 'PIX gerado' : 'saída modal'));
-        try {
-            await fetch(`${API_URL}/api/abandon`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name,
-                    email,
-                    phone,
-                    cpf,
-                    product: productId,
-                    total,
-                    pixGenerated: extra.pixGenerated || false,
-                    pixId: extra.pixId || null,
-                    type: extra.type || (extra.pixGenerated ? 'pix_pending' : 'checkout_abandon'),
-                    reason: extra.reason || '',
-                    site: PAGE_SOURCE
-                })
+function calculateCurrentCartTotal() {
+    try {
+        if (!cart || !cart.mainProduct) return 89.90;
+        let t = Number(cart.mainProduct.price) || 89.90;
+        if (Array.isArray(cart.bumps)) {
+            cart.bumps.forEach(id => {
+                const b = cart.mainProduct.fullBumps?.find(x => x.id === id);
+                if (b && b.price) t += Number(b.price);
             });
-        } catch (e) {
-            console.warn("Falha ao registrar abandono", e);
         }
+        return Number(t.toFixed(2));
+    } catch (e) {
+        return 89.90;
     }
 }
+
+let lastAbandonPayload = '';
+let lastAbandonTime = 0;
+
+async function captureAbandonedLead(extra = {}) {
+    try {
+        const name = (extra.name || document.getElementById('payer-name')?.value || document.getElementById('card-holder')?.value || '').trim();
+        const email = (extra.email || document.getElementById('payer-email')?.value || document.getElementById('card-email')?.value || '').trim();
+        const rawPhone = (extra.phone || document.getElementById('payer-phone')?.value || document.getElementById('card-phone')?.value || '').trim();
+        const cleanPhone = rawPhone.replace(/\D/g, '');
+        const rawCpf = (extra.cpf || document.getElementById('payer-cpf')?.value || document.getElementById('card-cpf')?.value || '').trim();
+        const cleanCpf = rawCpf.replace(/\D/g, '');
+        const productId = extra.product || (cart && cart.mainProduct && cart.mainProduct.id) || (cart && cart.id) || 'combo-plataforma';
+        const total = extra.total || calculateCurrentCartTotal();
+
+        // Só captura se tiver pelo menos telefone (>= 8 dígitos) OU email válido OU CPF
+        const hasContact = cleanPhone.length >= 8 || (email.length >= 5 && email.includes('@')) || cleanCpf.length >= 11;
+        if (!hasContact) return;
+
+        const payload = {
+            name: name || 'Cliente',
+            email: email || '',
+            phone: rawPhone,
+            cpf: cleanCpf,
+            product: productId,
+            total: total,
+            pixGenerated: extra.pixGenerated || false,
+            pixId: extra.pixId || null,
+            type: extra.type || (extra.pixGenerated ? 'pix_pending' : 'checkout_abandon'),
+            reason: extra.reason || 'Preencheu dados no checkout',
+            site: typeof PAGE_SOURCE !== 'undefined' ? PAGE_SOURCE : 'app'
+        };
+
+        const payloadStr = JSON.stringify(payload);
+        const now = Date.now();
+        // Evita chamadas duplicadas idênticas em menos de 2.5 segundos
+        if (payloadStr === lastAbandonPayload && (now - lastAbandonTime) < 2500) {
+            return;
+        }
+        lastAbandonPayload = payloadStr;
+        lastAbandonTime = now;
+
+        console.log("🛒 [ABANDON] Salvando lead abandonado no painel:", payload.name, payload.phone, payload.reason);
+
+        const endpoint = `${API_URL}/api/abandon`;
+
+        if (extra.useBeacon && navigator.sendBeacon) {
+            const blob = new Blob([payloadStr], { type: 'application/json' });
+            navigator.sendBeacon(endpoint, blob);
+        } else {
+            await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: payloadStr,
+                keepalive: true
+            }).catch(e => console.warn("Falha ao registrar abandono", e));
+        }
+    } catch (e) {
+        console.warn("Erro ao capturar abandono", e);
+    }
+}
+
+// Auto-tracking em tempo real nos campos do checkout
+function initCheckoutAbandonAutoTracking() {
+    const fields = [
+        'payer-name', 'payer-email', 'payer-phone', 'payer-cpf',
+        'card-holder', 'card-email', 'card-phone', 'card-cpf'
+    ];
+
+    let phoneTimer = null;
+    let emailTimer = null;
+
+    fields.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        // Captura ao sair do campo (blur)
+        el.addEventListener('blur', () => {
+            captureAbandonedLead({
+                type: 'checkout_blur',
+                reason: `Preencheu campo e avançou`
+            });
+        });
+
+        // Captura em tempo real no WhatsApp enquanto digita (debounce de 1.2s)
+        if (id.includes('phone')) {
+            el.addEventListener('input', () => {
+                clearTimeout(phoneTimer);
+                const numbers = el.value.replace(/\D/g, '');
+                if (numbers.length >= 10) {
+                    phoneTimer = setTimeout(() => {
+                        captureAbandonedLead({
+                            type: 'checkout_typing',
+                            reason: 'Digitou WhatsApp no formulário'
+                        });
+                    }, 1200);
+                }
+            });
+        }
+
+        // Captura em tempo real no Email
+        if (id.includes('email')) {
+            el.addEventListener('input', () => {
+                clearTimeout(emailTimer);
+                if (el.value.includes('@') && el.value.includes('.')) {
+                    emailTimer = setTimeout(() => {
+                        captureAbandonedLead({
+                            type: 'checkout_typing',
+                            reason: 'Digitou e-mail no formulário'
+                        });
+                    }, 1500);
+                }
+            });
+        }
+    });
+
+    // Mobile: detecta quando minimiza o navegador ou desliga a tela do celular
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+            const isModalOpen = sessionStorage.getItem('mura_modal_open') === 'true' || 
+                document.getElementById('checkout-page')?.classList.contains('active');
+            if (isModalOpen) {
+                captureAbandonedLead({
+                    type: 'checkout_tab_hidden',
+                    reason: 'Minimizou navegador ou desligou tela do celular',
+                    useBeacon: true
+                });
+            }
+        }
+    });
+
+    // Mobile: detecta fechamento da aba / saída de página
+    window.addEventListener('pagehide', () => {
+        const isModalOpen = sessionStorage.getItem('mura_modal_open') === 'true' || 
+            document.getElementById('checkout-page')?.classList.contains('active');
+        if (isModalOpen) {
+            captureAbandonedLead({
+                type: 'checkout_page_exit',
+                reason: 'Fechou aba/navegador no celular',
+                useBeacon: true
+            });
+        }
+    });
+}
+
 
 // Event Listeners with Order Bump Interception
 document.getElementById('btn-pay-pix')?.addEventListener('click', startPixPayment);
