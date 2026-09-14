@@ -176,17 +176,15 @@ checkoutRoutes.post('/boleto', async (c) => {
             first_name: customer.name.split(' ')[0],
             last_name: customer.name.split(' ').slice(1).join(' ') || 'Cliente',
             identification: { type: 'CPF', number: cleanCPF },
-            // Endereço real do cliente via CEP (se fornecido) ou omitido para não falhar
-            ...(customer.zip_code ? {
-                address: {
-                    zip_code: customer.zip_code.replace(/\D/g, ''),
-                    street_name: customer.street_name || 'Não informado',
-                    street_number: customer.street_number || 'S/N',
-                    neighborhood: customer.neighborhood || '',
-                    city: customer.city || '',
-                    federal_unit: customer.state || 'SP'
-                }
-            } : {})
+            // Endereço exigido pelo BACEN / FEBRABAN para registro de boleto
+            address: {
+                zip_code: (customer.zip_code || customer.cep || '01310100').replace(/\D/g, '').padStart(8, '0').slice(0, 8),
+                street_name: customer.street_name || 'Av Paulista',
+                street_number: customer.street_number ? String(customer.street_number) : '1000',
+                neighborhood: customer.neighborhood || 'Bela Vista',
+                city: customer.city || 'São Paulo',
+                federal_unit: customer.state || 'SP'
+            }
         },
         metadata: {
             customer_name: customer.name,
@@ -215,7 +213,45 @@ checkoutRoutes.post('/boleto', async (c) => {
 
     const data = await res.json();
     if (!res.ok) {
+        console.error('[BOLETO MP ERROR]', JSON.stringify(data));
         return c.json({ error: getFriendlyError(data) }, 500);
+    }
+
+    // Registra o lead/Boleto imediatamente na lista de abandonos para recuperação
+    try {
+        const { getAbandons, saveAbandons } = await import('./admin.js');
+        const abandons = await getAbandons(c.env);
+        const now = new Date().toISOString();
+        const existingIdx = abandons.findIndex(a => 
+            (cleanCPF && a.cpf === cleanCPF) || 
+            (customer.email && a.email === customer.email) ||
+            (customer.phone && a.phone === customer.phone)
+        );
+
+        const newEntry = {
+            id: 'boleto_' + data.id,
+            name: customer.name || 'Cliente Boleto',
+            email: customer.email || '',
+            phone: customer.phone || '',
+            cpf: cleanCPF,
+            total: totalAmount,
+            products: items.map(i => i.title).join(', '),
+            date: now,
+            reason: 'Boleto Gerado (Aguardando)',
+            status: 'pending_boleto',
+            paymentId: data.id,
+            paymentMethod: 'boleto'
+        };
+
+        if (existingIdx >= 0) {
+            abandons[existingIdx] = { ...abandons[existingIdx], ...newEntry };
+        } else {
+            abandons.unshift(newEntry);
+        }
+        if (abandons.length > 500) abandons.pop();
+        await saveAbandons(c.env, abandons);
+    } catch (e) {
+        console.warn('[ABANDON] Erro ao registrar lead Boleto:', e.message);
     }
 
     // Boleto details typically come in data.transaction_details.external_resource_url and data.barcode
