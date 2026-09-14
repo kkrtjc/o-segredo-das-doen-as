@@ -1324,30 +1324,26 @@ function setupPixUpsellModal() {
         if (titleEl) titleEl.innerText = '⚠️ ESPERE! NÃO FINALIZE ANTES DE VER ISSO...';
         if (descEl) descEl.innerHTML = 'Você garantiu a cura das suas aves adultas. Mas você sabia que <strong style="color: #f87171;">8 em cada 10 pintinhos morrem</strong> antes dos 20 dias por erros simples de calor e manejo?';
         if (priceEl) priceEl.innerHTML = 'Por + R$ 40,00';
-        if (subtextEl) subtextEl.innerHTML = 'Leve tudo junto por apenas <strong style="color: #10b981; font-size: 1.08rem;">R$ 129,90</strong> à vista no PIX ou em até 4x sem juros no cartão';
+        if (subtextEl) subtextEl.innerText = 'Leve os dois materiais juntos:';
         if (listEl) {
             listEl.innerHTML = `
-                <div style="margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px;">
-                    <span style="color: #10b981; font-weight: 900;">✓</span>
-                    <span><strong>Mortalidade Zero no Pinteiro:</strong> O manejo do 1º até o 90º dia.</span>
+                <div style="margin-bottom: 3px; display: flex; align-items: flex-start; gap: 5px; text-align: left;">
+                    <span style="color: #10b981; font-weight: 900; flex-shrink: 0; line-height: 1.3;">✓</span>
+                    <span style="flex: 1; min-width: 0; line-height: 1.3;"><strong>Mortalidade Zero no Pinteiro:</strong> Manejo do 1º ao 90º dia</span>
                 </div>
-                <div style="margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px;">
-                    <span style="color: #10b981; font-weight: 900;">✓</span>
-                    <span><strong>Tabela Térmica:</strong> O calor exato para não matar de frio nem calor.</span>
+                <div style="margin-bottom: 3px; display: flex; align-items: flex-start; gap: 5px; text-align: left;">
+                    <span style="color: #10b981; font-weight: 900; flex-shrink: 0; line-height: 1.3;">✓</span>
+                    <span style="flex: 1; min-width: 0; line-height: 1.3;"><strong>Tabela Térmica:</strong> O calor exato sem matar de frio ou calor</span>
                 </div>
-                <div style="margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px;">
-                    <span style="color: #10b981; font-weight: 900;">✓</span>
-                    <span><strong>Ambiente ideal</strong> de criação dos seus pintinhos.</span>
-                </div>
-                <div style="display: flex; align-items: flex-start; gap: 6px;">
-                    <span style="color: #10b981; font-weight: 900;">✓</span>
-                    <span><strong>Reduza drasticamente as chances</strong> de seus pintinhos adoecerem com o melhor manejo.</span>
+                <div style="display: flex; align-items: flex-start; gap: 5px; text-align: left;">
+                    <span style="color: #10b981; font-weight: 900; flex-shrink: 0; line-height: 1.3;">✓</span>
+                    <span style="flex: 1; min-width: 0; line-height: 1.3;"><strong>Ambiente ideal:</strong> Reduza drasticamente o risco de doenças</span>
                 </div>
             `;
         }
         if (rejectBtn) rejectBtn.innerText = 'Não obrigado, prefiro arriscar o manejo dos pintinhos sozinho';
         if (originalPriceEl) originalPriceEl.innerText = 'De R$ 99,90';
-        if (savingsEl) savingsEl.innerText = '🔥 ECONOMIA DE R$ 59,90 NESTA TELA';
+        if (savingsEl) savingsEl.innerText = '🔥 ECONOMIA DE R$ 59,90';
     } else if (isScenario2) {
         // Scenario 2: User chose only Tabela de Ração bump
         if (titleEl) titleEl.innerText = 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS + TABELA DE RAÇÃO';
