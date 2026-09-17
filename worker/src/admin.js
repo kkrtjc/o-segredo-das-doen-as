@@ -76,6 +76,45 @@ export async function logSale(env, customer, items, paymentId, method, site = 'a
         site: site
     });
     await saveHistory(env, history);
+
+    // 🔴 LIMPEZA AUTOMÁTICA DE ABANDONOS:
+    // Qualquer registro deste cliente (por pixId, paymentId, CPF, e-mail ou telefone)
+    // é marcado como PAGO para que NUNCA apareça na lista de abandonos!
+    try {
+        const abandons = await getAbandons(env);
+        const cleanCpf = (customer.cpf || '').replace(/\D/g, '');
+        const cleanEmail = (customer.email || '').trim().toLowerCase();
+        const cleanPhone = (customer.phone || '').replace(/\D/g, '').slice(-8);
+        const pIdStr = String(paymentId);
+        
+        let changed = false;
+        abandons.forEach(a => {
+            const aCpf = (a.cpf || '').replace(/\D/g, '');
+            const aEmail = (a.email || '').trim().toLowerCase();
+            const aPhone = (a.phone || '').replace(/\D/g, '').slice(-8);
+            const aPix = a.pixId ? String(a.pixId) : null;
+            const aPayId = a.paymentId ? String(a.paymentId) : null;
+
+            const isMatch = (aPix && aPix === pIdStr) ||
+                            (aPayId && aPayId === pIdStr) ||
+                            (cleanCpf && cleanCpf.length >= 9 && aCpf.length >= 9 && (cleanCpf.includes(aCpf) || aCpf.includes(cleanCpf))) ||
+                            (cleanEmail && aEmail && cleanEmail === aEmail) ||
+                            (cleanPhone && cleanPhone.length >= 8 && aPhone.length >= 8 && cleanPhone === aPhone);
+
+            if (isMatch && !a.paid) {
+                a.paid = true;
+                a.paidAt = new Date().toISOString();
+                changed = true;
+            }
+        });
+
+        if (changed) {
+            await saveAbandons(env, abandons);
+        }
+    } catch (err) {
+        console.error('[ABANDON CLEANUP ERROR IN LOGSALE]', err);
+    }
+
     return true;
 }
 
@@ -230,30 +269,98 @@ adminRoutes.post('/leads', async (c) => {
 adminRoutes.get('/abandons', async (c) => {
     const pw = c.req.header('x-admin-password') || c.req.query('password');
     if (pw !== (c.env.ADMIN_PASSWORD || 'mura2026')) return c.json({ error: 'Acesso Negado' }, 401);
-    return c.json(await getAbandons(c.env));
+    
+    const abandons = await getAbandons(c.env);
+    const history = await getHistory(c.env);
+
+    // Conjunto de identificadores de clientes que já compraram (para filtro absoluto)
+    const paidCpfs = new Set();
+    const paidEmails = new Set();
+    const paidPhones = new Set();
+    const paidIds = new Set();
+
+    history.forEach(h => {
+        if (h.paymentId) paidIds.add(String(h.paymentId));
+        if (h.id) paidIds.add(String(h.id));
+        const cpf = (h.cpf || h.customer?.cpf || '').replace(/\D/g, '');
+        if (cpf.length >= 9) paidCpfs.add(cpf.slice(0, 9));
+        const email = (h.email || h.customer?.email || '').trim().toLowerCase();
+        if (email) paidEmails.add(email);
+        const phone = (h.phone || h.customer?.phone || '').replace(/\D/g, '').slice(-8);
+        if (phone.length >= 8) paidPhones.add(phone);
+    });
+
+    // Retorna APENAS quem realmente NÃO pagou
+    const filtered = abandons.filter(a => {
+        if (a.paid) return false;
+        if (a.pixId && paidIds.has(String(a.pixId))) return false;
+        if (a.paymentId && paidIds.has(String(a.paymentId))) return false;
+        const aCpf = (a.cpf || '').replace(/\D/g, '');
+        if (aCpf.length >= 9 && paidCpfs.has(aCpf.slice(0, 9))) return false;
+        const aEmail = (a.email || '').trim().toLowerCase();
+        if (aEmail && paidEmails.has(aEmail)) return false;
+        const aPhone = (a.phone || '').replace(/\D/g, '').slice(-8);
+        if (aPhone.length >= 8 && paidPhones.has(aPhone)) return false;
+        return true;
+    });
+
+    return c.json(filtered);
 });
 
 adminRoutes.post('/abandon', async (c) => {
     const { name, email, phone, cpf, product, total, pixGenerated, pixId, site, type, reason } = await c.req.json();
     if (!phone && !email && !cpf) return c.json({ error: 'Contato não fornecido' }, 400);
+
+    const cleanCpf = (cpf || '').replace(/\D/g, '');
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const cleanPhone = (phone || '').replace(/\D/g, '').slice(-8);
+
+    // Se este cliente já concluiu uma compra no passado, NÃO registra como abandono!
+    const history = await getHistory(c.env);
+    const alreadyPaid = history.some(h => {
+        const hCpf = (h.cpf || h.customer?.cpf || '').replace(/\D/g, '');
+        const hEmail = (h.email || h.customer?.email || '').trim().toLowerCase();
+        const hPhone = (h.phone || h.customer?.phone || '').replace(/\D/g, '').slice(-8);
+        if (cleanCpf && cleanCpf.length >= 9 && hCpf.length >= 9 && (cleanCpf.includes(hCpf) || hCpf.includes(cleanCpf))) return true;
+        if (cleanEmail && hEmail && cleanEmail === hEmail) return true;
+        if (cleanPhone && cleanPhone.length >= 8 && hPhone.length >= 8 && cleanPhone === hPhone) return true;
+        return false;
+    });
+
+    if (alreadyPaid) {
+        return c.json({ success: true, message: 'Cliente já possui compra aprovada' });
+    }
+
     const abandons = await getAbandons(c.env);
     const todayStr = today();
-    const existing = abandons.find(a => (
-        (phone && a.phone === phone) || 
-        (email && a.email && a.email === email) ||
-        (cpf && a.cpf && a.cpf === cpf)
-    ) && a.date.startsWith(todayStr));
+    const existing = abandons.find(a => {
+        const aCpf = (a.cpf || '').replace(/\D/g, '');
+        const aEmail = (a.email || '').trim().toLowerCase();
+        const aPhone = (a.phone || '').replace(/\D/g, '').slice(-8);
+        const matchCpf = cleanCpf && cleanCpf.length >= 9 && aCpf.length >= 9 && cleanCpf === aCpf;
+        const matchEmail = cleanEmail && aEmail && cleanEmail === aEmail;
+        const matchPhone = cleanPhone && cleanPhone.length >= 8 && aPhone.length >= 8 && cleanPhone === aPhone;
+        return (matchCpf || matchEmail || matchPhone) && a.date.startsWith(todayStr);
+    });
 
     if (existing) {
-        if (name && !existing.name) existing.name = name;
+        // Se já foi marcado como pago hoje, não reverte para abandono
+        if (existing.paid) {
+            return c.json({ success: true });
+        }
+        if (name && (!existing.name || existing.name === 'Cliente')) existing.name = name;
         if (cpf && !existing.cpf) existing.cpf = cpf;
-        if (total && !existing.total) existing.total = total;
+        if (phone && !existing.phone) existing.phone = phone;
+        if (email && !existing.email) existing.email = email;
+        if (total) existing.total = total;
+        if (product) existing.product = product;
         if (type) existing.type = type;
         if (reason) existing.reason = reason;
-        if (pixGenerated && !existing.pixGenerated) { existing.pixGenerated = true; existing.pixId = pixId; }
+        if (pixGenerated) { existing.pixGenerated = true; existing.pixId = pixId; }
         await saveAbandons(c.env, abandons);
         return c.json({ success: true });
     }
+
     abandons.unshift({ 
         id: Date.now().toString(), 
         date: new Date().toISOString(), 
@@ -275,12 +382,36 @@ adminRoutes.post('/abandon', async (c) => {
 });
 
 adminRoutes.post('/abandon/convert', async (c) => {
-    const { pixId } = await c.req.json();
-    if (!pixId) return c.json({ error: 'pixId obrigatório' }, 400);
+    const { pixId, paymentId, cpf, email, phone } = await c.req.json();
     const abandons = await getAbandons(c.env);
-    const idx = abandons.findIndex(a => String(a.pixId) === String(pixId));
-    if (idx > -1) { abandons[idx].paid = true; abandons[idx].paidAt = new Date().toISOString(); }
-    await saveAbandons(c.env, abandons);
+    const pIdStr = pixId ? String(pixId) : (paymentId ? String(paymentId) : null);
+    const cleanCpf = (cpf || '').replace(/\D/g, '');
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const cleanPhone = (phone || '').replace(/\D/g, '').slice(-8);
+
+    let changed = false;
+    abandons.forEach(a => {
+        const aCpf = (a.cpf || '').replace(/\D/g, '');
+        const aEmail = (a.email || '').trim().toLowerCase();
+        const aPhone = (a.phone || '').replace(/\D/g, '').slice(-8);
+        const aPix = a.pixId ? String(a.pixId) : null;
+        const aPayId = a.paymentId ? String(a.paymentId) : null;
+
+        const isMatch = (pIdStr && (aPix === pIdStr || aPayId === pIdStr)) ||
+                        (cleanCpf && cleanCpf.length >= 9 && aCpf.length >= 9 && (cleanCpf.includes(aCpf) || aCpf.includes(cleanCpf))) ||
+                        (cleanEmail && aEmail && cleanEmail === aEmail) ||
+                        (cleanPhone && cleanPhone.length >= 8 && aPhone.length >= 8 && cleanPhone === aPhone);
+
+        if (isMatch) {
+            a.paid = true;
+            a.paidAt = new Date().toISOString();
+            changed = true;
+        }
+    });
+
+    if (changed) {
+        await saveAbandons(c.env, abandons);
+    }
     return c.json({ success: true });
 });
 

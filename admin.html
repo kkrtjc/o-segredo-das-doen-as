@@ -832,7 +832,7 @@
                     const amzAbandons = abandonsData.filter(a => {
                         if (a.site !== 'amazon') return false;
                         if (a.paid) return false;
-                        if (a.pixId && globalHistory && globalHistory.some(h => String(h.paymentId) === String(a.pixId))) return false;
+                        if (isCustomerPaidInHistory(a, globalHistory)) return false;
                         return true;
                     });
                     if(amzAbandons.length === 0) {
@@ -867,6 +867,30 @@
             } catch(e) {
                 console.error("Render amazon stats error:", e);
             }
+        function isCustomerPaidInHistory(item, historyList) {
+            if (!historyList || historyList.length === 0) return false;
+            const aPix = item.pixId ? String(item.pixId) : null;
+            const aPayId = item.paymentId ? String(item.paymentId) : null;
+            const aCpf = (item.cpf || '').replace(/\D/g, '');
+            const aEmail = (item.email || '').trim().toLowerCase();
+            const aPhone = (item.phone || '').replace(/\D/g, '').slice(-8);
+
+            return historyList.some(h => {
+                const hPayId = h.paymentId ? String(h.paymentId) : (h.id ? String(h.id) : null);
+                if (aPix && hPayId && aPix === hPayId) return true;
+                if (aPayId && hPayId && aPayId === hPayId) return true;
+
+                const hCpf = (h.cpf || h.customer?.cpf || '').replace(/\D/g, '');
+                if (aCpf && hCpf && aCpf.length >= 9 && hCpf.length >= 9 && (aCpf.includes(hCpf) || hCpf.includes(aCpf))) return true;
+
+                const hEmail = (h.email || h.customer?.email || '').trim().toLowerCase();
+                if (aEmail && hEmail && aEmail === hEmail) return true;
+
+                const hPhone = (h.phone || h.customer?.phone || '').replace(/\D/g, '').slice(-8);
+                if (aPhone && hPhone && aPhone.length >= 8 && aPhone === hPhone) return true;
+
+                return false;
+            });
         }
 
         // TAB 2: ABANDONS
@@ -882,11 +906,11 @@
                     return;
                 }
 
-                // Filter out Amazon and Paid (Cross-check with history to fix retroactively)
+                // Filter out Amazon and Paid (Cross-check completo com histórico: pixId, paymentId, CPF, Email, WhatsApp)
                 const officialAbandons = data.filter(a => {
                     if (a.site === 'amazon') return false;
                     if (a.paid) return false;
-                    if (a.pixId && globalHistory && globalHistory.some(h => String(h.paymentId) === String(a.pixId))) return false;
+                    if (isCustomerPaidInHistory(a, globalHistory)) return false;
                     return true;
                 });
 

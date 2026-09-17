@@ -90,6 +90,35 @@ app.post('/register', async (c) => {
     }
 });
 
+// ─── VITRINE E FICHA PÚBLICA DE AVES (Mura Manager) ─────────────────────────
+app.post('/api/showcase', async (c) => {
+    try {
+        const payload = await c.req.json();
+        if (!payload || !payload.id) {
+            return c.json({ error: 'ID do showcase é obrigatório' }, 400);
+        }
+        await c.env.HISTORY.put(`showcase:${payload.id}`, JSON.stringify(payload), {
+            expirationTtl: 60 * 60 * 24 * 180 // 180 dias de validade
+        });
+        return c.json({ success: true, id: payload.id });
+    } catch (err) {
+        return c.json({ error: err.message }, 500);
+    }
+});
+
+app.get('/api/showcase/:id', async (c) => {
+    try {
+        const id = c.req.param('id');
+        const raw = await c.env.HISTORY.get(`showcase:${id}`);
+        if (!raw) {
+            return c.json({ error: 'Ficha ou vitrine não encontrada.' }, 404);
+        }
+        return c.json(JSON.parse(raw));
+    } catch (err) {
+        return c.json({ error: err.message }, 500);
+    }
+});
+
 // Rotas de checkout (PIX, cartão)
 app.route('/api/checkout', checkoutRoutes);
 

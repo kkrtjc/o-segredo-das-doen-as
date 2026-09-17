@@ -109,17 +109,29 @@ checkoutRoutes.post('/pix', async (c) => {
         return c.json({ error: getFriendlyError(data) }, 500);
     }
 
-    // Registra o lead/PIX imediatamente na lista de abandonos
+    // Registra o lead/PIX imediatamente na lista de abandonos (ou atualiza o existente para evitar duplicatas)
     try {
         const { getAbandons, saveAbandons } = await import('./admin.js');
         const abandons = await getAbandons(c.env);
-        abandons.unshift({
+        const cleanPhone = (customer.phone || '').replace(/\D/g, '').slice(-8);
+        const cleanEmail = (customer.email || '').trim().toLowerCase();
+
+        const existingIdx = abandons.findIndex(a => {
+            const aCpf = (a.cpf || '').replace(/\D/g, '');
+            const aEmail = (a.email || '').trim().toLowerCase();
+            const aPhone = (a.phone || '').replace(/\D/g, '').slice(-8);
+            return (cleanCPF && aCpf && cleanCPF === aCpf) ||
+                   (cleanEmail && aEmail && cleanEmail === aEmail) ||
+                   (cleanPhone && aPhone && cleanPhone === aPhone);
+        });
+
+        const pixEntry = {
             id: `pix-${data.id}`,
             date: new Date().toISOString(),
-            name: customer.name || '',
-            email: customer.email || '',
-            phone: customer.phone || '',
-            cpf: cleanCPF,
+            name: customer.name || (existingIdx >= 0 ? abandons[existingIdx].name : ''),
+            email: customer.email || (existingIdx >= 0 ? abandons[existingIdx].email : ''),
+            phone: customer.phone || (existingIdx >= 0 ? abandons[existingIdx].phone : ''),
+            cpf: cleanCPF || (existingIdx >= 0 ? abandons[existingIdx].cpf : ''),
             product: items.map(i => i.title).join(', '),
             total: totalAmount,
             type: 'pix_pending',
@@ -128,7 +140,13 @@ checkoutRoutes.post('/pix', async (c) => {
             pixId: data.id,
             paid: false,
             site: site || 'app'
-        });
+        };
+
+        if (existingIdx >= 0) {
+            abandons[existingIdx] = { ...abandons[existingIdx], ...pixEntry };
+        } else {
+            abandons.unshift(pixEntry);
+        }
         await saveAbandons(c.env, abandons.slice(0, 500));
     } catch (e) {
         console.error('Erro ao registrar abandono PIX', e);

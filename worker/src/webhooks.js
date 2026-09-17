@@ -93,10 +93,33 @@ webhookRoutes.post('/mercadopago', async (c) => {
 
                     // Marcar abandono como pago
                     const abandons = await getAbandons(c.env);
-                    const idx = abandons.findIndex(a => String(a.pixId) === String(paymentId));
-                    if (idx > -1 && !abandons[idx].paid) {
-                        abandons[idx].paid = true;
-                        abandons[idx].paidAt = new Date().toISOString();
+                    const cleanCpf = (customer.cpf || '').replace(/\D/g, '');
+                    const cleanEmail = (customer.email || '').trim().toLowerCase();
+                    const cleanPhone = (customer.phone || '').replace(/\D/g, '').slice(-8);
+                    const pIdStr = String(paymentId);
+                    let changed = false;
+
+                    abandons.forEach(a => {
+                        const aCpf = (a.cpf || '').replace(/\D/g, '');
+                        const aEmail = (a.email || '').trim().toLowerCase();
+                        const aPhone = (a.phone || '').replace(/\D/g, '').slice(-8);
+                        const aPix = a.pixId ? String(a.pixId) : null;
+                        const aPayId = a.paymentId ? String(a.paymentId) : null;
+
+                        const isMatch = (aPix && aPix === pIdStr) ||
+                                        (aPayId && aPayId === pIdStr) ||
+                                        (cleanCpf && cleanCpf.length >= 9 && aCpf.length >= 9 && (cleanCpf.includes(aCpf) || aCpf.includes(cleanCpf))) ||
+                                        (cleanEmail && aEmail && cleanEmail === aEmail) ||
+                                        (cleanPhone && cleanPhone.length >= 8 && aPhone.length >= 8 && cleanPhone === aPhone);
+
+                        if (isMatch && !a.paid) {
+                            a.paid = true;
+                            a.paidAt = new Date().toISOString();
+                            changed = true;
+                        }
+                    });
+
+                    if (changed) {
                         await saveAbandons(c.env, abandons);
                     }
 

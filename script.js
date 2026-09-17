@@ -1058,21 +1058,6 @@ async function renderHomeProducts() {
             return;
         }
 
-        // PIXEL + CAPI: ViewContent (Delayed 10s para filtrar curiosos)
-        setTimeout(() => {
-            const viewEventId = generateEventID();
-            trackPixel('ViewContent', {
-                content_ids: [mainId],
-                content_name: p.title,
-                content_type: 'product',
-                value: p.price,
-                currency: 'BRL'
-            }, viewEventId);
-            trackCAPI('ViewContent', viewEventId, {
-                value: p.price, currency: 'BRL',
-                contentIds: [mainId], contentName: p.title,
-            });
-        }, 10000);
 
         const card = document.createElement('div');
         card.className = `price-card featured`;
@@ -2980,5 +2965,39 @@ document.addEventListener('DOMContentLoaded', () => {
             onFieldBlur();
         }
     });
+})();
+
+// ─── VIEWCONTENT AUTOMÁTICO (FILTRO 10s) ──────────────
+// Dispara ViewContent após 10 segundos na página (Pixel + CAPI Server-Side)
+(function initViewContentTracking() {
+    const FLAG_KEY = 'mura_viewcontent_fired';
+    if (sessionStorage.getItem(FLAG_KEY)) return;
+
+    setTimeout(() => {
+        if (sessionStorage.getItem(FLAG_KEY)) return;
+        sessionStorage.setItem(FLAG_KEY, 'true');
+
+        const viewEventId = generateEventID();
+        const mainId = 'ebook-doencas';
+        const title = 'Protocolo de Elite - O Segredo das Doenças';
+        const price = 89.90;
+
+        trackPixel('ViewContent', {
+            content_ids: [mainId],
+            content_name: title,
+            content_type: 'product',
+            value: price,
+            currency: 'BRL'
+        }, viewEventId);
+
+        trackCAPI('ViewContent', viewEventId, {
+            value: price,
+            currency: 'BRL',
+            contentIds: [mainId],
+            contentName: title,
+        });
+
+        console.log('👁️ [VIEWCONTENT] Disparado com sucesso após 10s (Pixel + CAPI Server-Side)!');
+    }, 10000);
 })();
 
