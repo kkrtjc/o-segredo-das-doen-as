@@ -56,7 +56,7 @@ function getFriendlyError(error) {
 
 // ─── PIX ────────────────────────────────────────────────────
 checkoutRoutes.post('/pix', async (c) => {
-    const { items, customer, facebookEventId, fbc, fbp, externalId, userAgent, site } = await c.req.json();
+    const { items, customer, facebookEventId, fbc, fbp, externalId, userAgent, site, idempotencyKey } = await c.req.json();
     const MP_TOKEN = c.env.MP_ACCESS_TOKEN;
     const BASE_URL = c.env.BASE_URL || 'https://mura-api.joaopaulosantoscamargo.workers.dev';
 
@@ -98,8 +98,8 @@ checkoutRoutes.post('/pix', async (c) => {
         headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${MP_TOKEN}`,
-            // Estável por janela de 30min — evita dupla cobrança por clique duplo
-            'X-Idempotency-Key': `pix-${cleanCPF}-${Math.floor(Date.now() / 1800000)}`,
+            // Chave de idempotência dinâmica: permite que se o valor mudar ou se o cliente reabrir/gerar novo PIX, gere um novo PIX no Mercado Pago com o valor correto
+            'X-Idempotency-Key': c.req.header('X-Idempotency-Key') || idempotencyKey || `pix-${cleanCPF}-${totalAmount.toFixed(2)}-${Date.now()}`,
         },
         body: JSON.stringify(body),
     });
@@ -288,7 +288,7 @@ checkoutRoutes.post('/boleto', async (c) => {
 checkoutRoutes.post('/card', async (c) => {
     const MP_TOKEN = c.env.MP_ACCESS_TOKEN;
     const BASE_URL = c.env.BASE_URL || 'https://mura-api.joaopaulosantoscamargo.workers.dev';
-    const { items, customer, token, installments, payment_method_id, issuer_id, deviceId, facebookEventId, fbc, fbp, externalId, userAgent, site } = await c.req.json();
+    const { items, customer, token, installments, payment_method_id, issuer_id, deviceId, facebookEventId, fbc, fbp, externalId, userAgent, site, idempotencyKey } = await c.req.json();
     const clientIp = c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For')?.split(',')[0]?.trim();
 
     const totalAmount = Number(items.reduce((acc, i) => acc + Number(i.price), 0).toFixed(2));
@@ -356,8 +356,7 @@ checkoutRoutes.post('/card', async (c) => {
         headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${MP_TOKEN}`,
-            // Estável por janela de 30min — evita dupla cobrança por clique duplo
-            'X-Idempotency-Key': `card-${cleanCPF}-${Math.floor(Date.now() / 1800000)}`,
+            'X-Idempotency-Key': c.req.header('X-Idempotency-Key') || idempotencyKey || `card-${cleanCPF}-${token}-${totalAmount.toFixed(2)}`,
         },
         body: JSON.stringify(body),
     });
