@@ -441,6 +441,76 @@ checkoutRoutes.post('/card', async (c) => {
     }
 });
 
+// ─── ASSINATURA RECORRENTE AUTOMÁTICA NO CARTÃO (PREAPPROVAL) ──
+checkoutRoutes.post('/subscription', async (c) => {
+    const MP_TOKEN = c.env.MP_ACCESS_TOKEN;
+    const { items, customer, token, plan, site } = await c.req.json();
+
+    const price = Number(items?.[0]?.price || 39.90);
+    const title = items?.[0]?.title || 'Mura Manager - Assinatura Mensal';
+    const cleanCPF = (customer.cpf || '').replace(/\D/g, '');
+    const cleanEmail = (customer.email || '').trim().toLowerCase();
+
+    if (!cleanEmail || cleanCPF.length !== 11 || !token) {
+        return c.json({ error: 'Dados cadastrais incompletos para criação da assinatura recorrente.' }, 400);
+    }
+
+    const body = {
+        payer_email: cleanEmail,
+        back_url: 'https://mura-manager.pages.dev',
+        reason: title.slice(0, 256),
+        auto_recurring: {
+            frequency: 1,
+            frequency_type: 'months',
+            transaction_amount: price,
+            currency_id: 'BRL'
+        },
+        card_token_id: token,
+        status: 'authorized',
+        external_reference: `${cleanCPF}-SUB-${Date.now()}`
+    };
+
+    const res = await fetch('https://api.mercadopago.com/preapproval', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${MP_TOKEN}`
+        },
+        body: JSON.stringify(body)
+    });
+
+    const result = await res.json();
+
+    if (result.status === 'authorized') {
+        try {
+            const customerObj = {
+                name: customer.name || 'Cliente',
+                email: cleanEmail,
+                phone: customer.phone || '',
+                cpf: cleanCPF
+            };
+            await logSale(c.env, customerObj, [{ title, price }], result.id, 'assinatura_cartão', site || 'mura_app');
+        } catch (e) {
+            console.error('Erro ao registrar venda de assinatura:', e);
+        }
+
+        return c.json({
+            status: 'approved',
+            subscription_id: result.id,
+            id: result.id,
+            reason: result.reason,
+            auto_recurring: result.auto_recurring
+        });
+    }
+
+    const errorMsg = getFriendlyError(result);
+    return c.json({
+        status: result.status || 'rejected',
+        status_detail: result.message || errorMsg,
+        error: errorMsg || 'Não foi possível autorizar a assinatura recorrente com este cartão. Verifique o limite ou utilize outro cartão.'
+    }, 400);
+});
+
 // ─── STATUS DO PAGAMENTO (Polling) ──────────────────────────
 checkoutRoutes.get('/payment/:id', async (c) => {
     const MP_TOKEN = c.env.MP_ACCESS_TOKEN;
