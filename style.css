@@ -1,5 +1,4 @@
-/* --- PROFESSIONAL TYPOGRAPHY SYSTEM --- */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+/* --- PROFESSIONAL TYPOGRAPHY SYSTEM (Fonts loaded in parallel in HTML head) --- */
 
 :root {
     --slate-50: #f8fafc;
@@ -1093,3 +1092,34 @@ header.sticky {
         100% { transform: translateX(calc(-220px * 6)); }
     }
 }
+
+/* === MOBILE PERFORMANCE & 60 FPS SCROLL OPTIMIZATIONS === */
+@media (max-width: 768px) {
+    /* Desativa processamento de Gaussian Blur pesado em placas de vídeo móveis antigas */
+    header.sticky {
+        background: #09090b !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    .card,
+    .testimonial-slider-v2,
+    .glass-card,
+    .hero div[style*="backdrop-filter"] {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: rgba(15, 23, 42, 0.95) !important;
+    }
+
+    /* Reduz complexidade de sombras pesadas durante o scroll */
+    .card, .btn-primary, .floating-cta-btn {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    /* Aceleração por hardware limpa */
+    .hero, .testimonial-track-original, .slider-track {
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        will-change: transform;
+    }
+}

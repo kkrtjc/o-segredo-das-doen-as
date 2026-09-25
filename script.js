@@ -199,11 +199,26 @@ function initStickyCTA() {
     const stickyCta = document.querySelector('.sticky-cta-bar');
     const heroSection = document.querySelector('.hero');
     if (stickyCta && heroSection) {
-        window.addEventListener('scroll', () => {
-            const triggerPoint = heroSection.offsetHeight - 200;
-            if (window.scrollY > triggerPoint) stickyCta.classList.add('visible');
-            else stickyCta.classList.remove('visible');
-        });
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver(([entry]) => {
+                if (!entry.isIntersecting) stickyCta.classList.add('visible');
+                else stickyCta.classList.remove('visible');
+            }, { threshold: 0.05 });
+            observer.observe(heroSection);
+        } else {
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        const triggerPoint = heroSection.offsetHeight - 200;
+                        if (window.scrollY > triggerPoint) stickyCta.classList.add('visible');
+                        else stickyCta.classList.remove('visible');
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+        }
     }
 }
 
@@ -583,19 +598,9 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         let productData = (typeof prefetchedProducts !== 'undefined') ? prefetchedProducts[productId] : null;
 
         if (!productData) {
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 2500);
-                const response = await fetch(`${API_URL}/api/products/${productId}?t=${Date.now()}`, { signal: controller.signal });
-                clearTimeout(timeoutId);
-
-                if (!response.ok) throw new Error("API Error");
-                productData = await response.json();
-            } catch (fetchErr) {
-                console.warn("[CHECKOUT] API Fetch failed, using fallback.", fetchErr);
-                productData = fallbackData[productId] || fallbackData['ebook-doencas'];
-                productData.id = productId;
-            }
+            // INSTANT ACCESS: Fallback local imediato sem travamento de rede no celular
+            productData = fallbackData[productId] || fallbackData['ebook-doencas'];
+            productData.id = productId;
         }
 
         cart.mainProduct = { ...productData, id: productId };
@@ -2718,12 +2723,12 @@ function removeHelpBubbles() {
 document.addEventListener('DOMContentLoaded', () => {
     initHelpBubbles();
 
-    // Hide help bubbles on scroll to prevent "floating" issue
-    window.addEventListener('scroll', removeHelpBubbles, true);
+    // Hide help bubbles on scroll to prevent "floating" issue (passive for 60 FPS)
+    window.addEventListener('scroll', removeHelpBubbles, { passive: true, capture: true });
     // Also scroll on modal container if it's the one scrolling
     const modalContent = document.querySelector('#checkout-modal .modal-content');
     if (modalContent) {
-        modalContent.addEventListener('scroll', removeHelpBubbles);
+        modalContent.addEventListener('scroll', removeHelpBubbles, { passive: true });
     }
 
     // Global click to blur inputs (hide mobile keyboard)
@@ -2839,7 +2844,7 @@ function initComparisonSlider() {
             nextButton.style.opacity = scrollLeft >= maxScroll - 1 ? '0.3' : '1';
         };
         updateArrows();
-        comparisonSlider.addEventListener('scroll', updateArrows);
+        comparisonSlider.addEventListener('scroll', updateArrows, { passive: true });
         prevButton.addEventListener('click', () => comparisonSlider.scrollBy({ left: -300, behavior: 'smooth' }));
         nextButton.addEventListener('click', () => comparisonSlider.scrollBy({ left: 300, behavior: 'smooth' }));
     }

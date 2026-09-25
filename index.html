@@ -211,8 +211,8 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
 
     <link rel="dns-prefetch" href="https://connect.facebook.net">
 
@@ -1748,7 +1748,7 @@
             <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 1rem; margin: 0 auto 2rem; max-width: 800px; backdrop-filter: blur(8px); box-shadow: 0 15px 35px rgba(0,0,0,0.4);">
                 
                 <div style="position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1.5px solid rgba(245,158,11,0.25);">
-                    <video id="vsl-video" controls playsinline webkit-playsinline preload="auto" poster="video_cover_vsl.webp"
+                    <video id="vsl-video" controls playsinline webkit-playsinline preload="none" poster="video_cover_vsl.webp"
                         style="width: 100%; display: block; background: #000; aspect-ratio: 16/9; object-fit: contain;">
                         <source src="venda_vsl.mp4" type="video/mp4">
                         Seu navegador não suporta vídeos.
@@ -1972,7 +1972,7 @@
 
             <div style="position: relative; border-radius: 18px; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.6); border: 1px solid rgba(245,158,11,0.2); margin-bottom: 3rem;">
 
-                <video id="plataforma-vsl-video" controls playsinline webkit-playsinline preload="auto"
+                <video id="plataforma-vsl-video" controls playsinline webkit-playsinline preload="none"
                     style="width: 100%; display: block; background: #000; aspect-ratio: 16/9; object-fit: contain;">
                     <source src="protocolo.mp4" type="video/mp4"><source src="protocolo.webm" type="video/webm">
                     Seu navegador nao suporta videos HTML5.
@@ -6150,31 +6150,35 @@
 
 
 
-            // 2. Controlar via Scroll (Usando o topo da seção de aprendizado como gatilho)
-
-            window.addEventListener('scroll', function () {
-
-                if (!learningSection) return;
-
-
-
-                const sectionPos = learningSection.getBoundingClientRect().top;
-
-
-
-                // Se a seção de aprendizado chegar perto do topo (ou já estiver visível), mostra o CTA
-
-                if (sectionPos < 400) {
-
-                    showCta();
-
-                } else {
-
-                    hideCta();
-
-                }
-
-            });
+            // 2. Controlar via IntersectionObserver (Zero lag na rolagem, 60 FPS)
+            if (learningSection && 'IntersectionObserver' in window) {
+                const ctaObserver = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting || entry.boundingClientRect.top < 400) {
+                            showCta();
+                        } else if (entry.boundingClientRect.top >= 400 && window.scrollY < 200) {
+                            hideCta();
+                        }
+                    });
+                }, { threshold: [0, 0.25], rootMargin: '0px 0px -10% 0px' });
+                ctaObserver.observe(learningSection);
+            } else if (learningSection) {
+                let ticking = false;
+                window.addEventListener('scroll', function () {
+                    if (!ticking) {
+                        window.requestAnimationFrame(function () {
+                            const sectionPos = learningSection.getBoundingClientRect().top;
+                            if (sectionPos < 400) {
+                                showCta();
+                            } else {
+                                hideCta();
+                            }
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                }, { passive: true });
+            }
 
         });
 
