@@ -759,8 +759,17 @@ header.sticky {
     padding: 0.5rem 0.75rem;
     border: 1px solid var(--gray-300);
     border-radius: 0.375rem;
-    font-size: 0.9375rem;
+    font-size: 16px; /* 16px previne zoom no iOS Safari */
     transition: 0.2s;
+    -webkit-text-size-adjust: 100%;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    select,
+    textarea,
+    input {
+        font-size: 16px !important;
+    }
 }
 
 .form-input:focus {

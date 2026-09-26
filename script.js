@@ -2969,6 +2969,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target && INPUT_IDS.includes(e.target.id)) {
             onFieldBlur();
         }
+        if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA')) {
+            window.scrollTo({ left: 0, behavior: 'instant' });
+            const cp = document.getElementById('checkout-page');
+            if (cp) cp.scrollLeft = 0;
+        }
     });
 })();
 
