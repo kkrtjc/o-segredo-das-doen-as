@@ -589,6 +589,160 @@
             color: #64748b;
             border-top: 1px solid var(--card-border);
         }
+    
+        /* Bundle Stack Component (Sobreposições e Economia) */
+        .lp-bundle-stack {
+            background: rgba(14, 22, 38, 0.75);
+            border: 1.5px solid rgba(251, 191, 36, 0.35);
+            border-radius: 16px;
+            padding: 16px 14px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(251, 191, 36, 0.1);
+            text-align: left;
+        }
+
+        .lp-bundle-header {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .lp-bundle-tag {
+            display: inline-block;
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--gold-primary);
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .lp-bundle-header h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        .lp-stack-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .lp-stack-item {
+            background: rgba(10, 15, 30, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .lp-stack-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .lp-stack-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: rgba(251, 191, 36, 0.12);
+            color: var(--gold-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .lp-stack-info h4 {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 2px 0;
+            line-height: 1.2;
+        }
+
+        .lp-stack-info p {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .lp-stack-right {
+            text-align: right;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .lp-stack-old {
+            font-size: 0.78rem;
+            color: #ef4444;
+            text-decoration: line-through;
+            font-weight: 700;
+        }
+
+        .lp-stack-badge {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.35);
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 2px 8px;
+            border-radius: 999px;
+            letter-spacing: 0.3px;
+        }
+
+        .lp-bundle-total-box {
+            border-top: 1px dashed rgba(255, 255, 255, 0.15);
+            margin-top: 12px;
+            padding-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .lp-bundle-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+        }
+
+        .lp-bundle-sum-old {
+            font-size: 1rem;
+            color: #ef4444;
+            text-decoration: line-through;
+            font-weight: 800;
+        }
+
+        .lp-bundle-economy {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            color: #4ade80;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 6px 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
@@ -627,7 +781,7 @@
             <div class="lp-cover-wrap">
                 <img src="capadospintinhos.webp" alt="Manual de Manejo de Pintinhos" class="lp-cover-img" loading="eager">
                 <div class="lp-badge-float">
-                    Por apenas R$ 19,90
+                    Pacote Completo: R$ 27,90
                 </div>
             </div>
 
@@ -638,7 +792,7 @@
 
             <div class="lp-price-box">
                 <span class="lp-old-price">De R$ 49,90</span>
-                <span class="lp-current-price">Por apenas R$ 19,90</span>
+                <span class="lp-current-price">Pacote Completo: R$ 27,90</span>
                 <div class="lp-trust-row">
                     <div class="lp-trust-item"><i class="fa-solid fa-bolt"></i> Acesso Imediato no Celular</div>
                     <div class="lp-trust-item"><i class="fa-solid fa-shield"></i> Compra 100% Segura</div>
@@ -694,7 +848,7 @@
             </p>
 
             <button onclick="openCheckout('ebook-pintinhos')" class="lp-cta-btn" style="font-size: 1rem; padding: 14px 18px;">
-                <i class="fa-solid fa-shield-halved"></i> BLINDAR MEU PINTEIRO POR R$ 19,90
+                <i class="fa-solid fa-shield-halved"></i> BLINDAR MEU PINTEIRO POR R$ 27,90
             </button>
         </div>
 
@@ -752,17 +906,17 @@
         <!-- SEÇÃO: CAIXA DE OFERTA FINAL -->
         <div class="lp-offer-box">
             <span class="lp-sec-tag" style="color: var(--gold-primary);">OFERTA ESPECIAL DE ACESSO IMEDIATO</span>
-            <h3 class="lp-offer-title">MANUAL DE MANEJO DE PINTINHOS</h3>
-            <p class="lp-offer-desc">O Guia Prático para Alcançar 98% de Sobrevivência no seu Pinteiro</p>
+            <h3 class="lp-offer-title">PACOTE COMPLETO DE MANEJO DOS PINTINHOS</h3>
+            <p class="lp-offer-desc">Tabela de Vacinação + Guia de Temperatura + Prevenção de Doenças</p>
 
             <div class="lp-price-tag">
-                <div class="lp-price-de">De R$ 49,90</div>
-                <div class="lp-price-por">R$ 19,90</div>
-                <div class="lp-price-sub">Pagamento único no Pix ou Cartão (sem mensalidade)</div>
+                <div class="lp-price-de" style="font-size: 1.1rem; color: #ef4444; font-weight: 700; text-decoration: line-through;">De R$ 129,70</div>
+                <div class="lp-price-por" style="font-size: 2.5rem; color: #22c55e; font-weight: 900;">R$ 27,90</div>
+                <div class="lp-price-sub">ou 3x de R$ 9,90 no cartão (ou Pix à vista)</div>
             </div>
 
             <button onclick="openCheckout('ebook-pintinhos')" class="lp-cta-btn" style="font-size: 1.15rem; padding: 18px 20px;">
-                <i class="fa-solid fa-arrow-right"></i> GARANTIR MEU ACESSO POR R$ 19,90
+                <i class="fa-solid fa-arrow-right"></i> GARANTIR MEU ACESSO POR R$ 27,90
             </button>
 
             <div class="lp-trust-row" style="margin-top: 14px;">
@@ -809,11 +963,11 @@
     <!-- Barra Fixa Inferior no Mobile -->
     <div class="lp-sticky-bar">
         <div class="lp-sticky-price">
-            <span>De R$ 49,90</span>
-            <span>R$ 19,90</span>
+            <span>De R$ 129,70</span>
+            <span>R$ 27,90</span>
         </div>
         <button onclick="openCheckout('ebook-pintinhos')" class="lp-sticky-btn">
-            SALVAR MEUS PINTINHOS <i class="fa-solid fa-arrow-right" style="margin-left: 4px;"></i>
+            SALVAR MEUS PINTINHOS POR R$ 27,90 <i class="fa-solid fa-arrow-right" style="margin-left: 4px;"></i>
         </button>
     </div>
 
@@ -3010,36 +3164,32 @@
                             <!-- Lista de itens -->
                             <div id="checkout-item-list" style="border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 2px;">
                                 <div class="ck-item-chip">
-                                    <span class="ck-item-chip-name">🐥 Manual Prático de Manejo dos Pintinhos</span>
-                                    <span class="ck-item-chip-price">R$ 49,90</span>
-                                </div>
-                                <div class="ck-item-chip">
-                                    <span class="ck-item-chip-name">🛡️ Protocolo Primeiros 30 Dias (98% Sobrevivência)</span>
+                                    <span class="ck-item-chip-name">💉 Tabela Completa de Vacinação</span>
                                     <span class="ck-item-chip-price">R$ 29,90</span>
                                 </div>
                                 <div class="ck-item-chip">
-                                    <span class="ck-item-chip-name">💧 Fórmula da Bebida de Arranque Inicial</span>
-                                    <span class="ck-item-chip-price">R$ 19,90</span>
+                                    <span class="ck-item-chip-name">🌡️ Guia de Temperatura e Ambiente Ideal</span>
+                                    <span class="ck-item-chip-price">R$ 39,90</span>
                                 </div>
                                 <div class="ck-item-chip">
-                                    <span class="ck-item-chip-name">🔄 Acesso Vitalício no WhatsApp e E-mail</span>
-                                    <span class="ck-item-chip-price">R$ 29,90</span>
+                                    <span class="ck-item-chip-name">🛡️ Principais Doenças, Prevenção e Tratamento</span>
+                                    <span class="ck-item-chip-price">R$ 59,90</span>
                                 </div>
                             </div>
 
-                            <div style="font-size: 0.78rem; color: #94a3b8; font-weight: 500;">De <span id="top-checkout-card-price" style="text-decoration: line-through; color: #ef4444; font-weight: bold;">R$ 49,90</span> por apenas:</div>
+                            <div style="font-size: 0.78rem; color: #94a3b8; font-weight: 500;">De <span id="top-checkout-card-price" style="text-decoration: line-through; color: #ef4444; font-weight: bold;">R$ 129,70</span> por apenas:</div>
 
                             <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 4px;">
-                                <span id="checkout-product-price-display" style="font-size: 1.6rem; color: #10b981; font-weight: 900; line-height: 1.1;">R$ 19,90</span>
-                                <span id="top-checkout-card-installment" style="font-size: 0.85rem; color: #cbd5e1; font-weight: 600;">ou 2x de R$ 10,40</span>
+                                <span id="checkout-product-price-display" style="font-size: 1.6rem; color: #10b981; font-weight: 900; line-height: 1.1;">R$ 27,90</span>
+                                <span id="top-checkout-card-installment" style="font-size: 0.85rem; color: #cbd5e1; font-weight: 600;">ou 3x de R$ 9,90</span>
                             </div>
 
                             <div id="checkout-savings-badge" style="margin-top: 6px; display: inline-block;">
-                                <span style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.72rem; font-weight: 900; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.25); text-transform: uppercase; letter-spacing: 0.5px;">💰 VOCÊ ECONOMIZA: R$ 30,00 (60% OFF)</span>
+                                <span style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.72rem; font-weight: 900; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.25); text-transform: uppercase; letter-spacing: 0.5px;">💰 VOCÊ ECONOMIZA: R$ 101,80 (78% OFF)</span>
                             </div>
 
                             <div style="font-size: 0.72rem; color: #fbbf24; margin-top: 6px; font-style: italic; border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 6px; font-weight: 600;">
-                                Menos de 67 centavos por dia para salvar seus pintinhos.
+                                Menos de 93 centavos por dia para salvar seus pintinhos.
                             </div>
 
                         </div>
