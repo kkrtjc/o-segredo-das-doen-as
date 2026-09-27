@@ -828,15 +828,17 @@ header.sticky {
     color: var(--gray-800);
 }
 
-/* Order Bump White Design */
+/* Order Bump Container */
 #order-bump-area {
-    margin: 1.5rem 0;
-    transition: 0.3s;
+    margin: 1rem 0;
+    transition: 0.2s;
+    background: transparent;
 }
 
-#order-bump-area:hover {
-    border-color: #d97706;
-    background: #fffbeb;
+#order-bump-area:hover,
+#order-bump-area:focus,
+#order-bump-area:active {
+    background: transparent;
 }
 
 .order-bump-checkbox {

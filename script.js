@@ -843,10 +843,10 @@ function renderOrderBumps(bumps) {
 
                         <!-- Price -->
                         <div style="text-align: center; margin-top: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px;">
-                            <span style="color: #a3a3a3; font-size: 0.75rem; text-decoration: line-through; text-shadow: 1px 1px 1px #000;">De R$ ${isManejo ? '99,90' : '89,90'}</span>
+                            <span style="color: #a3a3a3; font-size: 0.75rem; text-decoration: line-through; text-shadow: 1px 1px 1px #000;">De R$ ${isManejo ? '99,90' : (isDoencas ? '89,90' : '59,90')}</span>
                             <span style="color: #4ade80; font-size: 0.85rem; font-weight: 800; text-shadow: 0 0 8px rgba(74,222,128,0.4), 1px 1px 2px #000; line-height: 1.15;">
-                                Por APENAS <span style="font-size: 1.05rem;">R$ ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.price)).replace('R$ ', '')}</span><br>
-                                ${isManejo ? 'você salva seus pintinhos' : ', você economiza até 60% na ração'}
+                                Por apenas <span style="font-size: 1.05rem;">R$ ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.price)).replace('R$ ', '')}</span><br>
+                                ${isManejo ? 'você salva seus pintinhos' : (isDoencas ? 'você aprende a tratar mais de 10 diferentes doenças das galinhas.' : ', você economiza até 60% na ração')}
                             </span>
                         </div>
                     </div>
@@ -874,18 +874,22 @@ function toggleBump(bumpId) {
     if (card) {
         if (cart.bumps.includes(bumpId)) {
             card.classList.add('selected');
+            card.style.borderColor = '#10b981';
+            card.style.boxShadow = '0 0 15px rgba(16, 185, 129, 0.45), inset 0 0 20px rgba(0,0,0,0.8)';
             const check = card.querySelector('.bump-check-wrapper');
             if (check) {
                 check.style.background = '#10b981';
                 check.style.borderColor = '#10b981';
-                check.innerHTML = '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.9rem;"></i>';
+                check.innerHTML = '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.75rem;"></i>';
             }
         } else {
             card.classList.remove('selected');
+            card.style.borderColor = '#ffc107';
+            card.style.boxShadow = '0 4px 15px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.8)';
             const check = card.querySelector('.bump-check-wrapper');
             if (check) {
-                check.style.background = 'transparent';
-                check.style.borderColor = '#fbbf24';
+                check.style.background = 'rgba(0,0,0,0.7)';
+                check.style.borderColor = '#ffc107';
                 check.innerHTML = '';
             }
         }
