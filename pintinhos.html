@@ -545,6 +545,17 @@
             justify-content: space-between;
             gap: 12px;
             box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+            transform: translateY(120%);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+            will-change: transform, opacity;
+        }
+
+        .lp-sticky-bar.visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .lp-sticky-price {
@@ -579,6 +590,116 @@
             flex-grow: 1;
             text-align: center;
             box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+        }
+
+        /* Delivery / Como Recebe o Conteúdo */
+        .lp-delivery-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .lp-delivery-card {
+            background: var(--card-dark);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 18px 16px;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .lp-delivery-card.featured {
+            border: 1.5px solid rgba(251, 191, 36, 0.4);
+            background: linear-gradient(180deg, rgba(251, 191, 36, 0.05), rgba(14, 22, 38, 0.9));
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(251, 191, 36, 0.08);
+        }
+
+        .lp-delivery-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .lp-delivery-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .lp-delivery-badge {
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.12);
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 3px;
+        }
+
+        .lp-delivery-badge.gold {
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.15);
+        }
+
+        .lp-delivery-card h4 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .lp-delivery-card p {
+            font-size: 0.84rem;
+            color: #cbd5e1;
+            line-height: 1.55;
+            margin: 0 0 12px 0;
+        }
+
+        .lp-delivery-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 10px;
+        }
+
+        .lp-delivery-features li {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lp-delivery-features li i {
+            color: #22c55e;
+            font-size: 0.75rem;
+        }
+
+        .lp-instant-delivery-banner {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 12px;
+            padding: 14px 16px;
+            text-align: left;
+            margin-top: 10px;
         }
 
         /* Footer */
@@ -848,7 +969,7 @@
             </div>
 
             <!-- Preço e Botão de Ação -->
-            <div class="lp-price-box" style="margin-top: 10px; margin-bottom: 20px;">
+            <div class="lp-price-box" id="lp-first-price" style="margin-top: 10px; margin-bottom: 20px;">
                 <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 4px;">Tudo isso hoje por apenas:</div>
                 <div style="display: flex; align-items: baseline; justify-content: center; gap: 8px;">
                     <span class="lp-old-price" style="font-size: 1.1rem; color: #ef4444; font-weight: 700; text-decoration: line-through;">De R$ 129,70</span>
@@ -959,6 +1080,68 @@
             </div>
         </div>
 
+        <!-- SEÇÃO: COMO VOCÊ RECEBE O CONTEÚDO -->
+        <div class="lp-section">
+            <span class="lp-sec-tag" style="color: var(--gold-primary);"><i class="fa-solid fa-box-open"></i> FORMATO E ENTREGA</span>
+            <h2 class="lp-sec-title">Como você recebe o seu conteúdo:</h2>
+            <p style="font-size: 0.88rem; color: #94a3b8; text-align: center; margin: -6px 0 20px 0;">
+                Tudo estruturado de forma 100% profissional para você começar a aplicar hoje mesmo no seu criatório.
+            </p>
+
+            <div class="lp-delivery-grid">
+                <!-- Card 1: Arquivo PDF Profissional -->
+                <div class="lp-delivery-card">
+                    <div class="lp-delivery-header">
+                        <div class="lp-delivery-icon" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <div>
+                            <span class="lp-delivery-badge">DOWNLOAD IMEDIATO</span>
+                            <h4>Arquivo PDF Profissional</h4>
+                        </div>
+                    </div>
+                    <p>
+                        Você recebe um <strong>arquivo PDF completo e diagramado profissionalmente</strong>, pronto para você baixar no celular, tablet ou computador. Você pode consultar mesmo sem conexão com a internet direto no seu pinteiro ou se preferir, imprimir todas as tabelas práticas.
+                    </p>
+                    <ul class="lp-delivery-features">
+                        <li><i class="fa-solid fa-check"></i> Conteúdo profissional, didático e ricamente ilustrado</li>
+                        <li><i class="fa-solid fa-check"></i> Calendário prático de vacinação e tabelas de calor</li>
+                        <li><i class="fa-solid fa-check"></i> Baixe uma vez e o material fica salvo com você para sempre</li>
+                    </ul>
+                </div>
+
+                <!-- Card 2: Plataforma Premium -->
+                <div class="lp-delivery-card featured">
+                    <div class="lp-delivery-header">
+                        <div class="lp-delivery-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">
+                            <i class="fa-solid fa-crown"></i>
+                        </div>
+                        <div>
+                            <span class="lp-delivery-badge gold">ACESSO EXCLUSIVO</span>
+                            <h4>Acesso à Nossa Plataforma Premium</h4>
+                        </div>
+                    </div>
+                    <p>
+                        Além do arquivo em PDF, você ganha acesso exclusivo à nossa <strong>Plataforma Premium</strong> com estrutura profissional, reunindo informações privilegiadas e conteúdos atualizados sobre a criação e proteção das aves.
+                    </p>
+                    <ul class="lp-delivery-features">
+                        <li><i class="fa-solid fa-check"></i> Estrutura profissional, moderna e de fácil navegação</li>
+                        <li><i class="fa-solid fa-check"></i> Informações privilegiadas e estratégias avançadas de criação</li>
+                        <li><i class="fa-solid fa-check"></i> Envio imediato do seu acesso pelo WhatsApp e e-mail</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Box de Entrega Imediata -->
+            <div class="lp-instant-delivery-banner">
+                <i class="fa-solid fa-bolt-lightning" style="color: #fbbf24; font-size: 1.4rem; flex-shrink: 0;"></i>
+                <div>
+                    <strong style="color: #ffffff; display: block; font-size: 0.9rem;">Recebimento em menos de 1 minuto:</strong>
+                    <span style="color: #94a3b8; font-size: 0.8rem; line-height: 1.4; display: block;">Assim que o pagamento for aprovado (Pix ou Cartão), o link direto do PDF e os acessos da plataforma chegam instantaneamente no seu WhatsApp e no seu e-mail.</span>
+                </div>
+            </div>
+        </div>
+
         <!-- SEÇÃO: GARANTIA -->
         <div class="lp-section">
             <div class="lp-guarantee-card">
@@ -998,8 +1181,8 @@
             <h2 class="lp-sec-title">Perguntas comuns dos criadores:</h2>
 
             <div class="lp-faq-item">
-                <h5><i class="fa-solid fa-circle-question"></i> Como eu recebo o manual?</h5>
-                <p>Assim que o Pix ou Cartão for aprovado, o link de acesso chega direto no seu WhatsApp e no seu e-mail em menos de 1 minuto. Você pode ler no celular, tablet ou computador.</p>
+                <h5><i class="fa-solid fa-circle-question"></i> Como eu recebo o conteúdo?</h5>
+                <p>O envio é 100% imediato e automatizado! Assim que seu Pix ou Cartão for aprovado, você recebe no WhatsApp e no seu e-mail o link para baixar o arquivo PDF profissional (para ler no celular ou imprimir) e também os dados de acesso exclusivo à nossa Plataforma Premium com informações privilegiadas.</p>
             </div>
 
             <div class="lp-faq-item">
@@ -4066,5 +4249,36 @@
     <div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 10001;"></div>
 
     <script src="script.js"></script>
+    <script>
+        // Exibe o botão fixo inferior apenas após o primeiro preço da página aparecer na tela
+        (function() {
+            function setupStickyBarVisibility() {
+                var stickyBar = document.querySelector('.lp-sticky-bar');
+                var trigger = document.getElementById('lp-first-price');
+                if (!stickyBar || !trigger) return;
+
+                function checkPriceVisibility() {
+                    var rect = trigger.getBoundingClientRect();
+                    // Quando o topo do bloco de preço entra na janela de visualização
+                    if (rect.top <= window.innerHeight * 0.95) {
+                        stickyBar.classList.add('visible');
+                    } else {
+                        stickyBar.classList.remove('visible');
+                    }
+                }
+
+                window.addEventListener('scroll', checkPriceVisibility, { passive: true });
+                window.addEventListener('resize', checkPriceVisibility, { passive: true });
+                // Verificação inicial
+                checkPriceVisibility();
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', setupStickyBarVisibility);
+            } else {
+                setupStickyBarVisibility();
+            }
+        })();
+    </script>
 </body>
 </html>
