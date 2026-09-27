@@ -573,8 +573,8 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         },
         'ebook-pintinhos': {
             title: 'Manual de Manejo de Pintinhos',
-            price: 49.90,
-            originalPrice: 99.00,
+            price: 19.90,
+            originalPrice: 49.90,
             cover: 'capadospintinhos.webp',
             fullBumps: []
         },
@@ -681,9 +681,9 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             if (topCardInstEl) topCardInstEl.innerHTML = `ou 4x de R$ 22,47 sem juros`;
             document.getElementById('checkout-product-price-display').innerText = 'R$ 89,90';
         } else if (productId === 'ebook-pintinhos') {
-            if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 99,00';
-            if (topCardInstEl) topCardInstEl.innerHTML = `ou 4x de R$ 12,47 sem juros`;
-            document.getElementById('checkout-product-price-display').innerText = 'R$ 49,90';
+            if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 49,90';
+            if (topCardInstEl) topCardInstEl.innerHTML = `ou 2x de R$ 10,40`;
+            document.getElementById('checkout-product-price-display').innerText = 'R$ 19,90';
         } else {
             if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 149,90';
             if (topCardInstEl) topCardInstEl.innerHTML = `ou 4x de R$ 22,47 sem juros`;
@@ -1478,8 +1478,8 @@ async function handlePayment(method) {
     if (method === 'card') {
         const installments = parseInt(document.getElementById('installments-select')?.value || '1', 10);
         if (installments > 1) {
-            if (cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite') {
-                mainPrice = cart.mainProduct.price; // 149.90
+            if (cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite' || cart.mainProduct.id === 'ebook-pintinhos') {
+                mainPrice = cart.mainProduct.price;
             } else {
                 mainPrice = cart.mainProduct.price + 20; // 109.90
             }

@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover">
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-430QD56D2K"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-430QD56D2K');
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start': new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-WVBJNXCQ');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Meta Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1346740157465853');
+
+        var pvEventId = 'pv_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+        fbq('track', 'PageView', {}, { eventID: pvEventId });
+
+        // CAPI SERVER-SIDE: PageView
+        (function() {
+            var ck = document.cookie.split(';').reduce(function(a, c) {
+                var p = c.trim().split('=');
+                if (p[0]) a[p[0]] = p[1] || '';
+                return a;
+            }, {});
+            var params = new URLSearchParams(window.location.search);
+            var fbcFromUrl = params.get('fbclid');
+            var fbcValue = ck['_fbc'] || '';
+            if (!fbcValue && fbcFromUrl) fbcValue = 'fb.1.' + Date.now() + '.' + fbcFromUrl;
+            var sid = sessionStorage.getItem('mura_session_id');
+            if (!sid) {
+                sid = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+                sessionStorage.setItem('mura_session_id', sid);
+            }
+            var testCode = params.get('testCode') || sessionStorage.getItem('mura_test_code') || null;
+            if (testCode && !sessionStorage.getItem('mura_test_code')) sessionStorage.setItem('mura_test_code', testCode);
+            var apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                ? 'http://localhost:10000'
+                : 'https://mura-api.joaopaulojaguar.workers.dev';
+            fetch(apiUrl + '/api/capi-event', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    eventName: 'PageView',
+                    eventId: pvEventId,
+                    sourceUrl: window.location.href,
+                    customer: {},
+                    fbc: fbcValue,
+                    fbp: ck['_fbp'] || '',
+                    externalId: sid,
+                    testCode: testCode
+                }),
+                keepalive: true
+            }).catch(function(){});
+        })();
+    </script>
+
+    <title>Manejo de Pintinhos: 98% de Sobrevivência | Protocolo Elite</title>
+
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        :root {
+            --bg-dark: #070a12;
+            --card-dark: #0e1626;
+            --card-border: rgba(255, 255, 255, 0.08);
+            --gold-primary: #fbbf24;
+            --gold-gradient: linear-gradient(135deg, #fbbf24, #d97706);
+            --green-btn: linear-gradient(135deg, #22c55e, #16a34a);
+            --green-glow: rgba(34, 197, 94, 0.25);
+            --red-alert: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .lp-topbar {
+            background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d);
+            color: #ffffff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-align: center;
+            padding: 9px 12px;
+            letter-spacing: 0.3px;
+        }
+
+        .lp-container {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Hero */
+        .lp-hero {
+            padding: 24px 0 32px 0;
+            text-align: center;
+        }
+
+        .lp-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 191, 36, 0.12);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: var(--gold-primary);
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 6px 14px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .lp-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.85rem;
+            line-height: 1.25;
+            font-weight: 900;
+            color: #ffffff;
+            margin: 0 0 16px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .lp-title span.highlight-red {
+            color: #ef4444;
+            text-decoration: underline decoration-red-500/40;
+        }
+
+        .lp-title span.highlight-gold {
+            color: var(--gold-primary);
+        }
+
+        .lp-subtitle {
+            font-size: 1rem;
+            line-height: 1.55;
+            color: #cbd5e1;
+            margin: 0 0 20px 0;
+        }
+
+        .lp-pills {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .lp-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 8px;
+            color: #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lp-pill i {
+            color: #22c55e;
+        }
+
+        .lp-cover-wrap {
+            position: relative;
+            max-width: 320px;
+            margin: 0 auto 24px auto;
+        }
+
+        .lp-cover-img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            display: block;
+        }
+
+        .lp-badge-float {
+            position: absolute;
+            bottom: -10px;
+            right: 0;
+            background: var(--gold-gradient);
+            color: #0f172a;
+            font-weight: 900;
+            font-size: 0.85rem;
+            padding: 6px 14px;
+            border-radius: 999px;
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+            text-transform: uppercase;
+        }
+
+        /* CTA Button */
+        .lp-cta-btn {
+            display: block;
+            width: 100%;
+            background: var(--green-btn);
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 900;
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.35);
+            animation: lpPulse 2.2s infinite;
+            letter-spacing: 0.3px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .lp-cta-btn:active {
+            transform: scale(0.98);
+        }
+
+        @keyframes lpPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 12px rgba(34, 197, 94, 0);
+            }
+        }
+
+        .lp-price-box {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 24px;
+        }
+
+        .lp-old-price {
+            font-size: 0.85rem;
+            color: #64748b;
+            text-decoration: line-through;
+        }
+
+        .lp-current-price {
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: #22c55e;
+            margin-left: 6px;
+        }
+
+        .lp-trust-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            font-size: 0.72rem;
+            color: #94a3b8;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .lp-trust-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .lp-trust-item i {
+            color: #22c55e;
+        }
+
+        /* Section Cards */
+        .lp-section {
+            padding: 28px 0;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .lp-sec-tag {
+            color: var(--gold-primary);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .lp-sec-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 16px 0;
+            line-height: 1.3;
+        }
+
+        .lp-pain-card {
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-left: 4px solid #ef4444;
+            padding: 14px 16px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .lp-pain-card h4 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #f87171;
+            margin: 0 0 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lp-pain-card p {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .lp-callout-truth {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.08), rgba(217, 119, 6, 0.05));
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .lp-callout-truth p {
+            font-size: 0.95rem;
+            color: #f8fafc;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .lp-callout-truth strong {
+            color: var(--gold-primary);
+        }
+
+        /* Pillars */
+        .lp-pillar-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .lp-pillar-card {
+            background: var(--card-dark);
+            border: 1px solid var(--card-border);
+            padding: 16px;
+            border-radius: 12px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .lp-pillar-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: rgba(34, 197, 94, 0.12);
+            color: #22c55e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .lp-pillar-card h4 {
+            font-size: 0.98rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 4px 0;
+        }
+
+        .lp-pillar-card p {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Guarantee Box */
+        .lp-guarantee-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 14px;
+            padding: 20px 18px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .lp-guarantee-card img {
+            width: 65px;
+            height: auto;
+            flex-shrink: 0;
+        }
+
+        .lp-guarantee-card h4 {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #22c55e;
+            margin: 0 0 4px 0;
+        }
+
+        .lp-guarantee-card p {
+            font-size: 0.82rem;
+            color: #cbd5e1;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Offer Box */
+        .lp-offer-box {
+            background: linear-gradient(180deg, #0e172a, #070b16);
+            border: 2px solid var(--gold-primary);
+            border-radius: 16px;
+            padding: 24px 18px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(251, 191, 36, 0.15);
+            margin: 28px 0;
+        }
+
+        .lp-offer-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin: 0 0 6px 0;
+        }
+
+        .lp-offer-desc {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin: 0 0 16px 0;
+        }
+
+        .lp-price-tag {
+            margin-bottom: 20px;
+        }
+
+        .lp-price-de {
+            font-size: 0.95rem;
+            color: #64748b;
+            text-decoration: line-through;
+        }
+
+        .lp-price-por {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #22c55e;
+            line-height: 1;
+            margin: 6px 0;
+        }
+
+        .lp-price-sub {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+
+        /* FAQ */
+        .lp-faq-item {
+            background: var(--card-dark);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+        }
+
+        .lp-faq-item h5 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lp-faq-item h5 i {
+            color: var(--gold-primary);
+            font-size: 0.8rem;
+        }
+
+        .lp-faq-item p {
+            font-size: 0.82rem;
+            color: #94a3b8;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Sticky bottom bar on mobile */
+        .lp-sticky-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(9, 13, 22, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 16px;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .lp-sticky-price {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lp-sticky-price span:first-child {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            text-decoration: line-through;
+        }
+
+        .lp-sticky-price span:last-child {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #22c55e;
+            line-height: 1;
+        }
+
+        .lp-sticky-btn {
+            background: var(--green-btn);
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 0.95rem;
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            flex-grow: 1;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+        }
+
+        /* Footer */
+        .lp-footer {
+            padding: 40px 0 80px 0;
+            text-align: center;
+            font-size: 0.72rem;
+            color: #64748b;
+            border-top: 1px solid var(--card-border);
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WVBJNXCQ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Top Alert Bar -->
+    <div class="lp-topbar">
+        ⚠️ <strong>ALERTA DE PINTEIRO:</strong> 8 em cada 10 pintinhos morrem por erros invisíveis nas primeiras 72 horas.
+    </div>
+
+    <div class="lp-container">
+        
+        <!-- HERO -->
+        <div class="lp-hero">
+            <div class="lp-tag">
+                <i class="fa-solid fa-shield-halved"></i> MÉTODO DE MANEJO AVÍCOLA PRÁTICO
+            </div>
+
+            <h1 class="lp-title">
+                Cansado de ver seus pintinhos <span class="highlight-red">amontoarem e morrerem</span> na primeira semana?
+            </h1>
+
+            <p class="lp-subtitle">
+                O método simples de manejo caseiro para alcançar <strong>98% de taxa de sobrevivência</strong> no seu pinteiro — sem gastar com remédios caros de farmácia ou equipamentos industriais.
+            </p>
+
+            <div class="lp-pills">
+                <div class="lp-pill"><i class="fa-solid fa-check"></i> 98% Sobrevivência</div>
+                <div class="lp-pill"><i class="fa-solid fa-check"></i> 1º ao 30º dia blindados</div>
+                <div class="lp-pill"><i class="fa-solid fa-check"></i> Caipira, Poedeira e Índio</div>
+            </div>
+
+            <!-- 3D Book Cover -->
+            <div class="lp-cover-wrap">
+                <img src="capadospintinhos.webp" alt="Manual de Manejo de Pintinhos" class="lp-cover-img" loading="eager">
+                <div class="lp-badge-float">
+                    Por apenas R$ 19,90
+                </div>
+            </div>
+
+            <!-- Main CTA -->
+            <button onclick="openCheckout('ebook-pintinhos')" class="lp-cta-btn">
+                <i class="fa-solid fa-lock"></i> QUERO SALVAR MEUS PINTINHOS AGORA
+            </button>
+
+            <div class="lp-price-box">
+                <span class="lp-old-price">De R$ 49,90</span>
+                <span class="lp-current-price">Por apenas R$ 19,90</span>
+                <div class="lp-trust-row">
+                    <div class="lp-trust-item"><i class="fa-solid fa-bolt"></i> Acesso Imediato no Celular</div>
+                    <div class="lp-trust-item"><i class="fa-solid fa-shield"></i> Compra 100% Segura</div>
+                    <div class="lp-trust-item"><i class="fa-solid fa-medal"></i> Garantia 7 Dias</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO: AS DORES DO CRIADOR -->
+        <div class="lp-section">
+            <span class="lp-sec-tag">VOCÊ JÁ PASSOU POR ISSO?</span>
+            <h2 class="lp-sec-title">A frustração de ir ao pinteiro pela manhã e encontrar animais mortos...</h2>
+
+            <div class="lp-pain-card">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Pintinhos amontoados e asfixiados</h4>
+                <p>Eles piam alto a noite toda com frio, juntam todos num canto da caixa para se esquentarem e os de baixo amanhecem esmagados e sem ar.</p>
+            </div>
+
+            <div class="lp-pain-card">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Bebedouro virado e cama molhada</h4>
+                <p>O pintinho se molha, pega uma corrente de ar fria na madrugada e em poucas horas fica triste, encolhido e morre sem você entender o porquê.</p>
+            </div>
+
+            <div class="lp-pain-card">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Cloaca empastada e diarreia branca</h4>
+                <p>O intestino trava, as fezes secam e grudam na cloaca, impedindo a ave de evacuar. Em 48 horas ela para de comer e definha.</p>
+            </div>
+
+            <div class="lp-pain-card">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Prejuízo financeiro e desânimo</h4>
+                <p>Comprar 50 ou 100 pintinhos caros (ou tirar com tanto cuidado na chocadeira) para ver 30% a 50% morrerem antes do 20º dia.</p>
+            </div>
+
+            <div class="lp-callout-truth">
+                <p>
+                    A verdade que quase ninguém te conta: <strong>Pintinho não morre porque é fraco.</strong><br>
+                    Ele morre porque 95% dos criadores cometem <strong>pequenos erros invisíveis de manejo</strong> nas primeiras 72 horas de vida.
+                </p>
+            </div>
+        </div>
+
+        <!-- SEÇÃO: COMPARAÇÃO VISUAL -->
+        <div class="lp-section">
+            <span class="lp-sec-tag">A DIFERENÇA DO MANEJO CORRETO</span>
+            <h2 class="lp-sec-title">Olhe a diferença entre criar na sorte vs. criar com método:</h2>
+
+            <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border); margin-bottom: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+                <img src="comparacao_pintinhos.webp" alt="Comparação Pintinhos com e sem Manejo" style="width: 100%; height: auto; display: block;" loading="lazy">
+            </div>
+
+            <p style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.6; text-align: center; margin: 0 0 20px 0;">
+                Com o manejo certo, seu lote fica <strong>uniforme, com empenamento rápido, alta imunidade natural</strong> e ganho de peso acelerado.
+            </p>
+
+            <button onclick="openCheckout('ebook-pintinhos')" class="lp-cta-btn" style="font-size: 1rem; padding: 14px 18px;">
+                <i class="fa-solid fa-shield-halved"></i> BLINDAR MEU PINTEIRO POR R$ 19,90
+            </button>
+        </div>
+
+        <!-- SEÇÃO: OS 4 PILARES DO MANEJO -->
+        <div class="lp-section">
+            <span class="lp-sec-tag">O QUE VOCÊ VAI DOMINAR</span>
+            <h2 class="lp-sec-title">Os 4 Pilares para atingir 98% de sobrevivência no seu lote:</h2>
+
+            <div class="lp-pillar-grid">
+                <div class="lp-pillar-card">
+                    <div class="lp-pillar-icon"><i class="fa-solid fa-glass-water"></i></div>
+                    <div>
+                        <h4>1. O Primeiro Gole de Ouro (Recepção)</h4>
+                        <p>A bebida caseira de arranque nas primeiras 24 horas que limpa o mecônio, hidrata os órgãos internos e ativa o intestino antes da primeira ração.</p>
+                    </div>
+                </div>
+
+                <div class="lp-pillar-card">
+                    <div class="lp-pillar-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                    <div>
+                        <h4>2. Altura da Lâmpada e Temperatura Exata</h4>
+                        <p>Como "ler" o comportamento dos pintinhos para saber se o calor está certo sem precisar de termômetro caro. Acabe de vez com o amontoamento noturno.</p>
+                    </div>
+                </div>
+
+                <div class="lp-pillar-card">
+                    <div class="lp-pillar-icon"><i class="fa-solid fa-wheat-awn"></i></div>
+                    <div>
+                        <h4>3. Cama Seca e Bloqueio da Coccidiose</h4>
+                        <p>O manejo correto do piso e bebedouros para que a cama nunca fique úmida. Adeus diarreia vermelha (com sangue) e cloaca empastada.</p>
+                    </div>
+                </div>
+
+                <div class="lp-pillar-card">
+                    <div class="lp-pillar-icon"><i class="fa-solid fa-feather-pointed"></i></div>
+                    <div>
+                        <h4>4. Arranque e Empenamento Acelerado</h4>
+                        <p>O que colocar na ração inicial para o pintinho empenar rápido. Ave que empena antes ganha resistência ao frio e atinge o peso ideal 2 semanas antes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO: GARANTIA -->
+        <div class="lp-section">
+            <div class="lp-guarantee-card">
+                <img src="galo_garantia.webp" alt="Garantia Incondicional 7 Dias">
+                <div>
+                    <h4>Garantia Blindada de 7 Dias</h4>
+                    <p>Aplique o método no seu próximo lote. Se você não notar seus pintinhos muito mais fortes e ativos, basta me mandar um WhatsApp que devolvo <strong>100% do seu dinheiro</strong>. Risco zero para você.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO: CAIXA DE OFERTA FINAL -->
+        <div class="lp-offer-box">
+            <span class="lp-sec-tag" style="color: var(--gold-primary);">OFERTA ESPECIAL DE ACESSO IMEDIATO</span>
+            <h3 class="lp-offer-title">MANUAL DE MANEJO DE PINTINHOS</h3>
+            <p class="lp-offer-desc">O Guia Prático para Alcançar 98% de Sobrevivência no seu Pinteiro</p>
+
+            <div class="lp-price-tag">
+                <div class="lp-price-de">De R$ 49,90</div>
+                <div class="lp-price-por">R$ 19,90</div>
+                <div class="lp-price-sub">Pagamento único no Pix ou Cartão (sem mensalidade)</div>
+            </div>
+
+            <button onclick="openCheckout('ebook-pintinhos')" class="lp-cta-btn" style="font-size: 1.15rem; padding: 18px 20px;">
+                <i class="fa-solid fa-arrow-right"></i> GARANTIR MEU ACESSO POR R$ 19,90
+            </button>
+
+            <div class="lp-trust-row" style="margin-top: 14px;">
+                <div class="lp-trust-item"><i class="fa-brands fa-whatsapp" style="color: #22c55e;"></i> Envio Imediato no WhatsApp</div>
+                <div class="lp-trust-item"><i class="fa-solid fa-mobile-screen"></i> Leitura Fácil no Celular</div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO: PERGUNTAS FREQUENTES -->
+        <div class="lp-section" style="border-bottom: none;">
+            <span class="lp-sec-tag">DÚVIDAS FREQUENTES</span>
+            <h2 class="lp-sec-title">Perguntas comuns dos criadores:</h2>
+
+            <div class="lp-faq-item">
+                <h5><i class="fa-solid fa-circle-question"></i> Como eu recebo o manual?</h5>
+                <p>Assim que o Pix ou Cartão for aprovado, o link de acesso chega direto no seu WhatsApp e no seu e-mail em menos de 1 minuto. Você pode ler no celular, tablet ou computador.</p>
+            </div>
+
+            <div class="lp-faq-item">
+                <h5><i class="fa-solid fa-circle-question"></i> Preciso comprar remédios caros?</h5>
+                <p>Não! O foco de 98% de sobrevivência é no manejo preventivo (calor correto, hidratação de arranque e cama seca). Você só gasta o essencial com soluções que tem em casa.</p>
+            </div>
+
+            <div class="lp-faq-item">
+                <h5><i class="fa-solid fa-circle-question"></i> Serve para qual raça de galinha?</h5>
+                <p>Serve perfeitamente para Galinha Caipira, Caipirão, Poedeiras Comerciais (GLC, Embrapa, Isa Brown), Frangos de Corte e Índio Gigante.</p>
+            </div>
+
+            <div class="lp-faq-item">
+                <h5><i class="fa-solid fa-circle-question"></i> E se eu não gostar ou não funcionar?</h5>
+                <p>Você tem 7 dias inteiros para testar. Se não gostar do material, basta mandar uma mensagem no nosso suporte que devolvemos 100% do seu dinheiro na hora.</p>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="lp-footer">
+            <p style="margin-bottom: 6px;">&copy; 2026 PROTOCOLO ELITE - Todos os direitos reservados.</p>
+            <p style="margin-bottom: 6px;">CNPJ: 63.665.824/0001-09</p>
+            <p style="color: #475569; font-size: 0.68rem; margin: 0;">Este produto não garante a cura mágica de aves já em estado terminal. Os resultados dependem da correta aplicação do manejo.</p>
+        </div>
+
+    </div>
+
+    <!-- Barra Fixa Inferior no Mobile -->
+    <div class="lp-sticky-bar">
+        <div class="lp-sticky-price">
+            <span>De R$ 49,90</span>
+            <span>R$ 19,90</span>
+        </div>
+        <button onclick="openCheckout('ebook-pintinhos')" class="lp-sticky-btn">
+            SALVAR MEUS PINTINHOS <i class="fa-solid fa-arrow-right" style="margin-left: 4px;"></i>
+        </button>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- CHECKOUT INLINE FULLSCREEN OVERLAY          -->
+    <!-- ============================================ -->
+    <div id="checkout-page" style="display: none;">
+        <style>
+            #checkout-page {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                width: 100%;
+                max-width: 100vw;
+                height: 100%;
+                height: 100dvh;
+                background-color: #090d16;
+                color: #f8fafc;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                line-height: 1.5;
+                z-index: 10000;
+                overflow-y: auto;
+                overflow-x: hidden !important;
+                overscroll-behavior-y: contain;
+                padding-bottom: 50px;
+                -webkit-overflow-scrolling: touch;
+                touch-action: pan-y;
+            }
+            #checkout-page * {
+                box-sizing: border-box;
+                max-width: 100%;
+            }
+            .ck-header {
+                background: #0f172a;
+                padding: 12px 0;
+                position: sticky;
+                top: 0;
+                z-index: 200;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+            .ck-header-container {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 0 16px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .ck-logo {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 700;
+                font-size: 16px;
+                letter-spacing: -0.5px;
+                color: #fff;
+            }
+            .ck-logo-elite {
+                color: #fbbf24;
+            }
+            .ck-security-badge {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                color: #22c55e;
+                font-weight: 600;
+                font-size: 12px;
+            }
+            .ck-back-btn {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                color: #94a3b8;
+                font-size: 13px;
+                cursor: pointer;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 6px 12px;
+                border-radius: 6px;
+                font-family: inherit;
+                transition: all 0.3s ease;
+            }
+            .ck-back-btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: #fff;
+            }
+            .ck-urgency-banner {
+                text-align: center;
+                padding: 10px 16px;
+                background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d);
+                animation: ckPulse 3s infinite;
+            }
+            .ck-timer-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                color: #fff;
+                font-size: 14px;
+                font-weight: 700;
+            }
+            .ck-main {
+                max-width: 960px;
+                margin: 0 auto;
+                padding: 10px;
+            }
+            .ck-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            @media (min-width: 768px) {
+                .ck-grid {
+                    grid-template-columns: 7fr 5fr;
+                    gap: 24px;
+                }
+            }
+            .ck-section {
+                background-color: rgba(17, 24, 39, 0.7) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                border-radius: 12px;
+                padding: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            }
+            .ck-section-header {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 10px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+            .ck-section-number {
+                background: linear-gradient(135deg, #22c55e, #16a34a);
+                color: #ffffff;
+                width: 26px;
+                height: 26px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                font-size: 13px;
+                flex-shrink: 0;
+            }
+            .ck-section-title {
+                font-size: 1.05rem;
+                font-weight: 700;
+                color: #ffffff !important;
+                margin: 0;
+            }
+            #checkout-page .form-input,
+            #checkout-page .ck-input,
+            #checkout-page input,
+            #checkout-page select,
+            #checkout-page textarea {
+                font-size: 16px !important;
+                padding: 11px 12px !important;
+                border-radius: 8px !important;
+                background: rgba(10, 15, 30, 0.8) !important;
+                border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+                color: #ffffff !important;
+                -webkit-text-size-adjust: 100% !important;
+                text-size-adjust: 100% !important;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            #checkout-page .form-input:focus,
+            #checkout-page .ck-input:focus {
+                border-color: #fbbf24 !important;
+                box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2) !important;
+                outline: none;
+            }
+            #checkout-page .ck-form-group label {
+                font-size: 0.72rem !important;
+                font-weight: 600 !important;
+                letter-spacing: 0.3px !important;
+                text-transform: uppercase !important;
+                color: #94a3b8 !important;
+                margin-bottom: 4px !important;
+                display: block !important;
+            }
+            .ck-btn-checkout {
+                width: 100%;
+                background: linear-gradient(135deg, #22c55e, #16a34a);
+                color: #ffffff;
+                border: none;
+                border-radius: 10px;
+                padding: 14px 20px;
+                font-size: 1.05rem;
+                font-weight: 800;
+                cursor: pointer;
+                box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+            .payment-methods-grid {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 16px;
+            }
+            .radio-item {
+                flex: 1;
+                border: 1.5px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                padding: 10px;
+                cursor: pointer;
+                background: rgba(15, 23, 42, 0.5);
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                transition: all 0.2s;
+            }
+            .radio-item.selected {
+                border-color: #22c55e;
+                background: rgba(34, 197, 94, 0.08);
+            }
+            .radio-title {
+                font-size: 0.85rem;
+                font-weight: 800;
+                color: #ffffff;
+            }
+            .radio-desc {
+                font-size: 0.7rem;
+                color: #94a3b8;
+            }
+            .ck-product-card {
+                display: flex;
+                gap: 12px;
+                align-items: center;
+                padding-bottom: 12px;
+                margin-bottom: 12px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+            .ck-product-image {
+                width: 50px;
+                height: 70px;
+                object-fit: cover;
+                border-radius: 6px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            .ck-product-info h3 {
+                font-size: 0.95rem;
+                font-weight: 800;
+                color: #ffffff;
+                margin: 0 0 2px 0;
+            }
+            .ck-product-info p {
+                font-size: 0.8rem;
+                color: #94a3b8;
+                margin: 0;
+            }
+            .ck-product-info span {
+                font-size: 1.1rem;
+                font-weight: 900;
+                color: #22c55e;
+            }
+            .ck-order-summary-box {
+                background: rgba(10, 15, 30, 0.8);
+                border-radius: 8px;
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+            .ck-summary-row {
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.85rem;
+                color: #cbd5e1;
+                margin-bottom: 6px;
+            }
+            .ck-summary-total {
+                display: flex;
+                justify-content: space-between;
+                font-size: 1.15rem;
+                font-weight: 900;
+                color: #ffffff;
+                padding-top: 8px;
+                border-top: 1px dashed rgba(255, 255, 255, 0.1);
+            }
+            .hidden {
+                display: none !important;
+            }
+        </style>
+
+        <header class="ck-header">
+            <div class="ck-header-container">
+                <div class="ck-logo">
+                    <i class="fa-solid fa-feather" style="color: #fbbf24;"></i>
+                    <span>MANEJO <span class="ck-logo-elite">ELITE</span></span>
+                </div>
+                <div class="ck-security-badge">
+                    <i class="fa-solid fa-lock"></i>
+                    <span>Ambiente Seguro</span>
+                </div>
+                <button type="button" class="ck-back-btn" onclick="closeCheckout()">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Voltar</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="ck-urgency-banner">
+            <div class="ck-timer-badge">
+                <i class="fa-regular fa-clock"></i>
+                <span>SUA OFERTA EXPIRA EM: <strong id="checkout-reservation-timer">15:00</strong></span>
+            </div>
+        </div>
+
+        <div class="ck-main">
+            <div id="checkout-main-view">
+                <div class="ck-grid">
+                    <!-- Coluna Esquerda: Formulários -->
+                    <div class="ck-left-col">
+                        <div class="ck-section">
+                            <div class="ck-section-header">
+                                <div class="ck-section-number">1</div>
+                                <h2 class="ck-section-title">Dados Pessoais para Envio</h2>
+                            </div>
+                            <div id="pix-fields">
+                                <div class="ck-form-group form-group" style="margin-bottom: 10px;">
+                                    <label for="payer-name">Nome Completo</label>
+                                    <input type="text" id="payer-name" name="name" autocomplete="name" class="form-input ck-input" placeholder="Seu nome completo" required>
+                                </div>
+                                <div class="ck-form-group form-group" style="margin-bottom: 10px;">
+                                    <label for="payer-phone">WhatsApp para receber o acesso</label>
+                                    <input type="tel" id="payer-phone" name="phone" autocomplete="tel" class="form-input ck-input" placeholder="(00) 00000-0000" required inputmode="tel">
+                                </div>
+                                <div class="ck-form-group form-group" style="margin-bottom: 10px;">
+                                    <label for="payer-email">E-mail (Opcional)</label>
+                                    <input type="email" id="payer-email" name="email" autocomplete="email" class="form-input ck-input" placeholder="seu@email.com (Opcional)" inputmode="email">
+                                </div>
+                                <div class="ck-form-group form-group" style="margin-bottom: 6px;">
+                                    <label for="payer-cpf">CPF (Para emissão de nota)</label>
+                                    <input type="tel" id="payer-cpf" name="cpf" autocomplete="off" class="form-input ck-input" placeholder="000.000.000-00" required inputmode="numeric">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Bumps -->
+                        <div class="ck-section" style="margin-top: 14px;">
+                            <div id="order-bump-area"></div>
+                        </div>
+
+                        <!-- Forma de Pagamento -->
+                        <div class="ck-section" style="margin-top: 14px;">
+                            <div class="ck-section-header">
+                                <div class="ck-section-number">2</div>
+                                <h2 class="ck-section-title">Forma de Pagamento</h2>
+                            </div>
+
+                            <div class="payment-methods-grid">
+                                <div class="radio-item selected" onclick="selectPaymentMethod('pix')">
+                                    <input type="radio" name="paymentMethod" id="method-pix" value="pix" checked style="display:none;">
+                                    <span class="radio-title">⚡ PIX</span>
+                                    <span class="radio-desc">Acesso imediato</span>
+                                </div>
+                                <div class="radio-item" onclick="selectPaymentMethod('card')">
+                                    <input type="radio" name="paymentMethod" id="method-card" value="card" style="display:none;">
+                                    <span class="radio-title">💳 CARTÃO</span>
+                                    <span class="radio-desc">Até 2x</span>
+                                </div>
+                                <div class="radio-item" onclick="selectPaymentMethod('boleto')">
+                                    <input type="radio" name="paymentMethod" id="method-boleto" value="boleto" style="display:none;">
+                                    <span class="radio-title">📄 BOLETO</span>
+                                    <span class="radio-desc">Até 72h</span>
+                                </div>
+                            </div>
+
+                            <!-- Cartão de Crédito -->
+                            <div id="card-area" style="display: none; margin-bottom: 14px;">
+                                <div class="ck-form-group form-group" style="margin-bottom: 10px;">
+                                    <label>Nome impresso no Cartão</label>
+                                    <input type="text" id="card-holder" name="ccname" autocomplete="cc-name" class="form-input ck-input" placeholder="Como no cartão">
+                                </div>
+                                <div class="ck-form-group form-group" style="margin-bottom: 10px;">
+                                    <label>CPF do Titular</label>
+                                    <input type="tel" id="card-cpf" name="cpf" autocomplete="off" class="form-input ck-input" placeholder="000.000.000-00" inputmode="numeric">
+                                </div>
+                                <div class="ck-form-group form-group" style="margin-bottom: 10px;">
+                                    <label>Número do Cartão</label>
+                                    <input type="text" id="card-number" name="cardnumber" autocomplete="cc-number" class="form-input ck-input" placeholder="0000 0000 0000 0000" inputmode="numeric">
+                                </div>
+                                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                    <div class="ck-form-group form-group" style="flex: 1;">
+                                        <label>Validade</label>
+                                        <input type="text" id="card-expiration" name="cc-exp" autocomplete="cc-exp" class="form-input ck-input" placeholder="MM/AA" inputmode="numeric">
+                                    </div>
+                                    <div class="ck-form-group form-group" style="flex: 1;">
+                                        <label>CVV</label>
+                                        <input type="text" id="card-cvv" name="cvc" autocomplete="cc-csc" class="form-input ck-input" placeholder="123" inputmode="numeric">
+                                    </div>
+                                </div>
+                                <div class="ck-form-group form-group">
+                                    <label>Parcelas</label>
+                                    <select id="installments-select" class="form-input ck-input"></select>
+                                </div>
+                            </div>
+
+                            <!-- Botões de Finalização -->
+                            <button type="button" id="btn-pay-pix" class="ck-btn-checkout" onclick="handlePaymentSubmit('pix')">
+                                <i class="fa-solid fa-bolt"></i> GERAR PIX DE R$ 19,90
+                            </button>
+                            <button type="button" id="btn-pay-card" class="ck-btn-checkout" style="display: none;" onclick="handlePaymentSubmit('card')">
+                                <i class="fa-solid fa-credit-card"></i> FINALIZAR NO CARTÃO
+                            </button>
+                            <button type="button" id="btn-pay-boleto" class="ck-btn-checkout" style="display: none;" onclick="handlePaymentSubmit('boleto')">
+                                <i class="fa-solid fa-file-invoice"></i> GERAR BOLETO BANCÁRIO
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Coluna Direita: Resumo do Pedido -->
+                    <div class="ck-right-col">
+                        <div class="ck-section">
+                            <div class="ck-section-header">
+                                <h2 class="ck-section-title">Resumo do Pedido</h2>
+                            </div>
+                            <div class="ck-product-card">
+                                <img src="capadospintinhos.webp" alt="Manual de Pintinhos" class="ck-product-image">
+                                <div class="ck-product-info">
+                                    <h3 id="checkout-product-name">Manual de Manejo de Pintinhos</h3>
+                                    <p>Acesso Completo + Garantia</p>
+                                    <span id="checkout-product-price-display">R$ 19,90</span>
+                                </div>
+                            </div>
+                            <div class="ck-order-summary-box">
+                                <div class="ck-summary-row">
+                                    <span>Produto:</span>
+                                    <span id="top-checkout-card-price">R$ 49,90</span>
+                                </div>
+                                <div class="ck-summary-row" style="color: #22c55e;">
+                                    <span>Desconto Aplicado:</span>
+                                    <span>- R$ 30,00</span>
+                                </div>
+                                <div class="ck-summary-total">
+                                    <span>Total:</span>
+                                    <span id="checkout-total-price" style="color: #22c55e;">R$ 19,90</span>
+                                </div>
+                                <div id="top-checkout-card-installment" style="font-size: 0.75rem; color: #94a3b8; text-align: right; margin-top: 4px;">
+                                    ou 2x de R$ 10,40
+                                </div>
+                            </div>
+                            <div style="font-size: 0.75rem; color: #94a3b8; line-height: 1.5; text-align: center;">
+                                <i class="fa-solid fa-shield-halved" style="color: #22c55e;"></i> Seus dados protegidos com criptografia SSL 256 bits.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PIX Result View -->
+            <div id="pix-result" class="hidden" style="text-align: center; padding: 1.5rem 0;">
+                <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                    <i class="fa-solid fa-circle-check" style="font-size: 2.5rem; color: #22c55e;"></i>
+                    <h3 style="color: #ffffff; font-size: 1.25rem; font-weight: 800; margin: 10px 0 4px 0;">PIX Gerado com Sucesso!</h3>
+                    <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;">Pague agora para liberar seu acesso imediatamente no WhatsApp.</p>
+                </div>
+
+                <div id="qr-loader" style="margin: 1.5rem 0;">
+                    <div style="font-size: 0.9rem; color: #fbbf24;"><i class="fa-solid fa-spinner fa-spin"></i> Gerando QR Code PIX Oficial...</div>
+                </div>
+
+                <div style="display: flex; justify-content: center; margin: 1rem 0;">
+                    <img id="qr-code-img" src="" alt="QR Code PIX" class="hidden" style="width: 200px; height: 200px; border-radius: 8px; border: 4px solid #ffffff; background: #ffffff;">
+                </div>
+
+                <div id="pix-receiver-info" class="hidden" style="margin-bottom: 16px;">
+                    <p style="margin: 0; font-size: 0.8rem; color: #94a3b8;">Recebedor:</p>
+                    <p style="margin: 2px 0 0 0; font-size: 1rem; color: #ffffff; font-weight: 800;">JOAO PAULO SANTOS CAMARGO</p>
+                </div>
+
+                <button id="btn-copy-pix" class="ck-btn-checkout" style="display: none; background: linear-gradient(135deg, #22c55e, #16a34a); max-width: 320px; margin: 0 auto 16px auto;">
+                    <i class="fa-regular fa-copy"></i> COPIAR CÓDIGO PIX
+                </button>
+                <textarea id="pix-copy-paste" readonly style="opacity: 0; position: absolute; z-index: -1;"></textarea>
+
+                <div style="text-align: left; font-size: 0.82rem; color: #cbd5e1; line-height: 1.6; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); padding: 1rem; border-radius: 0.5rem; max-width: 400px; margin: 0 auto;">
+                    <p style="margin: 0 0 6px 0;">1. Abra o aplicativo do seu banco.</p>
+                    <p style="margin: 0 0 6px 0;">2. Escolha <strong>PIX</strong> e depois <strong>Pix Copia e Cola</strong>.</p>
+                    <p style="margin: 0;">3. Cole o código copiado e confirme o pagamento.</p>
+                </div>
+            </div>
+
+            <!-- Boleto Result View -->
+            <div id="boleto-result" class="hidden" style="text-align: center; padding: 1.5rem 0;">
+                <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                    <i class="fa-solid fa-barcode" style="font-size: 2.5rem; color: #3b82f6;"></i>
+                    <h3 style="color: #ffffff; font-size: 1.25rem; font-weight: 800; margin: 10px 0 4px 0;">Boleto Gerado!</h3>
+                    <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;">O acesso será liberado assim que o boleto for compensado (em até 72h úteis).</p>
+                </div>
+                <button type="button" id="btn-download-boleto" class="ck-btn-checkout" style="max-width: 320px; margin: 0 auto 12px auto; background: #3b82f6;">
+                    <i class="fa-solid fa-download"></i> BAIXAR BOLETO
+                </button>
+            </div>
+
+            <!-- Payment Pending View -->
+            <div id="payment-pending-view" class="hidden" style="text-align: center; padding: 1.5rem 0;">
+                <i class="fa-solid fa-shield-halved" style="font-size: 3rem; color: #fbbf24;"></i>
+                <h3 style="color: #ffffff; font-size: 1.25rem; font-weight: 800; margin: 10px 0 4px 0;">Pagamento em Análise</h3>
+                <p style="color: #94a3b8; font-size: 0.85rem; max-width: 400px; margin: 0 auto 16px auto;">Sua transação está sendo processada com segurança pelo Mercado Pago. Seu acesso chegará no seu WhatsApp/e-mail assim que aprovado.</p>
+                <button onclick="closeCheckout()" style="background: none; border: none; color: #94a3b8; text-decoration: underline; cursor: pointer;">Fechar checkout</button>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 20px; font-size: 0.72rem; color: #64748b;">
+            <p style="margin: 0;">&copy; 2026 PROTOCOLO ELITE - CNPJ: 63.665.824/0001-09</p>
+        </div>
+
+        <!-- Hidden hooks for script.js compatibility -->
+        <span id="checkout-urgency-banner" style="display:none;"></span>
+        <span id="checkout-payer-firstname" style="display:none;"></span>
+        <span id="product-icon-container" style="display:none;"></span>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 10001;"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
