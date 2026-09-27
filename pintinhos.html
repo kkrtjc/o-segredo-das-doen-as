@@ -1081,7 +1081,7 @@
         </div>
 
         <!-- SEÇÃO: COMO VOCÊ RECEBE O CONTEÚDO -->
-        <div class="lp-section">
+        <div class="lp-section" id="secao-como-recebe">
             <span class="lp-sec-tag" style="color: var(--gold-primary);"><i class="fa-solid fa-box-open"></i> FORMATO E ENTREGA</span>
             <h2 class="lp-sec-title">Como você recebe o seu conteúdo:</h2>
             <p style="font-size: 0.88rem; color: #94a3b8; text-align: center; margin: -6px 0 20px 0;">
@@ -3220,6 +3220,37 @@
                 padding: 16px 24px !important;
                 border-radius: 14px !important;
             }
+            #checkout-page .ck-btn-how-it-works {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 8px !important;
+                width: 100% !important;
+                margin-top: 10px !important;
+                padding: 11px 16px !important;
+                background: rgba(255, 255, 255, 0.05) !important;
+                border: 1px solid rgba(255, 255, 255, 0.12) !important;
+                border-radius: 12px !important;
+                color: #e2e8f0 !important;
+                font-size: 0.84rem !important;
+                font-weight: 700 !important;
+                font-family: inherit !important;
+                cursor: pointer !important;
+                transition: all 0.2s ease !important;
+                text-decoration: none !important;
+                touch-action: manipulation !important;
+                -webkit-tap-highlight-color: transparent !important;
+            }
+            #checkout-page .ck-btn-how-it-works:hover,
+            #checkout-page .ck-btn-how-it-works:active {
+                background: rgba(251, 191, 36, 0.1) !important;
+                border-color: rgba(251, 191, 36, 0.45) !important;
+                color: #fbbf24 !important;
+            }
+            #checkout-page .ck-btn-how-it-works i {
+                color: #fbbf24 !important;
+                font-size: 0.95rem !important;
+            }
             /* Form labels and inputs – compactos */
             #checkout-page .ck-form-group label {
                 font-size: 0.72rem !important;
@@ -3840,6 +3871,11 @@
 
                                     <button type="button" id="btn-pay-boleto" class="ck-btn-checkout" style="display: none; width: 100%; margin-top: 12px;">📄 GERAR BOLETO BANCÁRIO</button>
 
+                                    <!-- Botão Como Eu Recebo Meu Conteúdo -->
+                                    <button type="button" onclick="closeCheckoutAndGoTo('secao-como-recebe')" class="ck-btn-how-it-works">
+                                        <i class="fa-regular fa-circle-question"></i> Como eu recebo o meu conteúdo?
+                                    </button>
+
                                 </div>
 
 
@@ -4279,6 +4315,25 @@
                 setupStickyBarVisibility();
             }
         })();
+
+        // Fecha o checkout e rola suavemente até a seção de entrega/conteúdo
+        function closeCheckoutAndGoTo(sectionId) {
+            const ckModal = document.getElementById('checkout-page');
+            if (ckModal) {
+                ckModal.classList.remove('active');
+                ckModal.style.display = 'none';
+            }
+            document.body.classList.remove('modal-open');
+            document.documentElement.style.overflow = '';
+            sessionStorage.removeItem('mura_modal_open');
+
+            setTimeout(function() {
+                const target = document.getElementById(sectionId);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 120);
+        }
     </script>
 </body>
 </html>
