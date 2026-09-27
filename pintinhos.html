@@ -820,174 +820,1983 @@
     <!-- ============================================ -->
     <!-- CHECKOUT INLINE FULLSCREEN OVERLAY          -->
     <!-- ============================================ -->
-    <div id="checkout-page" style="display: none;">
+        <div id="checkout-page" style="display: none;">
+
         <style>
+
+            /* === CHECKOUT PAGE - FULLSCREEN OVERLAY === */
+
             #checkout-page {
+
                 position: fixed;
+
                 top: 0;
+
                 left: 0;
+
                 right: 0;
+
                 bottom: 0;
+
                 width: 100%;
+
                 max-width: 100vw;
+
                 height: 100%;
+
                 height: 100dvh;
+
                 background-color: #090d16;
+
                 color: #f8fafc;
+
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
                 line-height: 1.5;
+
                 z-index: 10000;
+
                 overflow-y: auto;
+
                 overflow-x: hidden !important;
+
                 overscroll-behavior-y: contain;
+
                 padding-bottom: 50px;
+
                 -webkit-overflow-scrolling: touch;
+
                 touch-action: pan-y;
+
             }
+
+
+
             #checkout-page * {
+
                 box-sizing: border-box;
+
                 max-width: 100%;
+
             }
+
+
+
+            /* Header do Checkout */
+
             .ck-header {
+
                 background: #0f172a;
+
                 padding: 12px 0;
+
                 position: sticky;
+
                 top: 0;
+
                 z-index: 200;
+
                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+
             }
+
+
+
             .ck-header-container {
+
                 max-width: 960px;
+
                 margin: 0 auto;
+
                 padding: 0 16px;
+
                 display: flex;
+
                 justify-content: space-between;
+
                 align-items: center;
+
             }
+
+
+
             .ck-logo {
+
                 display: flex;
+
                 align-items: center;
+
                 gap: 8px;
+
                 font-weight: 700;
+
                 font-size: 16px;
+
                 letter-spacing: -0.5px;
+
                 color: #fff;
+
             }
+
+
+
             .ck-logo-elite {
+
                 color: #fbbf24;
+
             }
+
+
+
             .ck-security-badge {
+
                 display: flex;
+
                 align-items: center;
+
                 gap: 6px;
+
                 color: #22c55e;
+
                 font-weight: 600;
+
                 font-size: 12px;
+
             }
+
+
+
             .ck-back-btn {
+
                 display: flex;
+
                 align-items: center;
+
                 gap: 4px;
+
                 color: #94a3b8;
+
                 font-size: 13px;
+
                 cursor: pointer;
+
                 background: rgba(255, 255, 255, 0.05);
+
                 border: 1px solid rgba(255, 255, 255, 0.1);
+
                 padding: 6px 12px;
+
                 border-radius: 6px;
+
                 font-family: inherit;
+
                 transition: all 0.3s ease;
+
             }
+
+
+
             .ck-back-btn:hover {
+
                 background: rgba(255, 255, 255, 0.1);
+
                 color: #fff;
+
             }
+
+
+
+            /* Timer de Urgencia */
+
             .ck-urgency-banner {
+
                 text-align: center;
+
                 padding: 10px 16px;
+
                 background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d);
+
                 animation: ckPulse 3s infinite;
+
             }
+
+
+
             .ck-timer-badge {
+
                 display: inline-flex;
+
                 align-items: center;
+
                 gap: 8px;
+
                 color: #fff;
+
                 font-size: 14px;
+
                 font-weight: 700;
+
             }
-            .ck-main {
-                max-width: 960px;
-                margin: 0 auto;
-                padding: 10px;
-            }
-            .ck-grid {
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-            @media (min-width: 768px) {
-                .ck-grid {
-                    grid-template-columns: 7fr 5fr;
-                    gap: 24px;
+
+
+
+            @keyframes ckPulse {
+
+
+
+                0%,
+
+                100% {
+
+                    opacity: 1;
+
                 }
+
+
+
+                50% {
+
+                    opacity: 0.85;
+
+                }
+
             }
+
+
+
+            /* Main Container */
+
+            .ck-main {
+
+                max-width: 960px;
+
+                margin: 0 auto;
+
+                padding: 10px;
+
+            }
+
+
+
+            /* Grid Layout */
+
+            .ck-grid {
+
+                display: grid;
+
+                grid-template-columns: 1fr;
+
+                gap: 12px;
+
+            }
+
+
+
+            @media (min-width: 768px) {
+
+                .ck-grid {
+
+                    grid-template-columns: 7fr 5fr;
+
+                    gap: 24px;
+
+                }
+
+            }
+
+
+
+            /* Secoes */
+
             .ck-section {
+
+                background-color: #ffffff;
+
+                border-radius: 12px;
+
+                padding: 10px;
+
+                border: 1px solid #e5e7eb;
+
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+            }
+
+
+
+            @media (min-width: 768px) {
+
+                .ck-section {
+
+                    padding: 16px;
+
+                }
+
+            }
+
+
+
+            .ck-section-header {
+
+                display: flex;
+
+                align-items: center;
+
+                gap: 8px;
+
+                margin-bottom: 10px;
+
+                padding-bottom: 8px;
+
+                border-bottom: 1px solid #f3f4f6;
+
+            }
+
+
+
+            .ck-section-number {
+
+                background: linear-gradient(135deg, #dc2626, #991b1b);
+
+                color: #ffffff;
+
+                width: 28px;
+
+                height: 28px;
+
+                border-radius: 50%;
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: center;
+
+                font-weight: 700;
+
+                font-size: 14px;
+
+                flex-shrink: 0;
+
+            }
+
+
+
+            .ck-section-title {
+
+                font-size: 16px;
+
+                font-weight: 700;
+
+                color: #1f2937;
+
+                margin: 0;
+
+            }
+
+
+
+            @media (min-width: 768px) {
+
+                .ck-section-title {
+
+                    font-size: 18px;
+
+                }
+
+            }
+
+
+
+            /* Formulario */
+
+            #checkout-page .ck-form-group {
+
+                margin-bottom: 8px;
+
+            }
+
+
+
+            #checkout-page .ck-form-group label {
+
+                display: block;
+
+                font-size: 12px;
+
+                font-weight: 700;
+
+                color: #374151;
+
+                margin-bottom: 4px;
+
+                text-transform: uppercase;
+
+                letter-spacing: 0.5px;
+
+            }
+
+
+
+            #checkout-page .form-input,
+
+            #checkout-page .ck-input {
+
+                width: 100% !important;
+
+                padding: 12px 14px !important;
+
+                border: 1.5px solid #d1d5db !important;
+
+                border-radius: 8px !important;
+
+                font-size: 16px !important;
+
+                font-family: inherit !important;
+
+                background: #ffffff !important;
+
+                color: #1f2937 !important;
+
+                height: auto !important;
+
+                -webkit-appearance: none !important;
+
+                -moz-appearance: none !important;
+
+                appearance: none !important;
+
+            }
+
+
+
+            #checkout-page .form-input:focus,
+
+            #checkout-page .ck-input:focus {
+
+                outline: none;
+
+                border-color: #dc2626 !important;
+
+                box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+
+            }
+
+
+
+            #checkout-page .form-input::placeholder,
+
+            #checkout-page .ck-input::placeholder {
+
+                color: #9ca3af !important;
+
+                font-size: 14px !important;
+
+            }
+
+
+
+            #checkout-page .ck-form-row {
+
+                display: grid !important;
+
+                grid-template-columns: 1fr !important;
+
+                gap: 10px;
+
+            }
+
+
+
+            @media (min-width: 768px) {
+
+                #checkout-page .ck-form-row {
+
+                    grid-template-columns: 1fr 1fr !important;
+
+                }
+
+            }
+
+
+
+            #checkout-page .order-bump-grid-view {
+
+                display: grid !important;
+
+                grid-template-columns: 1fr 1fr !important;
+
+                gap: 8px !important;
+
+            }
+
+
+
+            @media (min-width: 480px) {
+
+                #checkout-page .order-bump-grid-view {
+
+                    display: grid !important;
+
+                    grid-template-columns: 1fr 1fr !important;
+
+                    gap: 8px !important;
+
+                }
+
+            }
+
+
+
+            /* Abas de Pagamento */
+
+            #checkout-page .radio-item {
+
+                flex: 1;
+
+                padding: 14px 10px !important;
+
+                font-weight: 700;
+
+                text-align: center;
+
+                background: #ffffff !important;
+
+                border: 2px solid #e5e7eb !important;
+
+                cursor: pointer;
+
+                color: #9ca3af !important;
+
+                font-size: 14px;
+
+                transition: all 0.2s ease;
+
+                display: flex !important;
+
+                align-items: center !important;
+
+                justify-content: center;
+
+                gap: 8px;
+
+                border-radius: 10px !important;
+
+                height: auto !important;
+
+            }
+
+
+
+            #checkout-page .radio-item.selected {
+
+                color: #dc2626 !important;
+
+                border-color: #dc2626 !important;
+
+                background: #fef2f2 !important;
+
+            }
+
+
+
+            #checkout-page .radio-title {
+
+                color: inherit !important;
+
+                font-weight: 800;
+
+                font-size: 15px;
+
+            }
+
+
+
+            #checkout-page .radio-desc {
+
+                font-size: 11px;
+
+                color: #6b7280 !important;
+
+            }
+
+
+
+            /* Order Bump - CLEAN MOBILE DESIGN */
+
+            #checkout-page #order-bump-area {
+
+                margin-top: 16px;
+
+            }
+
+
+
+            #checkout-page .order-bump-container {
+
+                position: relative;
+
+                overflow: hidden;
+
+                border: 2px solid #fbbf24 !important;
+
+                border-radius: 12px;
+
+                cursor: pointer;
+
+                min-height: auto !important;
+
+                margin-bottom: 10px;
+
+                background: #fffbeb !important;
+
+                box-shadow: none !important;
+
+                display: flex !important;
+
+                flex-direction: row !important;
+
+                align-items: stretch !important;
+
+                padding: 0 !important;
+
+            }
+
+
+
+            #checkout-page .order-bump-container.selected {
+
+                border-color: #22c55e !important;
+
+                background: #000 !important; /* Base black under image */
+
+                box-shadow: 0 0 15px rgba(34, 197, 94, 0.4) !important;
+
+                border-width: 3px !important;
+
+            }
+
+
+
+            #checkout-page .order-bump-container:not(.selected) {
+
+                animation: none !important;
+
+            }
+
+
+
+            /* MOSTRAR imagens dos bumps no mobile com layout otimizado */
+
+            #checkout-page .order-bump-container img {
+
+                display: block !important;
+
+                position: absolute !important;
+
+                top: 0 !important;
+
+                left: 0 !important;
+
+                width: 100% !important;
+
+                height: 100% !important;
+
+                object-fit: cover !important;
+
+                z-index: 0 !important;
+
+                pointer-events: none !important;
+
+            }
+
+
+
+            /* MOSTRAR gradient overlay dos bumps para legibilidade */
+
+            #checkout-page .order-bump-container div[style*="linear-gradient"] {
+
+                display: block !important;
+
+                position: absolute !important;
+
+                top: 0 !important;
+
+                left: 0 !important;
+
+                width: 100% !important;
+
+                height: 100% !important;
+
+                z-index: 1 !important;
+
+                background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 90%) !important;
+
+                pointer-events: none !important;
+
+            }
+
+
+
+            /* Forcar layout limpo dos bumps */
+
+            #checkout-page .order-bump-container>div[style*="z-index: 2"] {
+
+                position: relative !important;
+
+                z-index: 1 !important;
+
+                padding: 12px !important;
+
+                width: 100% !important;
+
+                height: auto !important;
+
+                justify-content: flex-start !important;
+
+                background: transparent !important;
+
+            }
+
+
+
+            /* CORES E TIPOGRAFIA DOS ORDER BUMPS - FORCA ALTO CONTRASTE */
+
+            #checkout-page .order-bump-container .order-bump-title,
+
+            #checkout-page .order-bump-title {
+
+                color: #fbbf24 !important; /* Gold */
+
+                font-size: 1rem !important;
+
+                font-weight: 900 !important;
+
+                text-shadow: 0 2px 6px rgba(0,0,0,1) !important;
+
+                line-height: 1.2 !important;
+
+                margin-bottom: 6px !important;
+
+                display: block !important;
+
+                letter-spacing: -0.2px !important;
+
+                padding-right: 28px !important;
+
+            }
+
+
+
+            #checkout-page .order-bump-container .order-bump-description,
+
+            #checkout-page .order-bump-description {
+
+                color: #f1f5f9 !important;
+
+                font-size: 0.75rem !important;
+
+                line-height: 1.35 !important;
+
+                text-shadow: 0 1px 4px rgba(0,0,0,1) !important;
+
+            }
+
+
+
+            /* Permite cores inline (vermelho/verde) nas spans da descricao */
+
+            #checkout-page .order-bump-description span,
+
+            #checkout-page .order-bump-description strong {
+
+                text-shadow: 0 1px 4px rgba(0,0,0,0.9) !important;
+
+            }
+
+
+
+            #checkout-page .order-bump-container .order-bump-price,
+
+            #checkout-page .order-bump-price {
+
+                color: #4ade80 !important; /* Verde brilhante = ganho */
+
+                font-size: 1.1rem !important;
+
+                font-weight: 900 !important;
+
+                text-shadow: 0 2px 4px rgba(0,0,0,0.9) !important;
+
+            }
+
+
+
+            #checkout-page .order-bump-container .order-bump-old-price {
+
+                color: #fca5a5 !important; /* Rosa = prejuizo evitado */
+
+                text-decoration: line-through !important;
+
+                font-size: 0.75rem !important;
+
+                opacity: 1 !important;
+
+                font-weight: 600 !important;
+
+            }
+
+
+
+            #checkout-page .bump-check-wrapper {
+
+                border-color: #fbbf24 !important;
+
+            }
+
+
+
+            #checkout-page .order-bump-container:not(.selected) {
+
+                box-shadow: 0 0 0 2px rgba(251,191,36,0.3);
+
+                animation: bumpPulse 2.5s ease-in-out infinite;
+
+            }
+
+
+
+            @keyframes bumpPulse {
+
+                0%, 100% { box-shadow: 0 0 0 2px rgba(251,191,36,0.2); }
+
+                50% { box-shadow: 0 0 0 3px rgba(251,191,36,0.6), 0 4px 16px rgba(0,0,0,0.4); }
+
+            }
+
+
+
+            #checkout-page .order-bump-container.selected {
+
+                animation: none !important;
+
+            }
+
+
+
+            #checkout-page .order-bump-container.selected .bump-check-wrapper {
+
+                background: #22c55e !important;
+
+                border-color: #22c55e !important;
+
+            }
+
+
+
+            /* GRID dos bumps - lado a lado no checkout puro */
+
+            #checkout-page .order-bump-grid-view {
+
+                display: grid !important;
+
+                grid-template-columns: 1fr 1fr !important;
+
+                gap: 8px !important;
+
+            }
+
+
+
+            @media (min-width: 480px) {
+
+                #checkout-page .order-bump-grid-view {
+
+                    display: grid !important;
+
+                    grid-template-columns: 1fr 1fr !important;
+
+                    gap: 8px !important;
+
+                }
+
+            }
+
+
+
+            /* Botao Principal */
+
+            .ck-btn-checkout {
+
+                width: 100%;
+
+                padding: 16px;
+
+                border-radius: 12px;
+
+                background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+
+                color: #ffffff;
+
+                font-weight: 800;
+
+                font-size: 16px;
+
+                border: none;
+
+                cursor: pointer;
+
+                text-transform: uppercase;
+
+                letter-spacing: 0.5px;
+
+                transition: all 0.2s ease;
+
+                box-shadow: 0 4px 15px rgba(22, 197, 94, 0.3);
+
+                margin-bottom: 12px;
+
+                font-family: inherit;
+
+            }
+
+
+
+            .ck-btn-checkout:hover {
+
+                transform: translateY(-1px);
+
+                box-shadow: 0 6px 20px rgba(22, 197, 94, 0.4);
+
+            }
+
+
+
+            .ck-btn-checkout:active {
+
+                transform: translateY(0);
+
+            }
+
+
+
+            /* Resumo do Pedido (Sidebar) */
+
+            .ck-order-summary {
+
+                position: static;
+
+            }
+
+
+
+            @media (min-width: 768px) {
+
+                .ck-order-summary {
+
+                    position: sticky;
+
+                    top: 70px;
+
+                }
+
+            }
+
+
+
+            .ck-product-card {
+
+                display: flex;
+
+                gap: 12px;
+
+                margin-bottom: 16px;
+
+                padding-bottom: 16px;
+
+                border-bottom: 1px solid #f3f4f6;
+
+            }
+
+
+
+            .ck-product-image {
+
+                width: 65px;
+
+                height: 82px;
+
+                border-radius: 8px;
+
+                border: 1px solid #e5e7eb;
+
+                flex-shrink: 0;
+
+                overflow: hidden;
+
+            }
+
+
+
+            .ck-product-image img {
+
+                width: 100%;
+
+                height: 100%;
+
+                object-fit: cover;
+
+            }
+
+
+
+            .ck-product-info h3 {
+
+                font-size: 13px;
+
+                font-weight: 700;
+
+                margin: 0 0 2px 0;
+
+                line-height: 1.3;
+
+                color: #1f2937;
+
+            }
+
+
+
+            .ck-product-info p {
+
+                font-size: 11px;
+
+                color: #6b7280;
+
+                margin: 0 0 6px 0;
+
+            }
+
+
+
+            .ck-price-original {
+
+                text-decoration: line-through;
+
+                color: #9ca3af;
+
+                font-size: 12px;
+
+            }
+
+
+
+            .ck-price-current {
+
+                color: #dc2626;
+
+                font-weight: 800;
+
+                font-size: 16px;
+
+            }
+
+
+
+            /* Resumo de Precos */
+
+            .ck-price-breakdown {
+
+                font-size: 13px;
+
+                border-top: 1px solid #f3f4f6;
+
+                padding-top: 12px;
+
+            }
+
+
+
+            .ck-price-row {
+
+                display: flex;
+
+                justify-content: space-between;
+
+                margin-bottom: 8px;
+
+                color: #6b7280;
+
+            }
+
+
+
+            .ck-price-row.discount {
+
+                color: #16a34a;
+
+                font-weight: 600;
+
+            }
+
+
+
+            .ck-price-row.total {
+
+                font-size: 18px;
+
+                font-weight: 800;
+
+                color: #1f2937;
+
+                border-top: 2px solid #f3f4f6;
+
+                padding-top: 10px;
+
+                margin-top: 8px;
+
+            }
+
+
+
+            /* Garantia */
+
+            .ck-guarantee-box {
+
+                background: #f0fdf4;
+
+                border: 1px solid #bbf7d0;
+
+                border-radius: 10px;
+
+                padding: 12px;
+
+                display: flex;
+
+                gap: 10px;
+
+                align-items: center;
+
+                margin-top: 20px;
+
+            }
+
+
+
+            .ck-guarantee-icon {
+
+                font-size: 24px;
+
+                flex-shrink: 0;
+
+            }
+
+
+
+            .ck-guarantee-content p:first-child {
+
+                font-size: 12px;
+
+                font-weight: 800;
+
+                color: #166534;
+
+                text-transform: uppercase;
+
+                letter-spacing: 0.5px;
+
+                margin: 0 0 2px 0;
+
+            }
+
+
+
+            .ck-guarantee-content p:last-child {
+
+                font-size: 11px;
+
+                color: #15803d;
+
+                margin: 0;
+
+                line-height: 1.4;
+
+            }
+
+
+
+            /* Prova Social */
+
+            .ck-social-proof {
+
+                margin-top: 20px;
+
+            }
+
+
+
+            .ck-proof-label {
+
+                font-size: 11px;
+
+                font-weight: 700;
+
+                color: #9ca3af;
+
+                text-transform: uppercase;
+
+                letter-spacing: 1px;
+
+                text-align: center;
+
+                margin-bottom: 10px;
+
+            }
+
+
+
+            .ck-testimonial-box {
+
+                background: #f9fafb;
+
+                padding: 12px;
+
+                border-radius: 8px;
+
+                font-size: 12px;
+
+                color: #4b5563;
+
+                font-style: italic;
+
+                margin-bottom: 8px;
+
+                border-left: 3px solid #22c55e;
+
+                line-height: 1.4;
+
+            }
+
+
+
+            .ck-testimonial-author {
+
+                margin-top: 6px;
+
+                font-weight: 700;
+
+                color: #1f2937;
+
+                font-style: normal;
+
+                font-size: 11px;
+
+            }
+
+
+
+            .ck-stars {
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: center;
+
+                gap: 2px;
+
+                margin-top: 10px;
+
+                font-size: 14px;
+
+            }
+
+
+
+            .ck-star {
+
+                color: #fbbf24;
+
+            }
+
+
+
+            .ck-rating-text {
+
+                color: #6b7280;
+
+                font-weight: 700;
+
+                margin-left: 6px;
+
+                font-size: 12px;
+
+            }
+
+
+
+            /* Footer Checkout */
+
+            .ck-footer {
+
+                background: #0f172a;
+
+                padding: 20px 16px;
+
+                text-align: center;
+
+                margin-top: 20px;
+
+            }
+
+
+
+            .ck-footer p {
+
+                font-size: 12px;
+
+                color: #64748b;
+
+                margin: 0 0 4px 0;
+
+            }
+
+
+
+            /* Error styles */
+
+            #checkout-page .form-input.input-error,
+
+            #checkout-page .form-input.is-invalid {
+
+                border-color: #ef4444 !important;
+
+                background-color: #fef2f2 !important;
+
+            }
+
+
+
+            #checkout-page .form-input.input-success,
+
+            #checkout-page .form-input.is-valid {
+
+                border-color: #22c55e !important;
+
+                background-color: #f0fdf4 !important;
+
+            }
+
+
+
+            #checkout-page .error-message {
+
+                color: #ef4444;
+
+                font-size: 0.7rem;
+
+                font-weight: 700;
+
+                margin-top: 3px;
+
+                display: block;
+
+            }
+
+
+
+            /* PIX Result inside checkout page */
+
+            #checkout-page #pix-result {
+
+                max-width: 500px;
+
+                margin: 1rem auto;
+
+                padding: 1.5rem 1rem;
+
+                background: #fff;
+
+                border-radius: 16px;
+
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+            }
+
+
+
+            #checkout-page #payment-pending-view {
+
+                max-width: 500px;
+
+                margin: 1rem auto;
+
+                padding: 1.5rem 1rem;
+
+                background: #fff;
+
+                border-radius: 16px;
+
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+            }
+
+
+
+            #checkout-page .hidden {
+
+                display: none !important;
+
+            }
+
+
+
+            /* Card area */
+
+            #checkout-page #card-area {
+
+                background: #f8fafc;
+
+                border: 1px solid #e2e8f0;
+
+                padding: 12px;
+
+                border-radius: 10px;
+
+                margin-top: 12px;
+
+            }
+
+
+
+            /* WhatsApp link */
+
+            #checkout-page .ck-wpp-link {
+
+                display: inline-flex;
+
+                align-items: center;
+
+                gap: 6px;
+
+                background: #25d366;
+
+                color: #fff;
+
+                padding: 8px 14px;
+
+                border-radius: 50px;
+
+                text-decoration: none;
+
+                font-size: 0.75rem;
+
+                font-weight: 700;
+
+            }
+
+
+
+            /* Tooltip */
+
+            #checkout-page .field-tooltip {
+
+                display: none;
+
+            }
+
+
+
+            #checkout-page .form-group {
+
+                position: relative;
+
+                margin-bottom: 12px;
+
+            }
+
+
+
+            /* Price summary */
+
+            #checkout-page .price-summary-box {
+
+                background: #f9fafb !important;
+
+                border: 1px dashed #d1d5db !important;
+
+                padding: 12px;
+
+                border-radius: 10px;
+
+                margin-bottom: 12px;
+
+            }
+
+
+
+            #checkout-page .price-summary-box span {
+
+                color: #1f2937 !important;
+
+            }
+
+
+
+            #checkout-page .pix-discount-badge {
+
+                color: #16a34a !important;
+
+                background: rgba(22, 163, 74, 0.1) !important;
+
+            }
+
+
+
+            /* Mobile scroll fix */
+
+            @media (max-width: 767px) {
+
+                #checkout-page {
+
+                    padding-bottom: 0;
+
+                }
+
+
+
+                .ck-main {
+
+                    padding: 12px;
+
+                }
+
+
+
+                .ck-section {
+
+                    padding: 14px;
+
+                    border-radius: 10px;
+
+                }
+
+            }
+
+
+
+            /* MOBILE CHECKOUT LINEAR FULL-WIDTH OVERRIDES */
+
+            @media (max-width: 768px) {
+
+                #checkout-page .ck-form-row {
+
+                    grid-template-columns: 1fr !important;
+
+                }
+
+
+
+                /* FORCE ORDER BUMPS TO BE SIDE-BY-SIDE ON MOBILE */
+
+                #checkout-page .order-bump-grid-view {
+
+                    display: grid !important;
+
+                    grid-template-columns: 1fr 1fr !important;
+
+                    gap: 10px !important;
+
+                }
+
+
+
+                #checkout-page .order-bump-grid-view .order-bump-title {
+
+                    font-size: 0.7rem !important;
+
+                    line-height: 1.1 !important;
+
+                }
+
+
+
+                #checkout-page .order-bump-grid-view .order-bump-description {
+
+                    font-size: 0.55rem !important;
+
+                    line-height: 1.2 !important;
+
+                    margin: 4px 0 !important;
+
+                }
+
+
+
+                #checkout-page .order-bump-grid-view .order-bump-price {
+
+                    font-size: 0.7rem !important;
+
+                }
+
+
+
+                #checkout-page .order-bump-grid-view .order-bump-old-price {
+
+                    font-size: 0.55rem !important;
+
+                }
+
+
+
+                /* PROVA SOCIAL VERTICAL E CENTRALIZADA */
+
+                .ck-social-proof-mobile-stack {
+
+                    flex-direction: column !important;
+
+                    text-align: center !important;
+
+                    padding: 20px 15px !important;
+
+                    gap: 12px !important;
+
+                }
+
+
+
+                .ck-social-proof-mobile-stack .avatar-stack {
+
+                    margin-right: 0 !important;
+
+                    justify-content: center !important;
+
+                    width: 100% !important;
+
+                }
+
+
+
+                .ck-social-proof-mobile-stack div[style*="padding-left: 15px"] {
+
+                    padding-left: 0 !important;
+
+                    margin-top: 5px !important;
+
+                }
+
+
+
+                /* AJUSTE GERAL DE SECOES */
+
+                .ck-section {
+
+                    padding: 12px !important;
+
+                }
+
+
+
+                /* AJUSTE PAYMENT METHODS MOBILE - 3 CARDS LADO A LADO SEM OVERFLOW */
+
+                #checkout-page .payment-methods-grid {
+
+                    gap: 6px !important;
+
+                }
+
+                #checkout-page .radio-item {
+
+                    padding: 8px 4px !important;
+
+                    flex-direction: column !important;
+
+                    gap: 6px !important;
+
+                    justify-content: center !important;
+
+                }
+
+                #checkout-page .radio-label {
+
+                    display: flex;
+
+                    flex-direction: column;
+
+                    align-items: center;
+
+                    width: 100%;
+
+                }
+
+                #checkout-page .radio-title {
+
+                    font-size: 0.75rem !important;
+
+                    text-align: center;
+
+                    width: 100%;
+
+                    display: block;
+
+                }
+
+                #checkout-page .radio-desc {
+
+                    font-size: 0.55rem !important;
+
+                    text-align: center;
+
+                    width: 100%;
+
+                    display: block;
+
+                }
+
+                #checkout-page .radio-item img,
+
+                #checkout-page .radio-item i {
+
+                    height: 20px !important;
+
+                    font-size: 20px !important;
+
+                    margin: 0 !important;
+
+                }
+
+            }
+
+            /* Dark Mode Overrides for Premium Checkout Experience */
+            #checkout-page {
+                background-color: #090d16 !important;
+                color: #f8fafc !important;
+            }
+            #checkout-page .ck-section {
                 background-color: rgba(17, 24, 39, 0.7) !important;
                 border: 1px solid rgba(255, 255, 255, 0.08) !important;
-                border-radius: 12px;
-                padding: 12px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
             }
-            .ck-section-header {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                margin-bottom: 10px;
-                padding-bottom: 8px;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            }
-            .ck-section-number {
-                background: linear-gradient(135deg, #22c55e, #16a34a);
-                color: #ffffff;
-                width: 26px;
-                height: 26px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: 700;
-                font-size: 13px;
-                flex-shrink: 0;
-            }
-            .ck-section-title {
-                font-size: 1.05rem;
-                font-weight: 700;
+            #checkout-page .ck-section-title {
                 color: #ffffff !important;
-                margin: 0;
+            }
+            #checkout-page .ck-section-header {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+            }
+            #checkout-page .ck-form-group label {
+                color: #cbd5e1 !important;
             }
             #checkout-page .form-input,
-            #checkout-page .ck-input,
-            #checkout-page input,
-            #checkout-page select,
-            #checkout-page textarea {
-                font-size: 16px !important;
-                padding: 11px 12px !important;
-                border-radius: 8px !important;
+            #checkout-page .ck-input {
                 background: rgba(10, 15, 30, 0.8) !important;
                 border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
                 color: #ffffff !important;
-                -webkit-text-size-adjust: 100% !important;
-                text-size-adjust: 100% !important;
-                width: 100%;
-                box-sizing: border-box;
             }
             #checkout-page .form-input:focus,
             #checkout-page .ck-input:focus {
                 border-color: #fbbf24 !important;
                 box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2) !important;
-                outline: none;
             }
+            #checkout-page .ck-product-card {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+            }
+            #checkout-page .ck-product-image {
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            }
+            #checkout-page .ck-product-info h3 {
+                color: #ffffff !important;
+            }
+            #checkout-page .ck-product-info p {
+                color: #94a3b8 !important;
+            }
+            #checkout-page .ck-product-info span {
+                color: #10b981 !important;
+            }
+            #checkout-page .ck-social-proof-mobile-stack {
+                background: rgba(17, 24, 39, 0.7) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                backdrop-filter: blur(8px) !important;
+            }
+            #checkout-page .ck-social-proof-mobile-stack strong {
+                color: #ffffff !important;
+            }
+            #checkout-page .ck-social-proof-mobile-stack div[style] {
+                color: #cbd5e1 !important;
+            }
+            #checkout-page .payment-method-btn {
+                background: rgba(17, 24, 39, 0.6) !important;
+                border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+                color: #ffffff !important;
+            }
+            #checkout-page .payment-method-btn.active {
+                border-color: #fbbf24 !important;
+                background: rgba(251, 191, 36, 0.05) !important;
+                color: #fbbf24 !important;
+            }
+            #checkout-page .payment-method-btn i {
+                color: #94a3b8;
+            }
+            #checkout-page .payment-method-btn.active i {
+                color: #fbbf24;
+            }
+            #checkout-page .order-summary-item {
+                color: #cbd5e1 !important;
+            }
+            #checkout-page .order-summary-total {
+                color: #ffffff !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+            }
+            #checkout-page .ck-footer {
+                color: #64748b !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+            }
+            #checkout-page .ck-guarantee-box {
+                background: rgba(22, 163, 74, 0.05) !important;
+                border: 1px solid rgba(22, 163, 74, 0.15) !important;
+                color: #cbd5e1 !important;
+            }
+            #checkout-page .ck-guarantee-box strong {
+                color: #ffffff !important;
+            }
+            #checkout-page .order-bump-card {
+                background: rgba(251, 191, 36, 0.03) !important;
+                border: 1.5px dashed rgba(251, 191, 36, 0.2) !important;
+            }
+            #checkout-page .order-bump-card.active {
+                background: rgba(251, 191, 36, 0.06) !important;
+                border: 1.5px solid #fbbf24 !important;
+            }
+            #checkout-page .order-bump-title {
+                color: #ffffff !important;
+            }
+            #checkout-page .order-bump-description {
+                color: #94a3b8 !important;
+            }
+            #checkout-page .order-bump-price {
+                color: #fbbf24 !important;
+            }
+            #checkout-page .ck-product-card-pricing-box {
+                background: rgba(15, 23, 42, 0.6) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                box-sizing: border-box !important;
+                width: 100% !important;
+                overflow: hidden !important;
+            }
+            #checkout-page .ck-product-info {
+                min-width: 0;
+            }
+
+            /* Payment Tabs (PIX / CARD / BOLETO) */
+            #checkout-page .radio-item {
+                background: rgba(17, 24, 39, 0.6) !important;
+                border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+                color: #94a3b8 !important;
+            }
+            #checkout-page .radio-item.selected {
+                background: rgba(251, 191, 36, 0.08) !important;
+                border-color: #fbbf24 !important;
+                color: #fbbf24 !important;
+            }
+            #checkout-page .radio-item.selected .radio-title {
+                color: #fbbf24 !important;
+            }
+            #checkout-page .radio-item.selected .radio-desc {
+                color: rgba(251, 191, 36, 0.8) !important;
+            }
+            #checkout-page .radio-desc {
+                color: #64748b !important;
+            }
+
+            /* Bottom Summary / Total Paying Box */
+            #checkout-page .price-summary-box {
+                background: rgba(10, 15, 30, 0.8) !important;
+                border: 1.5px dashed rgba(255, 255, 255, 0.12) !important;
+                padding: 16px !important;
+                color: #ffffff !important;
+            }
+            #checkout-page .price-summary-box span {
+                color: #ffffff !important;
+            }
+            #checkout-page #checkout-order-summary {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+                color: #cbd5e1 !important;
+            }
+            #checkout-page #checkout-order-summary div {
+                color: #cbd5e1 !important;
+            }
+
+            /* Testimonial Boxes inside Checkout */
+            #checkout-page .ck-testimonial-box {
+                background: rgba(255, 255, 255, 0.03) !important;
+                border: 1px solid rgba(255, 255, 255, 0.07) !important;
+                border-left: 3px solid #10b981 !important;
+                padding: 12px !important;
+                border-radius: 10px !important;
+            }
+            #checkout-page .ck-testimonial-box p {
+                color: #cbd5e1 !important;
+                font-size: 0.78rem !important;
+                line-height: 1.45 !important;
+            }
+            #checkout-page .ck-testimonial-box .ck-testimonial-author {
+                color: #ffffff !important;
+                font-size: 0.78rem !important;
+            }
+            #checkout-page .ck-testimonial-box .ck-testimonial-author span {
+                color: #94a3b8 !important;
+                border-left-color: rgba(255, 255, 255, 0.15) !important;
+                font-size: 0.7rem !important;
+            }
+            #checkout-page .ck-proof-label {
+                color: #fbbf24 !important;
+                font-size: 0.78rem !important;
+            }
+            /* Item list chips in pricing box */
+            #checkout-page .ck-item-chip {
+                display: flex;
+                align-items: baseline;
+                justify-content: space-between;
+                gap: 8px;
+                padding: 5px 0;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+                min-width: 0;
+                overflow: hidden;
+            }
+            #checkout-page .ck-item-chip:last-child {
+                border-bottom: none;
+            }
+            #checkout-page .ck-item-chip-name {
+                font-size: 0.73rem;
+                color: #cbd5e1;
+                flex: 1;
+                min-width: 0;
+                font-weight: 500;
+                line-height: 1.35;
+                word-break: break-word;
+            }
+            #checkout-page .ck-item-chip-price {
+                font-size: 0.7rem;
+                color: #ef4444;
+                text-decoration: line-through;
+                white-space: nowrap;
+                flex-shrink: 0;
+                font-weight: 600;
+                margin-left: 4px;
+            }
+            /* Premium CTA button pulse */
+            @keyframes ck-pulse {
+                0%   { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+                70%  { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+            }
+            #checkout-page .ck-btn-checkout {
+                animation: ck-pulse 2s infinite !important;
+                font-size: 1rem !important;
+                font-weight: 800 !important;
+                letter-spacing: 0.3px !important;
+                padding: 16px 24px !important;
+                border-radius: 14px !important;
+            }
+            /* Form labels and inputs – compactos */
             #checkout-page .ck-form-group label {
                 font-size: 0.72rem !important;
                 font-weight: 600 !important;
@@ -997,339 +2806,1024 @@
                 margin-bottom: 4px !important;
                 display: block !important;
             }
-            .ck-btn-checkout {
-                width: 100%;
-                background: linear-gradient(135deg, #22c55e, #16a34a);
-                color: #ffffff;
-                border: none;
-                border-radius: 10px;
-                padding: 14px 20px;
-                font-size: 1.05rem;
-                font-weight: 800;
-                cursor: pointer;
-                box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
+            #checkout-page .form-input,
+            #checkout-page .ck-input,
+            #checkout-page input,
+            #checkout-page select,
+            #checkout-page textarea {
+                font-size: 16px !important; /* Previne auto-zoom no iOS Safari / Instagram In-App */
+                padding: 11px 12px !important;
+                border-radius: 8px !important;
+                -webkit-text-size-adjust: 100% !important;
+                text-size-adjust: 100% !important;
             }
-            .payment-methods-grid {
-                display: flex;
-                gap: 8px;
-                margin-bottom: 16px;
+
+            /* Card Input Area */
+            #checkout-page #card-area {
+                background: rgba(15, 23, 42, 0.6) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                padding: 16px !important;
+                border-radius: 12px !important;
+                margin-top: 16px !important;
             }
-            .radio-item {
-                flex: 1;
-                border: 1.5px solid rgba(255, 255, 255, 0.1);
-                border-radius: 8px;
-                padding: 10px;
-                cursor: pointer;
-                background: rgba(15, 23, 42, 0.5);
-                display: flex;
-                flex-direction: column;
-                gap: 4px;
-                transition: all 0.2s;
+            #checkout-page select.ck-input option {
+                background-color: #0d1117 !important;
+                color: #ffffff !important;
             }
-            .radio-item.selected {
-                border-color: #22c55e;
-                background: rgba(34, 197, 94, 0.08);
+
+            /* Dark Mode Validation State Overrides */
+            #checkout-page .form-input.input-error,
+            #checkout-page .ck-input.input-error,
+            #checkout-page .form-input.is-invalid,
+            #checkout-page .ck-input.is-invalid {
+                border-color: #ef4444 !important;
+                background-color: rgba(239, 68, 68, 0.1) !important;
+                color: #ffffff !important;
             }
-            .radio-title {
-                font-size: 0.85rem;
-                font-weight: 800;
-                color: #ffffff;
+            #checkout-page .form-input.input-success,
+            #checkout-page .ck-input.input-success,
+            #checkout-page .form-input.is-valid,
+            #checkout-page .ck-input.is-valid {
+                border-color: #10b981 !important;
+                background-color: rgba(16, 185, 129, 0.15) !important;
+                color: #ffffff !important;
             }
-            .radio-desc {
-                font-size: 0.7rem;
-                color: #94a3b8;
+
+            /* Override Browser Autofill (Preenchimento Automático) Styles in Dark Mode */
+            #checkout-page input:-webkit-autofill,
+            #checkout-page input:-webkit-autofill:hover, 
+            #checkout-page input:-webkit-autofill:focus, 
+            #checkout-page input:-webkit-autofill:active {
+                -webkit-box-shadow: 0 0 0 1000px #0b101d inset !important;
+                -webkit-text-fill-color: #ffffff !important;
+                transition: background-color 5000s ease-in-out 0s;
             }
-            .ck-product-card {
-                display: flex;
-                gap: 12px;
-                align-items: center;
-                padding-bottom: 12px;
-                margin-bottom: 12px;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+            /* PIX Area Overrides (pix-result) */
+            #checkout-page #pix-result h3 {
+                color: #ffffff !important;
             }
-            .ck-product-image {
-                width: 50px;
-                height: 70px;
-                object-fit: cover;
-                border-radius: 6px;
-                border: 1px solid rgba(255, 255, 255, 0.1);
+            #checkout-page #pix-result p {
+                color: #cbd5e1 !important;
             }
-            .ck-product-info h3 {
-                font-size: 0.95rem;
-                font-weight: 800;
-                color: #ffffff;
-                margin: 0 0 2px 0;
+            #checkout-page #pix-receiver-info p {
+                color: #ffffff !important;
             }
-            .ck-product-info p {
-                font-size: 0.8rem;
-                color: #94a3b8;
-                margin: 0;
+            #checkout-page #pix-receiver-info p:first-child {
+                color: #94a3b8 !important;
             }
-            .ck-product-info span {
-                font-size: 1.1rem;
-                font-weight: 900;
-                color: #22c55e;
+            #checkout-page #qr-loader p {
+                color: #ffffff !important;
             }
-            .ck-order-summary-box {
-                background: rgba(10, 15, 30, 0.8);
-                border-radius: 8px;
-                padding: 12px;
-                margin-bottom: 12px;
+            #checkout-page #qr-loader p span {
+                color: #94a3b8 !important;
             }
-            .ck-summary-row {
-                display: flex;
-                justify-content: space-between;
-                font-size: 0.85rem;
-                color: #cbd5e1;
-                margin-bottom: 6px;
+            #checkout-page #pix-result .qr-instructions {
+                background: rgba(15, 23, 42, 0.6) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                color: #cbd5e1 !important;
             }
-            .ck-summary-total {
-                display: flex;
-                justify-content: space-between;
-                font-size: 1.15rem;
-                font-weight: 900;
-                color: #ffffff;
-                padding-top: 8px;
-                border-top: 1px dashed rgba(255, 255, 255, 0.1);
+            #checkout-page #pix-result .qr-instructions strong {
+                color: #ffffff !important;
             }
-            .hidden {
-                display: none !important;
+
+            /* Outer Containers & Warranty box within PIX result */
+            #checkout-page #pix-result,
+            #checkout-page #payment-pending-view {
+                background: rgba(17, 24, 39, 0.7) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
             }
+            #checkout-page #pix-result div[style*="background: #f0fdf4"],
+            #checkout-page #pix-result div[style*="background:#f0fdf4"] {
+                background: rgba(22, 163, 74, 0.05) !important;
+                border: 1px solid rgba(22, 163, 74, 0.15) !important;
+            }
+            #checkout-page #pix-result div[style*="background: #f0fdf4"] p,
+            #checkout-page #pix-result div[style*="background:#f0fdf4"] p {
+                color: #cbd5e1 !important;
+            }
+            #checkout-page #pix-result div[style*="background: #f0fdf4"] i,
+            #checkout-page #pix-result div[style*="background:#f0fdf4"] i {
+                color: #22c55e !important;
+            }
+            #checkout-page #pix-result div[style*="border-top: 1px dashed #e5e7eb"],
+            #checkout-page #pix-result div[style*="border-top:1px dashed #e5e7eb"] {
+                border-top: 1px dashed rgba(255, 255, 255, 0.08) !important;
+            }
+
         </style>
 
-        <header class="ck-header">
-            <div class="ck-header-container">
-                <div class="ck-logo">
-                    <i class="fa-solid fa-feather" style="color: #fbbf24;"></i>
-                    <span>MANEJO <span class="ck-logo-elite">ELITE</span></span>
-                </div>
-                <div class="ck-security-badge">
-                    <i class="fa-solid fa-lock"></i>
-                    <span>Ambiente Seguro</span>
-                </div>
-                <button type="button" class="ck-back-btn" onclick="closeCheckout()">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    <span>Voltar</span>
-                </button>
-            </div>
-        </header>
 
-        <div class="ck-urgency-banner">
-            <div class="ck-timer-badge">
-                <i class="fa-regular fa-clock"></i>
-                <span>SUA OFERTA EXPIRA EM: <strong id="checkout-reservation-timer">15:00</strong></span>
+
+        <!-- Checkout Header -->
+
+        <div class="ck-header">
+
+            <div class="ck-header-container">
+
+                <button class="ck-back-btn" onclick="attemptCloseCheckout()">
+
+                    &#8592; Voltar
+
+                </button>
+
+                <div class="ck-logo" style="display: flex; align-items: center; gap: 8px;">
+                    <img src="logo.webp" alt="Logo" style="height: 38px; border-radius: 6px; display: block;">
+                    <span style="font-weight: 800; font-size: 1.1rem; letter-spacing: -0.5px; color: #fff;">PROTOCOLO <span style="color: #fbbf24;">ELITE</span></span>
+                </div>
+
+                <div class="ck-security-badge">
+
+                    <span>&#x1F512;</span>
+
+                    <span>Ambiente 100% Seguro</span>
+
+                </div>
+
             </div>
+
         </div>
+
+
+
+        <!-- Main Content -->
 
         <div class="ck-main">
-            <div id="checkout-main-view">
-                <div class="ck-grid">
-                    <!-- Coluna Esquerda: Formulários -->
-                    <div class="ck-left-col">
-                        <div class="ck-section">
-                            <div class="ck-section-header">
-                                <div class="ck-section-number">1</div>
-                                <h2 class="ck-section-title">Dados Pessoais para Envio</h2>
-                            </div>
-                            <div id="pix-fields">
-                                <div class="ck-form-group form-group" style="margin-bottom: 10px;">
-                                    <label for="payer-name">Nome Completo</label>
-                                    <input type="text" id="payer-name" name="name" autocomplete="name" class="form-input ck-input" placeholder="Seu nome completo" required>
-                                </div>
-                                <div class="ck-form-group form-group" style="margin-bottom: 10px;">
-                                    <label for="payer-phone">WhatsApp para receber o acesso</label>
-                                    <input type="tel" id="payer-phone" name="phone" autocomplete="tel" class="form-input ck-input" placeholder="(00) 00000-0000" required inputmode="tel">
-                                </div>
-                                <div class="ck-form-group form-group" style="margin-bottom: 10px;">
-                                    <label for="payer-email">E-mail (Opcional)</label>
-                                    <input type="email" id="payer-email" name="email" autocomplete="email" class="form-input ck-input" placeholder="seu@email.com (Opcional)" inputmode="email">
-                                </div>
-                                <div class="ck-form-group form-group" style="margin-bottom: 6px;">
-                                    <label for="payer-cpf">CPF (Para emissão de nota)</label>
-                                    <input type="tel" id="payer-cpf" name="cpf" autocomplete="off" class="form-input ck-input" placeholder="000.000.000-00" required inputmode="numeric">
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Order Bumps -->
-                        <div class="ck-section" style="margin-top: 14px;">
-                            <div id="order-bump-area"></div>
-                        </div>
+            <!-- Timer de Urgencia -->
 
-                        <!-- Forma de Pagamento -->
-                        <div class="ck-section" style="margin-top: 14px;">
-                            <div class="ck-section-header">
-                                <div class="ck-section-number">2</div>
-                                <h2 class="ck-section-title">Forma de Pagamento</h2>
-                            </div>
+            <div class="ck-urgency-banner" style="display: flex; flex-direction: column; align-items: center;">
 
-                            <div class="payment-methods-grid">
-                                <div class="radio-item selected" onclick="selectPaymentMethod('pix')">
-                                    <input type="radio" name="paymentMethod" id="method-pix" value="pix" checked style="display:none;">
-                                    <span class="radio-title">⚡ PIX</span>
-                                    <span class="radio-desc">Acesso imediato</span>
-                                </div>
-                                <div class="radio-item" onclick="selectPaymentMethod('card')">
-                                    <input type="radio" name="paymentMethod" id="method-card" value="card" style="display:none;">
-                                    <span class="radio-title">💳 CARTÃO</span>
-                                    <span class="radio-desc">Até 2x</span>
-                                </div>
-                                <div class="radio-item" onclick="selectPaymentMethod('boleto')">
-                                    <input type="radio" name="paymentMethod" id="method-boleto" value="boleto" style="display:none;">
-                                    <span class="radio-title">📄 BOLETO</span>
-                                    <span class="radio-desc">Até 72h</span>
-                                </div>
-                            </div>
+                <div class="ck-timer-badge">
 
-                            <!-- Cartão de Crédito -->
-                            <div id="card-area" style="display: none; margin-bottom: 14px;">
-                                <div class="ck-form-group form-group" style="margin-bottom: 10px;">
-                                    <label>Nome impresso no Cartão</label>
-                                    <input type="text" id="card-holder" name="ccname" autocomplete="cc-name" class="form-input ck-input" placeholder="Como no cartão">
-                                </div>
-                                <div class="ck-form-group form-group" style="margin-bottom: 10px;">
-                                    <label>CPF do Titular</label>
-                                    <input type="tel" id="card-cpf" name="cpf" autocomplete="off" class="form-input ck-input" placeholder="000.000.000-00" inputmode="numeric">
-                                </div>
-                                <div class="ck-form-group form-group" style="margin-bottom: 10px;">
-                                    <label>Número do Cartão</label>
-                                    <input type="text" id="card-number" name="cardnumber" autocomplete="cc-number" class="form-input ck-input" placeholder="0000 0000 0000 0000" inputmode="numeric">
-                                </div>
-                                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                                    <div class="ck-form-group form-group" style="flex: 1;">
-                                        <label>Validade</label>
-                                        <input type="text" id="card-expiration" name="cc-exp" autocomplete="cc-exp" class="form-input ck-input" placeholder="MM/AA" inputmode="numeric">
-                                    </div>
-                                    <div class="ck-form-group form-group" style="flex: 1;">
-                                        <label>CVV</label>
-                                        <input type="text" id="card-cvv" name="cvc" autocomplete="cc-csc" class="form-input ck-input" placeholder="123" inputmode="numeric">
-                                    </div>
-                                </div>
-                                <div class="ck-form-group form-group">
-                                    <label>Parcelas</label>
-                                    <select id="installments-select" class="form-input ck-input"></select>
-                                </div>
-                            </div>
+                    <span>&#x23F0;</span>
 
-                            <!-- Botões de Finalização -->
-                            <button type="button" id="btn-pay-pix" class="ck-btn-checkout" onclick="handlePaymentSubmit('pix')">
-                                <i class="fa-solid fa-bolt"></i> GERAR PIX DE R$ 19,90
-                            </button>
-                            <button type="button" id="btn-pay-card" class="ck-btn-checkout" style="display: none;" onclick="handlePaymentSubmit('card')">
-                                <i class="fa-solid fa-credit-card"></i> FINALIZAR NO CARTÃO
-                            </button>
-                            <button type="button" id="btn-pay-boleto" class="ck-btn-checkout" style="display: none;" onclick="handlePaymentSubmit('boleto')">
-                                <i class="fa-solid fa-file-invoice"></i> GERAR BOLETO BANCÁRIO
-                            </button>
-                        </div>
-                    </div>
+                    <span>Oferta expira em: <span id="ck-timer">14:59</span></span>
 
-                    <!-- Coluna Direita: Resumo do Pedido -->
-                    <div class="ck-right-col">
-                        <div class="ck-section">
-                            <div class="ck-section-header">
-                                <h2 class="ck-section-title">Resumo do Pedido</h2>
-                            </div>
-                            <div class="ck-product-card">
-                                <img src="capadospintinhos.webp" alt="Manual de Pintinhos" class="ck-product-image">
-                                <div class="ck-product-info">
-                                    <h3 id="checkout-product-name">Manual de Manejo de Pintinhos</h3>
-                                    <p>Acesso Completo + Garantia</p>
-                                    <span id="checkout-product-price-display">R$ 19,90</span>
-                                </div>
-                            </div>
-                            <div class="ck-order-summary-box">
-                                <div class="ck-summary-row">
-                                    <span>Produto:</span>
-                                    <span id="top-checkout-card-price">R$ 49,90</span>
-                                </div>
-                                <div class="ck-summary-row" style="color: #22c55e;">
-                                    <span>Desconto Aplicado:</span>
-                                    <span>- R$ 30,00</span>
-                                </div>
-                                <div class="ck-summary-total">
-                                    <span>Total:</span>
-                                    <span id="checkout-total-price" style="color: #22c55e;">R$ 19,90</span>
-                                </div>
-                                <div id="top-checkout-card-installment" style="font-size: 0.75rem; color: #94a3b8; text-align: right; margin-top: 4px;">
-                                    ou 2x de R$ 10,40
-                                </div>
-                            </div>
-                            <div style="font-size: 0.75rem; color: #94a3b8; line-height: 1.5; text-align: center;">
-                                <i class="fa-solid fa-shield-halved" style="color: #22c55e;"></i> Seus dados protegidos com criptografia SSL 256 bits.
-                            </div>
-                        </div>
-                    </div>
                 </div>
+
+                <div style="font-size: 0.75rem; color: #ffffff; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; text-align: center; line-height: 1.2;">
+
+                    <i class="fa-solid fa-mobile-screen-button"></i> Receba o acesso na palma da sua mão imediatamente após o pagamento.
+
+                </div>
+
             </div>
 
-            <!-- PIX Result View -->
-            <div id="pix-result" class="hidden" style="text-align: center; padding: 1.5rem 0;">
-                <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
-                    <i class="fa-solid fa-circle-check" style="font-size: 2.5rem; color: #22c55e;"></i>
-                    <h3 style="color: #ffffff; font-size: 1.25rem; font-weight: 800; margin: 10px 0 4px 0;">PIX Gerado com Sucesso!</h3>
-                    <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;">Pague agora para liberar seu acesso imediatamente no WhatsApp.</p>
+
+
+            <!-- CHECKOUT MAIN VIEW -->
+
+
+
+            <div id="checkout-main-view">
+
+                <div style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;">
+
+
+
+                    <!-- 1. Header do Produto e Garantia -->
+
+                    <div class="ck-section">
+
+                        <!-- Produto: Header (logo + titulo + subtitulo) -->
+                        <div class="ck-product-card" style="margin-bottom: 12px; padding-bottom: 12px;">
+
+                            <div class="ck-product-image" id="ck-product-cover" style="width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; overflow: hidden;">
+                                <img src="capadospintinhos.webp" alt="Manual de Pintinhos" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;">
+                            </div>
+
+                            <div class="ck-product-info" style="flex: 1; min-width: 0;">
+                                <h3 id="checkout-product-name" style="font-size: 1rem; font-weight: 800; color: #fff; margin-bottom: 2px; line-height: 1.2;">Manual de Manejo de Pintinhos</h3>
+                                <p style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 0; line-height: 1.3;">
+                                    Acesso Vitalicio + Atualizacoes<br>
+                                    <span style="color: #10b981; font-weight: 700;">+ 98% de Sobrevivência Garantida</span>
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <!-- Pricing Box: full-width, fora do flex row do card -->
+                        <div class="ck-product-card-pricing-box" style="display: flex; flex-direction: column; gap: 4px; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.08); box-sizing: border-box; width: 100%; overflow: hidden;">
+
+                            <!-- Lista de itens -->
+                            <div id="checkout-item-list" style="border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 2px;">
+                                <div class="ck-item-chip">
+                                    <span class="ck-item-chip-name">🐥 Manual Prático de Manejo dos Pintinhos</span>
+                                    <span class="ck-item-chip-price">R$ 49,90</span>
+                                </div>
+                                <div class="ck-item-chip">
+                                    <span class="ck-item-chip-name">🛡️ Protocolo Primeiros 30 Dias (98% Sobrevivência)</span>
+                                    <span class="ck-item-chip-price">R$ 29,90</span>
+                                </div>
+                                <div class="ck-item-chip">
+                                    <span class="ck-item-chip-name">💧 Fórmula da Bebida de Arranque Inicial</span>
+                                    <span class="ck-item-chip-price">R$ 19,90</span>
+                                </div>
+                                <div class="ck-item-chip">
+                                    <span class="ck-item-chip-name">🔄 Acesso Vitalício no WhatsApp e E-mail</span>
+                                    <span class="ck-item-chip-price">R$ 29,90</span>
+                                </div>
+                            </div>
+
+                            <div style="font-size: 0.78rem; color: #94a3b8; font-weight: 500;">De <span id="top-checkout-card-price" style="text-decoration: line-through; color: #ef4444; font-weight: bold;">R$ 49,90</span> por apenas:</div>
+
+                            <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 4px;">
+                                <span id="checkout-product-price-display" style="font-size: 1.6rem; color: #10b981; font-weight: 900; line-height: 1.1;">R$ 19,90</span>
+                                <span id="top-checkout-card-installment" style="font-size: 0.85rem; color: #cbd5e1; font-weight: 600;">ou 2x de R$ 10,40</span>
+                            </div>
+
+                            <div id="checkout-savings-badge" style="margin-top: 6px; display: inline-block;">
+                                <span style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.72rem; font-weight: 900; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.25); text-transform: uppercase; letter-spacing: 0.5px;">💰 VOCÊ ECONOMIZA: R$ 30,00 (60% OFF)</span>
+                            </div>
+
+                            <div style="font-size: 0.72rem; color: #fbbf24; margin-top: 6px; font-style: italic; border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 6px; font-weight: 600;">
+                                Menos de 67 centavos por dia para salvar seus pintinhos.
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- Prova Social Premium (Estilo Hero) -->
+
+                        <div class="ck-social-proof-mobile-stack" style="display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin-top: 14px; margin-bottom: 5px; padding: 12px 14px; border-radius: 12px; text-align: left;">
+                            <div class="avatar-stack" style="display: flex; flex-shrink: 0;">
+                                <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; margin-right: -12px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+                                    <img src="carrosel/carlos.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                </div>
+                                <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; margin-right: -12px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+                                    <img src="carrosel/maria.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                </div>
+                                <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; margin-right: -12px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+                                    <img src="carrosel/joao_new.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                </div>
+                                <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; margin-right: -12px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+                                    <img src="carrosel/ana.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                </div>
+                                <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+                                    <img src="carrosel/lucas.webp" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                </div>
+                            </div>
+                            <div style="flex: 1; min-width: 0;">
+                                <strong style="color: #ffffff; display: block; margin-bottom: 2px; font-size: 0.78rem; font-weight: 800; line-height: 1.3;">+1.600 criadores já salvando suas aves 🐔</strong>
+                                <span style="color: #94a3b8; font-size: 0.7rem; font-weight: 500; line-height: 1.3; display: block;">Não perca essa oferta por tempo limitado.</span>
+                            </div>
+                        </div>
+
+                            <!-- Garantia -->
+
+                            <div class="ck-guarantee-box">
+
+                                <div class="ck-guarantee-icon">&#x2705;</div>
+
+                                <div class="ck-guarantee-content">
+
+                                    <p>Garantia Blindada</p>
+
+                                    <p>7 dias para testar. Se nao gostar, devolvemos 100% do valor.</p>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- WhatsApp Support Banner Junto da Garantia -->
+
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; margin-top: 15px; margin-bottom: 5px; cursor: pointer; transition: 0.2s;" onclick="window.open('https://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20para%20finalizar%20minha%20compra.', '_blank')">
+
+                                <i class="fa-brands fa-whatsapp fa-bounce" style="color: #22c55e; font-size: 1.6rem;"></i>
+
+                                <div style="text-align: left; line-height: 1.2;">
+
+                                    <span style="display: block; font-size: 0.8rem; color: #166534; font-weight: 800;">Atendimento Rápido</span>
+
+                                    <span style="display: block; font-size: 0.7rem; color: #15803d; font-weight: 500;">Dúvidas? Chame a gente no WhatsApp</span>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- Prova -->
+
+                        </div>
+
+                    </div>
+
+
+
+                    <form id="payment-form">
+
+                        <!-- Dados Pessoais -->
+
+                        <div class="ck-section">
+
+                            <div class="ck-section-header">
+
+                                <div class="ck-section-number">1</div>
+
+                                <h2 class="ck-section-title">Dados Pessoais</h2>
+
+                            </div>
+
+
+
+                            <div id="pix-fields">
+
+                                <div class="ck-form-group form-group">
+
+                                    <label for="payer-name">Nome Completo</label>
+
+                                    <input type="text" id="payer-name" name="name" autocomplete="name" class="form-input ck-input"
+
+                                        placeholder="Como no seu documento" required
+
+                                        data-tip="Digite seu nome e sobrenome completo."
+
+                                        oninput="if(document.getElementById('checkout-payer-firstname')) document.getElementById('checkout-payer-firstname').textContent = this.value.trim().split(' ')[0].toLowerCase()">
+
+                                    <div class="field-tooltip">Digite seu nome completo</div>
+
+                                </div>
+
+
+
+                                <div class="ck-form-row">
+
+                                    <div class="ck-form-group form-group">
+
+                                        <label for="payer-email">E-mail (Opcional)</label>
+
+                                        <input type="email" id="payer-email" name="email" autocomplete="email" class="form-input ck-input"
+
+                                            placeholder="seu@email.com (Opcional)" inputmode="email"
+
+                                            data-tip="Seu melhor email onde recebera o acesso ao guia.">
+
+                                        <div class="field-tooltip">Onde voce recebera o acesso</div>
+
+                                    </div>
+
+                                    <div class="ck-form-group form-group">
+
+                                        <label for="payer-phone">WhatsApp</label>
+
+                                        <input type="tel" id="payer-phone" name="phone" autocomplete="tel" class="form-input ck-input"
+
+                                            placeholder="(00) 00000-0000" required inputmode="tel"
+
+                                            data-tip="Para suporte e avisos importantes (DDD + Numero).">
+
+                                        <div class="field-tooltip">DDD + Numero</div>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <div class="ck-form-group form-group">
+
+                                    <label for="payer-cpf">CPF</label>
+
+                                    <input type="tel" id="payer-cpf" name="cpf" autocomplete="off" class="form-input ck-input"
+
+                                        placeholder="000.000.000-00" required inputmode="numeric" pattern="[0-9]*"
+
+                                        data-tip="Necessario para emitir a nota fiscal (apenas numeros).">
+
+                                    <div class="field-tooltip">Apenas numeros do CPF</div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- 3. Ofertas Exclusivas / Order Bumps (Movido para cá) -->
+
+                        <div class="ck-section" style="margin-top: 24px;">
+
+                            <div id="order-bump-area"></div>
+
+                        </div>
+
+
+
+                        <!-- 5. Forma de Pagamento e Botoes -->
+
+                        <!-- Pagamento -->
+
+                        <div class="ck-section" style="margin-top: 24px;">
+
+                            <div class="ck-section-header">
+
+                                <div class="ck-section-number">2</div>
+
+                                <h2 class="ck-section-title">Forma de Pagamento</h2>
+
+                            </div>
+
+
+
+                            <!-- Metodos -->
+
+                            <div class="payment-methods-grid" style="display: flex; gap: 8px; margin-bottom: 24px;">
+
+                                <div class="radio-item selected" onclick="selectPaymentMethod('pix')">
+
+                                    <input type="radio" name="paymentMethod" id="method-pix" value="pix" checked
+
+                                        style="display:none;">
+
+                                    <div class="radio-label">
+
+                                        <span class="radio-title">PIX</span>
+
+                                        <span class="radio-desc">Acesso imediato</span>
+
+                                    </div>
+
+                                    <img src="assets/pix.png"
+
+                                        style="height: 24px;" alt="Pix" loading="lazy">
+
+                                </div>
+
+                                <div class="radio-item" onclick="selectPaymentMethod('card')">
+
+                                    <input type="radio" name="paymentMethod" id="method-card" value="card"
+
+                                        style="display:none;">
+
+                                    <div class="radio-label">
+
+                                        <span class="radio-title">CARTAO</span>
+
+                                        <span class="radio-desc">Ate 4x s/ juros</span>
+
+                                    </div>
+
+                                    <div style="display: flex; gap: 5px; align-items: center;">
+
+                                        <img src="assets/visa.png"
+
+                                            style="height: 18px;" alt="Visa" loading="lazy">
+
+                                        <img src="assets/mastercard.png"
+
+                                            style="height: 18px;" alt="Mastercard" loading="lazy">
+
+                                    </div>
+
+                                </div>
+
+                                <div class="radio-item" onclick="selectPaymentMethod('boleto')">
+
+                                    <input type="radio" name="paymentMethod" id="method-boleto" value="boleto"
+
+                                        style="display:none;">
+
+                                    <div class="radio-label">
+
+                                        <span class="radio-title">BOLETO</span>
+
+                                        <span class="radio-desc" style="font-size: 0.6rem;">Até 72h</span>
+
+                                    </div>
+
+                                    <img src="assets/barcode.png" alt="Boleto" style="height: 24px;" loading="lazy">
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- Card Area -->
+
+                            <!-- Card Area -->
+
+                            <div id="card-area" style="display: none;">
+
+                                <div class="ck-form-group form-group">
+
+                                    <label>Nome no Cartao</label>
+
+                                    <input type="text" id="card-holder" name="ccname" autocomplete="cc-name" class="form-input ck-input"
+
+                                        placeholder="Como impresso no cartao"
+
+                                        data-tip="Nome exatamente como impresso no cartao.">
+
+                                    <div class="field-tooltip">Igual impresso no cartao</div>
+
+                                </div>
+
+                                <div class="ck-form-group form-group">
+
+                                    <label>CPF do Titular</label>
+
+                                    <input type="tel" id="card-cpf" name="cpf" autocomplete="off" class="form-input ck-input"
+
+                                        placeholder="000.000.000-00" inputmode="numeric" pattern="[0-9]*">
+
+                                </div>
+
+
+
+                                <div class="ck-form-group form-group">
+
+                                    <label><i class="fa-regular fa-credit-card"></i> Número do Cartão</label>
+
+                                    <input type="text" id="card-number" name="cardnumber" autocomplete="cc-number" class="form-input ck-input"
+
+                                        placeholder="0000 0000 0000 0000" inputmode="numeric">
+
+                                    <div class="field-tooltip" style="display: flex; align-items: center; gap: 6px; color: #10b981;"><i class="fa-solid fa-camera"></i> Toque aqui para escanear o cartão com a câmera (iOS/Android)</div>
+
+                                </div>
+
+                                <div class="ck-form-row">
+
+                                    <div class="ck-form-group form-group">
+
+                                        <label><i class="fa-regular fa-calendar"></i> Validade</label>
+
+                                        <input type="text" id="card-expiration" name="cc-exp" autocomplete="cc-exp" class="form-input ck-input"
+
+                                            placeholder="MM/AA" inputmode="numeric">
+
+                                    </div>
+
+                                    <div class="ck-form-group form-group">
+
+                                        <label><i class="fa-solid fa-lock"></i> CVV</label>
+
+                                        <input type="text" id="card-cvv" name="cvc" autocomplete="cc-csc" class="form-input ck-input" placeholder="123" inputmode="numeric">
+
+                                    </div>
+
+                                </div>
+
+                                <div class="ck-form-group form-group">
+
+                                    <label>Parcelas</label>
+
+                                    <select id="installments-select" class="form-input ck-input"></select>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- Order -->
+
+
+
+                            <div style="margin-top: 24px;">
+
+                                <!-- Total -->
+
+                                <div style="text-align: center; margin-top: 1.5rem;">
+
+                                    <div class="price-summary-box">
+
+                                        <div id="checkout-order-summary" style="display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 8px; text-align: left; font-size: 0.85rem; color: #4b5563;">
+
+                                        </div>
+
+                                        <div style="display: flex; justify-content: space-between; font-weight: 700;">
+
+                                            <span>Total a pagar:</span>
+
+                                            <span class="checkout-total-display">R$ --,--</span>
+
+                                        </div>
+
+                                        <div id="pix-bonus-status" style="margin-top: 4px; display: none;"></div>
+
+                                    </div>
+
+
+
+                                    <button type="button" id="btn-pay-pix" class="ck-btn-checkout" style="width: 100%; margin-top: 12px;">🔒 GARANTIR MEU ACESSO AGORA</button>
+
+                                    <button type="button" id="btn-pay-card" class="ck-btn-checkout" style="display: none; width: 100%; margin-top: 12px;">🔒 FINALIZAR PAGAMENTO</button>
+
+                                    <button type="button" id="btn-pay-boleto" class="ck-btn-checkout" style="display: none; width: 100%; margin-top: 12px;">📄 GERAR BOLETO BANCÁRIO</button>
+
+                                </div>
+
+
+
+                            </div>
+
+                    </form>
+
+
+
+            <!-- 6. Prova Social -->
+
+                    <div style="padding-top: 5px;">
+
+                        <!-- Prova Social -->
+
+                        <div class="ck-social-proof">
+
+                            <p class="ck-proof-label" style="text-align: center; font-weight: 800; font-size: 0.72rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">⭐ O que dizem os alunos</p>
+
+
+
+                            <div class="ck-testimonial-box" style="display: flex; gap: 10px; align-items: flex-start; text-align: left; margin-bottom: 8px;">
+                                <img src="carrosel/pedro.webp" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0;" alt="Marcos" loading="lazy">
+                                <div>
+                                    <div style="color: #fbbf24; font-size: 0.6rem; margin-bottom: 2px;">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p style="margin: 0 0 4px 0; line-height: 1.4;">"Salvei um lote de 60 pintinhos que estavam amontoando com frio. Não perdi nenhum!"</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; border-top: none; padding-top: 0; text-align: left;">Marcos Paulo <span style="font-weight: 400; border-left: 1px solid rgba(255,255,255,0.12); padding-left: 6px; margin-left: 6px;">Goiânia - GO</span></p>
+                                </div>
+                            </div>
+
+                            <div class="ck-testimonial-box" style="display: flex; gap: 10px; align-items: flex-start; text-align: left; margin-bottom: 8px;">
+                                <img src="carrosel/fernanda.webp" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0;" alt="Silvia" loading="lazy">
+                                <div>
+                                    <div style="color: #fbbf24; font-size: 0.6rem; margin-bottom: 2px;">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p style="margin: 0 0 4px 0; line-height: 1.4;">"Gastava fortuna em remédio e perdia metade dos pintinhos na primeira semana. O manejo certo salvou meu lote."</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; border-top: none; padding-top: 0; text-align: left;">Silvia Lima <span style="font-weight: 400; border-left: 1px solid rgba(255,255,255,0.12); padding-left: 6px; margin-left: 6px;">Londrina - PR</span></p>
+                                </div>
+                            </div>
+
+                            <div class="ck-testimonial-box" style="display: flex; gap: 10px; align-items: flex-start; text-align: left; margin-bottom: 8px;">
+                                <img src="carrosel/ricardo.webp" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0;" alt="João" loading="lazy">
+                                <div>
+                                    <div style="color: #fbbf24; font-size: 0.6rem; margin-bottom: 2px;">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p style="margin: 0 0 4px 0; line-height: 1.4;">"Paguei no PIX e em menos de 1 minuto o acesso chegou no meu WhatsApp. Recomendo!"</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; border-top: none; padding-top: 0; text-align: left;">João Batista <span style="font-weight: 400; border-left: 1px solid rgba(255,255,255,0.12); padding-left: 6px; margin-left: 6px;">Campinas - SP</span></p>
+                                </div>
+                            </div>
+
+
+
+                            <div class="ck-stars" style="margin-top: 15px;">
+
+                                <span class="ck-star">&#9733;</span>
+
+                                <span class="ck-star">&#9733;</span>
+
+                                <span class="ck-star">&#9733;</span>
+
+                                <span class="ck-star">&#9733;</span>
+
+                                <span class="ck-star">&#9733;</span>
+
+                                <span class="ck-rating-text">4.9/5 (1.647 avaliações)</span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div id="qr-loader" style="margin: 1.5rem 0;">
-                    <div style="font-size: 0.9rem; color: #fbbf24;"><i class="fa-solid fa-spinner fa-spin"></i> Gerando QR Code PIX Oficial...</div>
+            </div>
+
+
+
+            <!-- PIX Result (hidden) -->
+
+            <div id="pix-result" class="hidden" style="text-align: center;">
+
+                <h3 id="pix-greeting" style="font-size: 1.5rem; font-weight: 700; color: #1f2937;">Quase lá!</h3>
+
+                <p style="font-size: 0.9rem; color: #6b7280; margin: 0.5rem 0;">Escaneie o QR Code ou copie o código abaixo.</p>
+
+
+
+                <div class="qr-container" style="background: #fff; padding: 1rem; border-radius: 1.2rem; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 260px; margin: 1.5rem auto; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.05); min-height: 260px; position: relative;">
+
+                    <div id="qr-loader" class="hidden" style="position: absolute; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+
+                        <i class="fa-solid fa-shield-halved fa-beat" style="font-size: 2.5rem; color: #10b981;"></i>
+
+                        <p style="font-size: 0.85rem; color: #0f172a; font-weight: 800; text-align: center;">CONECTANDO AO BANCO...<br><span style="font-size: 0.7rem; color: #64748b; font-weight: 600;">Gerando PIX com segurança</span></p>
+
+                    </div>
+
+                    <img id="qr-code-img" src="" alt="QR Code PIX" style="width: 100%; height: auto; margin: 0 auto; border-radius: 8px;" class="hidden">
+
                 </div>
 
-                <div style="display: flex; justify-content: center; margin: 1rem 0;">
-                    <img id="qr-code-img" src="" alt="QR Code PIX" class="hidden" style="width: 200px; height: 200px; border-radius: 8px; border: 4px solid #ffffff; background: #ffffff;">
+
+
+                <div id="pix-receiver-info" class="hidden">
+
+                    <p style="text-align: center; margin: 0; font-size: 0.85rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Recebedor:</p>
+
+                    <p style="text-align: center; margin: 2px 0 10px 0; font-size: 1.1rem; color: #0f172a; font-weight: 900; text-transform: uppercase;">JOAO PAULO SANTOS CAMARGO</p>
+
                 </div>
 
-                <div id="pix-receiver-info" class="hidden" style="margin-bottom: 16px;">
-                    <p style="margin: 0; font-size: 0.8rem; color: #94a3b8;">Recebedor:</p>
-                    <p style="margin: 2px 0 0 0; font-size: 1rem; color: #ffffff; font-weight: 800;">JOAO PAULO SANTOS CAMARGO</p>
-                </div>
 
-                <button id="btn-copy-pix" class="ck-btn-checkout" style="display: none; background: linear-gradient(135deg, #22c55e, #16a34a); max-width: 320px; margin: 0 auto 16px auto;">
+
+                <button id="btn-copy-pix" class="ck-btn-checkout" style="display: none; background: linear-gradient(135deg, #22c55e, #16a34a);">
+
                     <i class="fa-regular fa-copy"></i> COPIAR CÓDIGO PIX
+
                 </button>
+
                 <textarea id="pix-copy-paste" readonly style="opacity: 0; position: absolute; z-index: -1;"></textarea>
 
-                <div style="text-align: left; font-size: 0.82rem; color: #cbd5e1; line-height: 1.6; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); padding: 1rem; border-radius: 0.5rem; max-width: 400px; margin: 0 auto;">
-                    <p style="margin: 0 0 6px 0;">1. Abra o aplicativo do seu banco.</p>
-                    <p style="margin: 0 0 6px 0;">2. Escolha <strong>PIX</strong> e depois <strong>Pix Copia e Cola</strong>.</p>
-                    <p style="margin: 0;">3. Cole o código copiado e confirme o pagamento.</p>
+
+
+                <div class="qr-instructions" style="text-align: left; font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); padding: 1rem; border-radius: 0.5rem; margin-top: 15px;">
+
+                    <p>1. Abra o app do seu banco e escolha <strong>Pix</strong>.</p>
+
+                    <p>2. Selecione <strong>Pix Copia e Cola</strong> ou <strong>Ler QR Code</strong>.</p>
+
+                    <p>3. Cole o código ou escaneie a imagem acima.</p>
+
                 </div>
+
+
+
+                <div style="margin-top: 1.5rem; font-size: 0.85rem;">
+
+                    Dúvidas? <a href="https://wa.me/5538999832950" target="_blank" style="color: #25d366; font-weight: 700;"><i class="fa-brands fa-whatsapp"></i> Chame no WhatsApp</a>
+
+                </div>
+
+
+
+                <div style="margin-top: 1.5rem; border-top: 1px dashed #e5e7eb; padding-top: 1.5rem;">
+
+                    <div style="display: flex; justify-content: center; gap: 15px; align-items: center; margin-bottom: 15px;">
+
+                        <i class="fa-solid fa-lock" style="color: #16a34a; font-size: 1.2rem;"></i>
+
+                        <img src="assets/pix.png" style="height: 24px;" alt="Pix" loading="lazy">
+
+                        <img src="assets/mercado-pago.png" style="height: 22px;" alt="Mercado Pago" loading="lazy">
+
+                    </div>
+
+
+
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+
+                        <p style="color: #166534; font-weight: 800; font-size: 0.9rem; margin: 0 0 4px 0; text-transform: uppercase;">
+
+                            <i class="fa-solid fa-shield-halved"></i> 7 Dias de Garantia
+
+                        </p>
+
+                        <p style="color: #15803d; font-size: 0.8rem; line-height: 1.3; margin: 0;">
+
+                            Se o protocolo não funcionar, nós devolvemos 100% do seu dinheiro sem burocracia.
+
+                        </p>
+
+                    </div>
+
+
+
+                </div>
+
+
+
+                <button onclick="document.getElementById('pix-result').classList.add('hidden'); document.getElementById('checkout-main-view').classList.remove('hidden');" style="margin-top: 1rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-family: inherit;">Voltar</button>
+
             </div>
 
-            <!-- Boleto Result View -->
-            <div id="boleto-result" class="hidden" style="text-align: center; padding: 1.5rem 0;">
-                <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
-                    <i class="fa-solid fa-barcode" style="font-size: 2.5rem; color: #3b82f6;"></i>
-                    <h3 style="color: #ffffff; font-size: 1.25rem; font-weight: 800; margin: 10px 0 4px 0;">Boleto Gerado!</h3>
-                    <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;">O acesso será liberado assim que o boleto for compensado (em até 72h úteis).</p>
+
+
+            <!-- BOLETO Result (hidden) -->
+
+            <div id="boleto-result" class="hidden" style="text-align: center; padding: 0 1rem;">
+
+                <div style="max-width: 480px; margin: 0 auto;">
+
+                    <h3 style="font-size: 1.4rem; font-weight: 700; color: #1f2937; margin-bottom: 4px;">Boleto Gerado com Sucesso!</h3>
+
+                    <p style="font-size: 0.85rem; color: #6b7280; margin: 0 0 1.2rem 0;">Pague até <strong>72 horas</strong> para garantir seu acesso.</p>
+
+
+
+                    <div id="boleto-img-loading" class="hidden" style="margin: 0 auto 1rem; padding: 2.5rem 1rem; max-width: min(100%, 560px); background: #f8fafc; border-radius: 10px; border: 1px dashed #cbd5e1; color: #475569; font-size: 0.9rem;">
+
+                        <i class="fa-solid fa-spinner fa-spin" style="margin-right: 8px;"></i> Preparando visualização…
+
+                    </div>
+
+                    <div id="boleto-img-wrap" class="hidden" style="margin: 0 auto 1rem; width: 100%; max-width: min(100%, 560px); border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 16px rgba(0,0,0,0.08); background: #fff; position: relative;">
+
+                        <div class="boleto-img-shield" style="position: absolute; inset: 0; z-index: 2; cursor: default;" aria-hidden="true" oncontextmenu="return false;"></div>
+
+                        <img id="boleto-display-img" src="" alt="Ilustração de boleto (dados genéricos)" width="682" height="407" draggable="false" style="width: 100%; height: auto; display: block; user-select: none; -webkit-user-drag: none; position: relative; z-index: 1; pointer-events: none;" loading="lazy">
+
+                    </div>
+
+
+
+                    <!-- Código de barras display (Removido a pedido do usuário) -->
+
+                    <div style="display: none; background: #f8fafc; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 1rem;">
+
+                        <p style="font-size: 0.7rem; color: #64748b; font-weight: 600; text-transform: uppercase; margin: 0 0 6px 0;">Linha digitável</p>
+
+                        <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1px dashed #cbd5e1; word-break: break-all; font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 700; color: #0f172a; letter-spacing: -0.3px;" id="boleto-barcode-display">
+
+                            Gerando código...
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Botões -->
+
+                    <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; margin-bottom: 1rem;">
+
+                        <button type="button" id="btn-download-boleto" class="ck-btn-checkout" style="width: 100%; max-width: 320px; background: linear-gradient(135deg, #22c55e, #16a34a); font-size: 0.95rem;">
+
+                            <i class="fa-solid fa-download"></i> BAIXAR BOLETO
+
+                        </button>
+
+                        <button type="button" id="btn-copy-boleto" class="ck-btn-checkout" style="display: none; width: 100%; max-width: 320px; background: #3b82f6; font-size: 0.95rem;">
+
+                            <i class="fa-solid fa-copy"></i> COPIAR LINHA DIGITÁVEL
+
+                        </button>
+
+                    </div>
+
+
+
+                    <div style="text-align: left; font-size: 0.8rem; color: #6b7280; line-height: 1.5; background: #fefce8; border: 1px solid #fef08a; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+
+                        <p style="margin: 0;"><i class="fa-solid fa-circle-exclamation" style="color: #ca8a04;"></i> Seu acesso será enviado automaticamente para seu e-mail ou pelo whatsapp assim que o pagamento for compensado (em até <strong>72 horas úteis</strong>).</p>
+
+                    </div>
+
+
+
+                    <div style="font-size: 0.85rem; margin-bottom: 8px;">
+
+                        Dúvidas? <a href="https://wa.me/5538999832950" target="_blank" style="color: #25d366; font-weight: 700;"><i class="fa-brands fa-whatsapp"></i> Chame no WhatsApp</a>
+
+                    </div>
+
+
+
+                    <button onclick="document.getElementById('boleto-result').classList.add('hidden'); document.getElementById('checkout-main-view').classList.remove('hidden');" style="margin-top: 0.5rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-family: inherit;">Voltar ao Checkout</button>
+
                 </div>
-                <button type="button" id="btn-download-boleto" class="ck-btn-checkout" style="max-width: 320px; margin: 0 auto 12px auto; background: #3b82f6;">
-                    <i class="fa-solid fa-download"></i> BAIXAR BOLETO
-                </button>
+
             </div>
+
+
 
             <!-- Payment Pending View -->
-            <div id="payment-pending-view" class="hidden" style="text-align: center; padding: 1.5rem 0;">
-                <i class="fa-solid fa-shield-halved" style="font-size: 3rem; color: #fbbf24;"></i>
-                <h3 style="color: #ffffff; font-size: 1.25rem; font-weight: 800; margin: 10px 0 4px 0;">Pagamento em Análise</h3>
-                <p style="color: #94a3b8; font-size: 0.85rem; max-width: 400px; margin: 0 auto 16px auto;">Sua transação está sendo processada com segurança pelo Mercado Pago. Seu acesso chegará no seu WhatsApp/e-mail assim que aprovado.</p>
-                <button onclick="closeCheckout()" style="background: none; border: none; color: #94a3b8; text-decoration: underline; cursor: pointer;">Fechar checkout</button>
+
+            <div id="payment-pending-view" class="hidden" style="text-align: center; padding: 1rem 0;">
+
+                <div style="font-size: 4rem; color: #f59e0b; margin-bottom: 1rem;">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                </div>
+
+                <h3 style="color: #92400e; font-size: 1.3rem; font-weight: 700;">Pagamento em Análise</h3>
+
+                <p style="font-size: 0.95rem; color: #6b7280; margin: 1rem 0; line-height: 1.5;">
+
+                    Sua transação está sendo processada com segurança pelo Mercado Pago. <br>
+
+                    <strong>Não se preocupe, isso é um procedimento normal.</strong>
+
+                </p>
+
+
+
+                <div style="background: #fffbeb; border: 1px solid #fef3c7; padding: 1rem; border-radius: 0.75rem; text-align: left; margin-bottom: 1.5rem;">
+
+                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: #92400e;">
+
+                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-envelope"></i> O acesso será enviado para o seu e-mail assim que aprovado.</li>
+
+                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-clock"></i> Prazo de análise: de alguns minutos até 48h.</li>
+
+                        <li style="color: #b91c1c; font-weight: bold;"><i class="fa-solid fa-triangle-exclamation"></i> IMPORTANTE: Verifique sempre sua pasta de SPAM.</li>
+
+                    </ul>
+
+                </div>
+
+
+
+                <a href="https://wa.me/5538999832950?text=Ol%C3%A1,%20meu%20pagamento%20ficou%20em%20an%C3%A1lise.%20Pode%20me%20ajudar?" target="_blank" class="ck-btn-checkout" style="display: inline-block; text-decoration: none; background: #25d366;">
+
+                    <i class="fa-brands fa-whatsapp"></i> FALAR COM SUPORTE
+
+                </a>
+
+
+
+                <button onclick="closeCheckout()" style="margin-top: 1.5rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-size: 0.85rem; font-family: inherit; display: block; margin-left: auto; margin-right: auto;">
+
+                    Entendi, fechar checkout
+
+                </button>
+
             </div>
+
+
+
+        </div> <!-- Fim de ck-main -->
+
+
+
+        <!-- 7. Footer Geral do Checkout -->
+
+        <div class="ck-section" style="background-color: transparent; border: none; box-shadow: none; padding-top: 0; max-width: 600px; margin: 0 auto;">
+
+            <p style="text-align: center; font-size: 0.75rem; color: #6b7280; margin-bottom: 10px;">
+
+                <i class="fa-solid fa-lock" style="color: #22c55e;"></i> Seus dados estão protegidos com criptografia de ponta.
+
+            </p>
+
+            <div style="display: flex; justify-content: center; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 10px;">
+
+                <img src="assets/visa.png" style="height: 22px;" alt="Visa" loading="lazy">
+
+                <img src="assets/mastercard.png" style="height: 22px;" alt="Mastercard" loading="lazy">
+
+                <img src="assets/pix.png" style="height: 18px;" alt="Pix" loading="lazy">
+
+                <img src="assets/mercado-pago.png" style="height: 22px;" alt="Mercado Pago" loading="lazy">
+
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 12px; align-items: center; margin-bottom: 12px;">
+
+                <span style="font-size: 0.7rem; color: #16a34a; font-weight: 700;"><i class="fa-solid fa-lock"></i> Compra Segura</span>
+
+                <span style="font-size: 0.7rem; color: #d1d5db;">|</span>
+
+                <span style="font-size: 0.7rem; color: #16a34a; font-weight: 700;"><i class="fa-solid fa-shield-halved"></i> SSL 256-bit</span>
+
+                <span style="font-size: 0.7rem; color: #d1d5db;">|</span>
+
+                <span style="font-size: 0.7rem; color: #16a34a; font-weight: 700;"><i class="fa-solid fa-check-double"></i> Garantia 7 dias</span>
+
+            </div>
+
         </div>
 
-        <div style="text-align: center; padding: 20px; font-size: 0.72rem; color: #64748b;">
-            <p style="margin: 0;">&copy; 2026 PROTOCOLO ELITE - CNPJ: 63.665.824/0001-09</p>
+
+
+        <div class="ck-footer" style="padding-bottom: 30px;">
+
+            <p>&copy; 2026 PROTOCOLO ELITE - Todos os direitos reservados.</p>
+
+            <p>CNPJ: 63.665.824/0001-09</p>
+
         </div>
 
-        <!-- Hidden hooks for script.js compatibility -->
+
+
+        <!-- Hidden spans for JS compatibility -->
+
         <span id="checkout-urgency-banner" style="display:none;"></span>
+
         <span id="checkout-payer-firstname" style="display:none;"></span>
+
+        <span id="checkout-reservation-timer" style="display:none;"></span>
+
         <span id="product-icon-container" style="display:none;"></span>
+
     </div>
+
+
+
+
 
     <!-- Toast Notifications -->
     <div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 10001;"></div>
