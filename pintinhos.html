@@ -302,6 +302,44 @@
             color: #22c55e;
         }
 
+        /* Botão "Como eu recebo o meu conteúdo?" na página */
+        .lp-btn-delivery-info {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 360px;
+            margin: 12px auto 6px auto;
+            padding: 11px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            color: #cbd5e1;
+            font-size: 0.84rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .lp-btn-delivery-info:hover,
+        .lp-btn-delivery-info:active {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: rgba(251, 191, 36, 0.45);
+            color: #fbbf24;
+            transform: translateY(-1px);
+        }
+
+        .lp-btn-delivery-info i {
+            color: #fbbf24;
+            font-size: 0.95rem;
+        }
+
         /* Section Cards */
         .lp-section {
             padding: 28px 0;
@@ -980,6 +1018,11 @@
 
             <button onclick="openCheckout('ebook-pintinhos')" class="lp-cta-btn">
                 <i class="fa-solid fa-lock"></i> QUERO LEVAR TUDO POR APENAS R$ 27,90
+            </button>
+
+            <!-- Botão Como Eu Recebo Meu Conteúdo -->
+            <button type="button" onclick="document.getElementById('secao-como-recebe').scrollIntoView({ behavior: 'smooth', block: 'start' })" class="lp-btn-delivery-info">
+                <i class="fa-regular fa-circle-question"></i> Como eu recebo o meu conteúdo?
             </button>
 
             <div class="lp-trust-row" style="margin-top: 14px;">
@@ -3870,11 +3913,6 @@
                                     <button type="button" id="btn-pay-card" class="ck-btn-checkout" style="display: none; width: 100%; margin-top: 12px;">🔒 FINALIZAR PAGAMENTO</button>
 
                                     <button type="button" id="btn-pay-boleto" class="ck-btn-checkout" style="display: none; width: 100%; margin-top: 12px;">📄 GERAR BOLETO BANCÁRIO</button>
-
-                                    <!-- Botão Como Eu Recebo Meu Conteúdo -->
-                                    <button type="button" onclick="closeCheckoutAndGoTo('secao-como-recebe')" class="ck-btn-how-it-works">
-                                        <i class="fa-regular fa-circle-question"></i> Como eu recebo o meu conteúdo?
-                                    </button>
 
                                 </div>
 
