@@ -1785,6 +1785,8 @@ async function handlePayment(method) {
                 sessionStorage.setItem('obrigado_senha', result.senha || '');
                 sessionStorage.setItem('obrigado_method', 'cartao');
                 sessionStorage.setItem('obrigado_items', items.map(i => i.id || i.title).join(','));
+                sessionStorage.setItem('obrigado_total', items.reduce((acc, i) => acc + Number(i.price), 0).toFixed(2));
+                sessionStorage.setItem('obrigado_evid', currentFacebookEventId);
 
                 setTimeout(() => {
                     window.location.href = 'obrigado.html';
@@ -2473,6 +2475,8 @@ function showPixResult(data, items) {
                 sessionStorage.setItem('obrigado_senha', sd.senha || '');
                 sessionStorage.setItem('obrigado_method', 'pix');
                 sessionStorage.setItem('obrigado_items', items.map(i => i.id || i.title).join(','));
+                sessionStorage.setItem('obrigado_total', items.reduce((acc, i) => acc + Number(i.price), 0).toFixed(2));
+                sessionStorage.setItem('obrigado_evid', currentFacebookEventId);
 
                 setTimeout(() => {
                     window.location.href = 'obrigado.html';
@@ -3012,9 +3016,10 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionStorage.setItem(FLAG_KEY, 'true');
 
         const viewEventId = generateEventID();
-        const mainId = 'ebook-doencas';
-        const title = 'Protocolo de Elite - O Segredo das Doenças';
-        const price = 89.90;
+        const isPintinhos = (typeof PAGE_SOURCE !== 'undefined' && PAGE_SOURCE === 'pintinhos');
+        const mainId = isPintinhos ? 'ebook-pintinhos' : 'ebook-doencas';
+        const title = isPintinhos ? 'Manual de Manejo de Pintinhos: 98% de Sobrevivência' : 'Protocolo de Elite - O Segredo das Doenças';
+        const price = isPintinhos ? 27.90 : 89.90;
 
         trackPixel('ViewContent', {
             content_ids: [mainId],
