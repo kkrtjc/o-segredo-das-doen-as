@@ -739,6 +739,96 @@ adminRoutes.post('/admin/toggle-block', async (c) => {
     }
 });
 
+adminRoutes.post('/admin/delete-user', async (c) => {
+    try {
+        const { email, cpf, phone, password } = await c.req.json();
+        if (password !== (c.env.ADMIN_PASSWORD || 'mura2026')) return c.json({ error: 'Acesso Negado' }, 401);
+
+        const cleanEmail = email ? email.trim().toLowerCase() : '';
+        const cleanCpf = cpf ? cpf.replace(/\D/g, '') : '';
+        const cleanPhone = phone ? phone.replace(/\D/g, '') : '';
+
+        if (!cleanEmail && !cleanCpf && !cleanPhone) {
+            return c.json({ error: 'Nenhum dado identificador fornecido para exclusão.' }, 400);
+        }
+
+        // 1. Remove do histórico de vendas principal (HISTORY)
+        const history = await getHistory(c.env);
+        const filteredHistory = history.filter(sale => {
+            const saleEmail = (sale.customer?.email || sale.email || '').trim().toLowerCase();
+            const saleCpf = (sale.customer?.cpf || sale.cpf || '').replace(/\D/g, '');
+            const salePhone = (sale.customer?.phone || sale.phone || '').replace(/\D/g, '');
+
+            const matchCpf = cleanCpf && saleCpf && (saleCpf === cleanCpf);
+            const matchEmail = cleanEmail && saleEmail && (saleEmail === cleanEmail);
+            const matchPhone = cleanPhone && salePhone && (salePhone === cleanPhone || (cleanPhone.length >= 8 && salePhone.slice(-8) === cleanPhone.slice(-8)));
+
+            return !(matchCpf || matchEmail || matchPhone);
+        });
+        await saveHistory(c.env, filteredHistory);
+
+        // 2. Remove de usuários gratuitos (free_users) se existir
+        try {
+            const rawFree = await c.env.HISTORY.get('free_users');
+            if (rawFree) {
+                const freeUsers = JSON.parse(rawFree);
+                const filteredFree = freeUsers.filter(u => {
+                    const uEmail = (u.email || '').trim().toLowerCase();
+                    const uPhone = (u.phone || '').replace(/\D/g, '');
+                    const matchEmail = cleanEmail && uEmail === cleanEmail;
+                    const matchPhone = cleanPhone && (uPhone === cleanPhone || (cleanPhone.length >= 8 && uPhone.slice(-8) === cleanPhone.slice(-8)));
+                    return !(matchEmail || matchPhone);
+                });
+                await c.env.HISTORY.put('free_users', JSON.stringify(filteredFree));
+            }
+        } catch (e) {
+            console.error('[DELETE USER] Error cleaning free_users:', e);
+        }
+
+        // 3. Remove senha armazenada e perfil
+        if (cleanCpf) {
+            try {
+                await c.env.HISTORY.delete('pw_' + cleanCpf);
+                await c.env.CONFIG.delete('profile_' + cleanCpf);
+            } catch (_) {}
+        }
+        if (cleanEmail) {
+            try {
+                await c.env.CONFIG.delete('profile_' + cleanEmail);
+            } catch (_) {}
+        }
+
+        // 4. Remove da lista de bloqueados (db.blocked_users) para que uma nova compra funcione livremente
+        const db = await getDB(c.env);
+        if (db.blocked_users && db.blocked_users.length > 0) {
+            const idsToRemove = [cleanEmail, cleanCpf, cleanPhone].filter(Boolean);
+            db.blocked_users = db.blocked_users.filter(u => !idsToRemove.includes(u));
+            await saveDB(c.env, db);
+        }
+
+        // 5. Remove de abandonos (ABANDONS)
+        try {
+            const abandons = await getAbandons(c.env);
+            const filteredAbandons = abandons.filter(a => {
+                const aEmail = (a.email || '').trim().toLowerCase();
+                const aCpf = (a.cpf || '').replace(/\D/g, '');
+                const aPhone = (a.phone || '').replace(/\D/g, '');
+                const matchCpf = cleanCpf && aCpf && (aCpf === cleanCpf);
+                const matchEmail = cleanEmail && aEmail && (aEmail === cleanEmail);
+                const matchPhone = cleanPhone && aPhone && (aPhone === cleanPhone || (cleanPhone.length >= 8 && aPhone.slice(-8) === cleanPhone.slice(-8)));
+                return !(matchCpf || matchEmail || matchPhone);
+            });
+            await saveAbandons(c.env, filteredAbandons);
+        } catch (e) {
+            console.error('[DELETE USER] Error cleaning abandons:', e);
+        }
+
+        return c.json({ success: true, message: 'Cliente excluído com sucesso do sistema.' });
+    } catch (err) {
+        return c.json({ error: 'Erro interno ao excluir cliente' }, 500);
+    }
+});
+
 adminRoutes.post('/admin/grant-access', async (c) => {
     try {
         const { name, email, phone, cpf, products, password } = await c.req.json();
