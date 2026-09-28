@@ -174,13 +174,15 @@
     }
 
     var btn = document.getElementById('btn-access');
+    var accessUrl = PROTOCOLO_URL;
     if(cleanCPF.length === 11){
-        btn.href = PROTOCOLO_URL + '/?cpf=' + cleanCPF;
+        accessUrl += '/?cpf=' + cleanCPF;
+        if(senha) accessUrl += '&senha=' + encodeURIComponent(senha);
     } else if(email){
-        btn.href = PROTOCOLO_URL + '/?email=' + encodeURIComponent(email);
-    } else {
-        btn.href = PROTOCOLO_URL;
+        accessUrl += '/?email=' + encodeURIComponent(email);
+        if(senha) accessUrl += '&senha=' + encodeURIComponent(senha);
     }
+    btn.href = accessUrl;
 })();
 </script>
 </body>

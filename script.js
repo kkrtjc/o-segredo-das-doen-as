@@ -1963,15 +1963,18 @@ function showToast(title, message, type = 'error') {
 
     const toast = document.createElement('div');
     toast.className = 'toast-card';
-    if (type === 'success') toast.style.borderColor = '#2ecc71';
+    toast.style.cssText = 'background: #ffffff !important; color: #0f172a !important; border-radius: 16px !important; padding: 14px 20px !important; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.35), 0 4px 14px rgba(0,0,0,0.1) !important; border: 1px solid rgba(0,0,0,0.08) !important; display: flex !important; align-items: center !important; gap: 14px !important; pointer-events: auto !important; z-index: 999999 !important;';
     
+    const bgColor = type === 'success' ? '#10b981' : '#ef4444';
+    const iconClass = type === 'success' ? 'fa-check' : 'fa-triangle-exclamation';
+
     toast.innerHTML = `
-        <div style="width: 40px; height: 40px; background: ${type === 'success' ? '#2ecc71' : '#ef4444'}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff;">
-            <i class="fa-solid ${type === 'success' ? 'fa-check' : 'fa-triangle-exclamation'}"></i>
+        <div style="width: 38px; height: 38px; min-width: 38px; background: ${bgColor}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+            <i class="fa-solid ${iconClass}"></i>
         </div>
-        <div class="toast-content">
-            <h4>${title}</h4>
-            <p>${message}</p>
+        <div class="toast-content" style="text-align: left;">
+            <h4 style="margin: 0; font-size: 0.95rem; font-weight: 800; color: #0f172a; line-height: 1.2;">${title}</h4>
+            <p style="margin: 3px 0 0 0; font-size: 0.82rem; font-weight: 600; color: #475569; line-height: 1.3;">${message}</p>
         </div>
     `;
     container.appendChild(toast);
@@ -2381,20 +2384,22 @@ function showPixResult(data, items) {
             navigator.clipboard.writeText(data.qr_code).then(() => {
                 // Feedback Discreto (Toast)
                 const container = document.getElementById('toast-container');
-                const toast = document.createElement('div');
-                toast.className = 'toast-card';
-                toast.style.borderColor = '#2ecc71'; // Green border for success
-                toast.innerHTML = `
-                    <div style="width: 40px; height: 40px; background: #2ecc71; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff;">
-                        <i class="fa-solid fa-check"></i>
-                    </div>
-                    <div class="toast-content">
-                        <h4>Código PIX Copiado!</h4>
-                        <p>Código copiado com sucesso.</p>
-                    </div>
-                `;
-                container.appendChild(toast);
-                setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 4000);
+                if (container) {
+                    const toast = document.createElement('div');
+                    toast.className = 'toast-card';
+                    toast.style.cssText = 'background: #ffffff !important; color: #0f172a !important; border-radius: 16px !important; padding: 14px 20px !important; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.35), 0 4px 14px rgba(0,0,0,0.1) !important; border: 1px solid rgba(0,0,0,0.08) !important; display: flex !important; align-items: center !important; gap: 14px !important; pointer-events: auto !important; z-index: 999999 !important;';
+                    toast.innerHTML = `
+                        <div style="width: 38px; height: 38px; min-width: 38px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1rem; box-shadow: 0 4px 10px rgba(16,185,129,0.3);">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                        <div class="toast-content" style="text-align: left;">
+                            <h4 style="margin: 0; font-size: 0.95rem; font-weight: 800; color: #0f172a; line-height: 1.2;">Código PIX Copiado!</h4>
+                            <p style="margin: 3px 0 0 0; font-size: 0.82rem; font-weight: 600; color: #475569; line-height: 1.3;">Cole no app do seu banco para pagar.</p>
+                        </div>
+                    `;
+                    container.appendChild(toast);
+                    setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 4000);
+                }
             }).catch(() => {
                 // Silently ignore or log internally
             });
@@ -2403,22 +2408,33 @@ function showPixResult(data, items) {
 
         copyBtn.onclick = () => {
             navigator.clipboard.writeText(data.qr_code);
-            // Feedback Discreto (Toast)
+            // Feedback no botão
+            const origHtml = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> CÓDIGO PIX COPIADO!';
+            copyBtn.style.background = '#10b981';
+            setTimeout(() => {
+                copyBtn.innerHTML = origHtml;
+                copyBtn.style.background = '';
+            }, 3000);
+
+            // Feedback Discreto (Toast com fundo branco)
             const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast-card';
-            toast.style.borderColor = '#2ecc71';
-            toast.innerHTML = `
-                <div style="width: 40px; height: 40px; background: #2ecc71; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff;">
-                    <i class="fa-solid fa-check"></i>
-                </div>
-                <div class="toast-content">
-                    <h4>Código PIX Copiado!</h4>
-                    <p>Cole no app do seu banco para pagar.</p>
-                </div>
-            `;
-            container.appendChild(toast);
-            setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 4000);
+            if (container) {
+                const toast = document.createElement('div');
+                toast.className = 'toast-card';
+                toast.style.cssText = 'background: #ffffff !important; color: #0f172a !important; border-radius: 16px !important; padding: 14px 20px !important; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.35), 0 4px 14px rgba(0,0,0,0.1) !important; border: 1px solid rgba(0,0,0,0.08) !important; display: flex !important; align-items: center !important; gap: 14px !important; pointer-events: auto !important; z-index: 999999 !important;';
+                toast.innerHTML = `
+                    <div style="width: 38px; height: 38px; min-width: 38px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1rem; box-shadow: 0 4px 10px rgba(16,185,129,0.3);">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <div class="toast-content" style="text-align: left;">
+                        <h4 style="margin: 0; font-size: 0.95rem; font-weight: 800; color: #0f172a; line-height: 1.2;">Código PIX Copiado!</h4>
+                        <p style="margin: 3px 0 0 0; font-size: 0.82rem; font-weight: 600; color: #475569; line-height: 1.3;">Cole no app do seu banco para pagar.</p>
+                    </div>
+                `;
+                container.appendChild(toast);
+                setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 4000);
+            }
         };
     }
 
