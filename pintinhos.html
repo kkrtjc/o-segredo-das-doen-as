@@ -71,12 +71,31 @@
                     fbc: fbcValue,
                     fbp: ck['_fbp'] || '',
                     externalId: sid,
-                    testCode: testCode
+                    testCode: testCode,
+                    site: 'pintinhos'
                 }),
                 keepalive: true
             }).catch(function(){});
         })();
     </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=1346740157465853&ev=PageView&noscript=1" />
+    </noscript>
+    <!-- End Meta Pixel Code -->
+
+    <!-- TikTok Pixel — carregado 2s após page interactive (não impacta dados) -->
+    <script>
+        !function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","load","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=d.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=d.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+        function loadTikTok(){ttq.load('D4VFSO3C77U98L8KBEF0');ttq.page();}
+        if(document.readyState==='complete'){setTimeout(loadTikTok,2000);}
+        else{window.addEventListener('load',function(){setTimeout(loadTikTok,2000);});}
+        }(window,document,'ttq');
+    </script>
+    <!-- End TikTok Pixel Code -->
+
+    <link rel="dns-prefetch" href="https://connect.facebook.net">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 
     <title>Manejo de Pintinhos: 98% de Sobrevivência | Protocolo Elite</title>
 
@@ -4322,7 +4341,42 @@
     <!-- Toast Notifications (Fundo Branco Centralizado) -->
     <div id="toast-container" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999999; display: flex; flex-direction: column; align-items: center; gap: 10px; pointer-events: none; width: max-content; max-width: calc(100vw - 32px);"></div>
 
-    <script src="script.js"></script>
+    <script>
+    (function() {
+        var s = document.createElement('script');
+        s.src = 'https://sdk.mercadopago.com/js/v2';
+        s.async = true;
+        s.onload = function() { window.mp = new MercadoPago('APP_USR-2502a3c7-5f59-45b0-8365-1cfcad7b0fa5'); };
+        document.head.appendChild(s);
+    })();
+    </script>
+    <script src="smart_fields.js" defer></script>
+    <script src="script.js?v=34" defer></script>
+    <script>
+    // ─── META ADVANCED MATCHING — INPUT LISTENERS ─────────────────────────────
+    // Quando o usuário preenche email/telefone no checkout, atualiza o Pixel
+    // imediatamente para maximizar a correspondência de eventos com anúncios.
+    document.addEventListener('DOMContentLoaded', function() {
+        var emailFields = ['payer-email', 'card-email', 'customer-email'];
+        var phoneFields = ['payer-phone', 'card-phone', 'customer-phone'];
+        var nameFields  = ['payer-name',  'card-holder', 'customer-name'];
+        var cpfFields   = ['payer-cpf',   'card-cpf',   'customer-cpf'];
+        var allFields   = emailFields.concat(phoneFields).concat(nameFields).concat(cpfFields);
+        allFields.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener('blur', function() {
+                if (typeof updateMetaUserData === 'function') {
+                    var name  = (document.getElementById('payer-name')  || document.getElementById('card-holder') || {}).value  || '';
+                    var email = (document.getElementById('payer-email') || document.getElementById('card-email')  || {}).value  || '';
+                    var phone = (document.getElementById('payer-phone') || document.getElementById('card-phone')  || {}).value  || '';
+                    var cpf   = (document.getElementById('payer-cpf')   || document.getElementById('card-cpf')   || {}).value  || '';
+                    updateMetaUserData({ name: name, email: email, phone: phone, cpf: cpf });
+                }
+            });
+        });
+    });
+    </script>
     <script>
         // Exibe o botão fixo inferior apenas após o primeiro preço da página aparecer na tela
         (function() {
