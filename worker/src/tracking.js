@@ -25,8 +25,12 @@ trackingRoutes.post('/track', async (c) => {
     const t = analytics.totals;
     const d = analytics.daily[todayStr];
     
-    // Suporte a múltiplos sites (Oficial, Amazon, VSL)
-    const suffix = site === 'amazon' ? '_amazon' : (site === 'vsl' ? '_vsl' : '');
+    // Suporte a múltiplos sites (Oficial, Pintinhos, Amazon, VSL, App)
+    let suffix = '';
+    if (site === 'pintinhos') suffix = '_pintinhos';
+    else if (site === 'amazon') suffix = '_amazon';
+    else if (site === 'vsl') suffix = '_vsl';
+    else if (site === 'app') suffix = '_app';
     
     const inc = (baseKey) => { 
         const key = baseKey + suffix;

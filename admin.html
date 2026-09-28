@@ -240,69 +240,138 @@
             </div>
         </div>
 
-        <!-- TAB 1.5: AMAZON -->
-        <div id="tab-amazon" class="tab-content">
-            <div style="display: flex; flex-direction: column; margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h2 class="section-title" style="margin: 0;">Amazon Hub</h2>
-                    <select id="period-filter-amazon" style="padding: 10px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-color); color: var(--text-main); font-size: 13px; font-weight: 700;" onchange="toggleCustomDate('period-filter-amazon', 'filter-custom-row-amz'); renderAmazonStats()">
-                        <option value="today">Hoje</option>
-                        <option value="yesterday">Ontem</option>
-                        <option value="7days">Últimos 7 Dias</option>
-                        <option value="all" selected>Tudo</option>
-                        <option value="custom">Personalizado...</option>
-                    </select>
+        <!-- TAB 1.5: FUNIL DE CONVERSÃO & MÉTRICAS (Substitui Amazon) -->
+        <div id="tab-funnel" class="tab-content">
+            <div style="display: flex; flex-direction: column; margin-bottom: 20px; gap: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h2 class="section-title" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                            <span>📊</span> Funil de Vendas
+                        </h2>
+                        <p style="font-size: 12px; color: var(--text-muted); margin: 2px 0 0 0;">Entraram ➔ Abriram Checkout ➔ Abandonaram ➔ Pagou</p>
+                    </div>
                 </div>
-                <div id="filter-custom-row-amz" style="display: none; margin-top: 15px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border);">
+
+                <!-- FILTROS (PRODUTO & PERÍODO) -->
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 170px;">
+                        <label style="display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;">Página / Produto</label>
+                        <select id="funnel-product-filter" style="width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-color); color: var(--text-main); font-size: 13px; font-weight: 700; cursor: pointer;" onchange="renderFunnelStats()">
+                            <option value="pintinhos" selected>🐥 E-book dos Pintinhos (/pintinhos)</option>
+                            <option value="doencas">🐔 O Segredo das Doenças (Oficial)</option>
+                            <option value="all">🌐 Visão Geral (Todos os Produtos)</option>
+                        </select>
+                    </div>
+
+                    <div style="flex: 1; min-width: 130px;">
+                        <label style="display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;">Período</label>
+                        <select id="period-filter-funnel" style="width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--surface-border); background: var(--surface-color); color: var(--text-main); font-size: 13px; font-weight: 700; cursor: pointer;" onchange="toggleCustomDate('period-filter-funnel', 'filter-custom-row-funnel'); renderFunnelStats()">
+                            <option value="today">Hoje</option>
+                            <option value="yesterday">Ontem</option>
+                            <option value="7days">Últimos 7 Dias</option>
+                            <option value="all" selected>Tudo (Total)</option>
+                            <option value="custom">Personalizado...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="filter-custom-row-funnel" style="display: none; background: rgba(0,0,0,0.25); padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border);">
                     <div style="display: flex; gap: 10px; align-items: center;">
-                        <input type="date" id="date-start-amz" style="flex:1; padding: 8px; border-radius: 8px; border: none; background: var(--surface-color); color: var(--text-main); font-size: 13px; color-scheme: dark;">
+                        <input type="date" id="date-start-funnel" style="flex:1; padding: 8px; border-radius: 8px; border: none; background: var(--surface-color); color: var(--text-main); font-size: 13px; color-scheme: dark;">
                         <span style="color: var(--text-muted); font-size: 12px;">até</span>
-                        <input type="date" id="date-end-amz" style="flex:1; padding: 8px; border-radius: 8px; border: none; background: var(--surface-color); color: var(--text-main); font-size: 13px; color-scheme: dark;">
-                        <button onclick="renderAmazonStats()" class="btn-small btn-blue" style="padding: 10px;"><i class="fa-solid fa-check"></i></button>
+                        <input type="date" id="date-end-funnel" style="flex:1; padding: 8px; border-radius: 8px; border: none; background: var(--surface-color); color: var(--text-main); font-size: 13px; color-scheme: dark;">
+                        <button onclick="renderFunnelStats()" class="btn-small btn-blue" style="padding: 10px 16px;"><i class="fa-solid fa-check"></i> Filtrar</button>
                     </div>
                 </div>
             </div>
+
+            <!-- 4 CARDS PRINCIPAIS SOLICITADOS -->
             <div class="metrics-grid">
-                <div class="metric-card">
-                    <i class="fa-brands fa-amazon"></i>
-                    <div class="metric-title">Visitas (AMZ)</div>
-                    <div class="metric-value" id="val-visits-amz">0</div>
+                <!-- 1. ENTRARAM -->
+                <div class="metric-card" style="border-left: 4px solid var(--ios-blue);">
+                    <i class="fa-solid fa-users" style="color: var(--ios-blue);"></i>
+                    <div class="metric-title">1. Entraram na Página</div>
+                    <div class="metric-value" id="val-funnel-visits">0</div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px; font-weight: 600;">Pessoas que acessaram</div>
                 </div>
-                <div class="metric-card">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <div class="metric-title">Checkouts</div>
-                    <div class="metric-value" id="val-checkouts-amz">0</div>
+
+                <!-- 2. ABRIRAM CHECKOUT -->
+                <div class="metric-card" style="border-left: 4px solid #f59e0b;">
+                    <i class="fa-solid fa-cart-shopping" style="color: #f59e0b;"></i>
+                    <div class="metric-title">2. Abriram Checkout</div>
+                    <div class="metric-value" id="val-funnel-checkouts">0</div>
+                    <div style="font-size: 11px; color: #f59e0b; margin-top: 4px; font-weight: 700;" id="val-funnel-checkout-rate">0% das visitas</div>
                 </div>
-                <div class="metric-card green">
-                    <i class="fa-solid fa-money-check-dollar"></i>
-                    <div class="metric-title">Vendas (Tx)</div>
-                    <div class="metric-value" id="val-sales-amz">0</div>
-                </div>
-                <div class="metric-card red">
+
+                <!-- 3. ABANDONARAM -->
+                <div class="metric-card red" style="border-left: 4px solid var(--ios-red);">
                     <i class="fa-solid fa-basket-shopping"></i>
-                    <div class="metric-title">Abandonos</div>
-                    <div class="metric-value" id="val-abandons-amz">0</div>
+                    <div class="metric-title">3. Abandonaram</div>
+                    <div class="metric-value" id="val-funnel-abandons">0</div>
+                    <div style="font-size: 11px; color: #f87171; margin-top: 4px; font-weight: 700;" id="val-funnel-abandon-rate">0% de abandono</div>
+                </div>
+
+                <!-- 4. PAGOU -->
+                <div class="metric-card green" style="border-left: 4px solid var(--ios-green);">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <div class="metric-title">4. Pagou (Vendas)</div>
+                    <div class="metric-value" id="val-funnel-paid">0</div>
+                    <div style="font-size: 11px; color: #34d399; margin-top: 4px; font-weight: 700;" id="val-funnel-paid-rate">0% conversão</div>
                 </div>
             </div>
             
-            <div class="list-group">
-                <div class="list-item" style="flex-direction: row; justify-content: space-between; align-items: center;">
-                    <div>
-                        <div class="list-item-title">Receita Total (Amazon)</div>
-                        <div class="list-item-sub">Faturamento gerado via Amazon</div>
+            <!-- RESUMO VISUAL DO FUNIL E FATURAMENTO -->
+            <div class="list-group" style="margin-top: 15px;">
+                <div class="list-item" style="flex-direction: column; gap: 12px; padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <div class="list-item-title" style="font-size: 15px; font-weight: 800;">Faturamento Concluído</div>
+                            <div class="list-item-sub">Total recebido dos clientes que pagaram</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div id="val-funnel-revenue" style="font-size: 22px; font-weight: 900; color: var(--ios-green);">R$ 0,00</div>
+                            <div style="font-size: 11px; color: var(--text-muted);">Ticket Médio: <strong id="val-funnel-ticket" style="color: var(--text-main);">R$ 0,00</strong></div>
+                        </div>
                     </div>
-                    <div class="list-item-right" id="val-revenue-amz" style="position: static; font-size: 20px; color: var(--accent-secondary);">R$ 0,00</div>
+
+                    <!-- Fluxo visual em barras -->
+                    <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 12px; border: 1px solid var(--surface-border); font-size: 12px; font-weight: 700; width: 100%;">
+                        <div style="text-align: center; flex: 1;">
+                            <div style="color: var(--text-muted); font-size: 10px; text-transform: uppercase;">Acessos</div>
+                            <div id="val-funnel-flow-visits" style="color: var(--ios-blue); font-size: 14px; margin-top: 2px;">0</div>
+                        </div>
+                        <div style="color: var(--text-muted); font-size: 14px;">➔</div>
+                        <div style="text-align: center; flex: 1;">
+                            <div style="color: var(--text-muted); font-size: 10px; text-transform: uppercase;">Checkout</div>
+                            <div id="val-funnel-flow-checkouts" style="color: #f59e0b; font-size: 14px; margin-top: 2px;">0 (0%)</div>
+                        </div>
+                        <div style="color: var(--text-muted); font-size: 14px;">➔</div>
+                        <div style="text-align: center; flex: 1;">
+                            <div style="color: var(--text-muted); font-size: 10px; text-transform: uppercase;">Pagou</div>
+                            <div id="val-funnel-flow-paid" style="color: var(--ios-green); font-size: 14px; margin-top: 2px;">0 (0%)</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <h2 class="section-title">Vendas Recentes</h2>
-            <div class="list-group" id="amazon-sales-list">
-                 <div class="empty-state">As vendas aparecerão aqui.</div>
+            <!-- LISTA DE QUEM PAGOU -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; margin-bottom: 10px;">
+                <h2 class="section-title" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-circle-check" style="color: var(--ios-green);"></i> Quem Pagou (Vendas Concluídas)
+                </h2>
+            </div>
+            <div class="list-group" id="funnel-sales-list">
+                 <div class="empty-state">As vendas pagas aparecerão aqui.</div>
             </div>
 
-            <h2 class="section-title">Abandonos Recentes</h2>
-            <div class="list-group" id="amazon-abandons-list">
-                 <div class="empty-state">Os abandonos aparecerão aqui.</div>
+            <!-- LISTA DE QUEM ABANDONOU -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; margin-bottom: 10px;">
+                <h2 class="section-title" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-basket-shopping" style="color: var(--ios-red);"></i> Quem Abandonou (Para Recuperar)
+                </h2>
+            </div>
+            <div class="list-group" id="funnel-abandons-list">
+                 <div class="empty-state">Os abandonos aparecerão aqui para recuperação.</div>
             </div>
         </div>
 
@@ -427,9 +496,9 @@
             <i class="fa-solid fa-chart-pie"></i>
             <span>Oficial</span>
         </div>
-        <div class="nav-item" onclick="switchTab('amazon', this, 'Amazon Hub')">
-            <i class="fa-brands fa-amazon"></i>
-            <span>Amazon</span>
+        <div class="nav-item" onclick="switchTab('funnel', this, 'Funil de Vendas')">
+            <i class="fa-solid fa-filter-circle-dollar"></i>
+            <span>Funil</span>
         </div>
         <div class="nav-item" onclick="switchTab('vsl', this, 'VSL Hub')">
             <i class="fa-solid fa-play"></i>
@@ -570,8 +639,10 @@
 
         function loadCurrentTab() {
             if(currentTab === 'dashboard') loadDashboard();
-            if(currentTab === 'amazon') loadDashboard();
-            if(currentTab === 'amazon') renderAmazonStats();
+            if(currentTab === 'funnel' || currentTab === 'amazon') {
+                loadDashboard();
+                renderFunnelStats();
+            }
             if(currentTab === 'vsl') renderVslStats();
             if(currentTab === 'abandons') loadAbandons();
             if(currentTab === 'pix') loadPixHistory();
@@ -604,7 +675,7 @@
                 globalHistory = await resH.json();
                 
                 renderDashboardStats();
-                if (currentTab === 'amazon') renderAmazonStats();
+                if (currentTab === 'funnel' || currentTab === 'amazon') renderFunnelStats();
                 if (currentTab === 'vsl') renderVslStats();
                 
                 if (refreshBtn) {
@@ -697,176 +768,290 @@
                 document.getElementById('val-abandons').textContent = agg.abandons;
                 document.getElementById('val-revenue').textContent = formatBRL(agg.revenue);
                 
-                if (currentTab === 'amazon') renderAmazonStats();
+                if (currentTab === 'funnel' || currentTab === 'amazon') renderFunnelStats();
                 if (currentTab === 'vsl') renderVslStats();
             } catch(e) {
                 console.error("Render stats error:", e);
             }
         }
 
-        async function renderAmazonStats() {
+        async function renderFunnelStats() {
             try {
                 if(!globalAnalytics || !globalHistory) return;
                 
-                const filter = document.getElementById('period-filter-amazon').value;
+                const productFilter = document.getElementById('funnel-product-filter')?.value || 'pintinhos';
+                const periodFilter = document.getElementById('period-filter-funnel')?.value || 'all';
+                
                 let agg = { visits: 0, checkouts: 0, sales: 0, abandons: 0, revenue: 0 };
-                let amazonSalesList = [];
+                let funnelSalesList = [];
 
-                if(filter === 'all') {
-                    agg.visits = globalAnalytics.totals?.uniqueVisits_amazon || 0;
-                    agg.checkouts = globalAnalytics.totals?.checkoutOpens_amazon || 0;
-                    agg.abandons = globalAnalytics.totals?.checkoutAbandons_amazon || 0;
-                    
-                    const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0 && (h.items || []).some(i => i.includes('[AMZ]'))) : [];
-                    agg.sales = validHistory.length;
-                    agg.revenue = validHistory.reduce((a, s) => a + Number(s.total), 0);
-                    amazonSalesList = validHistory;
-                } else {
-                    const datesToKeep = [];
-                    const now = new Date();
-                    
-                    const getLocalDate = (d) => {
-                        const year = d.getFullYear();
-                        const month = String(d.getMonth() + 1).padStart(2, '0');
-                        const day = String(d.getDate()).padStart(2, '0');
-                        return `${year}-${month}-${day}`;
-                    };
-                    
-                    if (filter === 'today') {
-                        datesToKeep.push(getLocalDate(now));
-                    } else if (filter === 'yesterday') {
-                        const y = new Date(now);
-                        y.setDate(now.getDate() - 1);
-                        datesToKeep.push(getLocalDate(y));
-                    } else if (filter === '7days') {
-                        for(let i=0; i<7; i++) {
-                            const d = new Date(now);
-                            d.setDate(now.getDate() - i);
-                            datesToKeep.push(getLocalDate(d));
-                        }
-                    } else if (filter === 'custom') {
-                        const start = document.getElementById('date-start-amz').value;
-                        const end = document.getElementById('date-end-amz').value;
-                        if (start && end) {
-                            const d1 = new Date(start + 'T00:00:00');
-                            const d2 = new Date(end + 'T23:59:59');
-                            let current = new Date(d1);
-                            while(current <= d2) {
-                                datesToKeep.push(getLocalDate(current));
-                                current.setDate(current.getDate() + 1);
-                            }
+                // 1. Filtragem de datas
+                const datesToKeep = [];
+                const now = new Date();
+                const getLocalDate = (d) => {
+                    const year = d.getFullYear();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                };
+
+                const isDateInPeriod = (dateStr) => {
+                    if (periodFilter === 'all') return true;
+                    if (!dateStr) return false;
+                    const d = getLocalDate(new Date(dateStr));
+                    return datesToKeep.includes(d);
+                };
+
+                if (periodFilter === 'today') {
+                    datesToKeep.push(getLocalDate(now));
+                } else if (periodFilter === 'yesterday') {
+                    const y = new Date(now);
+                    y.setDate(now.getDate() - 1);
+                    datesToKeep.push(getLocalDate(y));
+                } else if (periodFilter === '7days') {
+                    for(let i=0; i<7; i++) {
+                        const d = new Date(now);
+                        d.setDate(now.getDate() - i);
+                        datesToKeep.push(getLocalDate(d));
+                    }
+                } else if (periodFilter === 'custom') {
+                    const start = document.getElementById('date-start-funnel')?.value;
+                    const end = document.getElementById('date-end-funnel')?.value;
+                    if (start && end) {
+                        const d1 = new Date(start + 'T00:00:00');
+                        const d2 = new Date(end + 'T23:59:59');
+                        let current = new Date(d1);
+                        while(current <= d2) {
+                            datesToKeep.push(getLocalDate(current));
+                            current.setDate(current.getDate() + 1);
                         }
                     }
-
-                    const daily = globalAnalytics.daily || {};
-                    datesToKeep.forEach(dStr => {
-                        if (daily[dStr]) {
-                            agg.visits += daily[dStr].uniqueVisits_amazon || 0;
-                            agg.checkouts += daily[dStr].checkoutOpens_amazon || 0;
-                            agg.abandons += daily[dStr].checkoutAbandons_amazon || 0;
-                        }
-                    });
-
-                    // Compute sales and revenue from history arrays (only Amazon)
-                    const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0 && (h.items || []).some(i => i.includes('[AMZ]'))) : [];
-                    validHistory.forEach(sale => {
-                        const saleDateObj = new Date(sale.date || Date.now());
-                        const saleLocalDate = getLocalDate(saleDateObj);
-                        
-                        if(datesToKeep.includes(saleLocalDate)) {
-                            agg.sales++;
-                            agg.revenue += (Number(sale.total) || 0);
-                            amazonSalesList.push(sale);
-                        }
-                    });
                 }
 
-                document.getElementById('val-visits-amz').textContent = agg.visits;
-                document.getElementById('val-checkouts-amz').textContent = agg.checkouts;
-                document.getElementById('val-sales-amz').textContent = agg.sales;
-                document.getElementById('val-abandons-amz').textContent = agg.abandons;
-                document.getElementById('val-revenue-amz').textContent = formatBRL(agg.revenue);
+                // 2. Visitas e Checkouts de globalAnalytics
+                const daily = globalAnalytics.daily || {};
+                const totals = globalAnalytics.totals || {};
 
-                // Render sales list
-                const listEl = document.getElementById('amazon-sales-list');
-                if(amazonSalesList.length === 0) {
-                    listEl.innerHTML = '<div class="empty-state">Nenhuma venda da Amazon neste período.</div>';
-                } else {
-                    amazonSalesList.sort((a,b) => new Date(b.date) - new Date(a.date));
-                    let html = '';
-                    amazonSalesList.forEach(sale => {
-                        const isPix = sale.method === 'pix';
-                        const methodStr = isPix ? 'PIX' : 'Cartão';
-                        const methodColor = isPix ? 'var(--ios-green)' : 'var(--ios-blue)';
-                        const dataObj = new Date(sale.date || Date.now());
-                        const dStr = dataObj.toLocaleDateString() + ' ' + dataObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                        
-                        const phone = sale.phone || sale.customer?.phone || '';
-                        const cleanPhone = parsePhone(phone);
-                        const groupMsg = encodeURIComponent('Olá! Parabéns pela sua compra. Acesse o nosso grupo VIP exclusivo aqui: https://chat.whatsapp.com/JXkGitHbLd3AeY8LqiLdYB');
-
-                        html += `
-                        <div class="list-item">
-                            <div class="list-item-title">${sale.name || sale.customer?.name || 'Sem Nome'} <span style="font-size: 11px; background: ${methodColor}; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">${methodStr}</span></div>
-                            <div class="list-item-sub"><i class="fa-regular fa-envelope"></i> ${sale.email || sale.customer?.email || 'Sem email'}</div>
-                            <div class="list-item-sub"><i class="fa-solid fa-phone"></i> ${phone || 'Sem celular'}</div>
-                            <div class="list-item-right" style="color:var(--ios-text);">${formatBRL(sale.total)}</div>
-                            <div class="list-item-sub" style="margin-top: 4px; font-size:11px;">Data: ${dStr}</div>
-                            <div class="list-item-sub" style="font-size:11px; color: var(--ios-blue);">Produtos: ${sale.items?.join(', ') || 'N/A'}</div>
-                            <div class="action-row">
-                                ${cleanPhone ? `<a href="https://wa.me/${cleanPhone}?text=${groupMsg}" target="_blank" class="btn-small btn-green"><i class="fa-brands fa-whatsapp"></i> Adicionar ao Grupo</a>` : ''}
-                            </div>
-                        </div>`;
-                    });
-                    listEl.innerHTML = html;
-                }
-
-                // Render Amazon Abandons
-                const abandonsRes = await fetch('https://mura-api.joaopaulojaguar.workers.dev/api/abandons', { headers: { 'x-admin-password': currentPass } });
-                const abandonsData = await abandonsRes.json();
-                const amzAbandonsList = document.getElementById('amazon-abandons-list');
-                
-                if(!Array.isArray(abandonsData)) {
-                    amzAbandonsList.innerHTML = '<div class="empty-state">Erro ao carregar abandonos.</div>';
-                } else {
-                    const amzAbandons = abandonsData.filter(a => {
-                        if (a.site !== 'amazon') return false;
-                        if (a.paid) return false;
-                        if (isCustomerPaidInHistory(a, globalHistory)) return false;
-                        return true;
-                    });
-                    if(amzAbandons.length === 0) {
-                        amzAbandonsList.innerHTML = '<div class="empty-state">Nenhum abandono da Amazon.</div>';
+                if (periodFilter === 'all') {
+                    if (productFilter === 'pintinhos') {
+                        agg.visits = totals.uniqueVisits_pintinhos || 0;
+                        agg.checkouts = totals.checkoutOpens_pintinhos || 0;
+                    } else if (productFilter === 'doencas') {
+                        agg.visits = (totals.uniqueVisits || 0) + (totals.uniqueVisits_app || 0);
+                        agg.checkouts = (totals.checkoutOpens || 0) + (totals.checkoutOpens_app || 0);
                     } else {
-                        amzAbandons.sort((a,b) => new Date(b.date) - new Date(a.date));
-                        let htmlAb = '';
-                        amzAbandons.forEach(item => {
-                            const nome = item.name || 'Desconhecido';
-                            const email = item.email || 'Sem email';
-                            const phone = item.phone || 'Sem celular';
-                            const dataObj = new Date(item.date || Date.now());
-                            const dStr = dataObj.toLocaleDateString() + ' às ' + dataObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                        agg.visits = (totals.uniqueVisits || 0) + (totals.uniqueVisits_app || 0) + (totals.uniqueVisits_pintinhos || 0);
+                        agg.checkouts = (totals.checkoutOpens || 0) + (totals.checkoutOpens_app || 0) + (totals.checkoutOpens_pintinhos || 0);
+                    }
+                } else {
+                    datesToKeep.forEach(dStr => {
+                        const dayData = daily[dStr] || {};
+                        if (productFilter === 'pintinhos') {
+                            agg.visits += dayData.uniqueVisits_pintinhos || 0;
+                            agg.checkouts += dayData.checkoutOpens_pintinhos || 0;
+                        } else if (productFilter === 'doencas') {
+                            agg.visits += (dayData.uniqueVisits || dayData.pageViews || 0) + (dayData.uniqueVisits_app || 0);
+                            agg.checkouts += (dayData.checkoutOpens || dayData.checkoutStarts || 0) + (dayData.checkoutOpens_app || 0);
+                        } else {
+                            agg.visits += (dayData.uniqueVisits || dayData.pageViews || 0) + (dayData.uniqueVisits_app || 0) + (dayData.uniqueVisits_pintinhos || 0);
+                            agg.checkouts += (dayData.checkoutOpens || dayData.checkoutStarts || 0) + (dayData.checkoutOpens_app || 0) + (dayData.checkoutOpens_pintinhos || 0);
+                        }
+                    });
+                }
+
+                // 3. Pagos (Vendas Concluídas) de globalHistory
+                const isPintinhosSale = (sale) => {
+                    if (sale.site === 'pintinhos') return true;
+                    const itemsStr = (sale.items || []).join(' ').toLowerCase();
+                    return itemsStr.includes('pintinho') || itemsStr.includes('manejo');
+                };
+
+                const isDoencasSale = (sale) => {
+                    if (sale.site === 'pintinhos') return false;
+                    const itemsStr = (sale.items || []).join(' ').toLowerCase();
+                    return itemsStr.includes('doen') || itemsStr.includes('cura') || itemsStr.includes('protocolo') || itemsStr.includes('completo');
+                };
+
+                const validHistory = Array.isArray(globalHistory) ? globalHistory.filter(h => h && h.total > 0 && h.site !== 'vsl' && !(h.items || []).some(i => i.includes('[AMZ]'))) : [];
+
+                validHistory.forEach(sale => {
+                    if (!isDateInPeriod(sale.date || sale.created_at)) return;
+                    
+                    let match = false;
+                    if (productFilter === 'pintinhos') match = isPintinhosSale(sale);
+                    else if (productFilter === 'doencas') match = isDoencasSale(sale);
+                    else match = true;
+
+                    if (match) {
+                        agg.sales++;
+                        agg.revenue += (Number(sale.total) || 0);
+                        funnelSalesList.push(sale);
+                    }
+                });
+
+                // 4. Abandonos de /api/abandons
+                let funnelAbandonsList = [];
+                try {
+                    const abRes = await fetch(`${WORKER_URL}/api/abandons`, { headers: { 'x-admin-password': currentPass } });
+                    const abData = await abRes.json();
+                    if (Array.isArray(abData)) {
+                        const isPintinhosAbandon = (a) => {
+                            if (a.site === 'pintinhos') return true;
+                            const prodStr = String(a.product || '').toLowerCase();
+                            const reasonStr = String(a.reason || '').toLowerCase();
+                            return prodStr.includes('pintinho') || prodStr.includes('manejo') || reasonStr.includes('pintinho');
+                        };
+
+                        const isDoencasAbandon = (a) => {
+                            if (a.site === 'pintinhos') return false;
+                            const prodStr = String(a.product || '').toLowerCase();
+                            return !prodStr.includes('pintinho') && a.site !== 'amazon';
+                        };
+
+                        abData.forEach(item => {
+                            if (item.paid) return;
+                            if (item.site === 'amazon') return;
+                            if (item.pixId && globalHistory && globalHistory.some(h => String(h.paymentId) === String(item.pixId))) return;
+                            if (!isDateInPeriod(item.date)) return;
+
+                            let match = false;
+                            if (productFilter === 'pintinhos') match = isPintinhosAbandon(item);
+                            else if (productFilter === 'doencas') match = isDoencasAbandon(item);
+                            else match = true;
+
+                            if (match) {
+                                agg.abandons++;
+                                funnelAbandonsList.push(item);
+                            }
+                        });
+                    }
+                } catch(e) {
+                    console.error("Funnel abandons fetch error", e);
+                }
+
+                // Cálculos das Taxas
+                const checkoutRate = agg.visits > 0 ? ((agg.checkouts / agg.visits) * 100).toFixed(1) : 0;
+                const abandonRate = agg.checkouts > 0 ? ((agg.abandons / agg.checkouts) * 100).toFixed(1) : 0;
+                const paidRate = agg.checkouts > 0 ? ((agg.sales / agg.checkouts) * 100).toFixed(1) : 0;
+                const ticketMedio = agg.sales > 0 ? (agg.revenue / agg.sales) : 0;
+
+                // Atualizar DOM dos 4 Cards
+                const visitsEl = document.getElementById('val-funnel-visits');
+                if (visitsEl) visitsEl.textContent = agg.visits;
+
+                const checkoutsEl = document.getElementById('val-funnel-checkouts');
+                if (checkoutsEl) checkoutsEl.textContent = agg.checkouts;
+
+                const cRateEl = document.getElementById('val-funnel-checkout-rate');
+                if (cRateEl) cRateEl.textContent = `${checkoutRate}% das visitas`;
+
+                const abandonsEl = document.getElementById('val-funnel-abandons');
+                if (abandonsEl) abandonsEl.textContent = agg.abandons;
+
+                const aRateEl = document.getElementById('val-funnel-abandon-rate');
+                if (aRateEl) aRateEl.textContent = `${abandonRate}% do checkout`;
+
+                const paidEl = document.getElementById('val-funnel-paid');
+                if (paidEl) paidEl.textContent = agg.sales;
+
+                const pRateEl = document.getElementById('val-funnel-paid-rate');
+                if (pRateEl) pRateEl.textContent = `${paidRate}% conversão checkout`;
+
+                // Resumo Financeiro e Visual
+                const revEl = document.getElementById('val-funnel-revenue');
+                if (revEl) revEl.textContent = formatBRL(agg.revenue);
+
+                const ticketEl = document.getElementById('val-funnel-ticket');
+                if (ticketEl) ticketEl.textContent = formatBRL(ticketMedio);
+
+                const fVisitsEl = document.getElementById('val-funnel-flow-visits');
+                if (fVisitsEl) fVisitsEl.textContent = agg.visits;
+
+                const fCheckEl = document.getElementById('val-funnel-flow-checkouts');
+                if (fCheckEl) fCheckEl.textContent = `${agg.checkouts} (${checkoutRate}%)`;
+
+                const fPaidEl = document.getElementById('val-funnel-flow-paid');
+                if (fPaidEl) fPaidEl.textContent = `${agg.sales} (${agg.visits > 0 ? ((agg.sales/agg.visits)*100).toFixed(1) : 0}%)`;
+
+                // Renderizar Lista de Vendas Pagas
+                const salesEl = document.getElementById('funnel-sales-list');
+                if (salesEl) {
+                    if (funnelSalesList.length === 0) {
+                        salesEl.innerHTML = '<div class="empty-state">Nenhum pagamento registrado neste período e filtro.</div>';
+                    } else {
+                        funnelSalesList.sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0));
+                        let htmlS = '';
+                        funnelSalesList.forEach(sale => {
+                            const isPix = sale.method === 'pix';
+                            const methodStr = isPix ? 'PIX' : (sale.method === 'manual' ? 'Manual' : 'Cartão');
+                            const methodColor = isPix ? 'var(--ios-green)' : (sale.method === 'manual' ? '#8b5cf6' : 'var(--ios-blue)');
+                            const dObj = new Date(sale.date || Date.now());
+                            const dStr = dObj.toLocaleDateString() + ' ' + dObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                            const phone = sale.phone || sale.customer?.phone || '';
                             const cleanPhone = parsePhone(phone);
-                            
-                            htmlAb += `
+                            const nome = sale.name || sale.customer?.name || 'Cliente';
+                            const email = sale.email || sale.customer?.email || 'Sem email';
+                            const prodName = (sale.items || []).join(', ') || 'Produto Elite';
+                            const msg = encodeURIComponent(`Olá ${nome}! Parabéns pela sua compra do ${prodName}. Qualquer dúvida estou à disposição!`);
+
+                            htmlS += `
                             <div class="list-item">
-                                <div class="list-item-title">${nome}</div>
+                                <div class="list-item-title">${nome} <span style="font-size: 11px; background: ${methodColor}; color: white; padding: 2px 7px; border-radius: 6px; margin-left: 6px; font-weight: 800;">${methodStr}</span></div>
                                 <div class="list-item-sub"><i class="fa-regular fa-envelope"></i> ${email}</div>
-                                <div class="list-item-sub"><i class="fa-solid fa-phone"></i> ${phone}</div>
-                                <div class="list-item-sub" style="margin-top: 4px; font-size:11px;">Capturado em: ${dStr}</div>
-                                
-                                <div class="action-row">
-                                    ${cleanPhone ? `<a href="https://wa.me/${cleanPhone}" target="_blank" class="btn-small btn-green"><i class="fa-brands fa-whatsapp"></i> Chamar</a>` : ''}
+                                <div class="list-item-sub"><i class="fa-solid fa-phone"></i> ${phone || 'Sem celular'}</div>
+                                <div class="list-item-right" style="color:var(--ios-green); font-weight: 900; font-size: 17px;">${formatBRL(sale.total)}</div>
+                                <div class="list-item-sub" style="margin-top: 5px; font-size:11px;">Data: ${dStr}</div>
+                                <div class="list-item-sub" style="font-size:11px; color: var(--ios-blue); font-weight: 600;">Itens: ${prodName}</div>
+                                <div class="action-row" style="margin-top: 8px;">
+                                    ${cleanPhone ? `<a href="https://wa.me/${cleanPhone}?text=${msg}" target="_blank" class="btn-small btn-green"><i class="fa-brands fa-whatsapp"></i> Chamar no WhatsApp</a>` : ''}
                                 </div>
                             </div>`;
                         });
-                        amzAbandonsList.innerHTML = htmlAb;
+                        salesEl.innerHTML = htmlS;
+                    }
+                }
+
+                // Renderizar Lista de Abandonos
+                const abListEl = document.getElementById('funnel-abandons-list');
+                if (abListEl) {
+                    if (funnelAbandonsList.length === 0) {
+                        abListEl.innerHTML = '<div class="empty-state">Nenhum abandono capturado neste período.</div>';
+                    } else {
+                        funnelAbandonsList.sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0));
+                        let htmlA = '';
+                        funnelAbandonsList.forEach(item => {
+                            const nome = item.name || 'Cliente';
+                            const email = item.email || 'Sem email';
+                            const phone = item.phone || '';
+                            const cleanPhone = parsePhone(phone);
+                            const dObj = new Date(item.date || Date.now());
+                            const dStr = dObj.toLocaleDateString() + ' às ' + dObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                            const prod = item.product || 'E-book';
+                            const valor = item.total ? formatBRL(item.total) : 'R$ 27,90';
+                            const recoveryMsg = encodeURIComponent(`Olá ${nome}, tudo bem? Vi que você estava no checkout garantindo o ${prod}. Ficou com alguma dúvida ou precisa de ajuda para finalizar? Posso te ajudar por aqui!`);
+
+                            htmlA += `
+                            <div class="list-item">
+                                <div class="list-item-title">${nome} <span style="font-size: 11px; background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 7px; border-radius: 6px; margin-left: 6px; font-weight: 700;">Abandonou</span></div>
+                                <div class="list-item-sub"><i class="fa-solid fa-box"></i> Produto: <strong>${prod}</strong> (${valor})</div>
+                                <div class="list-item-sub"><i class="fa-regular fa-envelope"></i> ${email}</div>
+                                <div class="list-item-sub"><i class="fa-solid fa-phone"></i> ${phone || 'Sem celular'}</div>
+                                <div class="list-item-sub" style="margin-top: 4px; font-size:11px; color: var(--ios-gray);"><i class="fa-regular fa-clock"></i> ${dStr} • ${item.reason || 'Checkout abandonado'}</div>
+                                
+                                <div class="action-row" style="margin-top: 8px;">
+                                    ${cleanPhone ? `<a href="https://wa.me/${cleanPhone}?text=${recoveryMsg}" target="_blank" class="btn-small btn-green"><i class="fa-brands fa-whatsapp"></i> Recuperar no WhatsApp</a>` : ''}
+                                </div>
+                            </div>`;
+                        });
+                        abListEl.innerHTML = htmlA;
                     }
                 }
 
             } catch(e) {
-                console.error("Render amazon stats error:", e);
+                console.error("Render funnel stats error:", e);
             }
+        }
+
         function isCustomerPaidInHistory(item, historyList) {
             if (!historyList || historyList.length === 0) return false;
             const aPix = item.pixId ? String(item.pixId) : null;
