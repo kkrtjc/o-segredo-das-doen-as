@@ -94,12 +94,18 @@
     <a href="#" id="btn-access" class="btn-access">
         <i class="fa-solid fa-rocket"></i> ACESSAR O PROTOCOLO ELITE AGORA
     </a>
+    <div id="pdf-download-area" style="text-align: center; margin: -4px auto 28px auto;">
+        <a href="https://mura-api.joaopaulojaguar.workers.dev/download/manejo" id="btn-pdf-download" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 420px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.14); color: #e2e8f0; font-size: 0.88rem; font-weight: 700; padding: 12px 20px; border-radius: 14px; text-decoration: none; transition: all 0.2s;">
+            <i class="fa-solid fa-file-pdf" style="color: #ef4444; font-size: 1.1rem;"></i>
+            <span id="btn-pdf-text">Baixar também seu arquivo em PDF</span>
+        </a>
+    </div>
     <p class="access-note">&#128274; Acesso seguro - seu CPF ou e-mail ja estara pre-preenchido</p>
     <p class="steps-title">&#128203; Proximos Passos</p>
     <div class="steps-list">
         <div class="step-item"><div class="step-num">1</div><div class="step-text">Clique no botao acima para abrir a plataforma Protocolo Elite.</div></div>
         <div class="step-item"><div class="step-num">2</div><div class="step-text">Faca login com seu <strong>CPF ou e-mail</strong> e a <strong>senha exclusiva</strong> exibida acima.</div></div>
-        <div class="step-item"><div class="step-num">3</div><div class="step-text">Acesse o <strong>Guia das Doencas</strong>, a <strong>Tabela de Racao</strong> e todas as ferramentas da plataforma.</div></div>
+        <div class="step-item"><div class="step-num">3</div><div class="step-text" id="step-products">Acesse o <strong>Guia das Doencas</strong>, a <strong>Tabela de Racao</strong> e todas as ferramentas da plataforma.</div></div>
         <div class="step-item"><div class="step-num">4</div><div class="step-text">Verifique seu e-mail - enviamos todas as instrucoes de acesso para <strong id="display-email">seu e-mail</strong>.</div></div>
     </div>
     <div class="whatsapp-box">
@@ -112,11 +118,13 @@
 <script>
 (function(){
     var PROTOCOLO_URL='https://protocolo-elite.pages.dev';
+    var API_URL = 'https://mura-api.joaopaulojaguar.workers.dev';
     var params = new URLSearchParams(window.location.search);
     var nome = sessionStorage.getItem('obrigado_name') || params.get('name') || params.get('nome') || '';
     var email = sessionStorage.getItem('obrigado_email') || params.get('email') || '';
     var cpf = sessionStorage.getItem('obrigado_cpf') || params.get('cpf') || '';
     var senha = sessionStorage.getItem('obrigado_senha') || params.get('senha') || params.get('password') || '';
+    var itemsStr = (sessionStorage.getItem('obrigado_items') || params.get('items') || '').toLowerCase();
 
     if(nome) document.getElementById('client-name').textContent = nome.split(' ')[0];
     
@@ -142,6 +150,28 @@
     }
 
     if(email) document.getElementById('display-email').textContent = email;
+
+    // Personalização dinâmica do Passo 3 e do botão de PDF
+    var stepProducts = document.getElementById('step-products');
+    var btnPdf = document.getElementById('btn-pdf-download');
+    var txtPdf = document.getElementById('btn-pdf-text');
+
+    var hasManejo = itemsStr.indexOf('pintinho') !== -1 || itemsStr.indexOf('manejo') !== -1;
+    var hasDoencas = itemsStr.indexOf('doenca') !== -1 || itemsStr.indexOf('doença') !== -1 || itemsStr.indexOf('combo') !== -1;
+
+    if (hasManejo && hasDoencas) {
+        if (stepProducts) stepProducts.innerHTML = 'Acesse o <strong>Guia das Doenças</strong>, o <strong>Manual de Pintinhos</strong> e a <strong>Tabela de Ração</strong> na plataforma.';
+        if (btnPdf) btnPdf.href = 'downloads.html?items=' + encodeURIComponent(itemsStr);
+        if (txtPdf) txtPdf.textContent = 'Baixar seus E-books em PDF';
+    } else if (hasManejo) {
+        if (stepProducts) stepProducts.innerHTML = 'Acesse o <strong>Manual de Manejo de Pintinhos</strong> e todas as orientações exclusivas na plataforma.';
+        if (btnPdf) btnPdf.href = API_URL + '/download/manejo';
+        if (txtPdf) txtPdf.textContent = 'Baixar Manual de Pintinhos em PDF';
+    } else {
+        if (stepProducts) stepProducts.innerHTML = 'Acesse o <strong>Guia das Doenças</strong>, a <strong>Tabela de Ração</strong> e todas as ferramentas da plataforma.';
+        if (btnPdf) btnPdf.href = API_URL + '/download/doencas';
+        if (txtPdf) txtPdf.textContent = 'Baixar Guia das Doenças em PDF';
+    }
 
     var btn = document.getElementById('btn-access');
     if(cleanCPF.length === 11){

@@ -1782,6 +1782,7 @@ async function handlePayment(method) {
                 sessionStorage.setItem('obrigado_cpf', c.cpf || '');
                 sessionStorage.setItem('obrigado_senha', result.senha || '');
                 sessionStorage.setItem('obrigado_method', 'cartao');
+                sessionStorage.setItem('obrigado_items', items.map(i => i.id || i.title).join(','));
 
                 setTimeout(() => {
                     window.location.href = 'obrigado.html';
@@ -2453,6 +2454,7 @@ function showPixResult(data, items) {
                 sessionStorage.setItem('obrigado_cpf', cust.cpf || '');
                 sessionStorage.setItem('obrigado_senha', sd.senha || '');
                 sessionStorage.setItem('obrigado_method', 'pix');
+                sessionStorage.setItem('obrigado_items', items.map(i => i.id || i.title).join(','));
 
                 setTimeout(() => {
                     window.location.href = 'obrigado.html';
