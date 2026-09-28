@@ -573,7 +573,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         },
         'ebook-pintinhos': {
             title: 'Manual de Manejo de Pintinhos',
-            price: 0.01,
+            price: 27.90,
             originalPrice: 129.70,
             cover: 'capadospintinhos.webp',
             fullBumps: []
@@ -633,19 +633,19 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                 {
                     id: 'ebook-doencas',
                     title: 'O SEGREDO DAS DOENÇAS AVÍCOLAS',
-                    price: 0.01,
-                    priceCard: 0.01,
+                    price: 49.90,
+                    priceCard: 49.90,
                     image: 'capadasdoencas.webp',
-                    description: '<span style="color: #ff4444;"><strong>🛡️ O Guia de Proteção Definitivo:</strong></span> Aprenda a identificar, tratar e curar mais de 10 doenças graves em minutos. <span style="color: #4ade80;"><strong>Não espere a primeira ave adoecer para agir.</strong></span> Leve por apenas R$ 0,01 nesta tela de teste.',
+                    description: '<span style="color: #ff4444;"><strong>🛡️ O Guia de Proteção Definitivo:</strong></span> Aprenda a identificar, tratar e curar mais de 10 doenças graves em minutos. <span style="color: #4ade80;"><strong>Não espere a primeira ave adoecer para agir.</strong></span> Leve por apenas R$ 49,90 nesta oferta exclusiva.',
                     tag: 'OFERTA ÚNICA'
                 },
                 {
                     id: 'bump-6361',
                     title: 'TABELA DE RAÇÃO PRÁTICA',
-                    price: 0.01,
-                    priceCard: 0.01,
+                    price: 19.90,
+                    priceCard: 19.90,
                     image: 'tabela_racao_bump.webp',
-                    description: '<span style="color: #ff4444;"><strong>💸 Economia Inteligente:</strong></span> Monte sua própria ração balanceada e forte, reduzindo seus gastos mensais com ração <strong style="color:#fbbf24;">em até 60%</strong>.',
+                    description: '<span style="color: #ff4444;"><strong>💸 Economia Inteligente:</strong></span> Monte sua própria ração balanceada e forte, reduzindo seus gastos mensais com ração <strong style="color:#fbbf24;">em até 60%</strong> por apenas R$ 19,90.',
                     tag: 'OFERTA ÚNICA'
                 }
             ];
@@ -682,8 +682,8 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             document.getElementById('checkout-product-price-display').innerText = 'R$ 89,90';
         } else if (productId === 'ebook-pintinhos') {
             if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 129,70';
-            if (topCardInstEl) topCardInstEl.innerHTML = `ou 1x de R$ 0,01`;
-            document.getElementById('checkout-product-price-display').innerText = 'R$ 0,01';
+            if (topCardInstEl) topCardInstEl.innerHTML = `ou 3x de R$ 9,93`;
+            document.getElementById('checkout-product-price-display').innerText = 'R$ 27,90';
         } else {
             if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 149,90';
             if (topCardInstEl) topCardInstEl.innerHTML = `ou 4x de R$ 22,47 sem juros`;
