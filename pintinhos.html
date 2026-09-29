@@ -4310,15 +4310,15 @@
             </p>
 
             <!-- Card Central do Produto: Capa pequena na esquerda + Lista na direita -->
-            <div style="background: rgba(15, 23, 42, 0.88); border: 1.5px solid rgba(245, 158, 11, 0.35); border-radius: 12px; padding: 8px 10px; margin-bottom: 8px; text-align: left; box-sizing: border-box; display: flex; align-items: center; gap: 10px;">
-                <img id="pix-upsell-img" src="capadasdoencas.webp" alt="Guia Completo das Doenças" style="width: 58px; height: auto; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); flex-shrink: 0; object-fit: contain;">
+            <div style="background: rgba(15, 23, 42, 0.88); border: 1.5px solid rgba(245, 158, 11, 0.35); border-radius: 12px; padding: 7px 10px; margin-bottom: 7px; text-align: left; box-sizing: border-box; display: flex; align-items: center; gap: 10px;">
+                <img id="pix-upsell-img" src="capadasdoencas.webp" alt="Guia Completo das Doenças" style="width: 52px; height: auto; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); flex-shrink: 0; object-fit: contain;">
                 
                 <div style="min-width: 0; flex: 1;">
-                    <div id="pix-upsell-prod-category" style="color: #f59e0b; font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px;">GUIA COMPLETO</div>
-                    <h4 id="pix-upsell-prod-title" style="color: #ffffff; font-size: 0.84rem; font-weight: 800; margin: 1px 0 4px 0; line-height: 1.2;">O Segredo das Doenças</h4>
+                    <div id="pix-upsell-prod-category" style="color: #f59e0b; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px;">GUIA COMPLETO ADICIONAL</div>
+                    <h4 id="pix-upsell-prod-title" style="color: #ffffff; font-size: 0.82rem; font-weight: 800; margin: 1px 0 3px 0; line-height: 1.2;">O Segredo das Doenças</h4>
                     
                     <!-- Lista de Benefícios Chave -->
-                    <div id="pix-upsell-list" style="font-size: 0.7rem; color: #e2e8f0; line-height: 1.3; display: flex; flex-direction: column; gap: 2px;">
+                    <div id="pix-upsell-list" style="font-size: 0.68rem; color: #e2e8f0; line-height: 1.25; display: flex; flex-direction: column; gap: 1px;">
                         <div style="display: flex; align-items: center; gap: 5px;">
                             <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
                             <span>Mais de 10 doenças catalogadas</span>
@@ -4329,29 +4329,44 @@
                         </div>
                         <div style="display: flex; align-items: center; gap: 5px;">
                             <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
-                            <span>Prevenção</span>
+                            <span>Prevenção e biossegurança</span>
                         </div>
                         <div style="display: flex; align-items: center; gap: 5px;">
                             <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
-                            <span>Tratamento</span>
+                            <span>Tratamento detalhado</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Box de Destaque do Preço -->
-            <div style="background: rgba(245, 158, 11, 0.12); border: 1px dashed rgba(245, 158, 11, 0.5); border-radius: 10px; padding: 6px 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; text-align: left; gap: 6px; box-sizing: border-box;">
-                <div style="flex: 1; min-width: 0;">
-                    <div id="pix-upsell-savings" style="color: #fbbf24; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; line-height: 1.2;">
-                        🔥 ECONOMIA DE R$ 40,00
+            <!-- Resumo Transparente do Pedido Completo -->
+            <div id="pix-upsell-summary-box" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 6px 10px; margin-bottom: 7px; text-align: left; box-sizing: border-box;">
+                <div style="color: #94a3b8; font-size: 0.62rem; font-weight: 800; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.3px;">
+                    📦 O QUE VOCÊ VAI RECEBER:
+                </div>
+                <div id="pix-upsell-items-list" style="display: flex; flex-direction: column; gap: 2px; font-size: 0.7rem; color: #f1f5f9;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>🐣 Manual de Manejo dos Pintinhos:</span>
+                        <strong style="color: #ffffff;">R$ 37,00</strong>
                     </div>
-                    <div id="pix-upsell-subtext" style="color: #cbd5e1; font-size: 0.65rem; font-weight: 500; line-height: 1.2;">
-                        Adicione com desconto único:
+                    <div style="display: flex; justify-content: space-between; align-items: center; color: #34d399;">
+                        <span>💊 Guia Completo das Doenças:</span>
+                        <strong style="color: #34d399;">+ R$ 49,90</strong>
                     </div>
                 </div>
+            </div>
+
+            <!-- Box de Destaque do Preço e Total Final -->
+            <div style="background: rgba(16, 185, 129, 0.12); border: 1.5px solid rgba(16, 185, 129, 0.45); border-radius: 10px; padding: 6px 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; text-align: left; gap: 6px; box-sizing: border-box;">
+                <div style="flex: 1; min-width: 0;">
+                    <div style="color: #cbd5e1; font-size: 0.68rem; font-weight: 700; line-height: 1.2;">
+                        TOTAL SE VOCÊ ACEITAR:
+                    </div>
+                    <span id="pix-upsell-original-price" style="color: #94a3b8; font-size: 0.65rem; text-decoration: line-through; display: block; line-height: 1.2;">De R$ 126,90</span>
+                </div>
                 <div style="text-align: right; flex-shrink: 0;">
-                    <span id="pix-upsell-original-price" style="color: #94a3b8; font-size: 0.65rem; text-decoration: line-through; display: block; line-height: 1.1;">De R$ 89,90</span>
-                    <span id="pix-upsell-price-offer" style="color: #10b981; font-size: clamp(1rem, 4vw, 1.15rem); font-weight: 900; white-space: nowrap; line-height: 1.1;">+ R$ 49,90</span>
+                    <span id="pix-upsell-total-value" style="color: #10b981; font-size: clamp(1.1rem, 4.2vw, 1.25rem); font-weight: 900; white-space: nowrap; line-height: 1.1;">R$ 86,90</span>
+                    <span style="color: #94a3b8; font-size: 0.6rem; font-weight: 600; display: block;">no PIX ou até 4x no cartão</span>
                 </div>
             </div>
 
@@ -4359,11 +4374,11 @@
             <div style="display: flex; flex-direction: column; gap: 4px;">
                 <button onclick="acceptPixUpsell()" class="btn-upsell-cta" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); font-size: clamp(0.82rem, 3.4vw, 0.92rem); padding: 11px 8px; border-radius: 10px; font-weight: 900; border: none; color: #ffffff; width: 100%; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); cursor: pointer; text-transform: uppercase; letter-spacing: 0.2px; transition: transform 0.15s, opacity 0.15s; display: flex; align-items: center; justify-content: center; gap: 6px; line-height: 1.2; box-sizing: border-box;">
                     <i class="fa-solid fa-check" style="flex-shrink: 0;"></i>
-                    <span id="pix-upsell-cta-text">Aprender sobre as doenças</span>
+                    <span id="pix-upsell-cta-text">Aprender sobre as doenças (Total: R$ 86,90)</span>
                 </button>
 
                 <button id="pix-upsell-reject-btn" onclick="rejectPixUpsell()" style="background: transparent; border: none; color: #94a3b8; font-size: clamp(0.7rem, 2.6vw, 0.75rem); text-decoration: underline; padding: 4px; font-weight: 600; cursor: pointer; transition: color 0.2s; line-height: 1.25; width: 100%; box-sizing: border-box;">
-                    Levar apenas o manejo de pintinhos
+                    Levar apenas o manejo de pintinhos (R$ 37,00)
                 </button>
             </div>
 
@@ -4395,7 +4410,7 @@
     })();
     </script>
     <script src="smart_fields.js" defer></script>
-    <script src="script.js?v=38" defer></script>
+    <script src="script.js?v=39" defer></script>
     <script>
     // ─── META ADVANCED MATCHING — INPUT LISTENERS ─────────────────────────────
     // Quando o usuário preenche email/telefone no checkout, atualiza o Pixel

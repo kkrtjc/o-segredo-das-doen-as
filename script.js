@@ -768,7 +768,7 @@ function renderOrderBumps(bumps) {
     const bumpHeader = `
         <div style="text-align: center; margin-bottom: 6px; padding: 8px 12px; background: rgba(245,158,11,0.08); border-radius: 8px; border: 1px solid rgba(245,158,11,0.25);">
             <p style="color: #fbbf24; font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; margin: 0; line-height: 1.4;">
-                ⚡ Adicione essas ofertas ÚNICAS à sua plataforma e libere todas as ferramentas.
+                ⚡ Oferta exclusiva pra você economizar na sua criação.
             </p>
         </div>
     `;
@@ -1320,40 +1320,83 @@ function setupPixUpsellModal() {
     const ctaBtnText = document.getElementById('pix-upsell-cta-text');
 
     if (cart.mainProduct && cart.mainProduct.id === 'ebook-pintinhos') {
+        const hasRacao = cart.bumps.includes('bump-6361');
+        const mainPrice = Number(cart.mainProduct.price) || 37.00;
+        const racaoPrice = hasRacao ? 19.90 : 0;
+        const doencasPrice = 49.90;
+        const currentTotal = mainPrice + racaoPrice;
+        const totalWithUpsell = currentTotal + doencasPrice;
+        const originalTotal = (mainPrice + (hasRacao ? 19.90 : 0) + 89.90);
+
+        const fmtCurrent = currentTotal.toFixed(2).replace('.', ',');
+        const fmtTotal = totalWithUpsell.toFixed(2).replace('.', ',');
+        const fmtOriginal = originalTotal.toFixed(2).replace('.', ',');
+
         if (titleEl) titleEl.innerText = '⚠️ ESPERE! NÃO FINALIZE ANTES DE VER ISSO...';
-        if (descEl) descEl.innerHTML = 'Aproveite esta condição única de balcão para levar o guia completo das doenças das galinhas.';
+        if (descEl) descEl.innerHTML = 'Adicione o <strong>Guia Completo das Doenças</strong> com condição única de balcão.';
         if (imgEl) {
             imgEl.src = 'capadasdoencas.webp';
             imgEl.alt = 'Guia Completo das Doenças';
         }
-        if (prodCategoryEl) prodCategoryEl.innerText = 'GUIA COMPLETO';
+        if (prodCategoryEl) prodCategoryEl.innerText = 'GUIA COMPLETO ADICIONAL';
         if (prodTitleEl) prodTitleEl.innerText = 'O Segredo das Doenças';
         if (priceEl) priceEl.innerHTML = '+ R$ 49,90';
-        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 89,90';
+        if (originalPriceEl) originalPriceEl.innerText = `De R$ ${fmtOriginal}`;
         if (savingsEl) savingsEl.innerText = '🔥 ECONOMIA DE R$ 40,00';
-        if (subtextEl) subtextEl.innerText = 'Aprenda sobre as doenças agora:';
+        if (subtextEl) subtextEl.innerText = 'Adicional com desconto:';
         if (listEl) {
             listEl.innerHTML = `
-                <div style="margin-bottom: 2px; display: flex; align-items: flex-start; gap: 5px; text-align: left;">
-                    <span style="color: #10b981; font-weight: 900; flex-shrink: 0; line-height: 1.3;">✓</span>
-                    <span style="flex: 1; min-width: 0; line-height: 1.3;">Mais de 10 doenças catalogadas</span>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
+                    <span>Mais de 10 doenças catalogadas</span>
                 </div>
-                <div style="margin-bottom: 2px; display: flex; align-items: flex-start; gap: 5px; text-align: left;">
-                    <span style="color: #10b981; font-weight: 900; flex-shrink: 0; line-height: 1.3;">✓</span>
-                    <span style="flex: 1; min-width: 0; line-height: 1.3;">Protocolo de vermifugação</span>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
+                    <span>Protocolo de vermifugação</span>
                 </div>
-                <div style="margin-bottom: 2px; display: flex; align-items: flex-start; gap: 5px; text-align: left;">
-                    <span style="color: #10b981; font-weight: 900; flex-shrink: 0; line-height: 1.3;">✓</span>
-                    <span style="flex: 1; min-width: 0; line-height: 1.3;">Prevenção</span>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
+                    <span>Prevenção e biossegurança</span>
                 </div>
-                <div style="display: flex; align-items: flex-start; gap: 5px; text-align: left;">
-                    <span style="color: #10b981; font-weight: 900; flex-shrink: 0; line-height: 1.3;">✓</span>
-                    <span style="flex: 1; min-width: 0; line-height: 1.3;">Tratamento</span>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
+                    <span>Tratamento detalhado</span>
                 </div>
             `;
         }
-        if (ctaBtnText) ctaBtnText.innerText = 'Aprender sobre as doenças';
-        if (rejectBtn) rejectBtn.innerText = 'Levar apenas o manejo de pintinhos';
+
+        const summaryBox = document.getElementById('pix-upsell-summary-box');
+        if (summaryBox) {
+            summaryBox.style.display = 'block';
+            summaryBox.innerHTML = `
+                <div style="color: #94a3b8; font-size: 0.62rem; font-weight: 800; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.3px;">
+                    📦 O QUE VOCÊ VAI RECEBER:
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 2px; font-size: 0.7rem; color: #f1f5f9;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>🐣 Manual de Manejo dos Pintinhos:</span>
+                        <strong style="color: #ffffff;">R$ ${mainPrice.toFixed(2).replace('.', ',')}</strong>
+                    </div>
+                    ${hasRacao ? `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>🌾 Tabela de Ração Prática:</span>
+                        <strong style="color: #ffffff;">R$ 19,90</strong>
+                    </div>` : ''}
+                    <div style="display: flex; justify-content: space-between; align-items: center; color: #34d399;">
+                        <span>💊 Guia Completo das Doenças:</span>
+                        <strong style="color: #34d399;">+ R$ 49,90</strong>
+                    </div>
+                </div>
+            `;
+        }
+
+        const totalValueEl = document.getElementById('pix-upsell-total-value');
+        if (totalValueEl) {
+            totalValueEl.innerText = `R$ ${fmtTotal}`;
+        }
+
+        if (ctaBtnText) ctaBtnText.innerText = `Aprender sobre as doenças (Total: R$ ${fmtTotal})`;
+        if (rejectBtn) rejectBtn.innerText = `Levar apenas o manejo de pintinhos (R$ ${fmtCurrent})`;
         return;
     }
 
