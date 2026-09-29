@@ -850,7 +850,7 @@ function renderOrderBumps(bumps) {
                             <span style="color: #a3a3a3; font-size: 0.75rem; text-decoration: line-through; text-shadow: 1px 1px 1px #000;">De R$ ${isManejo ? '99,90' : (isDoencas ? '89,90' : '59,90')}</span>
                             <span style="color: #4ade80; font-size: 0.85rem; font-weight: 800; text-shadow: 0 0 8px rgba(74,222,128,0.4), 1px 1px 2px #000; line-height: 1.15;">
                                 Por apenas <span style="font-size: 1.05rem;">R$ ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.price)).replace('R$ ', '')}</span><br>
-                                ${isManejo ? 'você salva seus pintinhos' : (isDoencas ? 'você aprende a tratar mais de 10 diferentes doenças das galinhas.' : ', você economiza até 60% na ração')}
+                                ${isManejo ? 'você salva seus pintinhos' : (isDoencas ? 'você aprende sobre as principais doenças.' : ', você economiza até 60% na ração')}
                             </span>
                         </div>
                     </div>
