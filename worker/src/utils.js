@@ -20,8 +20,10 @@ export async function generateDownloadToken(email, items, paymentId, env) {
     return btoa(`${data}|${hash}`);
 }
 
-// Formata data BR
+// Formata data BR no fuso de Brasília (America/Sao_Paulo / UTC-3)
 export function today() {
-    const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    return new Intl.DateTimeFormat('en-CA', { 
+        timeZone: 'America/Sao_Paulo', 
+        year: 'numeric', month: '2-digit', day: '2-digit' 
+    }).format(new Date());
 }

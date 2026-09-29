@@ -712,29 +712,40 @@
             }
         }
 
-        // Verificação de datas
+        // Verificação de datas com timezone de Brasília (America/Sao_Paulo / UTC-3)
         function getLocalDateStr(d) {
-            const year = d.getFullYear();
-            const month = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+            if (!d) return '';
+            const dateObj = (d instanceof Date) ? d : new Date(d);
+            if (isNaN(dateObj.getTime())) return '';
+            return new Intl.DateTimeFormat('en-CA', { 
+                timeZone: 'America/Sao_Paulo', 
+                year: 'numeric', month: '2-digit', day: '2-digit' 
+            }).format(dateObj);
         }
 
         function getDatesForPeriod() {
             const now = new Date();
             const dates = [];
 
+            const todayBR = getLocalDateStr(now);
+
             if (currentPeriod === 'today') {
-                dates.push(getLocalDateStr(now));
+                dates.push(todayBR);
+                const todayUTC = now.toISOString().split('T')[0];
+                if (!dates.includes(todayUTC)) dates.push(todayUTC);
             } else if (currentPeriod === 'yesterday') {
-                const y = new Date(now);
-                y.setDate(now.getDate() - 1);
-                dates.push(getLocalDateStr(y));
+                const y = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+                const yBR = getLocalDateStr(y);
+                dates.push(yBR);
+                const yUTC = y.toISOString().split('T')[0];
+                if (!dates.includes(yUTC)) dates.push(yUTC);
             } else if (currentPeriod === '7days') {
                 for (let i = 0; i < 7; i++) {
-                    const d = new Date(now);
-                    d.setDate(now.getDate() - i);
-                    dates.push(getLocalDateStr(d));
+                    const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+                    const brDate = getLocalDateStr(d);
+                    if (!dates.includes(brDate)) dates.push(brDate);
+                    const utcDate = d.toISOString().split('T')[0];
+                    if (!dates.includes(utcDate)) dates.push(utcDate);
                 }
             } else if (currentPeriod === 'custom') {
                 if (customStartDate && customEndDate) {
@@ -742,7 +753,8 @@
                     const d2 = new Date(customEndDate + 'T23:59:59');
                     let curr = new Date(d1);
                     while (curr <= d2) {
-                        dates.push(getLocalDateStr(curr));
+                        const brDate = getLocalDateStr(curr);
+                        if (!dates.includes(brDate)) dates.push(brDate);
                         curr.setDate(curr.getDate() + 1);
                     }
                 }
@@ -753,7 +765,7 @@
         function isDateMatch(dateStr, datesToKeep) {
             if (currentPeriod === 'all') return true;
             if (!dateStr) return false;
-            const d = getLocalDateStr(new Date(dateStr));
+            const d = getLocalDateStr(dateStr);
             return datesToKeep.includes(d);
         }
 
@@ -777,7 +789,7 @@
             // 1. CÁLCULO DE VISITAS E CHECKOUTS
             if (currentPeriod === 'all') {
                 if (isPintinhos) {
-                    visits = totals.uniqueVisits_pintinhos || 0;
+                    visits = totals.uniqueVisits_pintinhos || totals.pageViews_pintinhos || 0;
                     pageViews = totals.pageViews_pintinhos || 0;
                     checkouts = totals.checkoutOpens_pintinhos || 0;
                 } else {
@@ -790,7 +802,7 @@
                 dates.forEach(dStr => {
                     const d = daily[dStr] || {};
                     if (isPintinhos) {
-                        visits += (d.uniqueVisits_pintinhos || 0);
+                        visits += (d.uniqueVisits_pintinhos || d.pageViews_pintinhos || 0);
                         pageViews += (d.pageViews_pintinhos || 0);
                         checkouts += (d.checkoutOpens_pintinhos || 0);
                     } else {
@@ -801,7 +813,7 @@
                 });
             }
 
-            // 2. CÁLCULO DE VENDAS PAGAS
+            // 2. CÁLCULO DE VENDAS PAGAS - ATRIBUIÇÃO ESTRITA POR CAMPANHA
             const matchingSales = [];
             const historyList = Array.isArray(globalHistory) ? globalHistory : [];
 
@@ -810,7 +822,12 @@
                 if (!isDateMatch(sale.date || sale.created_at, dates)) return;
 
                 const itemsStr = (sale.items || []).join(' ').toLowerCase();
-                const isPintinhosSale = (sale.site === 'pintinhos') || itemsStr.includes('pintinho') || itemsStr.includes('manejo');
+                const mainItem = (sale.items && sale.items.length > 0) ? String(sale.items[0]).toLowerCase() : '';
+
+                // Uma venda pertence à campanha PINTINHOS se:
+                // - A origem registrada foi 'pintinhos' (sale.site === 'pintinhos')
+                // - OU o produto principal comprado (1º item) for Manual dos Pintinhos
+                const isPintinhosSale = (sale.site === 'pintinhos') || mainItem.includes('pintinho') || (mainItem.includes('manejo') && !mainItem.includes('cura') && !mainItem.includes('elite'));
 
                 if (isPintinhos && isPintinhosSale) {
                     salesCount++;
@@ -823,7 +840,7 @@
                 }
             });
 
-            // 3. CÁLCULO DE ABANDONOS
+            // 3. CÁLCULO DE ABANDONOS - ATRIBUIÇÃO ESTRITA POR CAMPANHA
             const matchingAbandons = [];
             const abandonsList = Array.isArray(globalAbandons) ? globalAbandons : [];
 
@@ -844,7 +861,7 @@
 
                 const prodStr = String(item.product || '').toLowerCase();
                 const reasonStr = String(item.reason || '').toLowerCase();
-                const isPintinhosAb = (item.site === 'pintinhos') || prodStr.includes('pintinho') || prodStr.includes('manejo') || reasonStr.includes('pintinho');
+                const isPintinhosAb = (item.site === 'pintinhos') || prodStr === 'ebook-pintinhos' || (prodStr.includes('pintinho') && !prodStr.includes('doencas'));
 
                 if (isPintinhos && isPintinhosAb) {
                     abandonsCount++;
