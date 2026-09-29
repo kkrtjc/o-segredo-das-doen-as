@@ -634,11 +634,11 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             cart.mainProduct.fullBumps = [
                 {
                     id: 'ebook-doencas',
-                    title: 'O SEGREDO DAS DOENÇAS AVÍCOLAS',
+                    title: 'GUIA COMPLETO DAS DOENÇAS',
                     price: 49.90,
                     priceCard: 49.90,
                     image: 'capadasdoencas.webp',
-                    description: '<span style="color: #ff4444;"><strong>🛡️ O Guia de Proteção Definitivo:</strong></span> Aprenda a identificar, tratar e curar mais de 10 doenças graves em minutos. <span style="color: #4ade80;"><strong>Não espere a primeira ave adoecer para agir.</strong></span> Leve por apenas R$ 49,90 nesta oferta exclusiva.',
+                    description: 'Com o <strong>Guia Completo das Doenças</strong> você aprende a <strong style="color: #4ade80;">identificar e tratar mais de 10 tipos diferentes de doenças</strong> nas galinhas. O tratamento que os maiores criadores usam em suas aves. <span style="color: #ff4444;"><strong>Não espere sua ave adoecer!</strong></span>',
                     tag: 'OFERTA ÚNICA'
                 },
                 {
@@ -805,10 +805,12 @@ function renderOrderBumps(bumps) {
         if (!desc) {
             desc = isManejo 
                 ? '<span style="color: #ff4444;"><strong>8 em cada 10 pintinhos morrem antes dos 20 dias.</strong></span> Temperatura errada, ração imprópria, ambiente inapropriado. <span style="color: #4ade80;"><strong>O manual te ensina o passo a passo completo</strong></span> do nascimento à fase adulta.' 
-                : '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até 60% na ração</strong> das suas aves.';
+                : (isDoencas 
+                    ? 'Com o <strong>Guia Completo das Doenças</strong> você aprende a <strong style="color: #4ade80;">identificar e tratar mais de 10 tipos diferentes de doenças</strong> nas galinhas. O tratamento que os maiores criadores usam em suas aves. <span style="color: #ff4444;"><strong>Não espere sua ave adoecer!</strong></span>'
+                    : '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até 60% na ração</strong> das suas aves.');
         }
 
-        const bumpLabel = isManejo ? 'MANUAL DE ELITE<br>DOS PINTINHOS' : (isDoencas ? 'O SEGREDO DAS DOENÇAS' : 'TABELA DE RAÇÃO');
+        const bumpLabel = isManejo ? 'MANUAL DE ELITE<br>DOS PINTINHOS' : (isDoencas ? 'GUIA COMPLETO<br>DAS DOENÇAS' : 'TABELA DE RAÇÃO');
 
         return `
             <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
@@ -1318,7 +1320,7 @@ function setupPixUpsellModal() {
     if (isCombo) {
         // Custom Upsell: Offer Manual de Manejo de Pintinhos for + R$ 40,00 (was R$ 99,90) -> Total R$ 129,90
         if (titleEl) titleEl.innerText = '⚠️ ESPERE! NÃO FINALIZE ANTES DE VER ISSO...';
-        if (descEl) descEl.innerHTML = 'Você garantiu a cura das suas aves adultas. Mas você sabia que <strong style="color: #f87171;">8 em cada 10 pintinhos morrem</strong> antes dos 20 dias por erros simples de calor e manejo?';
+        if (descEl) descEl.innerHTML = 'Você garantiu o tratamento e a proteção das suas aves adultas. Mas você sabia que <strong style="color: #f87171;">8 em cada 10 pintinhos morrem</strong> antes dos 20 dias por erros simples de calor e manejo?';
         if (priceEl) priceEl.innerHTML = 'Por + R$ 40,00';
         if (subtextEl) subtextEl.innerText = 'Leve os dois materiais juntos:';
         if (listEl) {
