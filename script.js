@@ -633,15 +633,6 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         } else if (productId === 'ebook-pintinhos') {
             cart.mainProduct.fullBumps = [
                 {
-                    id: 'ebook-doencas',
-                    title: 'GUIA COMPLETO DAS DOENÇAS',
-                    price: 49.90,
-                    priceCard: 49.90,
-                    image: 'capadasdoencas.webp',
-                    description: 'Com o <strong>Guia Completo das Doenças</strong> você aprende a <strong style="color: #4ade80;">identificar e tratar mais de 10 tipos diferentes de doenças</strong> nas galinhas. O tratamento que os maiores criadores usam em suas aves. <span style="color: #ff4444;"><strong>Não espere sua ave adoecer!</strong></span>',
-                    tag: 'OFERTA ÚNICA'
-                },
-                {
                     id: 'bump-6361',
                     title: 'TABELA DE RAÇÃO PRÁTICA',
                     price: 19.90,
@@ -926,21 +917,32 @@ function updateTotal() {
             let bumpPriceForPix = bump.price || 0;
             let bumpPriceForCard = bump.price || 0; // Fixado pelo admin
 
-            if (window.acceptedPixUpsell && (currentPaymentMethod === 'pix' || currentPaymentMethod === 'card')) {
-                const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
-                if (isCombo) {
-                    if (bump.id === 'ebook-manejo') {
-                        bumpPriceForPix = 40.00;
-                        bumpPriceForCard = 40.00;
-                    }
-                } else {
-                    if (bump.id === 'ebook-manejo' || bump.id === 'ebook-doencas') {
-                        bumpPriceForPix = window.originalHadRacao ? 30.10 : (window.originalHadManejo ? 49.90 : 50.00);
-                        bumpPriceForCard = window.originalHadRacao ? 30.10 : (window.originalHadManejo ? 49.90 : 50.00);
+            if (window.acceptedPixUpsell && (currentPaymentMethod === 'pix' || currentPaymentMethod === 'card' || currentPaymentMethod === 'boleto')) {
+                if (cart.mainProduct.id === 'ebook-pintinhos') {
+                    if (bump.id === 'ebook-doencas') {
+                        bumpPriceForPix = 49.90;
+                        bumpPriceForCard = 49.90;
                     }
                     if (bump.id === 'bump-6361') {
-                        bumpPriceForPix = window.originalHadManejo ? 9.90 : 0.00;
-                        bumpPriceForCard = window.originalHadManejo ? 9.90 : 0.00;
+                        bumpPriceForPix = 19.90;
+                        bumpPriceForCard = 19.90;
+                    }
+                } else {
+                    const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
+                    if (isCombo) {
+                        if (bump.id === 'ebook-manejo') {
+                            bumpPriceForPix = 40.00;
+                            bumpPriceForCard = 40.00;
+                        }
+                    } else {
+                        if (bump.id === 'ebook-manejo' || bump.id === 'ebook-doencas') {
+                            bumpPriceForPix = window.originalHadRacao ? 30.10 : (window.originalHadManejo ? 49.90 : 50.00);
+                            bumpPriceForCard = window.originalHadRacao ? 30.10 : (window.originalHadManejo ? 49.90 : 50.00);
+                        }
+                        if (bump.id === 'bump-6361') {
+                            bumpPriceForPix = window.originalHadManejo ? 9.90 : 0.00;
+                            bumpPriceForCard = window.originalHadManejo ? 9.90 : 0.00;
+                        }
                     }
                 }
             }
@@ -1312,6 +1314,48 @@ function setupPixUpsellModal() {
     const rejectBtn = document.getElementById('pix-upsell-reject-btn');
     const originalPriceEl = document.getElementById('pix-upsell-original-price');
     const savingsEl = document.getElementById('pix-upsell-savings');
+    const imgEl = document.getElementById('pix-upsell-img');
+    const prodCategoryEl = document.getElementById('pix-upsell-prod-category');
+    const prodTitleEl = document.getElementById('pix-upsell-prod-title');
+    const ctaBtnText = document.getElementById('pix-upsell-cta-text');
+
+    if (cart.mainProduct && cart.mainProduct.id === 'ebook-pintinhos') {
+        if (titleEl) titleEl.innerText = '⚠️ ESPERE! NÃO FINALIZE ANTES DE VER ISSO...';
+        if (descEl) descEl.innerHTML = 'Aproveite esta condição única de balcão para levar o guia completo das doenças das galinhas.';
+        if (imgEl) {
+            imgEl.src = 'capadasdoencas.webp';
+            imgEl.alt = 'Guia Completo das Doenças';
+        }
+        if (prodCategoryEl) prodCategoryEl.innerText = 'GUIA COMPLETO';
+        if (prodTitleEl) prodTitleEl.innerText = 'O Segredo das Doenças';
+        if (priceEl) priceEl.innerHTML = '+ R$ 49,90';
+        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 89,90';
+        if (savingsEl) savingsEl.innerText = '🔥 ECONOMIA DE R$ 40,00';
+        if (subtextEl) subtextEl.innerText = 'Aprenda sobre as doenças agora:';
+        if (listEl) {
+            listEl.innerHTML = `
+                <div style="margin-bottom: 2px; display: flex; align-items: flex-start; gap: 5px; text-align: left;">
+                    <span style="color: #10b981; font-weight: 900; flex-shrink: 0; line-height: 1.3;">✓</span>
+                    <span style="flex: 1; min-width: 0; line-height: 1.3;">Mais de 10 doenças catalogadas</span>
+                </div>
+                <div style="margin-bottom: 2px; display: flex; align-items: flex-start; gap: 5px; text-align: left;">
+                    <span style="color: #10b981; font-weight: 900; flex-shrink: 0; line-height: 1.3;">✓</span>
+                    <span style="flex: 1; min-width: 0; line-height: 1.3;">Protocolo de vermifugação</span>
+                </div>
+                <div style="margin-bottom: 2px; display: flex; align-items: flex-start; gap: 5px; text-align: left;">
+                    <span style="color: #10b981; font-weight: 900; flex-shrink: 0; line-height: 1.3;">✓</span>
+                    <span style="flex: 1; min-width: 0; line-height: 1.3;">Prevenção</span>
+                </div>
+                <div style="display: flex; align-items: flex-start; gap: 5px; text-align: left;">
+                    <span style="color: #10b981; font-weight: 900; flex-shrink: 0; line-height: 1.3;">✓</span>
+                    <span style="flex: 1; min-width: 0; line-height: 1.3;">Tratamento</span>
+                </div>
+            `;
+        }
+        if (ctaBtnText) ctaBtnText.innerText = 'Aprender sobre as doenças';
+        if (rejectBtn) rejectBtn.innerText = 'Levar apenas o manejo de pintinhos';
+        return;
+    }
 
     const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
     const isScenario2 = cart.bumps.length === 1 && cart.bumps.includes('bump-6361');
@@ -1406,10 +1450,11 @@ window.acceptPixUpsell = function() {
         if (!cart.bumps.includes('ebook-doencas')) cart.bumps.push('ebook-doencas');
     } else {
         if (!cart.bumps.includes('ebook-manejo')) cart.bumps.push('ebook-manejo');
+        if (!cart.bumps.includes('bump-6361')) cart.bumps.push('bump-6361');
     }
-    if (!cart.bumps.includes('bump-6361')) cart.bumps.push('bump-6361');
     
-    document.getElementById('pix-upsell-modal').classList.add('hidden');
+    const upsellModal = document.getElementById('pix-upsell-modal');
+    if (upsellModal) upsellModal.classList.add('hidden');
     updateTotal();
     handlePayment(currentPaymentMethod); // Use o método atual ao invés de forçar pix
 };
@@ -1417,7 +1462,8 @@ window.acceptPixUpsell = function() {
 window.rejectPixUpsell = function() {
     window.bypassPixUpsell = true;
     window.acceptedPixUpsell = false;
-    document.getElementById('pix-upsell-modal').classList.add('hidden');
+    const upsellModal = document.getElementById('pix-upsell-modal');
+    if (upsellModal) upsellModal.classList.add('hidden');
     handlePayment(currentPaymentMethod); // Use o método atual
 };
 
@@ -1460,19 +1506,25 @@ async function handlePayment(method) {
     console.log('[UPSELL DEBUG] product:', cart.mainProduct ? cart.mainProduct.id : 'none');
     console.log('[UPSELL DEBUG] bumps:', cart.bumps);
     
-    // Show upsell if they have chosen less than both bumps (i.e. bumps.length < 2)
-    const shouldShowPixUpsell = !window.bypassPixUpsell && (method === 'pix' || method === 'card') && cart.mainProduct && (cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite' || cart.mainProduct.id === 'ebook-doencas') && !cart.bumps.includes('ebook-manejo');
+    // Show upsell if not bypassed
+    const shouldShowPixUpsell = !window.bypassPixUpsell && (method === 'pix' || method === 'card' || method === 'boleto') && cart.mainProduct && (
+        ((cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite' || cart.mainProduct.id === 'ebook-doencas') && !cart.bumps.includes('ebook-manejo')) ||
+        (cart.mainProduct.id === 'ebook-pintinhos' && !cart.bumps.includes('ebook-doencas'))
+    );
     
     console.log('[UPSELL DEBUG] shouldShowPixUpsell:', shouldShowPixUpsell);
 
     if (shouldShowPixUpsell) {
         captureAbandonedLead({
             type: 'upsell_modal_shown',
-            reason: 'Abriu formulário e parou na oferta de Pintinhos'
+            reason: cart.mainProduct.id === 'ebook-pintinhos' ? 'Abriu formulário e parou na oferta de Doencas' : 'Abriu formulário e parou na oferta de Pintinhos'
         });
         setupPixUpsellModal();
-        document.getElementById('pix-upsell-modal').classList.remove('hidden');
-        return; // Stops the generation, waits for user action
+        const upsellModal = document.getElementById('pix-upsell-modal');
+        if (upsellModal) {
+            upsellModal.classList.remove('hidden');
+            return; // Stops the generation, waits for user action
+        }
     }
 
 
@@ -1512,12 +1564,12 @@ async function handlePayment(method) {
                 };
             } else {
                 // Fallback de emergência (mesmo do updateTotal)
-                const fallbackPrice = id === 'ebook-manejo' ? 49.9 : 59.9;
+                const fallbackPrice = (id === 'ebook-manejo' || id === 'ebook-doencas') ? 49.9 : 59.9;
                 b = { 
                     id: id, 
-                    title: id === 'ebook-manejo' ? 'Manual de Pintinhos' : 'Ebook Adicional',
+                    title: id === 'ebook-manejo' ? 'Manual de Pintinhos' : (id === 'ebook-doencas' ? 'Guia Completo das Doenças' : 'Ebook Adicional'),
                     price: fallbackPrice, 
-                    priceCard: id === 'ebook-manejo' ? 49.9 : 99.0 
+                    priceCard: id === 'ebook-manejo' ? 49.9 : (id === 'ebook-doencas' ? 49.9 : 99.0) 
                 };
             }
         }
@@ -1526,14 +1578,19 @@ async function handlePayment(method) {
             let bumpPrice = b.price; // Fixado pelo admin para não aumentar no cartão
             
             // --- PIX/CARD UPSELL RECAPTURE PRICE OVERRIDE ---
-            if (window.acceptedPixUpsell && (method === 'pix' || method === 'card')) {
-                const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
-                if (isCombo) {
-                    if (b.id === 'ebook-manejo') bumpPrice = 40.00;
-                    if (b.id === 'bump-6361') bumpPrice = 0.00;
+            if (window.acceptedPixUpsell && (method === 'pix' || method === 'card' || method === 'boleto')) {
+                if (cart.mainProduct.id === 'ebook-pintinhos') {
+                    if (b.id === 'ebook-doencas') bumpPrice = 49.90;
+                    if (b.id === 'bump-6361') bumpPrice = 19.90;
                 } else {
-                    if (b.id === 'ebook-manejo' || b.id === 'ebook-doencas') bumpPrice = 40.00;
-                    if (b.id === 'bump-6361') bumpPrice = 0.00;
+                    const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
+                    if (isCombo) {
+                        if (b.id === 'ebook-manejo') bumpPrice = 40.00;
+                        if (b.id === 'bump-6361') bumpPrice = 0.00;
+                    } else {
+                        if (b.id === 'ebook-manejo' || b.id === 'ebook-doencas') bumpPrice = 40.00;
+                        if (b.id === 'bump-6361') bumpPrice = 0.00;
+                    }
                 }
             }
 
