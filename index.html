@@ -5584,7 +5584,7 @@
 
                                     <div class="price-summary-box">
 
-                                        <div id="checkout-order-summary" style="display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 8px; text-align: left; font-size: 0.85rem; color: #4b5563;">
+                                        <div id="checkout-order-summary" style="display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px; text-align: left; font-size: 0.85rem; color: #cbd5e1;">
 
                                         </div>
 
@@ -5607,6 +5607,36 @@
                                     <button type="button" id="btn-pay-card" class="ck-btn-checkout" style="display: none; width: 100%; margin-top: 12px;">🔒 FINALIZAR PAGAMENTO</button>
 
                                     <button type="button" id="btn-pay-boleto" class="ck-btn-checkout" style="display: none; width: 100%; margin-top: 12px;">📄 GERAR BOLETO BANCÁRIO</button>
+
+                                    <!-- Trust & Security Badges logo abaixo dos botões de pagar -->
+                                    <div class="ck-security-trust-box" style="margin-top: 14px; text-align: center;">
+                                        <p style="text-align: center; font-size: 0.74rem; color: #94a3b8; margin: 0 0 10px 0; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                            <i class="fa-solid fa-lock" style="color: #22c55e;"></i> Seus dados estão protegidos com criptografia de ponta.
+                                        </p>
+
+                                        <!-- Ícones de Pagamento -->
+                                        <div style="display: flex; justify-content: center; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 10px;">
+                                            <img src="assets/visa.png" style="height: 20px;" alt="Visa" loading="lazy">
+                                            <img src="assets/mastercard.png" style="height: 20px;" alt="Mastercard" loading="lazy">
+                                            <img src="assets/pix.png" style="height: 18px;" alt="Pix" loading="lazy">
+                                            <img src="assets/mercado-pago.png" style="height: 20px;" alt="Mercado Pago" loading="lazy">
+                                        </div>
+
+                                        <!-- Selos de Garantia e Segurança -->
+                                        <div style="display: flex; justify-content: center; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                            <span style="font-size: 0.72rem; color: #22c55e; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                                                <i class="fa-solid fa-lock"></i> Compra Segura
+                                            </span>
+                                            <span style="font-size: 0.7rem; color: #475569;">|</span>
+                                            <span style="font-size: 0.72rem; color: #22c55e; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                                                <i class="fa-solid fa-shield-halved"></i> SSL 256-bit
+                                            </span>
+                                            <span style="font-size: 0.7rem; color: #475569;">|</span>
+                                            <span style="font-size: 0.72rem; color: #22c55e; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                                                <i class="fa-solid fa-check-double"></i> Garantia 7 dias
+                                            </span>
+                                        </div>
+                                    </div>
 
                                 </div>
 
@@ -5947,43 +5977,7 @@
 
 
 
-        <!-- 7. Footer Geral do Checkout -->
 
-        <div class="ck-section" style="background-color: transparent; border: none; box-shadow: none; padding-top: 0; max-width: 600px; margin: 0 auto;">
-
-            <p style="text-align: center; font-size: 0.75rem; color: #6b7280; margin-bottom: 10px;">
-
-                <i class="fa-solid fa-lock" style="color: #22c55e;"></i> Seus dados estão protegidos com criptografia de ponta.
-
-            </p>
-
-            <div style="display: flex; justify-content: center; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 10px;">
-
-                <img src="assets/visa.png" style="height: 22px;" alt="Visa" loading="lazy">
-
-                <img src="assets/mastercard.png" style="height: 22px;" alt="Mastercard" loading="lazy">
-
-                <img src="assets/pix.png" style="height: 18px;" alt="Pix" loading="lazy">
-
-                <img src="assets/mercado-pago.png" style="height: 22px;" alt="Mercado Pago" loading="lazy">
-
-            </div>
-
-            <div style="display: flex; justify-content: center; gap: 12px; align-items: center; margin-bottom: 12px;">
-
-                <span style="font-size: 0.7rem; color: #16a34a; font-weight: 700;"><i class="fa-solid fa-lock"></i> Compra Segura</span>
-
-                <span style="font-size: 0.7rem; color: #d1d5db;">|</span>
-
-                <span style="font-size: 0.7rem; color: #16a34a; font-weight: 700;"><i class="fa-solid fa-shield-halved"></i> SSL 256-bit</span>
-
-                <span style="font-size: 0.7rem; color: #d1d5db;">|</span>
-
-                <span style="font-size: 0.7rem; color: #16a34a; font-weight: 700;"><i class="fa-solid fa-check-double"></i> Garantia 7 dias</span>
-
-            </div>
-
-        </div>
 
 
 
