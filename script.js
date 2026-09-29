@@ -965,31 +965,76 @@ function updateTotal() {
     const mainCardPriceForInst = baseCardPrice;
 
     // Atualiza Resumo Dinâmico do Pedido
-    let eliteHtml = (currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto')
-        ? `<div style="display: flex; justify-content: space-between; font-weight: 500;"><span style="font-weight:700;">Protocolo Elite</span><span style="text-align: right; line-height: 1.2;"><span style="font-size: 0.85rem; color: #10b981; font-weight: 800;">${formatBRL(basePrice)}</span><br><span style="color: #cbd5e1; font-size: 0.72rem;">ou 4x de ${formatBRL(mainCardPriceForInst/4)} sem juros</span></span></div>`
-        : `<div style="display: flex; justify-content: space-between; font-weight: 500;"><span style="font-weight:700;">Protocolo Elite</span><span style="text-align: right; line-height: 1.2;"><span style="color: #10b981; font-size: 0.85rem; font-weight: 800;">4x de ${formatBRL(mainCardPriceForInst/4)} sem juros</span><br><span style="font-size: 0.72rem; color: #94a3b8;">(Total: ${formatBRL(baseCardPrice)})</span></span></div>`;
-        
-    let summaryHtml = eliteHtml;
+    let mainProductTitle = 'Manual de Manejo de Pintinhos';
+    let mainProductImg = 'capadospintinhos.webp';
+
+    if (cart.mainProduct) {
+        if (cart.mainProduct.id === 'ebook-pintinhos') {
+            mainProductTitle = 'Manual de Manejo de Pintinhos';
+            mainProductImg = 'capadospintinhos.webp';
+        } else if (cart.mainProduct.id === 'ebook-doencas') {
+            mainProductTitle = 'O Segredo das Doenças';
+            mainProductImg = 'capadasdoencas.webp';
+        } else if (cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite') {
+            mainProductTitle = 'Protocolo Elite Completo';
+            mainProductImg = 'logo.webp';
+        } else {
+            mainProductTitle = cart.mainProduct.title || 'Manual de Manejo de Pintinhos';
+            mainProductImg = (window.location.pathname.includes('pintinhos') || cart.mainProduct.title?.includes('Pintinhos')) ? 'capadospintinhos.webp' : 'capadasdoencas.webp';
+        }
+    }
+
+    let summaryHtml = `
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+                <img src="${mainProductImg}" alt="${mainProductTitle}" style="width: 36px; height: 36px; border-radius: 6px; object-fit: cover; border: 1px solid rgba(255,255,255,0.15); flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">
+                <div style="min-width: 0;">
+                    <span style="font-weight: 800; color: #ffffff; font-size: 0.85rem; line-height: 1.25; display: block; word-break: break-word;">${mainProductTitle}</span>
+                </div>
+            </div>
+            <div style="text-align: right; line-height: 1.2; flex-shrink: 0;">
+                <span style="font-size: 0.95rem; color: #10b981; font-weight: 800;">${formatBRL(basePrice)}</span>
+                ${currentPaymentMethod === 'card' 
+                    ? `<br><span style="font-size: 0.68rem; color: #cbd5e1;">ou 4x de ${formatBRL(mainCardPriceForInst/4)}</span>` 
+                    : ''
+                }
+            </div>
+        </div>
+    `;
     
     cart.bumps.forEach(id => {
         let bump = cart.mainProduct.fullBumps?.find(b => b.id === id);
         if (!bump && window.siteConfig) bump = window.siteConfig.products[id];
         if (!bump) bump = prefetchedProducts[id];
         
-        let bumpTitle = bump?.title || 'Oferta Adicional';
+        let bumpTitle = bump?.title || (id === 'ebook-doencas' ? 'Guia Completo das Doenças' : (id === 'bump-6361' ? 'Tabela de Ração Prática' : 'Oferta Adicional'));
+        let bumpImg = (id === 'ebook-doencas' || id.includes('doencas')) ? 'capadasdoencas.webp' : ((id === 'bump-6361' || id.includes('racao')) ? 'tabela_racao_bump.webp' : 'capadospintinhos.webp');
         let priceForMethod = bump?.price || 49.90;
         
-        if (window.acceptedPixUpsell && (currentPaymentMethod === 'pix' || currentPaymentMethod === 'card')) {
-            const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
-            if (isCombo) {
-                if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 49.90;
-            } else {
-                if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 30.10;
+        if (window.acceptedPixUpsell && (currentPaymentMethod === 'pix' || currentPaymentMethod === 'card' || currentPaymentMethod === 'boleto')) {
+            if (cart.mainProduct.id === 'ebook-pintinhos') {
+                if (id === 'ebook-doencas') priceForMethod = 49.90;
                 if (id === 'bump-6361') priceForMethod = 19.90;
+            } else {
+                const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
+                if (isCombo) {
+                    if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 49.90;
+                } else {
+                    if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 30.10;
+                    if (id === 'bump-6361') priceForMethod = 19.90;
+                }
             }
         }
 
-        summaryHtml += `<div style="display: flex; justify-content: space-between; color: #16a34a; font-weight: 500;"><span>+ ${bumpTitle}</span><span>${formatBRL(priceForMethod)}</span></div>`;
+        summaryHtml += `
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(255,255,255,0.08);">
+                <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+                    <img src="${bumpImg}" alt="${bumpTitle}" style="width: 26px; height: 26px; border-radius: 4px; object-fit: cover; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.1);">
+                    <span style="color: #34d399; font-weight: 700; font-size: 0.8rem; line-height: 1.2;">+ ${bumpTitle}</span>
+                </div>
+                <span style="color: #34d399; font-weight: 800; font-size: 0.85rem; flex-shrink: 0;">${formatBRL(priceForMethod)}</span>
+            </div>
+        `;
     });
 
     const summaryEl = document.getElementById('checkout-order-summary');
@@ -1202,6 +1247,8 @@ function closeCheckout() {
         btnPix.style.opacity = '1';
     }
 }
+window.closeCheckout = closeCheckout;
+window.attemptCloseCheckout = closeCheckout;
 
 // --- CHECKOUT SINGLE STEP FUNNELS (Previous steps were merged) ---
 
