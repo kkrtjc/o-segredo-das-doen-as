@@ -932,6 +932,7 @@
                     ? rawCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') 
                     : (rawCpf || 'Cadastrado no checkout');
                 const senhaAcesso = sale.password || (rawCpf.length >= 4 ? rawCpf.slice(0, 4) : '4 primeiros dígitos');
+                const itens = (sale.items || []).join(' + ') || 'Manual de Manejo de Pintinhos';
                 const appLink = 'https://protocolo-elite.pages.dev/?login=1';
 
                 const fullMsg = `Olá, ${nome}! 🐣🐔\n\nSeu acesso ao *Protocolo Elite* está liberado com sucesso!\n\n📱 *Link de Acesso Direto:*\n${appLink}\n\n🔑 *Seus Dados de Login:*\n• *Login (CPF):* ${formattedCpf}\n${email ? `• *Ou pelo E-mail:* ${email}\n` : ''}• *Senha de Acesso:* ${senhaAcesso}\n\n👉 _Basta clicar no link acima para abrir a tela de login. Digite seu CPF e sua senha e clique em Entrar!_\n\n⭐ *Grupo VIP dos Criadores:*\nhttps://chat.whatsapp.com/JXkGitHbLd3AeY8LqiLdYB\n\nQualquer dúvida estou à disposição por aqui!`;
