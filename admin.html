@@ -927,8 +927,15 @@
                 const cleanPhone = parsePhone(phone);
                 const dObj = new Date(sale.date || Date.now());
                 const dStr = dObj.toLocaleDateString() + ' às ' + dObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                const itens = (sale.items || []).join(' + ') || 'Produto Elite';
-                const wppMsg = encodeURIComponent(`Olá ${nome.split(' ')[0]}! Aqui é da equipe do Protocolo Elite. Parabéns pela sua compra do ${itens}! Qualquer dúvida com seu acesso estou por aqui.`);
+                const rawCpf = (sale.cpf || sale.customer?.cpf || '').replace(/\D/g, '');
+                const formattedCpf = rawCpf.length === 11 
+                    ? rawCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') 
+                    : (rawCpf || 'Cadastrado no checkout');
+                const senhaAcesso = sale.password || (rawCpf.length >= 4 ? rawCpf.slice(0, 4) : '4 primeiros dígitos');
+                const appLink = 'https://protocolo-elite.pages.dev/?login=1';
+
+                const fullMsg = `Olá, ${nome}! 🐣🐔\n\nSeu acesso ao *Protocolo Elite* está liberado com sucesso!\n\n📱 *Link de Acesso Direto:*\n${appLink}\n\n🔑 *Seus Dados de Login:*\n• *Login (CPF):* ${formattedCpf}\n${email ? `• *Ou pelo E-mail:* ${email}\n` : ''}• *Senha de Acesso:* ${senhaAcesso}\n\n👉 _Basta clicar no link acima para abrir a tela de login. Digite seu CPF e sua senha e clique em Entrar!_\n\n⭐ *Grupo VIP dos Criadores:*\nhttps://chat.whatsapp.com/JXkGitHbLd3AeY8LqiLdYB\n\nQualquer dúvida estou à disposição por aqui!`;
+                const wppMsg = encodeURIComponent(fullMsg);
 
                 html += `
                 <div class="list-item">
@@ -936,8 +943,11 @@
                         <span>${nome} ${methodBadge}</span>
                         <span class="list-item-right-price">${formatBRL(sale.total)}</span>
                     </div>
-                    <div class="list-item-sub"><i class="fa-regular fa-envelope"></i> ${email}</div>
+                    <div class="list-item-sub"><i class="fa-regular fa-envelope"></i> ${email || 'Sem e-mail'}</div>
                     <div class="list-item-sub"><i class="fa-solid fa-phone"></i> ${phone || 'Sem telefone'}</div>
+                    <div class="list-item-sub" style="margin-top: 4px; color: #38bdf8; font-size: 12px; font-family: monospace;">
+                        <i class="fa-solid fa-key"></i> CPF: <strong>${formattedCpf}</strong> | Senha: <strong style="color: #fbbf24;">${senhaAcesso}</strong>
+                    </div>
                     <div class="list-item-sub" style="margin-top: 5px; color: var(--accent-gold); font-weight: 700;">
                         <i class="fa-solid fa-box"></i> Itens: ${itens}
                     </div>
