@@ -1511,7 +1511,7 @@
                 return parseInt(item || 0, 10);
             };
 
-            const video3s = getVideoMetric('video_3_sec_watched_actions');
+            const video3s = getVideoMetric('video_play_actions') || getActionValue(['video_view']);
             const videoP25 = getVideoMetric('video_p25_watched_actions');
             const videoP50 = getVideoMetric('video_p50_watched_actions');
             const videoP75 = getVideoMetric('video_p75_watched_actions');
@@ -1563,11 +1563,12 @@
             document.getElementById('meta-camp-id').textContent = `ID: ${campId}`;
 
             try {
-                // 1. Metadados e Insights da Campanha
-                const [campRes, insightsRes, adsRes] = await Promise.all([
+                // 1. Metadados e Insights da Campanha + Lista de Anúncios + Insights de Todos os Anúncios em lote (level=ad)
+                const [campRes, insightsRes, adsRes, adInsightsRes] = await Promise.all([
                     fetch(`${META_BASE_URL}/${campId}?access_token=${token}&fields=id,name,status,daily_budget,lifetime_budget`),
                     fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&date_preset=${currentMetaPeriod}&fields=spend,impressions,reach,frequency,clicks,inline_link_clicks,cpc,cpm,actions,cost_per_action_type`),
-                    fetch(`${META_BASE_URL}/${campId}/ads?access_token=${token}&fields=id,name,status,creative{thumbnail_url,image_url}&limit=50`)
+                    fetch(`${META_BASE_URL}/${campId}/ads?access_token=${token}&fields=id,name,status,creative{thumbnail_url,image_url}&limit=100`),
+                    fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&level=ad&date_preset=${currentMetaPeriod}&fields=ad_id,ad_name,spend,impressions,reach,frequency,clicks,inline_link_clicks,cpc,cpm,actions,cost_per_action_type,video_play_actions,video_p25_watched_actions,video_p50_watched_actions,video_p75_watched_actions,video_p100_watched_actions&limit=100`)
                 ]);
 
                 if (!campRes.ok) {
@@ -1583,27 +1584,18 @@
                 const adsJson = adsRes.ok ? await adsRes.json() : { data: [] };
                 const rawAds = adsJson.data || [];
 
-                // 2. Insights dos anúncios
-                const adsWithInsights = await Promise.all(
-                    rawAds.map(async (ad) => {
-                        try {
-                            const adInsRes = await fetch(`${META_BASE_URL}/${ad.id}/insights?access_token=${token}&date_preset=${currentMetaPeriod}&fields=spend,impressions,reach,frequency,clicks,inline_link_clicks,cpc,actions,cost_per_action_type,video_3_sec_watched_actions,video_p25_watched_actions,video_p50_watched_actions,video_p75_watched_actions,video_p100_watched_actions`);
-                            const adInsJson = adInsRes.ok ? await adInsRes.json() : { data: [] };
-                            const rawAdIns = (adInsJson.data && adInsJson.data[0]) ? adInsJson.data[0] : {};
-                            return {
-                                ...ad,
-                                thumbnail: ad.creative?.thumbnail_url || ad.creative?.image_url || null,
-                                insights: formatMetaInsights(rawAdIns)
-                            };
-                        } catch(e) {
-                            return {
-                                ...ad,
-                                thumbnail: ad.creative?.thumbnail_url || ad.creative?.image_url || null,
-                                insights: formatMetaInsights({})
-                            };
-                        }
-                    })
-                );
+                const adInsightsJson = adInsightsRes.ok ? await adInsightsRes.json() : { data: [] };
+                const rawAdInsightsList = adInsightsJson.data || [];
+
+                // 2. Mapear anúncios com os insights retornados da Meta em lote
+                const adsWithInsights = rawAds.map((ad) => {
+                    const matchedInsight = rawAdInsightsList.find(i => String(i.ad_id) === String(ad.id));
+                    return {
+                        ...ad,
+                        thumbnail: ad.creative?.thumbnail_url || ad.creative?.image_url || null,
+                        insights: formatMetaInsights(matchedInsight || {})
+                    };
+                });
 
                 // Ordenar: ATIVOS primeiro, depois maior gasto
                 adsWithInsights.sort((a, b) => {
