@@ -514,15 +514,15 @@ adminRoutes.post('/verify-access', async (c) => {
                         return '';
                     }).join(' ');
                     
-                    // Compra principal (Protocolo Elite / Doenças) sempre inclui Doenças + Tabela de Ração
-                    if (titleStr.includes('doença') || titleStr.includes('doenca') || titleStr.includes('elite') || titleStr.includes('protocolo') || titleStr.includes('combo') || titleStr.includes('completo') || titleStr.includes('acesso')) {
+                    // 1. Guia das Doenças
+                    if (titleStr.includes('doença') || titleStr.includes('doenca') || titleStr.includes('cura das aves') || titleStr.includes('elite') || titleStr.includes('protocolo') || titleStr.includes('combo')) {
                         productsSet.add('ebook-doencas');
+                    }
+                    // 2. Tabela de Ração (apenas se comprou o bump de ração OU o combo completo)
+                    if (titleStr.includes('tabela') || titleStr.includes('ração') || titleStr.includes('racao') || titleStr.includes('bump') || titleStr.includes('combo-plataforma') || titleStr.includes('combo completo') || titleStr.includes('acesso completo')) {
                         productsSet.add('tabela-racao');
                     }
-                    if (titleStr.includes('tabela') || titleStr.includes('ração') || titleStr.includes('racao') || titleStr.includes('bump')) {
-                        productsSet.add('tabela-racao');
-                    }
-                    // Manejo de Pintinhos apenas se comprou o upsell de pintinhos
+                    // 3. Manejo de Pintinhos (apenas se comprou o manual de pintinhos OU combo elite)
                     if (titleStr.includes('manejo') || titleStr.includes('pintinho') || titleStr.includes('combo-elite')) {
                         productsSet.add('ebook-manejo');
                     }
