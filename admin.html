@@ -381,7 +381,37 @@
         .meta-kpi-card .val { font-size: 16px; font-weight: 900; color: #fff; }
         .meta-kpi-card.green .val { color: var(--accent-green); }
         .meta-kpi-card.gold .val { color: var(--accent-gold); }
-        .meta-kpi-card.blue .val { color: #38bdf8; }
+        /* CARD DE SALDO E FINANCEIRO DA CONTA META */
+        .meta-billing-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(15, 23, 42, 0.85) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            border-radius: 20px; padding: 16px 18px; margin-bottom: 18px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            display: flex; justify-content: space-between; align-items: center; gap: 14px;
+        }
+        @media (max-width: 480px) {
+            .meta-billing-card { flex-direction: column; align-items: stretch; text-align: left; gap: 12px; }
+        }
+        .meta-billing-left { flex: 1; }
+        .meta-billing-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 10px; font-weight: 800; text-transform: uppercase;
+            color: #34d399; margin-bottom: 4px; letter-spacing: 0.5px;
+        }
+        .meta-billing-balance {
+            font-size: 26px; font-weight: 900; color: #fff; letter-spacing: -0.5px;
+        }
+        .meta-billing-sub {
+            font-size: 11px; color: var(--text-muted); margin-top: 3px; font-weight: 600;
+        }
+        .btn-add-funds {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #fff; border: none; padding: 12px 18px; border-radius: 14px;
+            font-size: 13px; font-weight: 800; cursor: pointer; text-decoration: none;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35); transition: all 0.2s;
+        }
+        .btn-add-funds:active { transform: scale(0.96); }
 
         .meta-alert-warning {
             background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4);
@@ -667,7 +697,22 @@
                     <button class="period-pill" onclick="setMetaPeriod('last_7d', this)">7 Dias</button>
                     <button class="period-pill" onclick="setMetaPeriod('this_month', this)">Este Mês</button>
                     <button class="period-pill" onclick="setMetaPeriod('last_30d', this)">30 Dias</button>
-                    <button class="period-pill active" onclick="setMetaPeriod('maximum', this)">Máximo</button>
+                </div>
+
+                <!-- CARD DE SALDO E RECARGA DA CONTA META -->
+                <div class="meta-billing-card" id="meta-billing-card">
+                    <div class="meta-billing-left">
+                        <div class="meta-billing-badge">
+                            <i class="fa-solid fa-wallet"></i> Saldo na Conta de Anúncios
+                        </div>
+                        <div class="meta-billing-balance" id="meta-account-balance">R$ --,--</div>
+                        <div class="meta-billing-sub" id="meta-account-sub">
+                            <i class="fa-solid fa-circle-notch fa-spin"></i> Consultando saldo na Meta...
+                        </div>
+                    </div>
+                    <a href="https://adsmanager.facebook.com/billing_hub/payment_methods?act=1844429770281783&business_id=1908294546658212" target="_blank" class="btn-add-funds" title="Adicionar Saldo ou Gerar PIX na Meta">
+                        <i class="fa-solid fa-plus-circle"></i> Colocar Saldo (PIX)
+                    </a>
                 </div>
 
                 <!-- MASTER CARD DA CAMPANHA (STATUS, ORÇAMENTO E KPIS) -->
@@ -988,6 +1033,7 @@
                 cntSite.style.display = 'none';
                 cntMeta.style.display = 'block';
                 loadMetaCampaignData();
+                loadMetaAccountBalance();
             }
         }
 
@@ -1109,7 +1155,10 @@
 
                 renderMetrics();
                 if (currentViewMode === 'meta') {
-                    await loadMetaCampaignData(true);
+                    await Promise.all([
+                        loadMetaCampaignData(true),
+                        loadMetaAccountBalance()
+                    ]);
                 }
                 showToast('Dados atualizados com sucesso!');
             } catch(e) {
@@ -1598,6 +1647,53 @@
                 return `time_range=${encodeURIComponent(JSON.stringify({ since, until }))}`;
             }
             return `date_preset=${period}`;
+        }
+
+        // Consulta de Saldo e Informações Financeiras da Conta de Anúncios Meta
+        async function loadMetaAccountBalance() {
+            const token = META_CONFIG.token;
+            const actId = META_CONFIG.accountId;
+            if (!token || !actId) return;
+
+            const balanceEl = document.getElementById('meta-account-balance');
+            const subEl = document.getElementById('meta-account-sub');
+
+            try {
+                const res = await fetch(`${META_BASE_URL}/${actId}?access_token=${token}&fields=name,account_status,balance,amount_spent,spend_cap,currency,funding_source_details,adtrust_dsl`);
+                if (!res.ok) {
+                    if (subEl) subEl.textContent = 'Não foi possível carregar o saldo';
+                    return;
+                }
+                const data = await res.json();
+
+                // Balance na Meta é retornado em centavos (positivo para saldo ou a faturar)
+                const rawBal = parseFloat(data.balance || 0);
+                const balBRL = rawBal / 100;
+
+                const funding = data.funding_source_details?.display_string || 'PIX / Boleto / Cartão';
+                
+                const statusMap = {
+                    1: { text: 'Conta Ativa', color: '#10b981' },
+                    2: { text: 'Conta Desativada', color: '#f87171' },
+                    3: { text: 'Pagamento Pendente', color: '#fbbf24' },
+                    7: { text: 'Em Análise', color: '#fbbf24' },
+                    8: { text: 'Aguardando Liquidação', color: '#fbbf24' },
+                    9: { text: 'Tolerância', color: '#fbbf24' }
+                };
+                const st = statusMap[data.account_status] || { text: 'Conta Ativa', color: '#10b981' };
+
+                if (balanceEl) {
+                    balanceEl.textContent = formatBRL(balBRL);
+                }
+
+                if (subEl) {
+                    const dsl = (data.adtrust_dsl && data.adtrust_dsl > 0) ? ` • Limite Diário: ${formatBRL(data.adtrust_dsl)}` : '';
+                    subEl.innerHTML = `<span style="color:${st.color}; font-weight:800;">● ${st.text}</span> • Forma: <strong>${funding}</strong>${dsl}`;
+                }
+            } catch (err) {
+                console.error('Erro ao consultar saldo da conta Meta:', err);
+                if (subEl) subEl.textContent = 'Erro ao consultar saldo';
+            }
         }
 
         async function loadMetaCampaignData(forceRefresh = false) {
