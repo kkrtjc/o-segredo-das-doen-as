@@ -442,11 +442,8 @@
         }
 
         .meta-ad-stats-row {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px;
             background: rgba(0, 0, 0, 0.3); padding: 10px; border-radius: 12px;
-        }
-        @media (max-width: 480px) {
-            .meta-ad-stats-row { grid-template-columns: repeat(2, 1fr); }
         }
         .meta-ad-stat-col .lbl {
             font-size: 9px; font-weight: 800; text-transform: uppercase; color: var(--text-muted);
@@ -698,23 +695,23 @@
                         </button>
                     </div>
 
-                    <!-- 4 KPIS PRINCIPAIS -->
+                    <!-- KPIS PRINCIPAIS (GASTO, FATURAMENTO REAL COM UPSELL/BUMP, ROAS REAL E CPA) -->
                     <div class="meta-kpi-summary-grid">
                         <div class="meta-kpi-card gold">
                             <div class="lbl">Gasto no Período</div>
                             <div class="val" id="meta-kpi-spend">R$ 0,00</div>
                         </div>
                         <div class="meta-kpi-card green">
-                            <div class="lbl">Compras (Pixel)</div>
-                            <div class="val" id="meta-kpi-purchases">0</div>
-                        </div>
-                        <div class="meta-kpi-card blue">
-                            <div class="lbl">CPA Médio</div>
-                            <div class="val" id="meta-kpi-cpa">R$ 0,00</div>
+                            <div class="lbl">Faturamento Real</div>
+                            <div class="val" id="meta-kpi-revenue" style="color: var(--accent-green);">R$ 0,00</div>
                         </div>
                         <div class="meta-kpi-card">
-                            <div class="lbl">ROAS Estimado</div>
-                            <div class="val" id="meta-kpi-roas">0.0x</div>
+                            <div class="lbl">ROAS Real</div>
+                            <div class="val" id="meta-kpi-roas" style="color: #fbbf24;">0.00x</div>
+                        </div>
+                        <div class="meta-kpi-card blue">
+                            <div class="lbl">Compras (CPA)</div>
+                            <div class="val" id="meta-kpi-purchases">0 <span style="font-size: 11px; color: var(--text-muted); font-weight:700;" id="meta-kpi-cpa">(R$ --)</span></div>
                         </div>
                     </div>
                 </div>
@@ -1475,7 +1472,9 @@
 
         function formatMetaInsights(raw = {}) {
             const actions = raw.actions || [];
+            const actionValues = raw.action_values || [];
             const costPerAction = raw.cost_per_action_type || [];
+            const purchaseRoas = raw.purchase_roas || [];
 
             const getActionValue = (typeList) => {
                 const item = actions.find(a => typeList.includes(a.action_type));
@@ -1487,10 +1486,27 @@
                 return item ? parseFloat(item.value) : null;
             };
 
+            const getAmountValue = (typeList) => {
+                const item = actionValues.find(a => typeList.includes(a.action_type));
+                return item ? parseFloat(item.value) : 0;
+            };
+
             const purchases = getActionValue(['purchase', 'omni_purchase', 'offsite_conversion.fb_pixel_purchase']);
             const checkouts = getActionValue(['initiate_checkout', 'omni_initiated_checkout', 'offsite_conversion.fb_pixel_initiate_checkout']);
 
             const spend = parseFloat(raw.spend || 0);
+
+            // Faturamento Real (inclui Order Bump e Upsells enviados pelo Pixel)
+            const revenue = getAmountValue(['purchase', 'omni_purchase', 'offsite_conversion.fb_pixel_purchase', 'web_in_store_purchase']);
+
+            // ROAS Real
+            let roas = 0;
+            if (purchaseRoas.length > 0 && purchaseRoas[0].value) {
+                roas = parseFloat(purchaseRoas[0].value);
+            } else if (spend > 0 && revenue > 0) {
+                roas = revenue / spend;
+            }
+
             const cost_per_purchase = getCostValue(['purchase', 'omni_purchase', 'offsite_conversion.fb_pixel_purchase'])
                 || (purchases > 0 && spend > 0 ? (spend / purchases) : 0);
 
@@ -1522,6 +1538,8 @@
 
             return {
                 spend,
+                revenue,
+                roas,
                 impressions,
                 reach,
                 frequency,
@@ -1563,12 +1581,12 @@
             document.getElementById('meta-camp-id').textContent = `ID: ${campId}`;
 
             try {
-                // 1. Metadados e Insights da Campanha + Lista de Anúncios + Insights de Todos os Anúncios em lote (level=ad)
+                // 1. Metadados e Insights da Campanha + Lista de Anúncios + Insights de Todos os Anúncios em lote (level=ad) com action_values e purchase_roas
                 const [campRes, insightsRes, adsRes, adInsightsRes] = await Promise.all([
                     fetch(`${META_BASE_URL}/${campId}?access_token=${token}&fields=id,name,status,daily_budget,lifetime_budget`),
-                    fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&date_preset=${currentMetaPeriod}&fields=spend,impressions,reach,frequency,clicks,inline_link_clicks,cpc,cpm,actions,cost_per_action_type`),
+                    fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&date_preset=${currentMetaPeriod}&fields=spend,impressions,reach,frequency,clicks,inline_link_clicks,cpc,cpm,actions,action_values,cost_per_action_type,purchase_roas`),
                     fetch(`${META_BASE_URL}/${campId}/ads?access_token=${token}&fields=id,name,status,creative{thumbnail_url,image_url}&limit=100`),
-                    fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&level=ad&date_preset=${currentMetaPeriod}&fields=ad_id,ad_name,spend,impressions,reach,frequency,clicks,inline_link_clicks,cpc,cpm,actions,cost_per_action_type,video_play_actions,video_p25_watched_actions,video_p50_watched_actions,video_p75_watched_actions,video_p100_watched_actions&limit=100`)
+                    fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&level=ad&date_preset=${currentMetaPeriod}&fields=ad_id,ad_name,spend,impressions,reach,frequency,clicks,inline_link_clicks,cpc,cpm,actions,action_values,cost_per_action_type,purchase_roas,video_play_actions,video_p25_watched_actions,video_p50_watched_actions,video_p75_watched_actions,video_p100_watched_actions&limit=100`)
                 ]);
 
                 if (!campRes.ok) {
@@ -1654,14 +1672,25 @@
 
             // 4 KPIs Principais
             document.getElementById('meta-kpi-spend').textContent = formatBRL(insights.spend);
-            document.getElementById('meta-kpi-purchases').textContent = insights.purchases;
-            document.getElementById('meta-kpi-cpa').textContent = insights.purchases > 0 ? formatBRL(insights.cost_per_purchase) : 'R$ --,--';
+            
+            // Faturamento Real (inclui Order Bump e Upsell enviados pelo Pixel)
+            document.getElementById('meta-kpi-revenue').textContent = formatBRL(insights.revenue);
 
-            // ROAS Estimado
-            const prodTicket = (currentCampaign === 'pintinhos') ? 27.9 : 49.9;
-            const estRevenue = insights.purchases * prodTicket;
-            const roas = insights.spend > 0 ? (estRevenue / insights.spend).toFixed(2) : '0.0';
-            document.getElementById('meta-kpi-roas').textContent = `${roas}x`;
+            // ROAS Real
+            const roasVal = insights.roas || (insights.spend > 0 && insights.revenue > 0 ? (insights.revenue / insights.spend) : 0);
+            const roasEl = document.getElementById('meta-kpi-roas');
+            roasEl.textContent = roasVal > 0 ? `${roasVal.toFixed(2)}x` : '0.00x';
+            if (roasVal >= 2.0) {
+                roasEl.style.color = 'var(--accent-green)';
+            } else if (roasVal >= 1.0) {
+                roasEl.style.color = 'var(--accent-gold)';
+            } else {
+                roasEl.style.color = 'var(--text-muted)';
+            }
+
+            // Compras e CPA
+            const cpaStr = insights.purchases > 0 ? formatBRL(insights.cost_per_purchase) : 'R$ --,--';
+            document.getElementById('meta-kpi-purchases').innerHTML = `${insights.purchases} <span style="font-size: 11px; color: var(--text-muted); font-weight:700;">(CPA ${cpaStr})</span>`;
 
             // Alerta de Frequência / Saturação de Público
             const freqAlert = document.getElementById('meta-alert-frequency');
@@ -1737,19 +1766,23 @@
                         </div>
                     </div>
 
-                    <!-- Métricas do Criativo -->
+                    <!-- Métricas do Criativo com Faturamento e ROAS Real -->
                     <div class="meta-ad-stats-row">
                         <div class="meta-ad-stat-col">
                             <div class="lbl">Gasto</div>
                             <div class="val" style="color:var(--accent-gold);">${formatBRL(ins.spend)}</div>
                         </div>
                         <div class="meta-ad-stat-col">
-                            <div class="lbl">Compras</div>
-                            <div class="val" style="color:var(--accent-green);">${ins.purchases || 0}</div>
+                            <div class="lbl">Faturamento</div>
+                            <div class="val" style="color:var(--accent-green);">${formatBRL(ins.revenue)}</div>
                         </div>
                         <div class="meta-ad-stat-col">
-                            <div class="lbl">CPA</div>
-                            <div class="val">${ins.purchases > 0 ? formatBRL(ins.cost_per_purchase) : '--'}</div>
+                            <div class="lbl">ROAS Real</div>
+                            <div class="val" style="color:${ins.roas >= 2.0 ? 'var(--accent-green)' : (ins.roas >= 1.0 ? 'var(--accent-gold)' : 'var(--text-muted)')}; font-weight:900;">${ins.roas > 0 ? ins.roas.toFixed(2) + 'x' : '--'}</div>
+                        </div>
+                        <div class="meta-ad-stat-col">
+                            <div class="lbl">Compras (CPA)</div>
+                            <div class="val">${ins.purchases || 0} <span style="font-size:10px; color:var(--text-muted);">(${ins.purchases > 0 ? formatBRL(ins.cost_per_purchase) : '--'})</span></div>
                         </div>
                         <div class="meta-ad-stat-col">
                             <div class="lbl">CTR / CPC</div>
