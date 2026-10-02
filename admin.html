@@ -710,9 +710,9 @@
                             <i class="fa-solid fa-circle-notch fa-spin"></i> Consultando saldo na Meta...
                         </div>
                     </div>
-                    <a href="https://adsmanager.facebook.com/billing_hub/payment_methods?act=1844429770281783&business_id=1908294546658212" target="_blank" class="btn-add-funds" title="Adicionar Saldo ou Gerar PIX na Meta">
+                    <button onclick="openAddFundsModal()" class="btn-add-funds" title="Como colocar saldo ou gerar PIX">
                         <i class="fa-solid fa-plus-circle"></i> Colocar Saldo (PIX)
-                    </a>
+                    </button>
                 </div>
 
                 <!-- MASTER CARD DA CAMPANHA (STATUS, ORÇAMENTO E KPIS) -->
@@ -918,6 +918,43 @@
             <span>Ajustes</span>
         </div>
     </nav>
+
+    <!-- MODAL DE RECARGA DE SALDO META -->
+    <div id="modal-add-funds" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; backdrop-filter:blur(8px); align-items:flex-end; justify-content:center;">
+        <div style="background:#0f172a; border-top:1px solid var(--surface-border); border-radius:24px 24px 0 0; padding:24px 20px 36px; width:100%; max-width:480px; box-shadow:0 -10px 30px rgba(0,0,0,0.6); animation: slideUp 0.25s ease-out;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <div style="font-size:16px; font-weight:900; color:#fff; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-wallet" style="color:var(--accent-green);"></i> Como Colocar Saldo na Meta
+                </div>
+                <button onclick="closeAddFundsModal()" style="background:rgba(255,255,255,0.1); border:none; color:#fff; width:32px; height:32px; border-radius:50%; font-size:14px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <p style="font-size:12px; color:var(--text-muted); line-height:1.5; margin-bottom:16px;">
+                Por regras de segurança bancária do Banco Central e da Meta, todo PIX de anúncios deve ser gerado através da central oficial. Siga o passo a passo:
+            </p>
+
+            <!-- OPÇÃO 1: NO APP DA META NO CELULAR -->
+            <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(56,189,248,0.3); border-radius:16px; padding:14px; margin-bottom:14px;">
+                <div style="font-size:13px; font-weight:800; color:#38bdf8; margin-bottom:6px; display:flex; align-items:center; gap:6px;">
+                    <i class="fa-solid fa-mobile-screen"></i> Opção Recomendada (No seu iPhone)
+                </div>
+                <div style="font-size:12px; color:#cbd5e1; line-height:1.6;">
+                    1. Abra o app <strong>Meta Ads</strong> (Gerenciador de Anúncios) no celular.<br>
+                    2. Toque no ícone de <strong>Configurações (⚙️)</strong> no rodapé.<br>
+                    3. Toque em <strong>Pagamentos ➔ Adicionar Fundos</strong>.<br>
+                    4. Escolha <strong>PIX</strong>, digite o valor e confirme.<br>
+                    5. Pague pelo seu app do banco e o saldo entra em segundos!
+                </div>
+            </div>
+
+            <!-- OPÇÃO 2: LINK DIRETO PARA COMPUTADOR / NAVEGADOR -->
+            <a href="https://adsmanager.facebook.com/billing_hub/payment_methods?act=1844429770281783&business_id=1908294546658212" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:8px; background:linear-gradient(135deg, #10b981 0%, #059669 100%); color:#fff; padding:13px; border-radius:14px; font-size:13px; font-weight:800; text-decoration:none; margin-bottom:10px;">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Central de Cobrança Web
+            </a>
+            
+            <button onclick="closeAddFundsModal()" style="width:100%; background:transparent; border:1px solid var(--surface-border); color:var(--text-muted); padding:10px; border-radius:12px; font-size:12px; font-weight:700; cursor:pointer;">Entendido / Fechar</button>
+        </div>
+    </div>
 
     <div id="toast"></div>
 
@@ -1659,19 +1696,22 @@
             const subEl = document.getElementById('meta-account-sub');
 
             try {
-                const res = await fetch(`${META_BASE_URL}/${actId}?access_token=${token}&fields=name,account_status,balance,amount_spent,spend_cap,currency,funding_source_details,adtrust_dsl`);
+                // Consulta campos essenciais suportados por qualquer token de anunciante
+                const res = await fetch(`${META_BASE_URL}/${actId}?access_token=${token}&fields=name,account_status,balance,amount_spent,spend_cap,currency`);
                 if (!res.ok) {
-                    if (subEl) subEl.textContent = 'Não foi possível carregar o saldo';
+                    const err = await res.json().catch(() => ({}));
+                    const msg = err?.error?.message || `Erro HTTP ${res.status}`;
+                    console.error('Erro saldo Meta:', err);
+                    if (subEl) subEl.innerHTML = `<span style="color:var(--ios-red); font-size:11px;"><i class="fa-solid fa-triangle-exclamation"></i> ${msg}</span>`;
                     return;
                 }
                 const data = await res.json();
 
-                // Balance na Meta é retornado em centavos (positivo para saldo ou a faturar)
+                // Balance na Meta é retornado em centavos
+                // Para contas pré-pagas (PIX/Boleto), balance pode ser o saldo restante ou montante
                 const rawBal = parseFloat(data.balance || 0);
                 const balBRL = rawBal / 100;
 
-                const funding = data.funding_source_details?.display_string || 'PIX / Boleto / Cartão';
-                
                 const statusMap = {
                     1: { text: 'Conta Ativa', color: '#10b981' },
                     2: { text: 'Conta Desativada', color: '#f87171' },
@@ -1687,12 +1727,13 @@
                 }
 
                 if (subEl) {
-                    const dsl = (data.adtrust_dsl && data.adtrust_dsl > 0) ? ` • Limite Diário: ${formatBRL(data.adtrust_dsl)}` : '';
-                    subEl.innerHTML = `<span style="color:${st.color}; font-weight:800;">● ${st.text}</span> • Forma: <strong>${funding}</strong>${dsl}`;
+                    const spentBRL = data.amount_spent ? formatBRL(parseFloat(data.amount_spent) / 100) : '';
+                    const spentTxt = spentBRL ? ` • Total Investido: ${spentBRL}` : '';
+                    subEl.innerHTML = `<span style="color:${st.color}; font-weight:800;">● ${st.text}</span> (${data.currency || 'BRL'})${spentTxt}`;
                 }
             } catch (err) {
                 console.error('Erro ao consultar saldo da conta Meta:', err);
-                if (subEl) subEl.textContent = 'Erro ao consultar saldo';
+                if (subEl) subEl.innerHTML = `<span style="color:var(--ios-red); font-size:11px;">Erro de rede ao carregar saldo</span>`;
             }
         }
 
@@ -2029,6 +2070,16 @@
             }
         }
 
+        function openAddFundsModal() {
+            const m = document.getElementById('modal-add-funds');
+            if (m) m.style.display = 'flex';
+        }
+
+        function closeAddFundsModal() {
+            const m = document.getElementById('modal-add-funds');
+            if (m) m.style.display = 'none';
+        }
+
         function promptUpdateMetaToken() {
             const atual = META_CONFIG.token;
             const masked = atual ? (atual.slice(0, 8) + '...' + atual.slice(-6)) : '';
@@ -2040,6 +2091,7 @@
                 showToast('Token da Meta atualizado com sucesso!');
                 if (currentViewMode === 'meta') {
                     loadMetaCampaignData(true);
+                    loadMetaAccountBalance();
                 }
             }
         }
