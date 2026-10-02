@@ -1577,6 +1577,29 @@
             };
         }
 
+        function getMetaDateParam(period) {
+            if (period === 'maximum') return 'date_preset=maximum';
+            if (period === 'today') return 'date_preset=today';
+            if (period === 'yesterday') return 'date_preset=yesterday';
+            if (period === 'this_month') return 'date_preset=this_month';
+
+            // Na API Graph da Meta, os presets 'last_7d' e 'last_30d' excluem o dia de hoje (fechando até ontem).
+            // Usamos time_range com since e until para garantir que HOJE esteja sempre incluso em tempo real!
+            const now = new Date();
+            const until = now.toISOString().split('T')[0];
+            if (period === 'last_7d') {
+                const sinceDate = new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000);
+                const since = sinceDate.toISOString().split('T')[0];
+                return `time_range=${encodeURIComponent(JSON.stringify({ since, until }))}`;
+            }
+            if (period === 'last_30d') {
+                const sinceDate = new Date(now.getTime() - 29 * 24 * 60 * 60 * 1000);
+                const since = sinceDate.toISOString().split('T')[0];
+                return `time_range=${encodeURIComponent(JSON.stringify({ since, until }))}`;
+            }
+            return `date_preset=${period}`;
+        }
+
         async function loadMetaCampaignData(forceRefresh = false) {
             const campInfo = META_CONFIG.campaigns[currentCampaign];
             if (!campInfo) return;
@@ -1597,12 +1620,13 @@
             document.getElementById('meta-camp-id').textContent = `ID: ${campId}`;
 
             try {
+                const dateQuery = getMetaDateParam(currentMetaPeriod);
                 // 1. Metadados e Insights da Campanha + Lista de Anúncios + Insights de Todos os Anúncios em lote (level=ad) com action_values e purchase_roas
                 const [campRes, insightsRes, adsRes, adInsightsRes] = await Promise.all([
                     fetch(`${META_BASE_URL}/${campId}?access_token=${token}&fields=id,name,status,daily_budget,lifetime_budget`),
-                    fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&date_preset=${currentMetaPeriod}&fields=spend,impressions,reach,frequency,clicks,inline_link_clicks,inline_link_click_ctr,cost_per_inline_link_click,cpc,cpm,actions,action_values,cost_per_action_type,purchase_roas`),
+                    fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&${dateQuery}&fields=spend,impressions,reach,frequency,clicks,inline_link_clicks,inline_link_click_ctr,cost_per_inline_link_click,cpc,cpm,actions,action_values,cost_per_action_type,purchase_roas`),
                     fetch(`${META_BASE_URL}/${campId}/ads?access_token=${token}&fields=id,name,status,creative{thumbnail_url,image_url}&limit=100`),
-                    fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&level=ad&date_preset=${currentMetaPeriod}&fields=ad_id,ad_name,spend,impressions,reach,frequency,clicks,inline_link_clicks,inline_link_click_ctr,cost_per_inline_link_click,cpc,cpm,actions,action_values,cost_per_action_type,purchase_roas,video_play_actions,video_p25_watched_actions,video_p50_watched_actions,video_p75_watched_actions,video_p100_watched_actions&limit=100`)
+                    fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&level=ad&${dateQuery}&fields=ad_id,ad_name,spend,impressions,reach,frequency,clicks,inline_link_clicks,inline_link_click_ctr,cost_per_inline_link_click,cpc,cpm,actions,action_values,cost_per_action_type,purchase_roas,video_play_actions,video_p25_watched_actions,video_p50_watched_actions,video_p75_watched_actions,video_p100_watched_actions&limit=100`)
                 ]);
 
                 if (!campRes.ok) {
