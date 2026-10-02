@@ -1096,7 +1096,7 @@ async function renderHomeProducts() {
 
         // Calculando variáveis dinâmicas
         const discountPercent = Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100);
-        const installmentPrice = "22,47"; // Baseado no preço ancorado (89,90)
+        const installmentPrice = (p.price / 4).toFixed(2).replace('.', ',');
         const priceStr = p.price.toFixed(2).split('.');
         const priceInt = priceStr[0];
         const priceDec = priceStr[1];
@@ -1114,7 +1114,7 @@ async function renderHomeProducts() {
                         R$ ${priceInt}<small>,${priceDec}</small>
                     </span>
                     <span style="font-size: 0.75rem; color: #10b981; font-weight: 800; margin-top: 3px; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 15px;">🔥 ${discountPercent}% DE DESCONTO NO PIX</span>
-                    <span style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 5px;">ou até 4x de <strong>R$ ${installmentPrice}</strong> (Total R$ 109,90)</span>
+                    <span style="font-size: 0.9rem; color: var(--color-text-light); margin-top: 5px;">ou até 4x de <strong>R$ ${installmentPrice}</strong> sem juros</span>
                 </div>
             </div>
 
@@ -1585,18 +1585,8 @@ async function handlePayment(method) {
     // Isso resolve o erro de diagnóstico da Meta e permite atribuição correta.
     updateMetaUserData(customer);
 
-    // PRICING LOGIC FOR API PAYLOAD
-    let mainPrice = cart.mainProduct.price; // 89.90 default
-    if (method === 'card') {
-        const installments = parseInt(document.getElementById('installments-select')?.value || '1', 10);
-        if (installments > 1) {
-            if (cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite' || cart.mainProduct.id === 'ebook-pintinhos') {
-                mainPrice = cart.mainProduct.price;
-            } else {
-                mainPrice = cart.mainProduct.price + 20; // 109.90
-            }
-        }
-    }
+    // PRICING LOGIC FOR API PAYLOAD (Cobrança exata do preço mostrado na tela)
+    const mainPrice = cart.mainProduct.price;
 
     const items = [{ id: cart.mainProduct.id, title: cart.mainProduct.title, price: mainPrice }];
 

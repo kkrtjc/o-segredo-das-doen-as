@@ -154,30 +154,30 @@ adminRoutes.post('/config/reset', async (c) => {
     const defaultDB = {
         products: {
             'ebook-doencas': {
-                title: 'O Segredo das Doenças Avícolas', price: 89.90, originalPrice: 149.90,
+                title: 'O Segredo das Doenças Avícolas', price: 49.90, originalPrice: 147.00,
                 description: 'Identifique e trate mais de 10 doenças nas galinhas', isFeatured: true, badge: 'OFERTA PRINCIPAL',
                 features: ['Doenças Avícolas', 'Tabela de vacinação', 'Tabela de vermifugação', 'Protocolo de prevenção'],
-                cover: 'capadasdoencas.webp', orderBumps: []
+                cover: 'capadasdoencas.webp', orderBumps: ['bump-6361']
             },
             'ebook-pintinhos': {
-                title: 'Manual de Manejo de Pintinhos', price: 49.90, originalPrice: 99.00, enabled: true,
-                description: 'Aprenda a melhor forma de tratar e manejar seus pintinhos', cover: 'capadospintinhos.webp', orderBumps: []
+                title: 'Manual de Manejo de Pintinhos', price: 27.90, originalPrice: 67.00, enabled: true,
+                description: 'Aprenda a melhor forma de tratar e manejar seus pintinhos', cover: 'capadospintinhos.webp', orderBumps: ['bump-6361']
             },
             'ebook-manejo': {
-                title: 'Manual de Manejo de Pintinhos', price: 49.90, originalPrice: 99.00, enabled: true,
+                title: 'Manual de Manejo de Pintinhos', price: 27.90, originalPrice: 67.00, enabled: true,
                 description: 'Aprenda a melhor forma de tratar e manejar seus pintinhos', cover: 'capadospintinhos.webp', orderBumps: []
             },
             'combo-plataforma': {
-                title: 'Combo Completo Plataforma', price: 149.90, originalPrice: 297.00,
-                description: 'Acesso completo à plataforma de e-books avícolas', badge: 'MELHOR OFERTA', cover: 'combo', orderBumps: []
+                title: 'Combo Completo Plataforma', price: 49.90, originalPrice: 147.00,
+                description: 'Acesso completo à plataforma de e-books avícolas', badge: 'MELHOR OFERTA', cover: 'combo', orderBumps: ['bump-6361']
             },
             'combo-elite': {
-                title: 'Combo Completo Plataforma', price: 149.90, originalPrice: 297.00,
-                description: 'Acesso completo à plataforma de e-books avícolas', badge: 'MELHOR OFERTA', cover: 'combo', orderBumps: []
+                title: 'Combo Completo Plataforma', price: 49.90, originalPrice: 147.00,
+                description: 'Acesso completo à plataforma de e-books avícolas', badge: 'MELHOR OFERTA', cover: 'combo', orderBumps: ['bump-6361']
             }
         },
         orderBumps: {
-            'combo-elite-bump': { id: 'combo-elite-bump', title: 'Combo Criador Elite', price: 49.90, description: 'O protocolo completo — doenças, pintinhos e tabela de ração em um único pacote.', image: 'capadospintinhos.webp' }
+            'bump-6361': { id: 'bump-6361', title: 'Tabela de Ração Prática', price: 19.90, description: 'Aprenda a formular sua própria ração balanceada.', image: 'tabela_racao_bump.webp' }
         }
     };
     await saveDB(c.env, defaultDB);
