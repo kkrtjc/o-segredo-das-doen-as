@@ -666,8 +666,8 @@
                     <button class="period-pill" onclick="setMetaPeriod('yesterday', this)">Ontem</button>
                     <button class="period-pill" onclick="setMetaPeriod('last_7d', this)">7 Dias</button>
                     <button class="period-pill" onclick="setMetaPeriod('this_month', this)">Este Mês</button>
-                    <button class="period-pill active" onclick="setMetaPeriod('last_30d', this)">30 Dias</button>
-                    <button class="period-pill" onclick="setMetaPeriod('maximum', this)">Máximo</button>
+                    <button class="period-pill" onclick="setMetaPeriod('last_30d', this)">30 Dias</button>
+                    <button class="period-pill active" onclick="setMetaPeriod('maximum', this)">Máximo</button>
                 </div>
 
                 <!-- MASTER CARD DA CAMPANHA (STATUS, ORÇAMENTO E KPIS) -->
@@ -895,7 +895,7 @@
         let customEndDate = '';
 
         let currentViewMode = 'site'; // 'site' ou 'meta'
-        let currentMetaPeriod = 'last_30d'; // 'today', 'yesterday', 'last_7d', 'last_30d', 'maximum'
+        let currentMetaPeriod = 'maximum'; // 'today', 'yesterday', 'last_7d', 'this_month', 'last_30d', 'maximum'
 
         // Cache inteligente em memória para evitar Rate Limit (OAuthException 17)
         const metaCache = {
