@@ -568,8 +568,8 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     const fallbackData = {
         'ebook-doencas': {
             title: 'O Segredo das Doenças Avícolas',
-            price: 89.90,
-            originalPrice: 297.00,
+            price: 49.90,
+            originalPrice: 147.00,
             cover: 'capadasdoencas.webp',
             fullBumps: []
         },
@@ -581,17 +581,17 @@ async function startCheckoutProcess(productId, forceBumps = []) {
             fullBumps: []
         },
         'combo-plataforma': {
-            title: 'Combo Completo Plataforma',
-            price: 89.90,
-            originalPrice: 256.70,
-            cover: 'combo',
+            title: 'O Segredo das Doenças Avícolas',
+            price: 49.90,
+            originalPrice: 147.00,
+            cover: 'capadasdoencas.webp',
             fullBumps: []
         },
         'combo-elite': {
-            title: 'Combo Completo Plataforma',
-            price: 89.90,
-            originalPrice: 256.70,
-            cover: 'combo',
+            title: 'O Segredo das Doenças Avícolas',
+            price: 49.90,
+            originalPrice: 147.00,
+            cover: 'capadasdoencas.webp',
             fullBumps: []
         }
     };
@@ -607,25 +607,16 @@ async function startCheckoutProcess(productId, forceBumps = []) {
 
         cart.mainProduct = { ...productData, id: productId };
 
-        // HOTFIX: Force the bumps based on productId
-        if (productId === 'ebook-doencas') {
+        // HOTFIX: Force the bumps based on productId (Apenas Tabela de Ração como bump no checkout)
+        if (productId === 'ebook-doencas' || productId === 'combo-plataforma' || productId === 'combo-elite') {
             cart.mainProduct.fullBumps = [
-                {
-                    id: 'ebook-manejo',
-                    title: 'MANUAL DE ELITE DOS PINTINHOS',
-                    price: 49.90,
-                    priceCard: 49.90,
-                    image: 'capadospintinhos.webp',
-                    description: '<span style="color: #ff4444;"><strong>⚠️ ALERTA: 80% dos pintinhos morrem antes dos 20 dias</strong></span> por pequenos erros de manejo (frio, vento, bico molhado) que o guia das doenças não cobre. <span style="color: #4ade80;"><strong>Adicione o manual completo de sobrevivência</strong></span> e proteja suas aves na fase mais frágil de vida.',
-                    tag: 'OFERTA ÚNICA'
-                },
                 {
                     id: 'bump-6361',
                     title: 'TABELA DE RAÇÃO PRÁTICA',
                     price: 19.90,
                     priceCard: 19.90,
                     image: 'tabela_racao_bump.webp',
-                    description: '<span style="color: #ff4444;"><strong>💸 Pare de jogar dinheiro fora com rações caras de marca.</strong></span> Aprenda a formular sua própria ração balanceada usando grãos locais e economize <strong style="color:#fbbf24;">até 60% no custo mensal</strong> do seu plantel.',
+                    description: '<span style="color: #ff4444;"><strong>💸 Economia Inteligente:</strong></span> Monte sua própria ração balanceada e forte, reduzindo seus gastos mensais com ração <strong style="color:#fbbf24;">em até 60%</strong> por apenas R$ 19,90.',
                     tag: 'OFERTA ÚNICA'
                 }
             ];
@@ -669,36 +660,24 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         const topCardPriceEl = document.getElementById('top-checkout-card-price');
         const topCardInstEl = document.getElementById('top-checkout-card-installment');
         
-        if (productId === 'combo-plataforma' || productId === 'combo-elite') {
-            if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 256,70';
-            if (topCardInstEl) topCardInstEl.innerHTML = `ou 4x de R$ 22,47 sem juros`;
-            document.getElementById('checkout-product-price-display').innerText = 'R$ 89,90';
-        } else if (productId === 'ebook-pintinhos') {
+        if (productId === 'ebook-pintinhos') {
             if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 129,70';
             if (topCardInstEl) topCardInstEl.innerHTML = `ou 3x de R$ 9,93`;
             document.getElementById('checkout-product-price-display').innerText = 'R$ 27,90';
         } else {
-            if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 149,90';
-            if (topCardInstEl) topCardInstEl.innerHTML = `ou 4x de R$ 22,47 sem juros`;
-            document.getElementById('checkout-product-price-display').innerText = 'R$ 89,90';
+            if (topCardPriceEl) topCardPriceEl.innerText = 'R$ 147,00';
+            if (topCardInstEl) topCardInstEl.innerHTML = `ou 4x de R$ 13,29 sem juros`;
+            document.getElementById('checkout-product-price-display').innerText = 'R$ 49,90';
         }
 
         const savingsBadgeEl = document.getElementById('checkout-savings-badge');
         if (savingsBadgeEl) {
-            if (productId === 'combo-plataforma' || productId === 'combo-elite') {
-                savingsBadgeEl.style.display = 'inline-block';
-            } else {
-                savingsBadgeEl.style.display = 'none';
-            }
+            savingsBadgeEl.style.display = 'none';
         }
 
         const itemListEl = document.getElementById('checkout-item-list');
         if (itemListEl) {
-            if (productId === 'combo-plataforma' || productId === 'combo-elite') {
-                itemListEl.style.display = 'flex';
-            } else {
-                itemListEl.style.display = 'none';
-            }
+            itemListEl.style.display = 'none';
         }
 
         const iconContainer = document.getElementById('product-icon-container');
@@ -928,21 +907,13 @@ function updateTotal() {
                         bumpPriceForCard = 19.90;
                     }
                 } else {
-                    const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
-                    if (isCombo) {
-                        if (bump.id === 'ebook-manejo') {
-                            bumpPriceForPix = 40.00;
-                            bumpPriceForCard = 40.00;
-                        }
-                    } else {
-                        if (bump.id === 'ebook-manejo' || bump.id === 'ebook-doencas') {
-                            bumpPriceForPix = window.originalHadRacao ? 30.10 : (window.originalHadManejo ? 49.90 : 50.00);
-                            bumpPriceForCard = window.originalHadRacao ? 30.10 : (window.originalHadManejo ? 49.90 : 50.00);
-                        }
-                        if (bump.id === 'bump-6361') {
-                            bumpPriceForPix = window.originalHadManejo ? 9.90 : 0.00;
-                            bumpPriceForCard = window.originalHadManejo ? 9.90 : 0.00;
-                        }
+                    if (bump.id === 'ebook-manejo') {
+                        bumpPriceForPix = 27.90;
+                        bumpPriceForCard = 27.90;
+                    }
+                    if (bump.id === 'bump-6361') {
+                        bumpPriceForPix = 19.90;
+                        bumpPriceForCard = 19.90;
                     }
                 }
             }
@@ -1016,13 +987,8 @@ function updateTotal() {
                 if (id === 'ebook-doencas') priceForMethod = 49.90;
                 if (id === 'bump-6361') priceForMethod = 19.90;
             } else {
-                const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
-                if (isCombo) {
-                    if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 49.90;
-                } else {
-                    if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 30.10;
-                    if (id === 'bump-6361') priceForMethod = 19.90;
-                }
+                if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 27.90;
+                if (id === 'bump-6361') priceForMethod = 19.90;
             }
         }
 
@@ -1447,86 +1413,83 @@ function setupPixUpsellModal() {
         return;
     }
 
-    const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
-    const isScenario2 = cart.bumps.length === 1 && cart.bumps.includes('bump-6361');
-    const isScenario3 = cart.bumps.length === 1 && cart.bumps.includes('ebook-manejo');
+    const hasRacao = cart.bumps.includes('bump-6361');
+    const mainPrice = Number(cart.mainProduct?.price) || 49.90;
+    const racaoPrice = hasRacao ? 19.90 : 0;
+    const pintinhosPrice = 27.90;
+    const currentTotal = mainPrice + racaoPrice;
+    const totalWithUpsell = currentTotal + pintinhosPrice;
+    const originalTotal = (mainPrice + racaoPrice + 67.00);
 
-    if (isCombo) {
-        // Custom Upsell: Offer Manual de Manejo de Pintinhos for + R$ 40,00 (was R$ 99,90) -> Total R$ 129,90
-        if (titleEl) titleEl.innerText = '⚠️ ESPERE! NÃO FINALIZE ANTES DE VER ISSO...';
-        if (descEl) descEl.innerHTML = 'Você garantiu o tratamento e a proteção das suas aves adultas. Mas você sabia que <strong style="color: #f87171;">8 em cada 10 pintinhos morrem</strong> antes dos 20 dias por erros simples de calor e manejo?';
-        if (priceEl) priceEl.innerHTML = 'Por + R$ 40,00';
-        if (subtextEl) subtextEl.innerText = 'Leve os dois materiais juntos:';
-        if (listEl) {
-            listEl.innerHTML = `
-                <div style="margin-bottom: 3px; display: flex; align-items: flex-start; gap: 5px; text-align: left;">
-                    <span style="color: #10b981; font-weight: 900; flex-shrink: 0; line-height: 1.3;">✓</span>
-                    <span style="flex: 1; min-width: 0; line-height: 1.3;"><strong>Mortalidade Zero no Pinteiro:</strong> Manejo do 1º ao 90º dia</span>
-                </div>
-                <div style="margin-bottom: 3px; display: flex; align-items: flex-start; gap: 5px; text-align: left;">
-                    <span style="color: #10b981; font-weight: 900; flex-shrink: 0; line-height: 1.3;">✓</span>
-                    <span style="flex: 1; min-width: 0; line-height: 1.3;"><strong>Tabela Térmica:</strong> O calor exato sem matar de frio ou calor</span>
-                </div>
-                <div style="display: flex; align-items: flex-start; gap: 5px; text-align: left;">
-                    <span style="color: #10b981; font-weight: 900; flex-shrink: 0; line-height: 1.3;">✓</span>
-                    <span style="flex: 1; min-width: 0; line-height: 1.3;"><strong>Ambiente ideal:</strong> Reduza drasticamente o risco de doenças</span>
-                </div>
-            `;
-        }
-        if (rejectBtn) rejectBtn.innerText = 'Não obrigado, prefiro arriscar o manejo dos pintinhos sozinho';
-        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 99,90';
-        if (savingsEl) savingsEl.innerText = '🔥 ECONOMIA DE R$ 59,90';
-    } else if (isScenario2) {
-        // Scenario 2: User chose only Tabela de Ração bump
-        if (titleEl) titleEl.innerText = 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS + TABELA DE RAÇÃO';
-        if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de desbloquear toda a plataforma e ter acesso completo.';
-        if (priceEl) priceEl.innerHTML = '+ R$ 30,10';
-        if (subtextEl) subtextEl.innerText = 'PARA VOCÊ DESBLOQUEAR TODA A PLATAFORMA E TODAS AS FERRAMENTAS COM ACESSO A TODOS OS NOSSOS MATERIAIS';
-        if (listEl) {
-            listEl.innerHTML = `
-                <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças (Já Incluso)</div>
-                <div style="margin-bottom: 3px; font-size: 0.85rem;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Ebook dos Pintinhos (ÚLTIMA PEÇA)</strong></div>
-                <div style="color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Tabela de Ração + Calculadora (Já Inclusa - GRATUITA)</div>
-            `;
-        }
-        if (rejectBtn) rejectBtn.innerText = 'Quero apenas Doenças + Tabela de Ração';
-        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 265,90';
-        if (savingsEl) savingsEl.innerText = 'ECONOMIA DE R$ 126,00';
-    } else if (isScenario3) {
-        // Scenario 3: User chose only Manual de Pintinhos bump
-        if (titleEl) titleEl.innerText = 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS + MANUAL DE PINTINHOS';
-        if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de levar a Tabela de Ração para ter a plataforma completa.';
-        if (priceEl) priceEl.innerHTML = '+ R$ 9,90';
-        if (subtextEl) subtextEl.innerText = 'DE R$ 19,90 POR APENAS R$ 9,90 PARA COMPLETAR SUA PLATAFORMA';
-        if (listEl) {
-            listEl.innerHTML = `
-                <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças (Já Incluso)</div>
-                <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Manual de Pintinhos (Já Incluso)</div>
-                <div style="font-size: 0.85rem;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Tabela de Ração (ÚLTIMA PEÇA - DESCONTO DE 50%)</strong></div>
-            `;
-        }
-        if (rejectBtn) rejectBtn.innerText = 'Quero apenas Doenças + Manual de Pintinhos';
-        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 265,90';
-        if (savingsEl) savingsEl.innerText = 'ECONOMIA DE R$ 116,20';
-    } else {
-        // Scenario 1: User chose no order bumps (0 bumps)
-        if (titleEl) titleEl.innerText = 'VOCÊ JÁ ESTÁ LEVANDO O EBOOK DE DOENÇAS';
-        if (descEl) descEl.innerHTML = 'Porém gostaríamos de te dar a <strong style="color:#0f172a; font-weight: 800;">oportunidade única</strong> de se tornar um criador completo e ter acesso completo.';
-        if (priceEl) priceEl.innerHTML = '+ R$ 50,00';
-        if (subtextEl) subtextEl.innerText = 'PARA VOCÊ DESBLOQUEAR TODA A PLATAFORMA E TODAS AS FERRAMENTAS COM ACESSO A TODOS OS NOSSOS MATERIAIS';
-        
-        if (listEl) {
-            listEl.innerHTML = `
-                <div style="margin-bottom: 3px; color: #94a3b8;"><span style="color: #94a3b8; margin-right: 4px; font-weight: 900;">✓</span> Ebook das Doenças (Já Incluso)</div>
-                <div style="margin-bottom: 3px;"><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Ebook dos Pintinhos (ÚLTIMA PEÇA)</strong></div>
-                <div><span style="color: #fbbf24; margin-right: 4px; font-weight: 900;">🎁</span> <strong style="color: #ffffff;">Tabela de Ração + Calculadora (GRATUITA)</strong></div>
-            `;
-        }
-        
-        if (rejectBtn) rejectBtn.innerText = 'Quero apenas o guia das doenças';
-        if (originalPriceEl) originalPriceEl.innerText = 'De R$ 265,90';
-        if (savingsEl) savingsEl.innerText = 'ECONOMIA DE R$ 126,00';
+    const fmtCurrent = currentTotal.toFixed(2).replace('.', ',');
+    const fmtTotal = totalWithUpsell.toFixed(2).replace('.', ',');
+    const fmtOriginal = originalTotal.toFixed(2).replace('.', ',');
+
+    if (titleEl) titleEl.innerText = '⚠️ ESPERE! NÃO FINALIZE ANTES DE VER ISSO...';
+    if (descEl) descEl.innerHTML = 'Adicione o <strong>Manual de Manejo de Pintinhos</strong> com condição única de balcão.';
+    if (imgEl) {
+        imgEl.src = 'capadospintinhos.webp';
+        imgEl.alt = 'Manual de Manejo dos Pintinhos';
     }
+    if (prodCategoryEl) prodCategoryEl.innerText = 'MANUAL COMPLETO ADICIONAL';
+    if (prodTitleEl) prodTitleEl.innerText = 'Manual de Manejo dos Pintinhos';
+    if (priceEl) priceEl.innerHTML = '+ R$ 27,90';
+    if (originalPriceEl) originalPriceEl.innerText = `De R$ ${fmtOriginal}`;
+    if (savingsEl) savingsEl.innerText = '🔥 ECONOMIA DE R$ 39,10';
+    if (subtextEl) subtextEl.innerText = 'Adicional com desconto:';
+    if (listEl) {
+        listEl.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
+                <span>Mortalidade Zero no Pinteiro (1º ao 90º dia)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
+                <span>Tabela Térmica e controle de temperatura</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
+                <span>Prevenção desde as primeiras horas de vida</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
+                <span>Desenvolvimento rápido e ganho de peso</span>
+            </div>
+        `;
+    }
+
+    const summaryBox = document.getElementById('pix-upsell-summary-box');
+    if (summaryBox) {
+        summaryBox.style.display = 'block';
+        summaryBox.innerHTML = `
+            <div style="color: #94a3b8; font-size: 0.62rem; font-weight: 800; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.3px;">
+                📦 O QUE VOCÊ VAI RECEBER:
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 2px; font-size: 0.7rem; color: #f1f5f9;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>💊 Guia Completo das Doenças:</span>
+                    <strong style="color: #ffffff;">R$ ${mainPrice.toFixed(2).replace('.', ',')}</strong>
+                </div>
+                ${hasRacao ? `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>🌾 Tabela de Ração Prática:</span>
+                    <strong style="color: #ffffff;">R$ 19,90</strong>
+                </div>` : ''}
+                <div style="display: flex; justify-content: space-between; align-items: center; color: #34d399;">
+                    <span>🐣 Manual de Manejo dos Pintinhos:</span>
+                    <strong style="color: #34d399;">+ R$ 27,90</strong>
+                </div>
+            </div>
+        `;
+    }
+
+    const totalValueEl = document.getElementById('pix-upsell-total-value');
+    if (totalValueEl) {
+        totalValueEl.innerText = `R$ ${fmtTotal}`;
+    }
+
+    if (ctaBtnText) ctaBtnText.innerText = `Aprender sobre o manejo de pintinhos (Total: R$ ${fmtTotal})`;
+    if (rejectBtn) rejectBtn.innerText = `Levar apenas o guia das doenças (R$ ${fmtCurrent})`;
 }
 
 
@@ -1540,7 +1503,6 @@ window.acceptPixUpsell = function() {
         if (!cart.bumps.includes('ebook-doencas')) cart.bumps.push('ebook-doencas');
     } else {
         if (!cart.bumps.includes('ebook-manejo')) cart.bumps.push('ebook-manejo');
-        if (!cart.bumps.includes('bump-6361')) cart.bumps.push('bump-6361');
     }
     
     const upsellModal = document.getElementById('pix-upsell-modal');
@@ -1654,12 +1616,12 @@ async function handlePayment(method) {
                 };
             } else {
                 // Fallback de emergência (mesmo do updateTotal)
-                const fallbackPrice = (id === 'ebook-manejo' || id === 'ebook-doencas') ? 49.9 : 59.9;
+                const fallbackPrice = (id === 'ebook-manejo') ? 27.90 : ((id === 'ebook-doencas') ? 49.90 : 19.90);
                 b = { 
                     id: id, 
-                    title: id === 'ebook-manejo' ? 'Manual de Pintinhos' : (id === 'ebook-doencas' ? 'Guia Completo das Doenças' : 'Ebook Adicional'),
+                    title: id === 'ebook-manejo' ? 'Manual de Pintinhos' : (id === 'ebook-doencas' ? 'Guia Completo das Doenças' : 'Tabela de Ração Prática'),
                     price: fallbackPrice, 
-                    priceCard: id === 'ebook-manejo' ? 49.9 : (id === 'ebook-doencas' ? 49.9 : 99.0) 
+                    priceCard: fallbackPrice
                 };
             }
         }
@@ -1673,14 +1635,8 @@ async function handlePayment(method) {
                     if (b.id === 'ebook-doencas') bumpPrice = 49.90;
                     if (b.id === 'bump-6361') bumpPrice = 19.90;
                 } else {
-                    const isCombo = cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite';
-                    if (isCombo) {
-                        if (b.id === 'ebook-manejo') bumpPrice = 40.00;
-                        if (b.id === 'bump-6361') bumpPrice = 0.00;
-                    } else {
-                        if (b.id === 'ebook-manejo' || b.id === 'ebook-doencas') bumpPrice = 40.00;
-                        if (b.id === 'bump-6361') bumpPrice = 0.00;
-                    }
+                    if (b.id === 'ebook-manejo') bumpPrice = 27.90;
+                    if (b.id === 'bump-6361') bumpPrice = 19.90;
                 }
             }
 
