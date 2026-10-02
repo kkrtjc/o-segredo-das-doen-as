@@ -572,7 +572,8 @@ adminRoutes.post('/verify-access', async (c) => {
             products: Array.from(productsSet)
         });
     } catch (err) {
-        return c.json({ error: 'Erro interno ao verificar acesso' }, 500);
+        console.error('verify-access error:', err);
+        return c.json({ error: 'Erro interno ao verificar acesso', detail: err.message }, 500);
     }
 });
 
