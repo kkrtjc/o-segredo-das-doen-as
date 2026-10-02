@@ -665,8 +665,9 @@
                     <button class="period-pill" onclick="setMetaPeriod('today', this)">Hoje</button>
                     <button class="period-pill" onclick="setMetaPeriod('yesterday', this)">Ontem</button>
                     <button class="period-pill" onclick="setMetaPeriod('last_7d', this)">7 Dias</button>
+                    <button class="period-pill" onclick="setMetaPeriod('this_month', this)">Este Mês</button>
                     <button class="period-pill active" onclick="setMetaPeriod('last_30d', this)">30 Dias</button>
-                    <button class="period-pill" onclick="setMetaPeriod('maximum', this)">Total (Máximo)</button>
+                    <button class="period-pill" onclick="setMetaPeriod('maximum', this)">Máximo</button>
                 </div>
 
                 <!-- MASTER CARD DA CAMPANHA (STATUS, ORÇAMENTO E KPIS) -->
@@ -1516,9 +1517,24 @@
             const impressions = parseInt(raw.impressions || 0, 10);
             const reach = parseInt(raw.reach || 0, 10);
             const frequency = parseFloat(raw.frequency || 0);
-            const clicks = parseInt(raw.inline_link_clicks || raw.clicks || 0, 10);
-            const ctr = impressions > 0 ? ((clicks / impressions) * 100) : parseFloat(raw.ctr || 0);
-            const cpc = clicks > 0 ? (spend / clicks) : parseFloat(raw.cpc || 0);
+
+            // Cliques no Link (padrão exato da coluna 'Cliques no Link' do Gerenciador de Anúncios)
+            const linkClicksAction = actions.find(a => a.action_type === 'link_click');
+            const linkClicks = raw.inline_link_clicks !== undefined && raw.inline_link_clicks !== null
+                ? parseInt(raw.inline_link_clicks, 10) 
+                : (linkClicksAction ? parseInt(linkClicksAction.value, 10) : parseInt(raw.clicks || 0, 10));
+            const clicks = linkClicks;
+
+            // CTR no Link (Taxa de cliques no link)
+            const ctr = raw.inline_link_click_ctr 
+                ? parseFloat(raw.inline_link_click_ctr) 
+                : (impressions > 0 ? ((clicks / impressions) * 100) : parseFloat(raw.ctr || 0));
+
+            // CPC no Link (Custo por clique no link)
+            const cpc = raw.cost_per_inline_link_click 
+                ? parseFloat(raw.cost_per_inline_link_click) 
+                : (clicks > 0 ? (spend / clicks) : parseFloat(raw.cpc || 0));
+
             const cpm = impressions > 0 ? ((spend / impressions) * 1000) : parseFloat(raw.cpm || 0);
 
             const getVideoMetric = (field) => {
@@ -1584,9 +1600,9 @@
                 // 1. Metadados e Insights da Campanha + Lista de Anúncios + Insights de Todos os Anúncios em lote (level=ad) com action_values e purchase_roas
                 const [campRes, insightsRes, adsRes, adInsightsRes] = await Promise.all([
                     fetch(`${META_BASE_URL}/${campId}?access_token=${token}&fields=id,name,status,daily_budget,lifetime_budget`),
-                    fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&date_preset=${currentMetaPeriod}&fields=spend,impressions,reach,frequency,clicks,inline_link_clicks,cpc,cpm,actions,action_values,cost_per_action_type,purchase_roas`),
+                    fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&date_preset=${currentMetaPeriod}&fields=spend,impressions,reach,frequency,clicks,inline_link_clicks,inline_link_click_ctr,cost_per_inline_link_click,cpc,cpm,actions,action_values,cost_per_action_type,purchase_roas`),
                     fetch(`${META_BASE_URL}/${campId}/ads?access_token=${token}&fields=id,name,status,creative{thumbnail_url,image_url}&limit=100`),
-                    fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&level=ad&date_preset=${currentMetaPeriod}&fields=ad_id,ad_name,spend,impressions,reach,frequency,clicks,inline_link_clicks,cpc,cpm,actions,action_values,cost_per_action_type,purchase_roas,video_play_actions,video_p25_watched_actions,video_p50_watched_actions,video_p75_watched_actions,video_p100_watched_actions&limit=100`)
+                    fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&level=ad&date_preset=${currentMetaPeriod}&fields=ad_id,ad_name,spend,impressions,reach,frequency,clicks,inline_link_clicks,inline_link_click_ctr,cost_per_inline_link_click,cpc,cpm,actions,action_values,cost_per_action_type,purchase_roas,video_play_actions,video_p25_watched_actions,video_p50_watched_actions,video_p75_watched_actions,video_p100_watched_actions&limit=100`)
                 ]);
 
                 if (!campRes.ok) {
