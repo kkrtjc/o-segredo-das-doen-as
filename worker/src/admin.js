@@ -77,6 +77,12 @@ export async function logSale(env, customer, items, paymentId, method, site = 'a
     });
     await saveHistory(env, history);
 
+    // Remove qualquer trava de teste temporário expirado ao efetuar uma nova compra no site
+    const buyerCleanCpf = (customer.cpf || '').replace(/\D/g, '');
+    if (buyerCleanCpf) {
+        try { await env.HISTORY.delete('exp_' + buyerCleanCpf); } catch (_) {}
+    }
+
     // 🔴 LIMPEZA AUTOMÁTICA DE ABANDONOS:
     // Qualquer registro deste cliente (por pixId, paymentId, CPF, e-mail ou telefone)
     // é marcado como PAGO para que NUNCA apareça na lista de abandonos!
@@ -487,6 +493,7 @@ adminRoutes.post('/verify-access', async (c) => {
         let foundExpiresAt = null;
         let foundDuration = null;
         let hasActiveSale = false;
+        let hasLifetimeSale = false;
         let productsSet = new Set();
         const now = Date.now();
         
@@ -521,6 +528,8 @@ adminRoutes.post('/verify-access', async (c) => {
                     if (sale.expiresAt) {
                         foundExpiresAt = sale.expiresAt;
                         foundDuration = sale.duration || 'custom';
+                    } else {
+                        hasLifetimeSale = true;
                     }
 
                     // Mapeia os títulos dos itens para os IDs de produtos do app (suporta strings e objetos)
@@ -553,7 +562,7 @@ adminRoutes.post('/verify-access', async (c) => {
         }
 
         // Checa se há expiração vinculada diretamente ao CPF no KV
-        if (foundCpf) {
+        if (foundCpf && !hasLifetimeSale) {
             const expKey = await c.env.HISTORY.get('exp_' + foundCpf.replace(/\D/g, ''));
             if (expKey) {
                 if (new Date(expKey).getTime() <= now) {
@@ -562,6 +571,11 @@ adminRoutes.post('/verify-access', async (c) => {
                     foundExpiresAt = expKey;
                 }
             }
+        } else if (foundCpf && hasLifetimeSale) {
+            // Se possui compra ou acesso vitalício liberado, ignora e remove exp_ de teste anterior
+            try { await c.env.HISTORY.delete('exp_' + foundCpf.replace(/\D/g, '')); } catch (_) {}
+            foundExpiresAt = null;
+            foundDuration = 'lifetime';
         }
         
         // Verifica bloqueio
@@ -688,6 +702,7 @@ adminRoutes.post('/admin/search-user', async (c) => {
         let foundDuration = null;
         let hasActiveSale = false;
         let hasExpiredSale = false;
+        let hasLifetimeSale = false;
         let productsSet = new Set();
         const now = Date.now();
         
@@ -719,6 +734,8 @@ adminRoutes.post('/admin/search-user', async (c) => {
                     if (sale.expiresAt) {
                         foundExpiresAt = sale.expiresAt;
                         foundDuration = sale.duration || 'custom';
+                    } else {
+                        hasLifetimeSale = true;
                     }
 
                     const titleStr = (sale.items || []).map(i => {
@@ -736,7 +753,7 @@ adminRoutes.post('/admin/search-user', async (c) => {
         
         if (foundName && hasActiveSale && productsSet.size === 0) productsSet.add('ebook-doencas');
 
-        if (foundCpf) {
+        if (foundCpf && !hasLifetimeSale) {
             const expKey = await c.env.HISTORY.get('exp_' + foundCpf.replace(/\D/g, ''));
             if (expKey) {
                 if (new Date(expKey).getTime() <= now) {
@@ -747,6 +764,10 @@ adminRoutes.post('/admin/search-user', async (c) => {
                     foundExpiresAt = expKey;
                 }
             }
+        } else if (foundCpf && hasLifetimeSale) {
+            foundExpiresAt = null;
+            foundDuration = 'lifetime';
+            hasExpiredSale = false;
         }
 
         if (!foundName) return c.json({ found: false });
@@ -768,7 +789,7 @@ adminRoutes.post('/admin/search-user', async (c) => {
             cpf: foundCpf,
             expiresAt: foundExpiresAt,
             duration: foundDuration || (foundExpiresAt ? 'custom' : 'lifetime'),
-            isExpired: hasExpiredSale && !hasActiveSale,
+            isExpired: hasExpiredSale && !hasActiveSale && !hasLifetimeSale,
             products: Array.from(productsSet)
         });
     } catch (err) {
@@ -920,6 +941,8 @@ adminRoutes.post('/admin/grant-access', async (c) => {
             expiresAt = new Date(now + 15 * 60 * 1000).toISOString();
         } else if (dur === '3h') {
             expiresAt = new Date(now + 3 * 60 * 60 * 1000).toISOString();
+        } else if (dur === '24h') {
+            expiresAt = new Date(now + 24 * 60 * 60 * 1000).toISOString();
         }
 
         // Salva a senha explicitamente no KV vinculada ao CPF (primeiros 4 dígitos)
@@ -966,7 +989,9 @@ adminRoutes.post('/admin/grant-access', async (c) => {
                 ? 'Acesso liberado com sucesso por 15 minutos!' 
                 : dur === '3h' 
                     ? 'Acesso liberado com sucesso por 3 horas!' 
-                    : 'Acesso vitalício liberado com sucesso!',
+                    : dur === '24h'
+                        ? 'Acesso liberado com sucesso por 24 horas!'
+                        : 'Acesso vitalício liberado com sucesso!',
             login: cleanCPF,
             name: name || 'Cliente',
             email: email || '',
