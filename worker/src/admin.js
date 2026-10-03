@@ -484,7 +484,11 @@ adminRoutes.post('/verify-access', async (c) => {
         let foundEmail = null;
         let foundPhone = null;
         let foundCpf = null;
+        let foundExpiresAt = null;
+        let foundDuration = null;
+        let hasActiveSale = false;
         let productsSet = new Set();
+        const now = Date.now();
         
         for (const sale of history) {
             const isApproved = sale.status === 'approved' || !sale.status;
@@ -507,6 +511,18 @@ adminRoutes.post('/verify-access', async (c) => {
                     if (!foundPhone && salePhone) foundPhone = salePhone;
                     if (!foundCpf && saleCpf) foundCpf = saleCpf;
                     
+                    // Verifica se esta venda/acesso manual já expirou
+                    const isExpired = sale.expiresAt && (new Date(sale.expiresAt).getTime() <= now);
+                    if (isExpired) {
+                        continue; // Não adiciona produtos de acessos expirados
+                    }
+
+                    hasActiveSale = true;
+                    if (sale.expiresAt) {
+                        foundExpiresAt = sale.expiresAt;
+                        foundDuration = sale.duration || 'custom';
+                    }
+
                     // Mapeia os títulos dos itens para os IDs de produtos do app (suporta strings e objetos)
                     const titleStr = (sale.items || []).map(i => {
                         if (typeof i === 'string') return i.toLowerCase();
@@ -530,10 +546,22 @@ adminRoutes.post('/verify-access', async (c) => {
             }
         }
         
-        // Se encontrou a pessoa mas não identificou o produto (compras antigas), libera os dois produtos base
-        if (foundName && productsSet.size === 0) {
+        // Se encontrou a pessoa E TEM venda ativa mas não identificou o produto (compras antigas), libera os dois produtos base
+        if (foundName && hasActiveSale && productsSet.size === 0) {
             productsSet.add('ebook-doencas');
             productsSet.add('tabela-racao');
+        }
+
+        // Checa se há expiração vinculada diretamente ao CPF no KV
+        if (foundCpf) {
+            const expKey = await c.env.HISTORY.get('exp_' + foundCpf.replace(/\D/g, ''));
+            if (expKey) {
+                if (new Date(expKey).getTime() <= now) {
+                    productsSet.clear();
+                } else if (!foundExpiresAt) {
+                    foundExpiresAt = expKey;
+                }
+            }
         }
         
         // Verifica bloqueio
@@ -569,6 +597,8 @@ adminRoutes.post('/verify-access', async (c) => {
             email: foundEmail,
             phone: foundPhone,
             cpf: foundCpf,
+            expiresAt: foundExpiresAt,
+            duration: foundDuration || (foundExpiresAt ? 'custom' : 'lifetime'),
             products: Array.from(productsSet)
         });
     } catch (err) {
@@ -654,7 +684,12 @@ adminRoutes.post('/admin/search-user', async (c) => {
         let foundEmail = null;
         let foundPhone = null;
         let foundCpf = null;
+        let foundExpiresAt = null;
+        let foundDuration = null;
+        let hasActiveSale = false;
+        let hasExpiredSale = false;
         let productsSet = new Set();
+        const now = Date.now();
         
         for (const sale of history) {
             const isApproved = sale.status === 'approved' || !sale.status;
@@ -662,6 +697,7 @@ adminRoutes.post('/admin/search-user', async (c) => {
                 const saleEmail = (sale.customer?.email || sale.email || '').toLowerCase();
                 const saleCpf = (sale.customer?.cpf || sale.cpf || '').replace(/\D/g, '');
                 const salePhone = (sale.customer?.phone || sale.phone || '').replace(/\D/g, '');
+                const saleName = sale.customer?.name || sale.name || '';
                 
                 let isMatch = false;
                 if (cleanId.includes('@') && saleEmail === cleanId) isMatch = true;
@@ -669,10 +705,22 @@ adminRoutes.post('/admin/search-user', async (c) => {
                 
                 if (isMatch) {
                     if (!foundName) foundName = sale.customer?.name || sale.name || '';
-                    if (!foundEmail && saleEmail) foundEmail = saleEmail;
-                    if (!foundPhone && salePhone) foundPhone = salePhone;
-                    if (!foundCpf && saleCpf) foundCpf = saleCpf;
+                    if (!foundEmail) foundEmail = saleEmail;
+                    if (!foundPhone) foundPhone = salePhone;
+                    if (!foundCpf) foundCpf = saleCpf;
                     
+                    const isExpired = sale.expiresAt && (new Date(sale.expiresAt).getTime() <= now);
+                    if (isExpired) {
+                        hasExpiredSale = true;
+                        continue;
+                    }
+
+                    hasActiveSale = true;
+                    if (sale.expiresAt) {
+                        foundExpiresAt = sale.expiresAt;
+                        foundDuration = sale.duration || 'custom';
+                    }
+
                     const titleStr = (sale.items || []).map(i => {
                         if (typeof i === 'string') return i.toLowerCase();
                         if (i && typeof i === 'object') return (i.title || '').toLowerCase();
@@ -686,7 +734,20 @@ adminRoutes.post('/admin/search-user', async (c) => {
             }
         }
         
-        if (foundName && productsSet.size === 0) productsSet.add('ebook-doencas');
+        if (foundName && hasActiveSale && productsSet.size === 0) productsSet.add('ebook-doencas');
+
+        if (foundCpf) {
+            const expKey = await c.env.HISTORY.get('exp_' + foundCpf.replace(/\D/g, ''));
+            if (expKey) {
+                if (new Date(expKey).getTime() <= now) {
+                    productsSet.clear();
+                    hasExpiredSale = true;
+                    hasActiveSale = false;
+                } else if (!foundExpiresAt) {
+                    foundExpiresAt = expKey;
+                }
+            }
+        }
 
         if (!foundName) return c.json({ found: false });
 
@@ -705,6 +766,9 @@ adminRoutes.post('/admin/search-user', async (c) => {
             email: foundEmail,
             phone: foundPhone,
             cpf: foundCpf,
+            expiresAt: foundExpiresAt,
+            duration: foundDuration || (foundExpiresAt ? 'custom' : 'lifetime'),
+            isExpired: hasExpiredSale && !hasActiveSale,
             products: Array.from(productsSet)
         });
     } catch (err) {
@@ -790,6 +854,7 @@ adminRoutes.post('/admin/delete-user', async (c) => {
         if (cleanCpf) {
             try {
                 await c.env.HISTORY.delete('pw_' + cleanCpf);
+                await c.env.HISTORY.delete('exp_' + cleanCpf);
                 await c.env.CONFIG.delete('profile_' + cleanCpf);
             } catch (_) {}
         }
@@ -832,7 +897,7 @@ adminRoutes.post('/admin/delete-user', async (c) => {
 
 adminRoutes.post('/admin/grant-access', async (c) => {
     try {
-        const { name, email, phone, cpf, products, password } = await c.req.json();
+        const { name, email, phone, cpf, products, password, duration } = await c.req.json();
         
         if (password !== (c.env.ADMIN_PASSWORD || 'mura2026')) {
             return c.json({ error: 'Acesso Negado' }, 401);
@@ -847,8 +912,25 @@ adminRoutes.post('/admin/grant-access', async (c) => {
         const cleanCPF = (cpf || '').replace(/\D/g, '');
         const clientPassword = cleanCPF.slice(0, 4) || '1234';
 
+        // Calcula a expiração com base no tempo escolhido
+        const dur = duration || 'lifetime';
+        const now = Date.now();
+        let expiresAt = null;
+        if (dur === '15m') {
+            expiresAt = new Date(now + 15 * 60 * 1000).toISOString();
+        } else if (dur === '3h') {
+            expiresAt = new Date(now + 3 * 60 * 60 * 1000).toISOString();
+        }
+
         // Salva a senha explicitamente no KV vinculada ao CPF (primeiros 4 dígitos)
         await c.env.HISTORY.put('pw_' + cleanCPF, clientPassword);
+
+        // Se for temporário, registra exp_ no KV; se for vitalício, remove exp_ anterior
+        if (expiresAt) {
+            await c.env.HISTORY.put('exp_' + cleanCPF, expiresAt);
+        } else {
+            try { await c.env.HISTORY.delete('exp_' + cleanCPF); } catch (_) {}
+        }
 
         const history = await getHistory(c.env);
         const manualId = `manual-${Date.now()}`;
@@ -857,6 +939,8 @@ adminRoutes.post('/admin/grant-access', async (c) => {
             id: manualId,
             paymentId: manualId,
             date: new Date().toISOString(),
+            expiresAt: expiresAt,
+            duration: dur,
             customer: {
                 name: name || 'Acesso Manual',
                 email: email || '',
@@ -878,12 +962,18 @@ adminRoutes.post('/admin/grant-access', async (c) => {
         await saveHistory(c.env, history);
         return c.json({ 
             success: true, 
-            message: 'Acesso liberado com sucesso!',
+            message: dur === '15m' 
+                ? 'Acesso liberado com sucesso por 15 minutos!' 
+                : dur === '3h' 
+                    ? 'Acesso liberado com sucesso por 3 horas!' 
+                    : 'Acesso vitalício liberado com sucesso!',
             login: cleanCPF,
             name: name || 'Cliente',
             email: email || '',
             phone: phone || '',
-            password: clientPassword
+            password: clientPassword,
+            duration: dur,
+            expiresAt: expiresAt
         });
         
     } catch (err) {
