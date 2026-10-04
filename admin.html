@@ -522,6 +522,7 @@
         .client-kpi-card .kpi-value { font-size: 20px; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
         .client-kpi-card .kpi-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
         .client-kpi-card.green .kpi-value { color: var(--accent-green); }
+        .client-kpi-card.gold .kpi-value { color: #fbbf24; }
         .client-kpi-card.red .kpi-value { color: var(--ios-red); }
         .client-kpi-card.blue .kpi-value { color: #38bdf8; }
 
@@ -644,8 +645,10 @@
             align-items: center; gap: 5px; margin-bottom: 3px;
         }
         .status-badge-inline.active { color: var(--accent-green); }
-        .status-badge-inline.entered { color: #fbbf24; }
+        .status-badge-inline.entered { color: #38bdf8; }
+        .status-badge-inline.pending { color: #fbbf24; }
         .status-badge-inline.never { color: var(--ios-red); }
+        .status-badge-inline.historical { color: #94a3b8; }
         .status-sub-text { font-size: 11px; color: var(--text-muted); line-height: 1.3; }
 
         .btn-wpp-action {
@@ -1052,19 +1055,19 @@
                     <div class="kpi-sub">Cadastros únicos</div>
                 </div>
                 <div class="client-kpi-card green">
-                    <div class="kpi-label"><i class="fa-solid fa-fire"></i> Ativos (Consumindo)</div>
-                    <div class="kpi-value" id="cli-kpi-consuming">--</div>
-                    <div class="kpi-sub" id="cli-kpi-consuming-sub">Já leram conteúdos</div>
+                    <div class="kpi-label"><i class="fa-solid fa-circle-check"></i> Acessos Confirmados</div>
+                    <div class="kpi-value" id="cli-kpi-confirmed">--</div>
+                    <div class="kpi-sub" id="cli-kpi-confirmed-sub">Logados no App</div>
                 </div>
-                <div class="client-kpi-card red">
-                    <div class="kpi-label"><i class="fa-solid fa-door-closed"></i> Nunca Acessaram</div>
-                    <div class="kpi-value" id="cli-kpi-never">--</div>
-                    <div class="kpi-sub" id="cli-kpi-never-sub">Precisam de suporte</div>
+                <div class="client-kpi-card gold">
+                    <div class="kpi-label"><i class="fa-solid fa-clock"></i> Aguardando Acesso</div>
+                    <div class="kpi-value" id="cli-kpi-pending">--</div>
+                    <div class="kpi-sub" id="cli-kpi-pending-sub">Compras recentes (72h)</div>
                 </div>
                 <div class="client-kpi-card blue">
-                    <div class="kpi-label"><i class="fa-solid fa-chart-pie"></i> Taxa de Ativação</div>
-                    <div class="kpi-value" id="cli-kpi-rate">--%</div>
-                    <div class="kpi-sub" id="cli-kpi-rate-sub">Entraram no app</div>
+                    <div class="kpi-label"><i class="fa-solid fa-box-archive"></i> Base Histórica</div>
+                    <div class="kpi-value" id="cli-kpi-historical">--</div>
+                    <div class="kpi-sub" id="cli-kpi-historical-sub">Entregues por e-mail/PDF</div>
                 </div>
             </div>
 
@@ -1133,9 +1136,9 @@
                 <!-- Filtros por Status de Acesso -->
                 <div class="filter-pills-row">
                     <div class="filter-pill active" id="pill-status-all" onclick="setClientsFilterStatus('all')">Todos (<span id="count-status-all">0</span>)</div>
-                    <div class="filter-pill" id="pill-status-consuming" onclick="setClientsFilterStatus('active_consuming')">🟢 Consumindo (<span id="count-status-consuming">0</span>)</div>
-                    <div class="filter-pill" id="pill-status-entered" onclick="setClientsFilterStatus('logged_in')">🟡 Só Entrou (<span id="count-status-entered">0</span>)</div>
-                    <div class="filter-pill" id="pill-status-never" onclick="setClientsFilterStatus('never_accessed')">🔴 Nunca Acessou (<span id="count-status-never">0</span>)</div>
+                    <div class="filter-pill" id="pill-status-confirmed" onclick="setClientsFilterStatus('confirmed')">🟢 Acessou / Logado (<span id="count-status-confirmed">0</span>)</div>
+                    <div class="filter-pill" id="pill-status-pending" onclick="setClientsFilterStatus('recent_pending')">⏳ Aguardando Acesso (<span id="count-status-pending">0</span>)</div>
+                    <div class="filter-pill" id="pill-status-historical" onclick="setClientsFilterStatus('historical')">📦 Base Histórica (<span id="count-status-historical">0</span>)</div>
                 </div>
 
                 <!-- Filtro Ativo / Limpar -->
@@ -1824,23 +1827,27 @@
 
                 // 1. Atualiza KPIs do Topo
                 const elTotal = document.getElementById('cli-kpi-total');
-                const elConsuming = document.getElementById('cli-kpi-consuming');
-                const elNever = document.getElementById('cli-kpi-never');
-                const elRate = document.getElementById('cli-kpi-rate');
+                const elConfirmed = document.getElementById('cli-kpi-confirmed');
+                const elPending = document.getElementById('cli-kpi-pending');
+                const elHistorical = document.getElementById('cli-kpi-historical');
+
+                const totalAccessed = summary.totalAccessed || 0;
+                const recentPending = summary.recentPendingCount || 0;
+                const historical = summary.historicalCount || 0;
 
                 if (elTotal) elTotal.textContent = total;
-                if (elConsuming) elConsuming.textContent = summary.activeConsumingCount || 0;
-                if (elNever) elNever.textContent = summary.neverAccessedCount || 0;
-                if (elRate) elRate.textContent = (summary.activationRate || 0) + '%';
+                if (elConfirmed) elConfirmed.textContent = totalAccessed;
+                if (elPending) elPending.textContent = recentPending;
+                if (elHistorical) elHistorical.textContent = historical;
 
-                const elConsumingSub = document.getElementById('cli-kpi-consuming-sub');
-                if (elConsumingSub) elConsumingSub.textContent = `${summary.consumingRate || 0}% de retenção ativa`;
+                const elConfirmedSub = document.getElementById('cli-kpi-confirmed-sub');
+                if (elConfirmedSub) elConfirmedSub.textContent = `${summary.activeConsumingCount || 0} consumindo conteúdos`;
 
-                const elNeverSub = document.getElementById('cli-kpi-never-sub');
-                if (elNeverSub) elNeverSub.textContent = total > 0 ? `${Math.round(((summary.neverAccessedCount || 0) / total) * 100)}% sem primeiro login` : '0%';
+                const elPendingSub = document.getElementById('cli-kpi-pending-sub');
+                if (elPendingSub) elPendingSub.textContent = 'Compras recentes (72h)';
 
-                const elRateSub = document.getElementById('cli-kpi-rate-sub');
-                if (elRateSub) elRateSub.textContent = `${summary.totalAccessed || 0} já fizeram login`;
+                const elHistoricalSub = document.getElementById('cli-kpi-historical-sub');
+                if (elHistoricalSub) elHistoricalSub.textContent = 'Entregues por e-mail/PDF';
 
                 // 2. Atualiza Níveis
                 const lvls = summary.levels || {};
@@ -1871,10 +1878,15 @@
                 document.getElementById('lvl-free-bar').style.width = `${freePct}%`;
 
                 // 3. Atualiza contadores das pílulas de status
-                document.getElementById('count-status-all').textContent = total;
-                document.getElementById('count-status-consuming').textContent = summary.activeConsumingCount || 0;
-                document.getElementById('count-status-entered').textContent = summary.loggedInCount || 0;
-                document.getElementById('count-status-never').textContent = summary.neverAccessedCount || 0;
+                const countAll = document.getElementById('count-status-all');
+                const countConfirmed = document.getElementById('count-status-confirmed');
+                const countPending = document.getElementById('count-status-pending');
+                const countHistorical = document.getElementById('count-status-historical');
+
+                if (countAll) countAll.textContent = total;
+                if (countConfirmed) countConfirmed.textContent = totalAccessed;
+                if (countPending) countPending.textContent = recentPending;
+                if (countHistorical) countHistorical.textContent = historical;
 
                 // 4. Renderiza lista com filtros aplicados
                 renderClientsList();
@@ -1908,10 +1920,9 @@
         function setClientsFilterStatus(status) {
             clientFilterStatus = status;
 
-            ['all', 'consuming', 'entered', 'never'].forEach(k => {
-                const map = { all: 'all', consuming: 'active_consuming', entered: 'logged_in', never: 'never_accessed' };
+            ['all', 'confirmed', 'pending', 'historical'].forEach(k => {
                 const el = document.getElementById(`pill-status-${k}`);
-                if (el) el.classList.toggle('active', clientFilterStatus === map[k]);
+                if (el) el.classList.toggle('active', clientFilterStatus === k || (clientFilterStatus === 'recent_pending' && k === 'pending'));
             });
 
             updateActiveFilterIndicator();
@@ -1945,7 +1956,7 @@
                 if (el) el.classList.remove('active-filter');
             });
 
-            ['all', 'consuming', 'entered', 'never'].forEach(k => {
+            ['all', 'confirmed', 'pending', 'historical'].forEach(k => {
                 const el = document.getElementById(`pill-status-${k}`);
                 if (el) el.classList.toggle('active', k === 'all');
             });
@@ -1976,11 +1987,11 @@
                 }
                 if (hasStatus) {
                     const statusNames = {
-                        'active_consuming': '🟢 Consumindo',
-                        'logged_in': '🟡 Só Entrou',
-                        'never_accessed': '🔴 Nunca Acessou'
+                        'confirmed': '🟢 Acessou / Logado',
+                        'recent_pending': '⏳ Aguardando Acesso Recente',
+                        'historical': '📦 Base Histórica'
                     };
-                    parts.push(statusNames[clientFilterStatus]);
+                    parts.push(statusNames[clientFilterStatus] || clientFilterStatus);
                 }
                 if (hasSearch) parts.push(`Busca: "${clientSearchQuery}"`);
 
@@ -2016,7 +2027,15 @@
 
             // 3. Filtro por Status de Atividade
             if (clientFilterStatus !== 'all') {
-                clients = clients.filter(c => c.activity?.status === clientFilterStatus);
+                if (clientFilterStatus === 'confirmed') {
+                    clients = clients.filter(c => c.activity?.status === 'active_consuming' || c.activity?.status === 'logged_in');
+                } else if (clientFilterStatus === 'recent_pending' || clientFilterStatus === 'pending') {
+                    clients = clients.filter(c => c.activity?.status === 'recent_pending');
+                } else if (clientFilterStatus === 'historical') {
+                    clients = clients.filter(c => c.activity?.status === 'historical');
+                } else {
+                    clients = clients.filter(c => c.activity?.status === clientFilterStatus);
+                }
             }
 
             if (clients.length === 0) {
@@ -2057,23 +2076,28 @@
                 if (prods.length === 0) prodsHtml += '<span class="product-tag tag-none">Sem conteúdos pagos</span>';
 
                 // Status de Acesso
-                let statusIcon = 'fa-circle-xmark';
-                let statusClass = 'never';
-                let statusTitle = '🔴 NUNCA ACESSOU';
-                let statusDetails = `Comprou em ${dateStr} e ainda não fez login.`;
+                let statusIcon = 'fa-box-archive';
+                let statusClass = 'historical';
+                let statusTitle = '📦 BASE HISTÓRICA (Acesso Entregue)';
+                let statusDetails = `Compra de ${dateStr}. Acesso entregue por e-mail e PDF liberado na confirmação.`;
 
                 if (act.status === 'active_consuming') {
                     statusIcon = 'fa-circle-check';
                     statusClass = 'active';
-                    statusTitle = `🟢 ATIVO (Consumiu ${act.consumedCount} conteúdos)`;
+                    statusTitle = `🟢 ATIVO (Leu ${act.consumedCount} conteúdos)`;
                     const lastLoginDate = act.lastLogin ? new Date(act.lastLogin).toLocaleDateString('pt-BR') + ' às ' + new Date(act.lastLogin).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 'Recentemente';
                     statusDetails = `Último acesso: ${lastLoginDate}${act.lastContentTitle ? ` • Vendo: <strong>${act.lastContentTitle}</strong>` : ''}`;
                 } else if (act.status === 'logged_in') {
-                    statusIcon = 'fa-circle-exclamation';
+                    statusIcon = 'fa-circle-check';
                     statusClass = 'entered';
                     statusTitle = `🟡 JÁ ACESSOU (${act.loginCount} login${act.loginCount > 1 ? 's' : ''})`;
                     const lastLoginDate = act.lastLogin ? new Date(act.lastLogin).toLocaleDateString('pt-BR') + ' às ' + new Date(act.lastLogin).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 'Recentemente';
-                    statusDetails = `Entrou no app em ${lastLoginDate}, mas ainda não abriu capítulos.`;
+                    statusDetails = `Entrou no app em ${lastLoginDate}. Sessão ativa.`;
+                } else if (act.status === 'recent_pending') {
+                    statusIcon = 'fa-clock';
+                    statusClass = 'pending';
+                    statusTitle = '⏳ AGUARDANDO 1º ACESSO (Compra Recente)';
+                    statusDetails = `Comprou em ${dateStr}. Ainda não abriu o link de acesso no app.`;
                 }
 
                 // WhatsApp URL para envio de suporte ou acesso
@@ -2085,16 +2109,18 @@
                     const directLink = `https://protocolo-elite.pages.dev/?login=1&cpf=${cleanCpfOnly}`;
 
                     let wppText = '';
-                    if (act.status === 'never_accessed') {
-                        wppText = `Olá, ${firstName}! Tudo bem? Aqui é o João Paulo do Protocolo Elite.\n\nVi que você garantiu seu acesso ao ${c.levelLabel} mas ainda não entrou na plataforma.\n\nFicou alguma dúvida com o login ou senha? Estou por aqui para te ajudar!\n\nVocê pode entrar direto por este link:\n${directLink}`;
+                    if (act.status === 'recent_pending') {
+                        wppText = `Olá, ${firstName}! Tudo bem? Aqui é o João Paulo do Protocolo Elite.\n\nVi que você acabou de garantir seu acesso ao ${c.levelLabel}! Passando para te dar as boas-vindas e enviar seu link direto de acesso:\n${directLink}\n\nFicou alguma dúvida? Estou por aqui para te apoiar!`;
+                    } else if (act.status === 'historical') {
+                        wppText = `Olá, ${firstName}! Tudo bem? Aqui é o João Paulo do Protocolo Elite. Passando para saber como estão suas aves e te lembrar que você tem acesso liberado à nossa plataforma atualizada:\n${directLink}\n\nQualquer dúvida é só me chamar!`;
                     } else {
                         wppText = `Olá, ${firstName}! Tudo bem? Aqui é o João Paulo do Protocolo Elite. Passando para saber como estão suas aves e se você está conseguindo aplicar os manejos da plataforma! Qualquer dúvida é só me chamar por aqui.`;
                     }
 
                     const wppUrl = `https://wa.me/${fullPhone}?text=${encodeURIComponent(wppText)}`;
                     wppBtnHtml = `
-                    <a href="${wppUrl}" target="_blank" class="btn-wpp-action ${act.status === 'never_accessed' ? '' : 'secondary'}">
-                        <i class="fa-brands fa-whatsapp"></i> ${act.status === 'never_accessed' ? 'Enviar Acesso no WhatsApp' : 'Chamar no WhatsApp'}
+                    <a href="${wppUrl}" target="_blank" class="btn-wpp-action ${act.status === 'recent_pending' ? '' : 'secondary'}">
+                        <i class="fa-brands fa-whatsapp"></i> ${act.status === 'recent_pending' ? 'Enviar Acesso no WhatsApp' : 'Chamar no WhatsApp'}
                     </a>`;
                 } else {
                     wppBtnHtml = `<span style="font-size:10px; color:var(--text-muted); font-style:italic;">Sem WhatsApp cadastrado</span>`;

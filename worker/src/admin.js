@@ -786,9 +786,24 @@ adminRoutes.get('/admin/clients-metrics', async (c) => {
     let umProdutoCount = 0;
     let gratuitoCount = 0;
 
+    // Carrega usuários gratuitos cadastrados para checar quem já criou conta
+    let freeUsersSet = new Set();
+    try {
+        const rawFree = await c.env.HISTORY.get('free_users');
+        if (rawFree) {
+            const parsed = JSON.parse(rawFree);
+            parsed.forEach(u => {
+                if (u.email) freeUsersSet.add(u.email.trim().toLowerCase());
+                const cleanPh = (u.phone || '').replace(/\D/g, '');
+                if (cleanPh.length >= 8) freeUsersSet.add(cleanPh.slice(-8));
+            });
+        }
+    } catch (_) {}
+
     let activeConsumingCount = 0;
     let loggedInCount = 0;
-    let neverAccessedCount = 0;
+    let recentPendingCount = 0;
+    let historicalCount = 0;
 
     for (const [key, client] of clientsMap.entries()) {
         const isBlocked = blockedUsers.has(client.cleanCpf) || (client.email && blockedUsers.has(client.email)) || blockedUsers.has(client.id);
@@ -837,12 +852,19 @@ adminRoutes.get('/admin/clients-metrics', async (c) => {
         const loginCount = act.loginCount || 0;
         const consumedList = Array.isArray(act.consumed) ? act.consumed : [];
         const consumedCount = consumedList.length;
-        const hasAccessed = loginCount > 0 || !!act.lastLogin;
+
+        const clientPhoneEnding = client.phone ? client.phone.replace(/\D/g, '').slice(-8) : '';
+        const isRegistered = (client.email && freeUsersSet.has(client.email)) || (clientPhoneEnding && freeUsersSet.has(clientPhoneEnding));
+
+        const hasAccessed = loginCount > 0 || !!act.lastLogin || isRegistered;
         const hasConsumed = consumedCount > 0;
 
-        let status = 'never_accessed';
-        let statusLabel = 'Nunca Acessou';
-        let statusBadge = 'status-never';
+        const saleTime = new Date(client.lastPurchaseDate || client.firstPurchaseDate).getTime();
+        const isRecent = (now - saleTime) <= (72 * 60 * 60 * 1000); // Compras das últimas 72 horas
+
+        let status = 'historical';
+        let statusLabel = 'Base Histórica';
+        let statusBadge = 'status-historical';
 
         if (hasConsumed) {
             status = 'active_consuming';
@@ -851,14 +873,19 @@ adminRoutes.get('/admin/clients-metrics', async (c) => {
             activeConsumingCount++;
         } else if (hasAccessed) {
             status = 'logged_in';
-            statusLabel = 'Acessou (Sem Leitura)';
+            statusLabel = 'Acessou (Logado)';
             statusBadge = 'status-entered';
             loggedInCount++;
+        } else if (isRecent) {
+            status = 'recent_pending';
+            statusLabel = 'Aguardando 1º Acesso';
+            statusBadge = 'status-pending';
+            recentPendingCount++;
         } else {
-            status = 'never_accessed';
-            statusLabel = 'Nunca Acessou';
-            statusBadge = 'status-never';
-            neverAccessedCount++;
+            status = 'historical';
+            statusLabel = 'Base Histórica (E-mail/PDF)';
+            statusBadge = 'status-historical';
+            historicalCount++;
         }
 
         clientsList.push({
@@ -882,9 +909,11 @@ adminRoutes.get('/admin/clients-metrics', async (c) => {
             activity: {
                 hasAccessed: hasAccessed,
                 hasConsumed: hasConsumed,
+                isRegistered: isRegistered,
+                isRecent: isRecent,
                 loginCount: loginCount,
-                firstLogin: act.firstLogin || null,
-                lastLogin: act.lastLogin || null,
+                firstLogin: act.firstLogin || (isRegistered ? client.firstPurchaseDate : null),
+                lastLogin: act.lastLogin || (isRegistered ? client.lastPurchaseDate : null),
                 consumedCount: consumedCount,
                 consumed: consumedList,
                 lastConsumedAt: act.lastConsumedAt || null,
@@ -908,7 +937,8 @@ adminRoutes.get('/admin/clients-metrics', async (c) => {
             totalClients,
             activeConsumingCount,
             loggedInCount,
-            neverAccessedCount,
+            recentPendingCount,
+            historicalCount,
             totalAccessed,
             activationRate,
             consumingRate,
