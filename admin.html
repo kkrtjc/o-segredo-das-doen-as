@@ -502,6 +502,163 @@
             display: flex; justify-content: space-between; font-size: 9px;
             color: var(--text-muted); font-weight: 700; margin-top: 4px;
         }
+
+        /* ─── CLIENTS & COMMUNITY TAB STYLES ─── */
+        .clients-kpi-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px;
+        }
+        @media (max-width: 520px) {
+            .clients-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        .client-kpi-card {
+            background: rgba(15, 23, 42, 0.7); border: 1px solid var(--surface-border);
+            border-radius: 16px; padding: 12px; text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+        }
+        .client-kpi-card .kpi-label {
+            font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted);
+            margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 4px;
+        }
+        .client-kpi-card .kpi-value { font-size: 20px; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
+        .client-kpi-card .kpi-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+        .client-kpi-card.green .kpi-value { color: var(--accent-green); }
+        .client-kpi-card.red .kpi-value { color: var(--ios-red); }
+        .client-kpi-card.blue .kpi-value { color: #38bdf8; }
+
+        /* NÍVEIS CONTAINER */
+        .levels-container {
+            background: rgba(15, 23, 42, 0.6); border: 1px solid var(--surface-border);
+            border-radius: 20px; padding: 14px 16px; margin-bottom: 18px;
+        }
+        .levels-header-title {
+            font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--text-muted);
+            letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+        }
+        .levels-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+        }
+        @media (max-width: 520px) {
+            .levels-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        .level-card {
+            background: rgba(0, 0, 0, 0.35); border: 1px solid var(--surface-border);
+            border-radius: 14px; padding: 12px; cursor: pointer; transition: all 0.2s;
+            display: flex; flex-direction: column;
+        }
+        .level-card:active { transform: scale(0.97); }
+        .level-card.active-filter { border-color: var(--accent-gold); box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.3); }
+        .level-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .level-badge {
+            font-size: 9px; font-weight: 800; text-transform: uppercase; padding: 2px 7px;
+            border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;
+        }
+        .badge-combo { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); }
+        .badge-double { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+        .badge-single { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+        .badge-free { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); }
+
+        .level-count { font-size: 16px; font-weight: 900; color: #fff; }
+        .level-desc { font-size: 10px; color: var(--text-muted); line-height: 1.25; margin-bottom: 8px; flex: 1; }
+        .level-progress-bar { width: 100%; height: 5px; background: rgba(255, 255, 255, 0.08); border-radius: 4px; overflow: hidden; margin-bottom: 4px; }
+        .level-progress-fill { height: 100%; border-radius: 4px; }
+        .fill-combo { background: linear-gradient(90deg, #a855f7, #e879f9); }
+        .fill-double { background: linear-gradient(90deg, #10b981, #34d399); }
+        .fill-single { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .fill-free { background: linear-gradient(90deg, #64748b, #94a3b8); }
+        .level-percent { font-size: 9px; font-weight: 700; color: var(--text-muted); }
+
+        /* TOOLBAR */
+        .clients-toolbar { margin-bottom: 16px; }
+        .search-input-wrapper {
+            position: relative; display: flex; align-items: center; margin-bottom: 10px;
+        }
+        .search-input-wrapper i.fa-magnifying-glass {
+            position: absolute; left: 14px; color: var(--text-muted); font-size: 14px; pointer-events: none;
+        }
+        .search-input-wrapper input {
+            width: 100%; background: rgba(15, 23, 42, 0.85); border: 1px solid var(--surface-border);
+            border-radius: 14px; padding: 12px 38px 12px 38px; color: #fff; font-size: 13px; font-weight: 600;
+            outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .search-input-wrapper input:focus {
+            border-color: var(--accent-gold); box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
+        }
+        .search-input-wrapper #btn-clear-search {
+            position: absolute; right: 12px; background: transparent; border: none; color: var(--text-muted);
+            cursor: pointer; font-size: 13px; padding: 4px;
+        }
+
+        .filter-pills-row {
+            display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none;
+        }
+        .filter-pills-row::-webkit-scrollbar { display: none; }
+        .filter-pill {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--surface-border);
+            padding: 6px 12px; border-radius: 10px; font-size: 11px; font-weight: 700;
+            color: var(--text-muted); white-space: nowrap; cursor: pointer; transition: all 0.15s;
+        }
+        .filter-pill:active { transform: scale(0.96); }
+        .filter-pill.active {
+            background: rgba(251, 191, 36, 0.18); border-color: var(--accent-gold); color: var(--accent-gold);
+        }
+
+        /* CLIENT CARD */
+        .client-card {
+            background: rgba(15, 23, 42, 0.85); border: 1px solid var(--surface-border);
+            border-radius: 18px; padding: 14px 16px; margin-bottom: 12px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3); transition: border-color 0.2s;
+        }
+        .client-card-header {
+            display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px;
+        }
+        .client-card-name { font-size: 14px; font-weight: 900; color: #fff; line-height: 1.3; }
+        .client-card-info-row {
+            display: flex; flex-wrap: wrap; gap: 10px; font-size: 11px; color: var(--text-muted); margin-bottom: 10px;
+        }
+        .client-card-info-item { display: inline-flex; align-items: center; gap: 4px; }
+        .client-card-info-item strong { color: #cbd5e1; }
+        
+        .client-card-products {
+            display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;
+        }
+        .product-tag {
+            font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px;
+            display: inline-flex; align-items: center; gap: 4px;
+        }
+        .tag-doencas { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .tag-pintinhos { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .tag-racao { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .tag-none { background: rgba(148, 163, 184, 0.1); color: #94a3b8; }
+
+        .client-card-status-bar {
+            background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px; padding: 10px 12px; display: flex; justify-content: space-between;
+            align-items: center; gap: 10px;
+        }
+        @media (max-width: 480px) {
+            .client-card-status-bar { flex-direction: column; align-items: stretch; gap: 8px; }
+        }
+        .status-left-details { flex: 1; }
+        .status-badge-inline {
+            font-size: 10px; font-weight: 800; text-transform: uppercase; display: inline-flex;
+            align-items: center; gap: 5px; margin-bottom: 3px;
+        }
+        .status-badge-inline.active { color: var(--accent-green); }
+        .status-badge-inline.entered { color: #fbbf24; }
+        .status-badge-inline.never { color: var(--ios-red); }
+        .status-sub-text { font-size: 11px; color: var(--text-muted); line-height: 1.3; }
+
+        .btn-wpp-action {
+            background: #25D366; color: #fff; border: none; border-radius: 10px;
+            padding: 8px 12px; font-size: 11px; font-weight: 800; text-decoration: none;
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            cursor: pointer; white-space: nowrap; transition: all 0.2s; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.25);
+        }
+        .btn-wpp-action:active { transform: scale(0.95); }
+        .btn-wpp-action.secondary {
+            background: rgba(37, 211, 102, 0.15); color: #25D366; border: 1px solid rgba(37, 211, 102, 0.3);
+            box-shadow: none;
+        }
     </style>
 </head>
 <body>
@@ -870,14 +1027,129 @@
             </div>
         </div>
 
-        <!-- ABA CATÁLOGO DE PREÇOS -->
-        <div id="view-products" class="tab-view" style="display: none;">
-            <div class="section-header-title">
-                <i class="fa-solid fa-box-open" style="color: var(--accent-gold);"></i> Preços dos Produtos
+        <!-- ABA COMUNIDADE & CLIENTES ELITE (SUBSTITUI PREÇOS) -->
+        <div id="view-clients" class="tab-view" style="display: none;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div>
+                    <div style="font-size: 17px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-users-viewfinder" style="color: var(--accent-gold);"></i> Clientes Protocolo Elite
+                    </div>
+                    <div style="font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 2px;">
+                        Acompanhamento de Acesso e Consumo em Tempo Real
+                    </div>
+                </div>
+                <button onclick="loadClientsMetrics(true)" style="background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.3); color: var(--accent-gold); padding: 8px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-rotate" id="clients-refresh-icon"></i> Atualizar
+                </button>
             </div>
-            <div class="list-group" id="products-catalog-list">
-                <div class="empty-state">Carregando catálogo...</div>
+
+            <!-- CARDS DE RESUMO (HERO METRICS) -->
+            <div class="clients-kpi-grid">
+                <div class="client-kpi-card">
+                    <div class="kpi-label"><i class="fa-solid fa-users"></i> Total Clientes</div>
+                    <div class="kpi-value" id="cli-kpi-total">--</div>
+                    <div class="kpi-sub">Cadastros únicos</div>
+                </div>
+                <div class="client-kpi-card green">
+                    <div class="kpi-label"><i class="fa-solid fa-fire"></i> Ativos (Consumindo)</div>
+                    <div class="kpi-value" id="cli-kpi-consuming">--</div>
+                    <div class="kpi-sub" id="cli-kpi-consuming-sub">Já leram conteúdos</div>
+                </div>
+                <div class="client-kpi-card red">
+                    <div class="kpi-label"><i class="fa-solid fa-door-closed"></i> Nunca Acessaram</div>
+                    <div class="kpi-value" id="cli-kpi-never">--</div>
+                    <div class="kpi-sub" id="cli-kpi-never-sub">Precisam de suporte</div>
+                </div>
+                <div class="client-kpi-card blue">
+                    <div class="kpi-label"><i class="fa-solid fa-chart-pie"></i> Taxa de Ativação</div>
+                    <div class="kpi-value" id="cli-kpi-rate">--%</div>
+                    <div class="kpi-sub" id="cli-kpi-rate-sub">Entraram no app</div>
+                </div>
             </div>
+
+            <!-- DISTRIBUIÇÃO DOS 4 NÍVEIS DE CLIENTES -->
+            <div class="levels-container">
+                <div class="levels-header-title">
+                    <i class="fa-solid fa-layer-group" style="color: var(--accent-gold);"></i> Níveis de Clientes na Plataforma
+                </div>
+                <div class="levels-grid">
+                    
+                    <!-- Nível 1: Combo Completo -->
+                    <div class="level-card level-combo" id="lvl-card-combo" onclick="setClientsFilterLevel('combo_completo')">
+                        <div class="level-card-top">
+                            <div class="level-badge badge-combo"><i class="fa-solid fa-crown"></i> Combo Completo</div>
+                            <div class="level-count" id="lvl-combo-count">0</div>
+                        </div>
+                        <div class="level-desc">Doenças + Pintinhos + Ração</div>
+                        <div class="level-progress-bar"><div class="level-progress-fill fill-combo" id="lvl-combo-bar" style="width: 0%;"></div></div>
+                        <div class="level-percent" id="lvl-combo-percent">0% da base</div>
+                    </div>
+
+                    <!-- Nível 2: 2 Produtos -->
+                    <div class="level-card level-double" id="lvl-card-double" onclick="setClientsFilterLevel('dois_produtos')">
+                        <div class="level-card-top">
+                            <div class="level-badge badge-double"><i class="fa-solid fa-gem"></i> 2 Produtos</div>
+                            <div class="level-count" id="lvl-double-count">0</div>
+                        </div>
+                        <div class="level-desc">Pintinhos + Doenças ou Ração</div>
+                        <div class="level-progress-bar"><div class="level-progress-fill fill-double" id="lvl-double-bar" style="width: 0%;"></div></div>
+                        <div class="level-percent" id="lvl-double-percent">0% da base</div>
+                    </div>
+
+                    <!-- Nível 3: 1 Produto -->
+                    <div class="level-card level-single" id="lvl-card-single" onclick="setClientsFilterLevel('um_produto')">
+                        <div class="level-card-top">
+                            <div class="level-badge badge-single"><i class="fa-solid fa-book"></i> 1 Produto</div>
+                            <div class="level-count" id="lvl-single-count">0</div>
+                        </div>
+                        <div class="level-desc">Apenas Pintinhos ou Doenças</div>
+                        <div class="level-progress-bar"><div class="level-progress-fill fill-single" id="lvl-single-bar" style="width: 0%;"></div></div>
+                        <div class="level-percent" id="lvl-single-percent">0% da base</div>
+                    </div>
+
+                    <!-- Nível 4: Gratuito -->
+                    <div class="level-card level-free" id="lvl-card-free" onclick="setClientsFilterLevel('gratuito')">
+                        <div class="level-card-top">
+                            <div class="level-badge badge-free"><i class="fa-solid fa-gift"></i> Gratuito / Teste</div>
+                            <div class="level-count" id="lvl-free-count">0</div>
+                        </div>
+                        <div class="level-desc">Testes expirados ou contas livres</div>
+                        <div class="level-progress-bar"><div class="level-progress-fill fill-free" id="lvl-free-bar" style="width: 0%;"></div></div>
+                        <div class="level-percent" id="lvl-free-percent">0% da base</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- BARRA DE PESQUISA & FILTROS -->
+            <div class="clients-toolbar">
+                <div class="search-input-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="clients-search-input" placeholder="Buscar por Nome, CPF, WhatsApp ou E-mail..." oninput="onClientsSearchInput()">
+                    <button id="btn-clear-search" onclick="clearClientsSearch()" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <!-- Filtros por Status de Acesso -->
+                <div class="filter-pills-row">
+                    <div class="filter-pill active" id="pill-status-all" onclick="setClientsFilterStatus('all')">Todos (<span id="count-status-all">0</span>)</div>
+                    <div class="filter-pill" id="pill-status-consuming" onclick="setClientsFilterStatus('active_consuming')">🟢 Consumindo (<span id="count-status-consuming">0</span>)</div>
+                    <div class="filter-pill" id="pill-status-entered" onclick="setClientsFilterStatus('logged_in')">🟡 Só Entrou (<span id="count-status-entered">0</span>)</div>
+                    <div class="filter-pill" id="pill-status-never" onclick="setClientsFilterStatus('never_accessed')">🔴 Nunca Acessou (<span id="count-status-never">0</span>)</div>
+                </div>
+
+                <!-- Filtro Ativo / Limpar -->
+                <div id="active-filter-indicator" style="display:none; justify-content:space-between; align-items:center; background:rgba(251,191,36,0.1); border:1px dashed rgba(251,191,36,0.3); border-radius:10px; padding:6px 12px; margin-top:8px; font-size:11px; color:#fbbf24;">
+                    <span id="active-filter-text">Filtro aplicado</span>
+                    <span onclick="resetAllClientFilters()" style="text-decoration:underline; font-weight:800; cursor:pointer;">Limpar Filtros</span>
+                </div>
+            </div>
+
+            <!-- LISTAGEM DE CLIENTES -->
+            <div id="clients-list-container">
+                <div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i> Carregando dados de clientes e acessos...</div>
+            </div>
+
         </div>
 
         <!-- ABA AJUSTES -->
@@ -919,9 +1191,9 @@
             <i class="fa-solid fa-egg"></i>
             <span>Pintinhos</span>
         </div>
-        <div class="nav-item" id="nav-item-products" onclick="switchMainTab('products')">
-            <i class="fa-solid fa-tags"></i>
-            <span>Preços</span>
+        <div class="nav-item" id="nav-item-clients" onclick="switchMainTab('clients')">
+            <i class="fa-solid fa-users"></i>
+            <span>Clientes</span>
         </div>
         <div class="nav-item" id="nav-item-settings" onclick="switchMainTab('settings')">
             <i class="fa-solid fa-gear"></i>
@@ -1104,7 +1376,8 @@
             // Atualiza bottom nav
             document.getElementById('nav-item-doencas').classList.toggle('active', campaignId === 'doencas');
             document.getElementById('nav-item-pintinhos').classList.toggle('active', campaignId === 'pintinhos');
-            document.getElementById('nav-item-products').classList.remove('active');
+            const navClients = document.getElementById('nav-item-clients') || document.getElementById('nav-item-products');
+            if (navClients) navClients.classList.remove('active');
             document.getElementById('nav-item-settings').classList.remove('active');
 
             // Atualiza banner
@@ -1126,19 +1399,22 @@
 
         function switchMainTab(tab) {
             document.getElementById('view-campaign-metrics').style.display = (tab === 'campaign') ? 'block' : 'none';
-            document.getElementById('view-products').style.display = (tab === 'products') ? 'block' : 'none';
+            const viewClients = document.getElementById('view-clients') || document.getElementById('view-products');
+            if (viewClients) viewClients.style.display = (tab === 'clients' || tab === 'products') ? 'block' : 'none';
             document.getElementById('view-settings').style.display = (tab === 'settings') ? 'block' : 'none';
 
-            if (tab === 'products') {
+            const navClients = document.getElementById('nav-item-clients') || document.getElementById('nav-item-products');
+
+            if (tab === 'clients' || tab === 'products') {
                 document.getElementById('nav-item-doencas').classList.remove('active');
                 document.getElementById('nav-item-pintinhos').classList.remove('active');
-                document.getElementById('nav-item-products').classList.add('active');
+                if (navClients) navClients.classList.add('active');
                 document.getElementById('nav-item-settings').classList.remove('active');
-                loadProductsCatalog();
+                loadClientsMetrics();
             } else if (tab === 'settings') {
                 document.getElementById('nav-item-doencas').classList.remove('active');
                 document.getElementById('nav-item-pintinhos').classList.remove('active');
-                document.getElementById('nav-item-products').classList.remove('active');
+                if (navClients) navClients.classList.remove('active');
                 document.getElementById('nav-item-settings').classList.add('active');
             }
             window.scrollTo(0, 0);
@@ -1511,37 +1787,358 @@
             container.innerHTML = html;
         }
 
-        // CATÁLOGO DE PREÇOS
-        async function loadProductsCatalog() {
-            const list = document.getElementById('products-catalog-list');
-            list.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i> Carregando produtos...</div>';
-            try {
-                const res = await fetch(`${WORKER_URL}/api/config`, { headers: { 'x-admin-password': currentPass } });
-                const data = await res.json();
-                const products = data.products || {};
+        // ==========================================
+        // 👥 ABA COMUNIDADE & CLIENTES PROTOCOLO ELITE
+        // ==========================================
 
-                let html = '';
-                const pKeys = Object.keys(products);
-                if (pKeys.length === 0) {
-                    list.innerHTML = '<div class="empty-state">Nenhum produto cadastrado na configuração.</div>';
-                    return;
+        let globalClientsData = null;
+        let clientFilterLevel = 'all'; // 'all', 'combo_completo', 'dois_produtos', 'um_produto', 'gratuito'
+        let clientFilterStatus = 'all'; // 'all', 'active_consuming', 'logged_in', 'never_accessed'
+        let clientSearchQuery = '';
+
+        async function loadClientsMetrics(force = false) {
+            const container = document.getElementById('clients-list-container');
+            if (!container) return;
+
+            const icon = document.getElementById('clients-refresh-icon');
+            if (icon) icon.classList.add('fa-spin');
+
+            if (!globalClientsData || force) {
+                container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i> Carregando dados de clientes e acessos...</div>';
+            }
+
+            try {
+                const res = await fetch(`${WORKER_URL}/api/admin/clients-metrics?password=${encodeURIComponent(currentPass)}`, {
+                    headers: { 'x-admin-password': currentPass }
+                });
+
+                if (!res.ok) {
+                    throw new Error('Falha ao autenticar ou carregar métricas.');
                 }
 
-                pKeys.forEach(key => {
-                    const prod = products[key];
-                    html += `
-                    <div class="list-item">
-                        <div class="list-item-title">${prod.title || key}</div>
-                        <div class="list-item-sub">ID: <code>${key}</code></div>
-                        <div class="list-item-sub" style="margin-top: 6px; color: var(--accent-gold); font-size: 15px; font-weight: 800;">
-                            Preço Atual: ${formatBRL(prod.price)}
-                        </div>
-                    </div>`;
-                });
-                list.innerHTML = html;
-            } catch(e) {
-                list.innerHTML = `<div class="empty-state" style="color:var(--ios-red);">Erro ao carregar catálogo: ${e.message}</div>`;
+                const data = await res.json();
+                globalClientsData = data;
+
+                const summary = data.summary || {};
+                const total = summary.totalClients || 0;
+
+                // 1. Atualiza KPIs do Topo
+                const elTotal = document.getElementById('cli-kpi-total');
+                const elConsuming = document.getElementById('cli-kpi-consuming');
+                const elNever = document.getElementById('cli-kpi-never');
+                const elRate = document.getElementById('cli-kpi-rate');
+
+                if (elTotal) elTotal.textContent = total;
+                if (elConsuming) elConsuming.textContent = summary.activeConsumingCount || 0;
+                if (elNever) elNever.textContent = summary.neverAccessedCount || 0;
+                if (elRate) elRate.textContent = (summary.activationRate || 0) + '%';
+
+                const elConsumingSub = document.getElementById('cli-kpi-consuming-sub');
+                if (elConsumingSub) elConsumingSub.textContent = `${summary.consumingRate || 0}% de retenção ativa`;
+
+                const elNeverSub = document.getElementById('cli-kpi-never-sub');
+                if (elNeverSub) elNeverSub.textContent = total > 0 ? `${Math.round(((summary.neverAccessedCount || 0) / total) * 100)}% sem primeiro login` : '0%';
+
+                const elRateSub = document.getElementById('cli-kpi-rate-sub');
+                if (elRateSub) elRateSub.textContent = `${summary.totalAccessed || 0} já fizeram login`;
+
+                // 2. Atualiza Níveis
+                const lvls = summary.levels || {};
+                const comboCount = lvls.combo_completo || 0;
+                const doubleCount = lvls.dois_produtos || 0;
+                const singleCount = lvls.um_produto || 0;
+                const freeCount = lvls.gratuito || 0;
+
+                const comboPct = total > 0 ? Math.round((comboCount / total) * 100) : 0;
+                const doublePct = total > 0 ? Math.round((doubleCount / total) * 100) : 0;
+                const singlePct = total > 0 ? Math.round((singleCount / total) * 100) : 0;
+                const freePct = total > 0 ? Math.round((freeCount / total) * 100) : 0;
+
+                document.getElementById('lvl-combo-count').textContent = comboCount;
+                document.getElementById('lvl-combo-percent').textContent = `${comboPct}% da base`;
+                document.getElementById('lvl-combo-bar').style.width = `${comboPct}%`;
+
+                document.getElementById('lvl-double-count').textContent = doubleCount;
+                document.getElementById('lvl-double-percent').textContent = `${doublePct}% da base`;
+                document.getElementById('lvl-double-bar').style.width = `${doublePct}%`;
+
+                document.getElementById('lvl-single-count').textContent = singleCount;
+                document.getElementById('lvl-single-percent').textContent = `${singlePct}% da base`;
+                document.getElementById('lvl-single-bar').style.width = `${singlePct}%`;
+
+                document.getElementById('lvl-free-count').textContent = freeCount;
+                document.getElementById('lvl-free-percent').textContent = `${freePct}% da base`;
+                document.getElementById('lvl-free-bar').style.width = `${freePct}%`;
+
+                // 3. Atualiza contadores das pílulas de status
+                document.getElementById('count-status-all').textContent = total;
+                document.getElementById('count-status-consuming').textContent = summary.activeConsumingCount || 0;
+                document.getElementById('count-status-entered').textContent = summary.loggedInCount || 0;
+                document.getElementById('count-status-never').textContent = summary.neverAccessedCount || 0;
+
+                // 4. Renderiza lista com filtros aplicados
+                renderClientsList();
+
+            } catch (err) {
+                console.error('[LOAD CLIENTS ERROR]', err);
+                container.innerHTML = `<div class="empty-state" style="color:var(--ios-red);">Erro ao carregar dados dos clientes: ${err.message}</div>`;
+            } finally {
+                if (icon) icon.classList.remove('fa-spin');
             }
+        }
+
+        function setClientsFilterLevel(level) {
+            if (clientFilterLevel === level) {
+                clientFilterLevel = 'all'; // Desmarca ao clicar de novo
+            } else {
+                clientFilterLevel = level;
+            }
+
+            // Atualiza classe visual dos cards de nível
+            ['combo', 'double', 'single', 'free'].forEach(k => {
+                const map = { combo: 'combo_completo', double: 'dois_produtos', single: 'um_produto', free: 'gratuito' };
+                const el = document.getElementById(`lvl-card-${k}`);
+                if (el) el.classList.toggle('active-filter', clientFilterLevel === map[k]);
+            });
+
+            updateActiveFilterIndicator();
+            renderClientsList();
+        }
+
+        function setClientsFilterStatus(status) {
+            clientFilterStatus = status;
+
+            ['all', 'consuming', 'entered', 'never'].forEach(k => {
+                const map = { all: 'all', consuming: 'active_consuming', entered: 'logged_in', never: 'never_accessed' };
+                const el = document.getElementById(`pill-status-${k}`);
+                if (el) el.classList.toggle('active', clientFilterStatus === map[k]);
+            });
+
+            updateActiveFilterIndicator();
+            renderClientsList();
+        }
+
+        function onClientsSearchInput() {
+            const input = document.getElementById('clients-search-input');
+            const btnClear = document.getElementById('btn-clear-search');
+            clientSearchQuery = input.value.trim().toLowerCase();
+            if (btnClear) btnClear.style.display = clientSearchQuery ? 'block' : 'none';
+            renderClientsList();
+        }
+
+        function clearClientsSearch() {
+            const input = document.getElementById('clients-search-input');
+            const btnClear = document.getElementById('btn-clear-search');
+            if (input) input.value = '';
+            if (btnClear) btnClear.style.display = 'none';
+            clientSearchQuery = '';
+            renderClientsList();
+        }
+
+        function resetAllClientFilters() {
+            clientFilterLevel = 'all';
+            clientFilterStatus = 'all';
+            clearClientsSearch();
+
+            ['combo', 'double', 'single', 'free'].forEach(k => {
+                const el = document.getElementById(`lvl-card-${k}`);
+                if (el) el.classList.remove('active-filter');
+            });
+
+            ['all', 'consuming', 'entered', 'never'].forEach(k => {
+                const el = document.getElementById(`pill-status-${k}`);
+                if (el) el.classList.toggle('active', k === 'all');
+            });
+
+            updateActiveFilterIndicator();
+            renderClientsList();
+        }
+
+        function updateActiveFilterIndicator() {
+            const indicator = document.getElementById('active-filter-indicator');
+            const text = document.getElementById('active-filter-text');
+            if (!indicator || !text) return;
+
+            const hasLevel = clientFilterLevel !== 'all';
+            const hasStatus = clientFilterStatus !== 'all';
+            const hasSearch = !!clientSearchQuery;
+
+            if (hasLevel || hasStatus || hasSearch) {
+                const parts = [];
+                if (hasLevel) {
+                    const levelNames = {
+                        'combo_completo': '👑 Combo Completo',
+                        'dois_produtos': '🥇 2 Produtos',
+                        'um_produto': '🥈 1 Produto',
+                        'gratuito': '🥉 Gratuito'
+                    };
+                    parts.push(levelNames[clientFilterLevel]);
+                }
+                if (hasStatus) {
+                    const statusNames = {
+                        'active_consuming': '🟢 Consumindo',
+                        'logged_in': '🟡 Só Entrou',
+                        'never_accessed': '🔴 Nunca Acessou'
+                    };
+                    parts.push(statusNames[clientFilterStatus]);
+                }
+                if (hasSearch) parts.push(`Busca: "${clientSearchQuery}"`);
+
+                text.innerHTML = `Filtros: <strong>${parts.join(' • ')}</strong>`;
+                indicator.style.display = 'flex';
+            } else {
+                indicator.style.display = 'none';
+            }
+        }
+
+        function renderClientsList() {
+            const container = document.getElementById('clients-list-container');
+            if (!container || !globalClientsData) return;
+
+            let clients = globalClientsData.clients || [];
+
+            // 1. Filtro por Busca
+            if (clientSearchQuery) {
+                const q = clientSearchQuery;
+                clients = clients.filter(c => {
+                    const name = (c.name || '').toLowerCase();
+                    const cpf = (c.cleanCpf || '').toLowerCase();
+                    const phone = (c.phone || '').replace(/\D/g, '');
+                    const email = (c.email || '').toLowerCase();
+                    return name.includes(q) || cpf.includes(q) || phone.includes(q) || email.includes(q);
+                });
+            }
+
+            // 2. Filtro por Nível
+            if (clientFilterLevel !== 'all') {
+                clients = clients.filter(c => c.level === clientFilterLevel);
+            }
+
+            // 3. Filtro por Status de Atividade
+            if (clientFilterStatus !== 'all') {
+                clients = clients.filter(c => c.activity?.status === clientFilterStatus);
+            }
+
+            if (clients.length === 0) {
+                container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fa-solid fa-user-slash" style="font-size: 28px; margin-bottom: 8px; opacity: 0.5;"></i>
+                    <div>Nenhum cliente encontrado com os filtros selecionados.</div>
+                    <button onclick="resetAllClientFilters()" style="margin-top: 10px; background: rgba(251,191,36,0.2); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 6px 14px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;">Limpar Filtros</button>
+                </div>`;
+                return;
+            }
+
+            let html = `
+            <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                <span>Exibindo ${clients.length} cliente(s)</span>
+                <span>Ordenados por data recente</span>
+            </div>`;
+
+            clients.forEach(c => {
+                const act = c.activity || {};
+                const cleanPhone = (c.phone || '').replace(/\D/g, '');
+                const dObj = new Date(c.lastPurchaseDate || c.firstPurchaseDate || Date.now());
+                const dateStr = dObj.toLocaleDateString('pt-BR') + ' às ' + dObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+                // Nível Badge
+                let badgeClass = 'badge-free';
+                let badgeIcon = 'fa-gift';
+                if (c.level === 'combo_completo') { badgeClass = 'badge-combo'; badgeIcon = 'fa-crown'; }
+                else if (c.level === 'dois_produtos') { badgeClass = 'badge-double'; badgeIcon = 'fa-gem'; }
+                else if (c.level === 'um_produto') { badgeClass = 'badge-single'; badgeIcon = 'fa-book'; }
+
+                // Tags de Produtos
+                const prods = c.products || [];
+                let prodsHtml = '';
+                if (prods.includes('ebook-doencas')) prodsHtml += '<span class="product-tag tag-doencas"><i class="fa-solid fa-shield-virus"></i> Doenças</span>';
+                if (prods.includes('ebook-manejo')) prodsHtml += '<span class="product-tag tag-pintinhos"><i class="fa-solid fa-egg"></i> Pintinhos</span>';
+                if (prods.includes('tabela-racao')) prodsHtml += '<span class="product-tag tag-racao"><i class="fa-solid fa-wheat-awn"></i> Ração</span>';
+                if (prods.length === 0) prodsHtml += '<span class="product-tag tag-none">Sem conteúdos pagos</span>';
+
+                // Status de Acesso
+                let statusIcon = 'fa-circle-xmark';
+                let statusClass = 'never';
+                let statusTitle = '🔴 NUNCA ACESSOU';
+                let statusDetails = `Comprou em ${dateStr} e ainda não fez login.`;
+
+                if (act.status === 'active_consuming') {
+                    statusIcon = 'fa-circle-check';
+                    statusClass = 'active';
+                    statusTitle = `🟢 ATIVO (Consumiu ${act.consumedCount} conteúdos)`;
+                    const lastLoginDate = act.lastLogin ? new Date(act.lastLogin).toLocaleDateString('pt-BR') + ' às ' + new Date(act.lastLogin).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 'Recentemente';
+                    statusDetails = `Último acesso: ${lastLoginDate}${act.lastContentTitle ? ` • Vendo: <strong>${act.lastContentTitle}</strong>` : ''}`;
+                } else if (act.status === 'logged_in') {
+                    statusIcon = 'fa-circle-exclamation';
+                    statusClass = 'entered';
+                    statusTitle = `🟡 JÁ ACESSOU (${act.loginCount} login${act.loginCount > 1 ? 's' : ''})`;
+                    const lastLoginDate = act.lastLogin ? new Date(act.lastLogin).toLocaleDateString('pt-BR') + ' às ' + new Date(act.lastLogin).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : 'Recentemente';
+                    statusDetails = `Entrou no app em ${lastLoginDate}, mas ainda não abriu capítulos.`;
+                }
+
+                // WhatsApp URL para envio de suporte ou acesso
+                let wppBtnHtml = '';
+                if (cleanPhone && cleanPhone.length >= 8) {
+                    const fullPhone = cleanPhone.startsWith('55') ? cleanPhone : '55' + cleanPhone;
+                    const firstName = (c.name || 'Cliente').split(' ')[0];
+                    const cleanCpfOnly = (c.cleanCpf || '').replace(/\D/g, '');
+                    const directLink = `https://protocolo-elite.pages.dev/?login=1&cpf=${cleanCpfOnly}`;
+
+                    let wppText = '';
+                    if (act.status === 'never_accessed') {
+                        wppText = `Olá, ${firstName}! Tudo bem? Aqui é o João Paulo do Protocolo Elite.\n\nVi que você garantiu seu acesso ao ${c.levelLabel} mas ainda não entrou na plataforma.\n\nFicou alguma dúvida com o login ou senha? Estou por aqui para te ajudar!\n\nVocê pode entrar direto por este link:\n${directLink}`;
+                    } else {
+                        wppText = `Olá, ${firstName}! Tudo bem? Aqui é o João Paulo do Protocolo Elite. Passando para saber como estão suas aves e se você está conseguindo aplicar os manejos da plataforma! Qualquer dúvida é só me chamar por aqui.`;
+                    }
+
+                    const wppUrl = `https://wa.me/${fullPhone}?text=${encodeURIComponent(wppText)}`;
+                    wppBtnHtml = `
+                    <a href="${wppUrl}" target="_blank" class="btn-wpp-action ${act.status === 'never_accessed' ? '' : 'secondary'}">
+                        <i class="fa-brands fa-whatsapp"></i> ${act.status === 'never_accessed' ? 'Enviar Acesso no WhatsApp' : 'Chamar no WhatsApp'}
+                    </a>`;
+                } else {
+                    wppBtnHtml = `<span style="font-size:10px; color:var(--text-muted); font-style:italic;">Sem WhatsApp cadastrado</span>`;
+                }
+
+                html += `
+                <div class="client-card">
+                    <div class="client-card-header">
+                        <div>
+                            <div class="client-card-name">${c.name || 'Cliente Sem Nome'}</div>
+                            <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">
+                                Compra: ${dateStr} • Total: <strong style="color:var(--accent-gold);">${formatBRL(c.totalSpent || 0)}</strong> (${(c.method || 'pix').toUpperCase()})
+                            </div>
+                        </div>
+                        <div class="level-badge ${badgeClass}">
+                            <i class="fa-solid ${badgeIcon}"></i> ${c.levelLabel}
+                        </div>
+                    </div>
+
+                    <div class="client-card-info-row">
+                        <div class="client-card-info-item"><i class="fa-solid fa-id-card" style="color:var(--accent-gold);"></i> <strong>${c.cpf || 'Sem CPF'}</strong></div>
+                        ${c.phone ? `<div class="client-card-info-item"><i class="fa-brands fa-whatsapp" style="color:#25D366;"></i> <strong>${c.phone}</strong></div>` : ''}
+                        ${c.email ? `<div class="client-card-info-item"><i class="fa-solid fa-envelope" style="color:#38bdf8;"></i> <span>${c.email}</span></div>` : ''}
+                    </div>
+
+                    <div class="client-card-products">
+                        ${prodsHtml}
+                    </div>
+
+                    <div class="client-card-status-bar">
+                        <div class="status-left-details">
+                            <div class="status-badge-inline ${statusClass}">
+                                <i class="fa-solid ${statusIcon}"></i> ${statusTitle}
+                            </div>
+                            <div class="status-sub-text">${statusDetails}</div>
+                        </div>
+                        <div>
+                            ${wppBtnHtml}
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
         }
 
         async function clearHistoryBackend() {

@@ -57,6 +57,15 @@ export async function saveAnalytics(env, data) {
     await env.ANALYTICS.put('data', JSON.stringify({ totals: data.totals, daily: data.daily }));
 }
 
+export async function getClientActivities(env) {
+    const raw = await env.HISTORY.get('client_activities');
+    return raw ? JSON.parse(raw) : {};
+}
+export async function saveClientActivities(env, data) {
+    await env.HISTORY.put('client_activities', JSON.stringify(data));
+}
+
+
 // ─── LOG SALE ────────────────────────────────────────────────
 export async function logSale(env, customer, items, paymentId, method, site = 'app') {
     const history = await getHistory(env);
@@ -604,6 +613,33 @@ adminRoutes.post('/verify-access', async (c) => {
             }
         }
         
+        // ─── REGISTRA ATIVIDADE DE LOGIN AUTOMATICAMENTE ───
+        if (foundName && !isBlocked) {
+            try {
+                const actId = (foundCpf ? foundCpf.replace(/\D/g, '') : cleanNum) || (foundEmail ? foundEmail.trim().toLowerCase() : null);
+                if (actId) {
+                    const activities = await getClientActivities(c.env);
+                    const nowIso = new Date().toISOString();
+                    const existing = activities[actId] || {};
+                    activities[actId] = {
+                        ...existing,
+                        name: foundName || existing.name || '',
+                        email: foundEmail || existing.email || '',
+                        phone: foundPhone || existing.phone || '',
+                        cpf: foundCpf || existing.cpf || '',
+                        lastLogin: nowIso,
+                        firstLogin: existing.firstLogin || nowIso,
+                        loginCount: (existing.loginCount || 0) + 1,
+                        consumed: existing.consumed || [],
+                        consumedCount: existing.consumed ? existing.consumed.length : 0
+                    };
+                    await saveClientActivities(c.env, activities);
+                }
+            } catch (actErr) {
+                console.error('[ACTIVITY LOGIN TRACK ERROR]', actErr);
+            }
+        }
+
         return c.json({
             found: foundName !== null,
             isBlocked: isBlocked,
@@ -620,6 +656,273 @@ adminRoutes.post('/verify-access', async (c) => {
         return c.json({ error: 'Erro interno ao verificar acesso', detail: err.message }, 500);
     }
 });
+
+// ─── TRACK ACTIVITY (CONSUMO DE CONTEÚDO NO APP) ──────────────
+adminRoutes.post('/track-activity', async (c) => {
+    try {
+        const { identifier, contentId, title, type } = await c.req.json();
+        if (!identifier || !contentId) return c.json({ error: 'Dados incompletos' }, 400);
+
+        const cleanId = identifier.trim().toLowerCase();
+        const cleanNum = cleanId.replace(/\D/g, '');
+        const actId = cleanNum.length >= 9 ? cleanNum : cleanId;
+
+        const activities = await getClientActivities(c.env);
+        const existing = activities[actId] || {};
+        const nowIso = new Date().toISOString();
+
+        const consumedList = Array.isArray(existing.consumed) ? existing.consumed : [];
+        const alreadyConsumed = consumedList.some(item => item.id === contentId);
+
+        if (!alreadyConsumed) {
+            consumedList.push({
+                id: contentId,
+                title: title || contentId,
+                type: type || 'content',
+                date: nowIso
+            });
+        }
+
+        activities[actId] = {
+            ...existing,
+            lastConsumedAt: nowIso,
+            lastContentTitle: title || contentId,
+            consumed: consumedList,
+            consumedCount: consumedList.length,
+            lastLogin: existing.lastLogin || nowIso,
+            loginCount: existing.loginCount || 1
+        };
+
+        await saveClientActivities(c.env, activities);
+        return c.json({ success: true, consumedCount: consumedList.length });
+    } catch (err) {
+        console.error('[TRACK ACTIVITY ERROR]', err);
+        return c.json({ error: 'Erro ao registrar atividade' }, 500);
+    }
+});
+
+// ─── CLIENTS METRICS & STATUS (GESTOR MURA) ───────────────────
+adminRoutes.get('/admin/clients-metrics', async (c) => {
+    const pw = c.req.header('x-admin-password') || c.req.query('password');
+    if (pw !== (c.env.ADMIN_PASSWORD || 'mura2026')) return c.json({ error: 'Acesso Negado' }, 401);
+
+    const history = await getHistory(c.env);
+    const activities = await getClientActivities(c.env);
+    const db = await getDB(c.env);
+    const blockedUsers = new Set(db.blocked_users || []);
+    const now = Date.now();
+
+    const clientsMap = new Map();
+
+    for (const sale of history) {
+        const isApproved = sale.status === 'approved' || !sale.status;
+        if (!isApproved) continue;
+
+        const rawCpf = sale.customer?.cpf || sale.cpf || '';
+        const cleanCpf = rawCpf.replace(/\D/g, '');
+        const rawEmail = (sale.customer?.email || sale.email || '').trim().toLowerCase();
+        const rawPhone = sale.customer?.phone || sale.phone || '';
+        const name = sale.customer?.name || sale.name || 'Cliente';
+
+        const clientKey = cleanCpf.length >= 9 ? cleanCpf : (rawEmail || String(sale.paymentId || sale.id));
+
+        if (!clientsMap.has(clientKey)) {
+            clientsMap.set(clientKey, {
+                id: clientKey,
+                name: name,
+                cpf: cleanCpf.length === 11 ? cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : (cleanCpf || 'Não informado'),
+                cleanCpf: cleanCpf,
+                email: rawEmail || '',
+                phone: rawPhone || '',
+                totalSpent: 0,
+                purchasesCount: 0,
+                firstPurchaseDate: sale.date || new Date().toISOString(),
+                lastPurchaseDate: sale.date || new Date().toISOString(),
+                method: sale.method || 'pix',
+                isManual: sale.method === 'manual',
+                expiresAt: sale.expiresAt || null,
+                duration: sale.duration || null,
+                itemsTitles: [],
+                productsSet: new Set()
+            });
+        }
+
+        const client = clientsMap.get(clientKey);
+        client.totalSpent += Number(sale.total || 0);
+        client.purchasesCount += 1;
+        if (new Date(sale.date).getTime() < new Date(client.firstPurchaseDate).getTime()) {
+            client.firstPurchaseDate = sale.date;
+        }
+        if (new Date(sale.date).getTime() > new Date(client.lastPurchaseDate).getTime()) {
+            client.lastPurchaseDate = sale.date;
+            client.method = sale.method || client.method;
+        }
+
+        if (sale.expiresAt) {
+            client.expiresAt = sale.expiresAt;
+            client.duration = sale.duration || client.duration;
+        }
+
+        const titleStr = (sale.items || []).map(i => {
+            const t = (typeof i === 'string' ? i : i?.title || '');
+            if (t) client.itemsTitles.push(t);
+            return t.toLowerCase();
+        }).join(' ');
+
+        if (titleStr.includes('doença') || titleStr.includes('doenca') || titleStr.includes('cura das aves') || titleStr.includes('elite') || titleStr.includes('protocolo') || titleStr.includes('combo')) {
+            client.productsSet.add('ebook-doencas');
+        }
+        if (titleStr.includes('tabela') || titleStr.includes('ração') || titleStr.includes('racao') || titleStr.includes('bump') || titleStr.includes('combo-plataforma') || titleStr.includes('combo completo') || titleStr.includes('acesso completo')) {
+            client.productsSet.add('tabela-racao');
+        }
+        if (titleStr.includes('manejo') || titleStr.includes('pintinho') || titleStr.includes('combo-elite')) {
+            client.productsSet.add('ebook-manejo');
+        }
+    }
+
+    const clientsList = [];
+    let comboCompletoCount = 0;
+    let doisProdutosCount = 0;
+    let umProdutoCount = 0;
+    let gratuitoCount = 0;
+
+    let activeConsumingCount = 0;
+    let loggedInCount = 0;
+    let neverAccessedCount = 0;
+
+    for (const [key, client] of clientsMap.entries()) {
+        const isBlocked = blockedUsers.has(client.cleanCpf) || (client.email && blockedUsers.has(client.email)) || blockedUsers.has(client.id);
+        const isExpired = client.expiresAt && (new Date(client.expiresAt).getTime() <= now);
+
+        let products = Array.from(client.productsSet);
+        if (isBlocked || isExpired) {
+            products = [];
+        } else if (products.length === 0 && client.totalSpent > 0 && !client.isManual) {
+            products = ['ebook-doencas', 'tabela-racao'];
+        }
+
+        let level = 'gratuito';
+        let levelLabel = 'Gratuito / Teste';
+        let levelBadge = 'badge-free';
+
+        const pCount = products.length;
+        if (client.totalSpent === 0 || client.isManual || isExpired) {
+            level = 'gratuito';
+            levelLabel = 'Gratuito / Teste';
+            levelBadge = 'badge-free';
+            gratuitoCount++;
+        } else if (pCount >= 3 || (products.includes('ebook-doencas') && products.includes('ebook-manejo') && products.includes('tabela-racao'))) {
+            level = 'combo_completo';
+            levelLabel = 'Combo Completo';
+            levelBadge = 'badge-combo';
+            comboCompletoCount++;
+        } else if (pCount === 2) {
+            level = 'dois_produtos';
+            levelLabel = '2 Produtos';
+            levelBadge = 'badge-double';
+            doisProdutosCount++;
+        } else if (pCount === 1) {
+            level = 'um_produto';
+            levelLabel = '1 Produto';
+            levelBadge = 'badge-single';
+            umProdutoCount++;
+        } else {
+            level = 'gratuito';
+            levelLabel = 'Gratuito / Teste';
+            levelBadge = 'badge-free';
+            gratuitoCount++;
+        }
+
+        const act = activities[client.cleanCpf] || activities[client.email] || activities[key] || {};
+        const loginCount = act.loginCount || 0;
+        const consumedList = Array.isArray(act.consumed) ? act.consumed : [];
+        const consumedCount = consumedList.length;
+        const hasAccessed = loginCount > 0 || !!act.lastLogin;
+        const hasConsumed = consumedCount > 0;
+
+        let status = 'never_accessed';
+        let statusLabel = 'Nunca Acessou';
+        let statusBadge = 'status-never';
+
+        if (hasConsumed) {
+            status = 'active_consuming';
+            statusLabel = 'Ativo & Consumiu';
+            statusBadge = 'status-active';
+            activeConsumingCount++;
+        } else if (hasAccessed) {
+            status = 'logged_in';
+            statusLabel = 'Acessou (Sem Leitura)';
+            statusBadge = 'status-entered';
+            loggedInCount++;
+        } else {
+            status = 'never_accessed';
+            statusLabel = 'Nunca Acessou';
+            statusBadge = 'status-never';
+            neverAccessedCount++;
+        }
+
+        clientsList.push({
+            id: key,
+            name: client.name,
+            cpf: client.cpf,
+            cleanCpf: client.cleanCpf,
+            email: client.email,
+            phone: client.phone,
+            totalSpent: Number(client.totalSpent.toFixed(2)),
+            purchasesCount: client.purchasesCount,
+            firstPurchaseDate: client.firstPurchaseDate,
+            lastPurchaseDate: client.lastPurchaseDate,
+            method: client.method,
+            isBlocked: isBlocked,
+            isExpired: isExpired,
+            products: products,
+            level: level,
+            levelLabel: levelLabel,
+            levelBadge: levelBadge,
+            activity: {
+                hasAccessed: hasAccessed,
+                hasConsumed: hasConsumed,
+                loginCount: loginCount,
+                firstLogin: act.firstLogin || null,
+                lastLogin: act.lastLogin || null,
+                consumedCount: consumedCount,
+                consumed: consumedList,
+                lastConsumedAt: act.lastConsumedAt || null,
+                lastContentTitle: act.lastContentTitle || null,
+                status: status,
+                statusLabel: statusLabel,
+                statusBadge: statusBadge
+            }
+        });
+    }
+
+    clientsList.sort((a, b) => new Date(b.lastPurchaseDate).getTime() - new Date(a.lastPurchaseDate).getTime());
+
+    const totalClients = clientsList.length;
+    const totalAccessed = activeConsumingCount + loggedInCount;
+    const activationRate = totalClients > 0 ? Number(((totalAccessed / totalClients) * 100).toFixed(1)) : 0;
+    const consumingRate = totalClients > 0 ? Number(((activeConsumingCount / totalClients) * 100).toFixed(1)) : 0;
+
+    return c.json({
+        summary: {
+            totalClients,
+            activeConsumingCount,
+            loggedInCount,
+            neverAccessedCount,
+            totalAccessed,
+            activationRate,
+            consumingRate,
+            levels: {
+                combo_completo: comboCompletoCount,
+                dois_produtos: doisProdutosCount,
+                um_produto: umProdutoCount,
+                gratuito: gratuitoCount
+            }
+        },
+        clients: clientsList
+    });
+});
+
 
 // ─── CHANGE PASSWORD ──────────────────────────────────────────
 adminRoutes.post('/change-password', async (c) => {
