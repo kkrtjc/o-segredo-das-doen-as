@@ -649,35 +649,32 @@
             box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
         }
 
-        /* Delivery / Como Recebe o Conteúdo */
-        .lp-delivery-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
+        /* Delivery / Como Recebe o Conteúdo — Seção Unificada */
+        #secao-como-recebe {
+            scroll-margin-top: 25px;
+        }
+
+        .lp-delivery-unified-card {
+            background: linear-gradient(160deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.85));
+            border: 1.5px solid rgba(251, 191, 36, 0.35);
+            border-radius: 18px;
+            padding: 22px 18px;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(251, 191, 36, 0.08);
             margin-bottom: 16px;
         }
 
-        .lp-delivery-card {
-            background: var(--card-dark);
-            border: 1px solid var(--card-border);
-            border-radius: 14px;
-            padding: 18px 16px;
-            text-align: left;
-            position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        .lp-delivery-pillar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .lp-delivery-card.featured {
-            border: 1.5px solid rgba(251, 191, 36, 0.4);
-            background: linear-gradient(180deg, rgba(251, 191, 36, 0.05), rgba(14, 22, 38, 0.9));
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(251, 191, 36, 0.08);
-        }
-
-        .lp-delivery-header {
+        .lp-delivery-pillar-header {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 10px;
         }
 
         .lp-delivery-icon {
@@ -690,37 +687,81 @@
             font-size: 1.3rem;
             flex-shrink: 0;
         }
+        .lp-delivery-icon.gold {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        .lp-delivery-icon.red {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
 
         .lp-delivery-badge {
             font-size: 0.65rem;
             font-weight: 800;
             letter-spacing: 0.5px;
-            color: #ef4444;
-            background: rgba(239, 68, 68, 0.12);
             padding: 2px 8px;
             border-radius: 4px;
             display: inline-block;
             margin-bottom: 3px;
         }
-
         .lp-delivery-badge.gold {
             color: #fbbf24;
             background: rgba(251, 191, 36, 0.15);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        .lp-delivery-badge.red {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
-        .lp-delivery-card h4 {
+        .lp-delivery-pillar h4 {
             font-size: 1.05rem;
-            font-weight: 800;
+            font-weight: 900;
             color: #ffffff;
             margin: 0;
-            line-height: 1.2;
+            line-height: 1.25;
         }
 
-        .lp-delivery-card p {
-            font-size: 0.84rem;
+        .lp-delivery-pillar-desc {
+            font-size: 0.85rem;
             color: #cbd5e1;
-            line-height: 1.55;
-            margin: 0 0 12px 0;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .lp-delivery-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 18px 0;
+            position: relative;
+        }
+        .lp-delivery-divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .lp-delivery-divider span {
+            position: relative;
+            background: #141f33;
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #fbbf24;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .lp-delivery-features {
@@ -740,11 +781,13 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            line-height: 1.4;
         }
 
         .lp-delivery-features li i {
             color: #22c55e;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
+            flex-shrink: 0;
         }
 
         .lp-instant-delivery-banner {
@@ -756,7 +799,7 @@
             border-radius: 12px;
             padding: 14px 16px;
             text-align: left;
-            margin-top: 10px;
+            margin-top: 18px;
         }
 
         /* Footer */
@@ -1039,9 +1082,9 @@
                 <i class="fa-solid fa-lock"></i> QUERO LEVAR TUDO POR APENAS R$ 27,90
             </button>
 
-            <!-- Botão Como Eu Recebo Meu Conteúdo -->
-            <button type="button" onclick="document.getElementById('secao-como-recebe').scrollIntoView({ behavior: 'smooth', block: 'start' })" class="lp-btn-delivery-info">
-                <i class="fa-regular fa-circle-question"></i> Como eu recebo o meu conteúdo?
+            <!-- Botão Como Eu Recebo Meu Acesso -->
+            <button type="button" onclick="scrollToComoRecebe()" class="lp-btn-delivery-info">
+                <i class="fa-regular fa-circle-question"></i> Como eu recebo o meu acesso?
             </button>
 
             <div class="lp-trust-row" style="margin-top: 14px;">
@@ -1103,64 +1146,69 @@
         </div>
 
 
-        <!-- SEÇÃO: COMO VOCÊ RECEBE O CONTEÚDO -->
+        <!-- SEÇÃO: COMO VOCÊ RECEBE O ACESSO (SEÇÃO UNIFICADA) -->
         <div class="lp-section" id="secao-como-recebe">
-            <span class="lp-sec-tag" style="color: var(--gold-primary);"><i class="fa-solid fa-box-open"></i> FORMATO E ENTREGA</span>
-            <h2 class="lp-sec-title">Como você recebe o seu conteúdo:</h2>
-            <p style="font-size: 0.88rem; color: #94a3b8; text-align: center; margin: -6px 0 20px 0;">
-                Tudo estruturado de forma 100% profissional para você começar a aplicar hoje mesmo no seu criatório.
+            <span class="lp-sec-tag" style="color: var(--gold-primary);"><i class="fa-solid fa-box-open"></i> FORMATO E ENTREGA IMEDIATA</span>
+            <h2 class="lp-sec-title">Como você recebe o seu acesso:</h2>
+            <p style="font-size: 0.9rem; color: #94a3b8; text-align: center; margin: -6px 0 22px 0;">
+                Você não precisa escolher: <strong>você recebe os dois modelos completos</strong> para ter o melhor dos dois mundos!
             </p>
 
-            <div class="lp-delivery-grid">
-                <!-- Card 1: Arquivo PDF Profissional -->
-                <div class="lp-delivery-card">
-                    <div class="lp-delivery-header">
-                        <div class="lp-delivery-icon" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">
-                            <i class="fa-solid fa-file-pdf"></i>
-                        </div>
-                        <div>
-                            <span class="lp-delivery-badge">DOWNLOAD IMEDIATO</span>
-                            <h4>Arquivo PDF Profissional</h4>
-                        </div>
-                    </div>
-                    <p>
-                        Você recebe um <strong>arquivo PDF completo e diagramado profissionalmente</strong>, pronto para você baixar no celular, tablet ou computador. Você pode consultar mesmo sem conexão com a internet direto no seu pinteiro ou se preferir, imprimir todas as tabelas práticas.
-                    </p>
-                    <ul class="lp-delivery-features">
-                        <li><i class="fa-solid fa-check"></i> Conteúdo profissional, didático e ricamente ilustrado</li>
-                        <li><i class="fa-solid fa-check"></i> Calendário prático de vacinação e tabelas de calor</li>
-                        <li><i class="fa-solid fa-check"></i> Baixe uma vez e o material fica salvo com você para sempre</li>
-                    </ul>
-                </div>
-
-                <!-- Card 2: Plataforma Premium -->
-                <div class="lp-delivery-card featured">
-                    <div class="lp-delivery-header">
-                        <div class="lp-delivery-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">
+            <div class="lp-delivery-unified-card">
+                <!-- Pilar 1: Plataforma Profissional Exclusiva -->
+                <div class="lp-delivery-pillar">
+                    <div class="lp-delivery-pillar-header">
+                        <div class="lp-delivery-icon gold">
                             <i class="fa-solid fa-crown"></i>
                         </div>
                         <div>
-                            <span class="lp-delivery-badge gold">ACESSO EXCLUSIVO</span>
-                            <h4>Acesso à Nossa Plataforma Premium</h4>
+                            <span class="lp-delivery-badge gold">ACESSO VITALÍCIO &amp; ATUALIZAÇÕES</span>
+                            <h4>1. Plataforma Profissional Exclusiva (Protocolo Elite)</h4>
                         </div>
                     </div>
-                    <p>
-                        Além do arquivo em PDF, você ganha acesso exclusivo à nossa <strong>Plataforma Premium</strong> com estrutura profissional, reunindo informações privilegiadas e conteúdos atualizados sobre a criação e proteção das aves.
+                    <p class="lp-delivery-pillar-desc">
+                        Você tem acesso direto a uma <strong>plataforma moderna e profissional</strong>, feita para você navegar com total facilidade pelo celular, computador ou tablet. Lá dentro você encontra todas as informações organizadas passo a passo, orientações detalhadas e tem <strong>acesso vitalício com todas as futuras atualizações gratuitas</strong> incluídas, sem pagar mensalidade.
                     </p>
                     <ul class="lp-delivery-features">
-                        <li><i class="fa-solid fa-check"></i> Estrutura profissional, moderna e de fácil navegação</li>
-                        <li><i class="fa-solid fa-check"></i> Informações privilegiadas e estratégias avançadas de criação</li>
-                        <li><i class="fa-solid fa-check"></i> Envio imediato do seu acesso pelo WhatsApp e e-mail</li>
+                        <li><i class="fa-solid fa-check"></i> Ambiente exclusivo, rápido e super fácil de usar no celular</li>
+                        <li><i class="fa-solid fa-check"></i> Conteúdo completo e sempre atualizado com as melhores práticas</li>
+                        <li><i class="fa-solid fa-check"></i> Login e senha vitalícios — consulte quando e quantas vezes quiser</li>
+                    </ul>
+                </div>
+
+                <!-- Divisor Visual -->
+                <div class="lp-delivery-divider">
+                    <span><i class="fa-solid fa-plus"></i> E VOCÊ TAMBÉM RECEBE</span>
+                </div>
+
+                <!-- Pilar 2: Arquivo em PDF Completo -->
+                <div class="lp-delivery-pillar">
+                    <div class="lp-delivery-pillar-header">
+                        <div class="lp-delivery-icon red">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <div>
+                            <span class="lp-delivery-badge red">DOWNLOAD DIRETO &amp; IMPRESSÃO</span>
+                            <h4>2. Arquivo Completo em PDF Diagramado</h4>
+                        </div>
+                    </div>
+                    <p class="lp-delivery-pillar-desc">
+                        Além da plataforma, você recebe o <strong>arquivo digital completo em PDF</strong> em alta qualidade, pronto para baixar imediatamente. Você pode guardar na memória do seu celular para consultar direto no pinteiro <strong>mesmo sem internet ou sinal</strong>, ou imprimir as tabelas práticas para colar na parede do galpão.
+                    </p>
+                    <ul class="lp-delivery-features">
+                        <li><i class="fa-solid fa-check"></i> Consulta 100% offline direto na rotina do criatório</li>
+                        <li><i class="fa-solid fa-check"></i> Tabelas de calor, receitas e calendário de vacinação prontos para imprimir</li>
+                        <li><i class="fa-solid fa-check"></i> Baixou uma vez, o arquivo fica salvo com você para sempre</li>
                     </ul>
                 </div>
             </div>
 
             <!-- Box de Entrega Imediata -->
             <div class="lp-instant-delivery-banner">
-                <i class="fa-solid fa-bolt-lightning" style="color: #fbbf24; font-size: 1.4rem; flex-shrink: 0;"></i>
+                <i class="fa-solid fa-bolt-lightning" style="color: #fbbf24; font-size: 1.5rem; flex-shrink: 0;"></i>
                 <div>
-                    <strong style="color: #ffffff; display: block; font-size: 0.9rem;">Recebimento em menos de 1 minuto:</strong>
-                    <span style="color: #94a3b8; font-size: 0.8rem; line-height: 1.4; display: block;">Assim que o pagamento for aprovado (Pix ou Cartão), o link direto do PDF e os acessos da plataforma chegam instantaneamente no seu WhatsApp e no seu e-mail.</span>
+                    <strong style="color: #ffffff; display: block; font-size: 0.92rem;">Recebimento em menos de 1 minuto no WhatsApp e E-mail:</strong>
+                    <span style="color: #cbd5e1; font-size: 0.82rem; line-height: 1.45; display: block; margin-top: 2px;">Assim que seu pedido for confirmado (Pix ou Cartão), você recebe automaticamente no seu WhatsApp e no seu e-mail tanto os dados de acesso da plataforma quanto o link direto para baixar o PDF.</span>
                 </div>
             </div>
         </div>
@@ -1204,8 +1252,8 @@
             <h2 class="lp-sec-title">Perguntas comuns dos criadores:</h2>
 
             <div class="lp-faq-item">
-                <h5><i class="fa-solid fa-circle-question"></i> Como eu recebo o conteúdo?</h5>
-                <p>O envio é 100% imediato e automatizado! Assim que seu Pix ou Cartão for aprovado, você recebe no WhatsApp e no seu e-mail o link para baixar o arquivo PDF profissional (para ler no celular ou imprimir) e também os dados de acesso exclusivo à nossa Plataforma Premium com informações privilegiadas.</p>
+                <h5><i class="fa-solid fa-circle-question"></i> Como eu recebo o meu acesso?</h5>
+                <p>O envio é 100% imediato e automatizado! Assim que seu Pix ou Cartão for aprovado, você recebe no WhatsApp e no seu e-mail o acesso à nossa <strong>Plataforma Profissional Exclusiva (com login vitalício e atualizações)</strong> e também o link direto para baixar o <strong>Arquivo PDF Completo</strong> para ler sem internet no pinteiro ou imprimir as tabelas.</p>
             </div>
 
             <div class="lp-faq-item">
@@ -4461,6 +4509,19 @@
             }
         })();
 
+        // Rola suavemente com offset preciso até a seção de entrega/acesso
+        function scrollToComoRecebe() {
+            var el = document.getElementById('secao-como-recebe');
+            if (!el) return;
+            var headerOffset = 20;
+            var elementPosition = el.getBoundingClientRect().top;
+            var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({
+                top: Math.max(0, offsetPosition),
+                behavior: 'smooth'
+            });
+        }
+
         // Fecha o checkout e rola suavemente até a seção de entrega/conteúdo
         function closeCheckoutAndGoTo(sectionId) {
             const ckModal = document.getElementById('checkout-page');
@@ -4473,9 +4534,13 @@
             sessionStorage.removeItem('mura_modal_open');
 
             setTimeout(function() {
-                const target = document.getElementById(sectionId);
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (sectionId === 'secao-como-recebe') {
+                    scrollToComoRecebe();
+                } else {
+                    const target = document.getElementById(sectionId);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
                 }
             }, 120);
         }
