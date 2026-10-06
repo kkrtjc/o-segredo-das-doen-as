@@ -1636,10 +1636,27 @@
                 }
             });
 
-            // 3. CÁLCULO DE ABANDONOS - SEGREGAÇÃO TOTAL (CAMPANHA VS PLATAFORMA)
+            // 3. CÁLCULO DE ABANDONOS - SEGREGAÇÃO TOTAL E RÍGIDA (PINTINHOS NAS PINTINHOS, DOENÇAS NAS DOENÇAS)
             const campaignAbandons = [];
             const platformAbandons = [];
             const abandonsList = Array.isArray(globalAbandons) ? globalAbandons : [];
+
+            // Identificadores estritos de produto
+            const isPintinhosItem = (it) => {
+                const s = String(it.site || '').toLowerCase();
+                const p = String(it.product || it.products || '').toLowerCase();
+                if (s === 'pintinhos') return true;
+                if (p === 'ebook-pintinhos') return true;
+                if (p.includes('pintinho') && !p.includes('doenca') && !p.includes('cura') && !p.includes('elite')) return true;
+                return false;
+            };
+
+            const isDoencasItem = (it) => {
+                if (isPintinhosItem(it)) return false;
+                const s = String(it.site || '').toLowerCase();
+                if (s === 'amazon') return false;
+                return true;
+            };
 
             abandonsList.forEach(item => {
                 if (!item || item.paid) return;
@@ -1656,38 +1673,33 @@
                 });
                 if (alreadyPaid) return;
 
+                // FILTRO ESTRITO DA CAMPANHA ATIVA:
+                // Se estamos na aba Pintinhos, SÓ aceita itens de Pintinhos.
+                // Se estamos na aba Doenças, SÓ aceita itens de Doenças.
+                const belongsToCurrentCampaign = isPintinhos ? isPintinhosItem(item) : isDoencasItem(item);
+                if (!belongsToCurrentCampaign) return; // Descarta completamente se for da outra campanha!
+
                 const itemSite = String(item.site || '').toLowerCase();
                 const isPlatform = (itemSite === 'platform' || itemSite === 'app' || itemSite === 'admin-panel' || item.source === 'platform');
                 const cleanPhone = parsePhone(item.phone);
 
-                // REGRA DA PLATAFORMA:
-                // Da plataforma, SÓ exibe abandonos que tenham dados para chamar no WhatsApp!
                 if (isPlatform) {
-                    if (!cleanPhone) {
-                        // Sem dados para chamar no WhatsApp -> DESCARTA TOTALMENTE!
-                        return;
+                    // Da plataforma, SÓ exibe se tiver dados válidos para chamar no WhatsApp!
+                    if (cleanPhone) {
+                        platformAbandons.push({ ...item, isFromPlatform: true });
                     }
-                    // Aluno da plataforma com WhatsApp preenchido
-                    platformAbandons.push({ ...item, isFromPlatform: true });
                     return;
                 }
 
                 // Abandono da página de vendas externa da campanha
-                const prodStr = String(item.product || '').toLowerCase();
-                const isPintinhosAb = (itemSite === 'pintinhos') || prodStr === 'ebook-pintinhos' || (prodStr.includes('pintinho') && !prodStr.includes('doencas'));
-
-                if (isPintinhos && isPintinhosAb) {
-                    campaignAbandons.push({ ...item, isFromPlatform: false });
-                } else if (!isPintinhos && !isPintinhosAb) {
-                    campaignAbandons.push({ ...item, isFromPlatform: false });
-                }
+                campaignAbandons.push({ ...item, isFromPlatform: false });
             });
 
             // As métricas do funil da campanha mostram ESTRITAMENTE a página externa de tráfego
             abandonsCount = campaignAbandons.length;
             const platformWithWppCount = platformAbandons.length;
 
-            // Na lista para recuperação no WhatsApp: junta os da campanha com os da plataforma que têm WhatsApp
+            // Na lista para recuperação no WhatsApp: junta os da campanha com os da plataforma que têm WhatsApp (ambos pertencentes exclusivamente à campanha ativa!)
             const matchingAbandons = [...campaignAbandons, ...platformAbandons];
 
             // 4. TAXAS PERCENTUAIS
