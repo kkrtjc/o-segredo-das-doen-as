@@ -1576,10 +1576,14 @@
                     pageViews = totals.pageViews_pintinhos || 0;
                     checkouts = totals.checkoutOpens_pintinhos || 0;
                 } else {
-                    // Oficial / Doenças (remove amazon, vsl e pintinhos)
-                    visits = totals.uniqueVisits || totals.pageViews || 0;
-                    pageViews = totals.pageViews || 0;
-                    checkouts = totals.checkoutOpens || totals.checkoutStarts || 0;
+                    // Oficial / Doenças (página de vendas externa - isolada de plataforma e app)
+                    const platVisits = (totals.uniqueVisits_platform || 0) + (totals.uniqueVisits_app || 0);
+                    const platViews = (totals.pageViews_platform || 0) + (totals.pageViews_app || 0);
+                    const platCheckouts = (totals.checkoutOpens_platform || 0) + (totals.checkoutOpens_app || 0);
+
+                    visits = Math.max(0, (totals.uniqueVisits || totals.pageViews || 0) - platVisits);
+                    pageViews = Math.max(0, (totals.pageViews || 0) - platViews);
+                    checkouts = Math.max(0, (totals.checkoutOpens || totals.checkoutStarts || 0) - platCheckouts);
                 }
             } else {
                 dates.forEach(dStr => {
@@ -1589,14 +1593,18 @@
                         pageViews += (d.pageViews_pintinhos || 0);
                         checkouts += (d.checkoutOpens_pintinhos || 0);
                     } else {
-                        visits += (d.uniqueVisits || d.pageViews || 0);
-                        pageViews += (d.pageViews || 0);
-                        checkouts += (d.checkoutOpens || d.checkoutStarts || 0);
+                        const platVisits = (d.uniqueVisits_platform || 0) + (d.uniqueVisits_app || 0);
+                        const platViews = (d.pageViews_platform || 0) + (d.pageViews_app || 0);
+                        const platCheckouts = (d.checkoutOpens_platform || 0) + (d.checkoutOpens_app || 0);
+
+                        visits += Math.max(0, (d.uniqueVisits || d.pageViews || 0) - platVisits);
+                        pageViews += Math.max(0, (d.pageViews || 0) - platViews);
+                        checkouts += Math.max(0, (d.checkoutOpens || d.checkoutStarts || 0) - platCheckouts);
                     }
                 });
             }
 
-            // 2. CÁLCULO DE VENDAS PAGAS - ATRIBUIÇÃO ESTRITA POR CAMPANHA
+            // 2. CÁLCULO DE VENDAS PAGAS - ATRIBUIÇÃO ESTRITA POR CAMPANHA EXTERNA
             const matchingSales = [];
             const historyList = Array.isArray(globalHistory) ? globalHistory : [];
 
@@ -1604,27 +1612,33 @@
                 if (!sale || Number(sale.total) <= 0) return;
                 if (!isDateMatch(sale.date || sale.created_at, dates)) return;
 
+                const saleSite = String(sale.site || '').toLowerCase();
+
+                // REGRA BLINDADA: Vendas de dentro da plataforma ou painel de controle NÃO entram no gestor das campanhas de tráfego
+                if (saleSite === 'platform' || saleSite === 'app' || saleSite === 'admin-panel') return;
+
                 const itemsStr = (sale.items || []).join(' ').toLowerCase();
                 const mainItem = (sale.items && sale.items.length > 0) ? String(sale.items[0]).toLowerCase() : '';
 
                 // Uma venda pertence à campanha PINTINHOS se:
-                // - A origem registrada foi 'pintinhos' (sale.site === 'pintinhos')
+                // - A origem registrada foi 'pintinhos' (saleSite === 'pintinhos')
                 // - OU o produto principal comprado (1º item) for Manual dos Pintinhos
-                const isPintinhosSale = (sale.site === 'pintinhos') || mainItem.includes('pintinho') || (mainItem.includes('manejo') && !mainItem.includes('cura') && !mainItem.includes('elite'));
+                const isPintinhosSale = (saleSite === 'pintinhos') || mainItem.includes('pintinho') || (mainItem.includes('manejo') && !mainItem.includes('cura') && !mainItem.includes('elite'));
 
                 if (isPintinhos && isPintinhosSale) {
                     salesCount++;
                     revenue += Number(sale.total);
                     matchingSales.push(sale);
-                } else if (!isPintinhos && !isPintinhosSale && sale.site !== 'vsl' && !itemsStr.includes('[amz]')) {
+                } else if (!isPintinhos && !isPintinhosSale && saleSite !== 'vsl' && !itemsStr.includes('[amz]')) {
                     salesCount++;
                     revenue += Number(sale.total);
                     matchingSales.push(sale);
                 }
             });
 
-            // 3. CÁLCULO DE ABANDONOS - ATRIBUIÇÃO ESTRITA POR CAMPANHA
-            const matchingAbandons = [];
+            // 3. CÁLCULO DE ABANDONOS - SEGREGAÇÃO TOTAL (CAMPANHA VS PLATAFORMA)
+            const campaignAbandons = [];
+            const platformAbandons = [];
             const abandonsList = Array.isArray(globalAbandons) ? globalAbandons : [];
 
             abandonsList.forEach(item => {
@@ -1642,18 +1656,39 @@
                 });
                 if (alreadyPaid) return;
 
+                const itemSite = String(item.site || '').toLowerCase();
+                const isPlatform = (itemSite === 'platform' || itemSite === 'app' || itemSite === 'admin-panel' || item.source === 'platform');
+                const cleanPhone = parsePhone(item.phone);
+
+                // REGRA DA PLATAFORMA:
+                // Da plataforma, SÓ exibe abandonos que tenham dados para chamar no WhatsApp!
+                if (isPlatform) {
+                    if (!cleanPhone) {
+                        // Sem dados para chamar no WhatsApp -> DESCARTA TOTALMENTE!
+                        return;
+                    }
+                    // Aluno da plataforma com WhatsApp preenchido
+                    platformAbandons.push({ ...item, isFromPlatform: true });
+                    return;
+                }
+
+                // Abandono da página de vendas externa da campanha
                 const prodStr = String(item.product || '').toLowerCase();
-                const reasonStr = String(item.reason || '').toLowerCase();
-                const isPintinhosAb = (item.site === 'pintinhos') || prodStr === 'ebook-pintinhos' || (prodStr.includes('pintinho') && !prodStr.includes('doencas'));
+                const isPintinhosAb = (itemSite === 'pintinhos') || prodStr === 'ebook-pintinhos' || (prodStr.includes('pintinho') && !prodStr.includes('doencas'));
 
                 if (isPintinhos && isPintinhosAb) {
-                    abandonsCount++;
-                    matchingAbandons.push(item);
+                    campaignAbandons.push({ ...item, isFromPlatform: false });
                 } else if (!isPintinhos && !isPintinhosAb) {
-                    abandonsCount++;
-                    matchingAbandons.push(item);
+                    campaignAbandons.push({ ...item, isFromPlatform: false });
                 }
             });
+
+            // As métricas do funil da campanha mostram ESTRITAMENTE a página externa de tráfego
+            abandonsCount = campaignAbandons.length;
+            const platformWithWppCount = platformAbandons.length;
+
+            // Na lista para recuperação no WhatsApp: junta os da campanha com os da plataforma que têm WhatsApp
+            const matchingAbandons = [...campaignAbandons, ...platformAbandons];
 
             // 4. TAXAS PERCENTUAIS
             const checkoutRate = visits > 0 ? ((checkouts / visits) * 100).toFixed(1) : 0;
@@ -1669,7 +1704,8 @@
             document.getElementById('val-checkouts-sub').textContent = `${checkoutRate}% das visitas`;
 
             document.getElementById('val-abandons').textContent = abandonsCount;
-            document.getElementById('val-abandons-sub').textContent = `${abandonRate}% do checkout`;
+            const platSub = platformWithWppCount > 0 ? ` (+${platformWithWppCount} da plataforma)` : '';
+            document.getElementById('val-abandons-sub').textContent = `${abandonRate}% do checkout${platSub}`;
 
             document.getElementById('val-sales').textContent = salesCount;
             document.getElementById('val-sales-sub').textContent = `${paidRate}% conversão checkout`;
@@ -1760,30 +1796,51 @@
 
             let html = '';
             abandons.forEach(item => {
+                const isPlatform = Boolean(item.isFromPlatform);
                 const nome = item.name || 'Cliente';
                 const email = item.email || 'Sem e-mail';
                 const phone = item.phone || '';
                 const cleanPhone = parsePhone(phone);
                 const dObj = new Date(item.date || Date.now());
                 const dStr = dObj.toLocaleDateString() + ' às ' + dObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                const prod = (currentCampaign === 'pintinhos') ? 'Manual de Manejo de Pintinhos' : 'O Segredo das Doenças';
-                const price = (currentCampaign === 'pintinhos') ? 'R$ 27,90' : 'R$ 49,90';
-                const recoveryMsg = encodeURIComponent(`Olá ${nome.split(' ')[0]}, tudo bem? Vi que você estava no checkout garantindo o ${prod} por ${price}, mas não concluiu. Ficou com alguma dúvida sobre o conteúdo ou precisa de ajuda com o PIX?`);
+                
+                const rawProd = String(item.product || item.products || '').toLowerCase();
+                const prod = (currentCampaign === 'pintinhos' || rawProd.includes('pintinho')) 
+                    ? 'Manual de Manejo de Pintinhos' 
+                    : 'O Segredo das Doenças';
+                const price = (currentCampaign === 'pintinhos' || rawProd.includes('pintinho')) 
+                    ? (item.total ? formatBRL(item.total) : 'R$ 27,90') 
+                    : (item.total ? formatBRL(item.total) : 'R$ 49,90');
+
+                // Badge e identificação cristalina de origem
+                const originBadge = isPlatform
+                    ? '<span style="background:rgba(147,51,234,0.25); color:#c084fc; border:1px solid rgba(168,85,247,0.5); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-crown" style="color:#e879f9;"></i> PLATAFORMA PROTOCOLO ELITE</span>'
+                    : '<span style="background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800;">PÁGINA DE VENDAS</span>';
+
+                const originDescription = isPlatform
+                    ? `<div class="list-item-sub" style="color: #c084fc; font-weight: 700; font-size: 11px; margin-top: 4px;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> <strong>Origem: Plataforma (Área de Membros)</strong> — Aluno tentou desbloquear o conteúdo direto pelo app/site • ${item.reason || 'PIX Gerado'}
+                       </div>`
+                    : `<div class="list-item-sub" style="font-size: 11px; margin-top: 4px;">
+                        <i class="fa-regular fa-clock"></i> ${dStr} • ${item.reason || 'Parou no checkout da página'}
+                       </div>`;
+
+                const recoveryMsg = isPlatform
+                    ? encodeURIComponent(`Olá ${nome.split(' ')[0]}, tudo bem? Vi que você estava dentro da nossa plataforma Protocolo Elite garantindo o ${prod}, mas o pagamento não concluiu. Posso te ajudar a liberar o seu acesso por aqui?`)
+                    : encodeURIComponent(`Olá ${nome.split(' ')[0]}, tudo bem? Vi que você estava no checkout garantindo o ${prod} por ${price}, mas não concluiu. Ficou com alguma dúvida sobre o conteúdo ou precisa de ajuda com o PIX?`);
 
                 html += `
-                <div class="list-item">
+                <div class="list-item" style="${isPlatform ? 'border-left: 3px solid #a855f7;' : ''}">
                     <div class="list-item-title">
-                        <span>${nome} <span style="background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800;">ABANDONOU</span></span>
+                        <span>${nome} ${originBadge}</span>
                         <span style="font-size: 13px; color: var(--text-muted); font-weight: 700;">${price}</span>
                     </div>
                     <div class="list-item-sub"><i class="fa-regular fa-envelope"></i> ${email}</div>
                     <div class="list-item-sub"><i class="fa-solid fa-phone"></i> ${phone || 'Sem telefone'}</div>
-                    <div class="list-item-sub" style="font-size: 11px; margin-top: 4px;">
-                        <i class="fa-regular fa-clock"></i> ${dStr} • ${item.reason || 'Parou no checkout'}
-                    </div>
+                    ${originDescription}
                     ${cleanPhone ? `
-                    <a href="https://wa.me/${cleanPhone}?text=${recoveryMsg}" target="_blank" class="btn-action-wpp" style="background: #10b981;">
-                        <i class="fa-brands fa-whatsapp"></i> Recuperar no WhatsApp
+                    <a href="https://wa.me/${cleanPhone}?text=${recoveryMsg}" target="_blank" class="btn-action-wpp" style="background: ${isPlatform ? '#9333ea' : '#10b981'};">
+                        <i class="fa-brands fa-whatsapp"></i> ${isPlatform ? 'Chamar Aluno no WhatsApp' : 'Recuperar no WhatsApp'}
                     </a>` : ''}
                 </div>`;
             });
