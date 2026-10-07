@@ -1604,7 +1604,7 @@
                 });
             }
 
-            // 2. CÁLCULO DE VENDAS PAGAS - ATRIBUIÇÃO ESTRITA POR CAMPANHA EXTERNA
+            // 2. CÁLCULO DE VENDAS PAGAS - ATRIBUIÇÃO ESTRITA POR PRODUTO/CAMPANHA
             const matchingSales = [];
             const historyList = Array.isArray(globalHistory) ? globalHistory : [];
 
@@ -1613,16 +1613,15 @@
                 if (!isDateMatch(sale.date || sale.created_at, dates)) return;
 
                 const saleSite = String(sale.site || '').toLowerCase();
-
-                // REGRA BLINDADA: Vendas de dentro da plataforma ou painel de controle NÃO entram no gestor das campanhas de tráfego
-                if (saleSite === 'platform' || saleSite === 'app' || saleSite === 'admin-panel') return;
-
                 const itemsStr = (sale.items || []).join(' ').toLowerCase();
                 const mainItem = (sale.items && sale.items.length > 0) ? String(sale.items[0]).toLowerCase() : '';
 
+                // Ignora liberações de teste com total 0 do admin-panel
+                if (saleSite === 'admin-panel' && Number(sale.total) <= 0) return;
+
                 // Uma venda pertence à campanha PINTINHOS se:
                 // - A origem registrada foi 'pintinhos' (saleSite === 'pintinhos')
-                // - OU o produto principal comprado (1º item) for Manual dos Pintinhos
+                // - OU o produto comprado for Manual dos Pintinhos (seja da página ou da plataforma)
                 const isPintinhosSale = (saleSite === 'pintinhos') || mainItem.includes('pintinho') || (mainItem.includes('manejo') && !mainItem.includes('cura') && !mainItem.includes('elite'));
 
                 if (isPintinhos && isPintinhosSale) {
@@ -1645,6 +1644,7 @@
             const isPintinhosItem = (it) => {
                 const s = String(it.site || '').toLowerCase();
                 const p = String(it.product || it.products || '').toLowerCase();
+                if (s === 'amazon' || p.includes('[amz]')) return false;
                 if (s === 'pintinhos') return true;
                 if (p === 'ebook-pintinhos') return true;
                 if (p.includes('pintinho') && !p.includes('doenca') && !p.includes('cura') && !p.includes('elite')) return true;
@@ -1654,7 +1654,9 @@
             const isDoencasItem = (it) => {
                 if (isPintinhosItem(it)) return false;
                 const s = String(it.site || '').toLowerCase();
-                if (s === 'amazon') return false;
+                const p = String(it.product || it.products || '').toLowerCase();
+                if (s === 'amazon' || p.includes('[amz]')) return false;
+                if (s === 'text' || s === 'official' || p.includes('doenca') || p.includes('cura') || p.includes('elite') || p.includes('combo')) return true;
                 return true;
             };
 
@@ -1752,6 +1754,12 @@
                 const isPix = sale.method === 'pix';
                 const methodBadge = isPix ? '<span style="background:rgba(16,185,129,0.2); color:#10b981; border:1px solid rgba(16,185,129,0.4); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800;">PIX</span>' : '<span style="background:rgba(59,130,246,0.2); color:#60a5fa; border:1px solid rgba(59,130,246,0.4); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800;">CARTÃO</span>';
                 
+                const saleSite = String(sale.site || '').toLowerCase();
+                const isPlatformSale = (saleSite === 'platform' || saleSite === 'app');
+                const platformBadge = isPlatformSale 
+                    ? '<span style="background:rgba(147,51,234,0.25); color:#c084fc; border:1px solid rgba(168,85,247,0.5); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800; display:inline-flex; align-items:center; gap:4px; margin-left:4px;"><i class="fa-solid fa-crown" style="color:#e879f9;"></i> PLATAFORMA</span>' 
+                    : '';
+
                 const nome = sale.name || sale.customer?.name || 'Cliente';
                 const email = sale.email || sale.customer?.email || 'Sem e-mail';
                 const phone = sale.phone || sale.customer?.phone || '';
@@ -1770,13 +1778,14 @@
                 const wppMsg = encodeURIComponent(fullMsg);
 
                 html += `
-                <div class="list-item">
+                <div class="list-item" style="${isPlatformSale ? 'border-left: 3px solid #a855f7;' : ''}">
                     <div class="list-item-title">
-                        <span>${nome} ${methodBadge}</span>
+                        <span>${nome} ${methodBadge} ${platformBadge}</span>
                         <span class="list-item-right-price">${formatBRL(sale.total)}</span>
                     </div>
                     <div class="list-item-sub"><i class="fa-regular fa-envelope"></i> ${email || 'Sem e-mail'}</div>
                     <div class="list-item-sub"><i class="fa-solid fa-phone"></i> ${phone || 'Sem telefone'}</div>
+                    ${isPlatformSale ? `<div class="list-item-sub" style="color: #c084fc; font-weight: 700; margin-top: 2px; font-size: 11px;"><i class="fa-solid fa-circle-check"></i> Aluno comprou direto pela plataforma/app</div>` : ''}
                     <div class="list-item-sub" style="margin-top: 4px; color: #38bdf8; font-size: 12px; font-family: monospace;">
                         <i class="fa-solid fa-key"></i> CPF: <strong>${formattedCpf}</strong> | Senha: <strong style="color: #fbbf24;">${senhaAcesso}</strong>
                     </div>
