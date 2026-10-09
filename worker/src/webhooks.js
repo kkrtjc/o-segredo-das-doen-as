@@ -127,6 +127,7 @@ webhookRoutes.post('/mercadopago', async (c) => {
                     if (isNewSale) {
                         const clientIp = c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For')?.split(',')[0]?.trim();
                         const { sendEmail } = await import('./email.js');
+                        const salePassword = cleanCpf ? await c.env.HISTORY.get('pw_' + cleanCpf) : null;
                         await sendEmail(c.env, customer, items, paymentId, 
                             metadata.facebook_event_id, 
                             metadata.fbc, 
@@ -134,7 +135,8 @@ webhookRoutes.post('/mercadopago', async (c) => {
                             metadata.user_agent,
                             clientIp,
                             metadata.site || 'app',
-                            metadata.external_id); // Passa o session_id original para match no Meta
+                            metadata.external_id,
+                            salePassword); // Passa a senha correta (original ou gerada) para o e-mail de acesso
                     }
                 }
             } catch (e) {

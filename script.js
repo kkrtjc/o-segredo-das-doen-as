@@ -1120,7 +1120,6 @@ async function renderHomeProducts() {
 
             <ul class="price-features" style="margin-top: 1rem;">
                 ${featuresHTML}
-                <li style="color: #32bcad; font-weight: 800;"><span class="check-icon">✓</span> + TABELA DE RAÇÃO (OFERTA ÚNICA)</li>
             </ul>
             
             <button onclick="openCheckout('${mainId}')" class="btn btn-primary btn-pulse" style="width:100%; font-size: 1.3rem; padding: 1.5rem;">

@@ -25,15 +25,53 @@ function generatePassword() {
 }
 
 // Salva a senha na KV e retorna ela
-async function saveAndGetPassword(env, cleanCPF) {
+async function saveAndGetPassword(env, cleanCPF, email = '', phone = '') {
     const key = 'pw_' + cleanCPF;
-    // Só gera nova senha se não existir ainda (preserva senha de clientes antigos)
     let existing = await env.HISTORY.get(key);
-    if (!existing) {
-        existing = generatePassword();
-        await env.HISTORY.put(key, existing);
+    
+    // Verifica se usuário tem conta criada anteriormente no free_users
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const cleanPhone = (phone || '').replace(/\D/g, '').slice(-8);
+    let originalPassword = null;
+
+    try {
+        const rawFree = await env.HISTORY.get('free_users');
+        if (rawFree) {
+            const freeUsers = JSON.parse(rawFree);
+            const matched = freeUsers.find(u => {
+                const uEmail = (u.email || '').trim().toLowerCase();
+                const uPhone = (u.phone || '').replace(/\D/g, '').slice(-8);
+                const uCpf = (u.cpf || '').replace(/\D/g, '');
+                return (cleanEmail && uEmail && uEmail === cleanEmail) ||
+                       (cleanPhone && uPhone && uPhone === cleanPhone) ||
+                       (cleanCPF && uCpf && uCpf === cleanCPF);
+            });
+            if (matched && matched.password) {
+                originalPassword = matched.password.trim();
+                // Sincroniza CPF na conta se ainda não tinha
+                if (cleanCPF && !matched.cpf) {
+                    matched.cpf = cleanCPF;
+                    await env.HISTORY.put('free_users', JSON.stringify(freeUsers));
+                }
+            }
+        }
+    } catch (e) {
+        console.error('[saveAndGetPassword free_users check error]', e);
     }
-    return existing;
+
+    if (originalPassword) {
+        await env.HISTORY.put(key, originalPassword);
+        return originalPassword;
+    }
+
+    if (existing) {
+        return existing;
+    }
+
+    // Se novo cliente, padrão é os 4 primeiros dígitos do CPF (ou gerada se CPF indisponível)
+    const newPwd = cleanCPF.length >= 4 ? cleanCPF.slice(0, 4) : generatePassword();
+    await env.HISTORY.put(key, newPwd);
+    return newPwd;
 }
 
 // Mapeia erros técnicos do MP para mensagens amigáveis
@@ -368,8 +406,8 @@ checkoutRoutes.post('/card', async (c) => {
         const lockKey = `lock_${result.id}`;
         const isLocked = await c.env.HISTORY.get(lockKey);
         
-        // Gera/recupera senha do cliente
-        const senha = await saveAndGetPassword(c.env, cleanCPF);
+        // Gera/recupera senha do cliente (preserva senha se já tinha conta gratuita)
+        const senha = await saveAndGetPassword(c.env, cleanCPF, customer.email, customer.phone);
 
         if (!isLocked) {
             // Aplica o lock imediatamente
@@ -532,8 +570,8 @@ checkoutRoutes.get('/payment/:id', async (c) => {
         const items = itemTitles.map(title => ({ title, price: result.transaction_amount / itemTitles.length }));
         const isNewSale = await logSale(c.env, customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão', metadata.site || 'app');
         
-        // Gera/recupera senha do cliente
-        const senha = cleanCPF ? await saveAndGetPassword(c.env, cleanCPF) : null;
+        // Gera/recupera senha do cliente (preserva senha se já tinha conta gratuita)
+        const senha = cleanCPF ? await saveAndGetPassword(c.env, cleanCPF, customer.email, customer.phone) : null;
 
             if (isNewSale) {
                 const clientIpStatus = c.req.header('CF-Connecting-IP') || c.req.header('X-Forwarded-For')?.split(',')[0]?.trim();

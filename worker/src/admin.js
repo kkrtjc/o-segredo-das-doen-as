@@ -70,6 +70,72 @@ export async function saveClientActivities(env, data) {
 export async function logSale(env, customer, items, paymentId, method, site = 'app') {
     const history = await getHistory(env);
     if (history.some(h => String(h.paymentId) === String(paymentId))) return false;
+
+    const bEmail = (customer.email || '').trim().toLowerCase();
+    const bPhone = (customer.phone || '').replace(/\D/g, '');
+    const bPhoneShort = bPhone.slice(-8);
+    const bCpf = (customer.cpf || '').replace(/\D/g, '');
+
+    let hasExistingAccount = false;
+    let customerPassword = null;
+
+    // Sincroniza imediatamente com free_users se o comprador for um usuário registrado no app
+    try {
+        const rawFree = await env.HISTORY.get('free_users');
+        if (rawFree) {
+            const freeUsers = JSON.parse(rawFree);
+            const idx = freeUsers.findIndex(u => 
+                (bEmail && u.email && u.email.toLowerCase() === bEmail) ||
+                (bPhoneShort && u.phone && u.phone.replace(/\D/g, '').slice(-8) === bPhoneShort) ||
+                (bCpf && u.cpf && u.cpf.replace(/\D/g, '') === bCpf)
+            );
+            if (idx !== -1) {
+                hasExistingAccount = true;
+                if (freeUsers[idx].password) {
+                    customerPassword = freeUsers[idx].password.trim();
+                }
+                const prodSet = new Set(freeUsers[idx].products || []);
+                const titleStr = items.map(i => (typeof i === 'string' ? i : i.title || '').toLowerCase()).join(' ');
+                if (titleStr.includes('doença') || titleStr.includes('doenca') || titleStr.includes('cura das aves') || titleStr.includes('elite') || titleStr.includes('protocolo') || titleStr.includes('combo')) {
+                    prodSet.add('ebook-doencas');
+                }
+                if (titleStr.includes('tabela') || titleStr.includes('ração') || titleStr.includes('racao') || titleStr.includes('bump') || titleStr.includes('combo-plataforma') || titleStr.includes('combo completo') || titleStr.includes('acesso completo')) {
+                    prodSet.add('tabela-racao');
+                }
+                if (titleStr.includes('manejo') || titleStr.includes('pintinho') || titleStr.includes('combo-elite')) {
+                    prodSet.add('ebook-manejo');
+                }
+                if (bCpf && !freeUsers[idx].cpf) freeUsers[idx].cpf = bCpf;
+                freeUsers[idx].products = Array.from(prodSet);
+                await env.HISTORY.put('free_users', JSON.stringify(freeUsers));
+            }
+        }
+    } catch (e) {
+        console.error('[LOGSALE FREE_USERS SYNC ERROR]', e);
+    }
+
+    // Se encontrou usuário existente, vincula a senha original ao CPF no KV
+    if (customerPassword && bCpf) {
+        try {
+            await env.HISTORY.put('pw_' + bCpf, customerPassword);
+        } catch (e) {
+            console.error('[LOGSALE PW SYNC ERROR]', e);
+        }
+    } else if (bCpf) {
+        // Se novo cliente, verifica se já havia senha salva no KV, senão define os 4 dígitos do CPF
+        try {
+            const stored = await env.HISTORY.get('pw_' + bCpf);
+            if (stored) {
+                customerPassword = stored;
+            } else {
+                customerPassword = bCpf.length >= 4 ? bCpf.slice(0, 4) : '1234';
+                await env.HISTORY.put('pw_' + bCpf, customerPassword);
+            }
+        } catch (_) {
+            customerPassword = bCpf.length >= 4 ? bCpf.slice(0, 4) : '1234';
+        }
+    }
+
     history.push({
         id: paymentId, paymentId,
         date: new Date().toISOString(),
@@ -82,7 +148,9 @@ export async function logSale(env, customer, items, paymentId, method, site = 'a
         items: items.map(i => (typeof i === 'string' ? i : i.title)),
         total: items.reduce((acc, i) => acc + Number(i.price || 0), 0),
         method, status: 'approved',
-        site: site
+        site: site,
+        password: customerPassword,
+        hasExistingAccount: hasExistingAccount
     });
     await saveHistory(env, history);
 
@@ -218,13 +286,31 @@ adminRoutes.get('/history', async (c) => {
     const pw = c.req.header('x-admin-password') || c.req.query('password');
     if (pw !== (c.env.ADMIN_PASSWORD || 'mura2026')) return c.json({ error: 'Acesso Negado' }, 401);
     const list = await getHistory(c.env);
+
+    let freeUsersMap = new Map();
+    try {
+        const rawFree = await c.env.HISTORY.get('free_users');
+        if (rawFree) {
+            const freeUsers = JSON.parse(rawFree);
+            freeUsers.forEach(u => {
+                if (u.email) freeUsersMap.set(u.email.toLowerCase().trim(), u);
+                if (u.phone) freeUsersMap.set(u.phone.replace(/\D/g, '').slice(-8), u);
+                if (u.cpf) freeUsersMap.set(u.cpf.replace(/\D/g, ''), u);
+            });
+        }
+    } catch (_) {}
+
     const enriched = await Promise.all(list.map(async (item) => {
         const cpf = (item.cpf || item.customer?.cpf || '').replace(/\D/g, '');
-        if (cpf && cpf.length >= 4) {
-            const storedPw = await c.env.HISTORY.get('pw_' + cpf);
-            return { ...item, password: storedPw || cpf.slice(0, 4) };
-        }
-        return item;
+        const email = (item.email || item.customer?.email || '').trim().toLowerCase();
+        const phone = (item.phone || item.customer?.phone || '').replace(/\D/g, '').slice(-8);
+
+        const freeUser = freeUsersMap.get(email) || freeUsersMap.get(phone) || (cpf ? freeUsersMap.get(cpf) : null);
+        const storedPw = (cpf && cpf.length >= 4) ? await c.env.HISTORY.get('pw_' + cpf) : null;
+        const password = item.password || freeUser?.password || storedPw || (cpf.length >= 4 ? cpf.slice(0, 4) : '1234');
+        const hasExistingAccount = !!(item.hasExistingAccount || freeUser || (storedPw && cpf.length >= 4 && storedPw !== cpf.slice(0, 4)));
+
+        return { ...item, password, hasExistingAccount };
     }));
     return c.json(enriched);
 });
@@ -465,29 +551,30 @@ adminRoutes.post('/verify-access', async (c) => {
             });
         }
 
+        let foundName = null;
+        let foundEmail = null;
+        let foundPhone = null;
+        let foundCpf = null;
+        let productsSet = new Set();
+
         // ─── VERIFICA USUÁRIOS GRATUITOS (conta criada via /register) ───
+        let freeUserMatched = null;
         try {
             const rawFreeUsers = await c.env.HISTORY.get('free_users');
             if (rawFreeUsers) {
                 const freeUsers = JSON.parse(rawFreeUsers);
                 const freeUser = freeUsers.find(u =>
-                    u.email === cleanId
+                    (cleanId && u.email && u.email.toLowerCase() === cleanId) ||
+                    (cleanNum && cleanNum.length >= 8 && u.phone && u.phone.replace(/\D/g, '').includes(cleanNum)) ||
+                    (cleanNum && cleanNum.length >= 11 && u.cpf && u.cpf.replace(/\D/g, '') === cleanNum)
                 );
                 if (freeUser) {
-                    const pInput = (password || '').trim();
-                    const pSaved = (freeUser.password || '').trim();
-                    if (pInput && pInput !== pSaved && pInput.toLowerCase() !== pSaved.toLowerCase()) {
-                        return c.json({ found: true, error: 'Senha incorreta.' }, 401);
-                    }
-                    return c.json({
-                        found: true,
-                        isBlocked: false,
-                        name: freeUser.name,
-                        email: freeUser.email,
-                        phone: freeUser.phone,
-                        cpf: null,
-                        products: freeUser.products || []
-                    });
+                    freeUserMatched = freeUser;
+                    foundName = freeUser.name;
+                    foundEmail = freeUser.email;
+                    foundPhone = freeUser.phone;
+                    if (freeUser.cpf) foundCpf = freeUser.cpf;
+                    (freeUser.products || []).forEach(p => productsSet.add(p));
                 }
             }
         } catch (freeErr) {
@@ -495,15 +582,11 @@ adminRoutes.post('/verify-access', async (c) => {
         }
 
         const history = await getHistory(c.env);
-        let foundName = null;
-        let foundEmail = null;
-        let foundPhone = null;
-        let foundCpf = null;
         let foundExpiresAt = null;
         let foundDuration = null;
         let hasActiveSale = false;
         let hasLifetimeSale = false;
-        let productsSet = new Set();
+        let foundSalePassword = null;
         const now = Date.now();
         
         for (const sale of history) {
@@ -519,6 +602,14 @@ adminRoutes.post('/verify-access', async (c) => {
                     if (saleEmail === cleanId) isMatch = true;
                 } else {
                     if (cleanNum.length === 11 && saleCpf === cleanNum) isMatch = true;
+                    if ((cleanNum.length === 10 || cleanNum.length === 11) && salePhone.includes(cleanNum)) isMatch = true;
+                }
+
+                // Cruzamento também com dados do usuário gratuito cadastrado
+                if (freeUserMatched) {
+                    if (freeUserMatched.email && saleEmail && saleEmail === freeUserMatched.email.toLowerCase()) isMatch = true;
+                    if (freeUserMatched.phone && salePhone && (salePhone === freeUserMatched.phone || salePhone.includes(freeUserMatched.phone) || freeUserMatched.phone.includes(salePhone))) isMatch = true;
+                    if (freeUserMatched.cpf && saleCpf && saleCpf === freeUserMatched.cpf.replace(/\D/g, '')) isMatch = true;
                 }
                 
                 if (isMatch) {
@@ -526,6 +617,7 @@ adminRoutes.post('/verify-access', async (c) => {
                     if (!foundEmail && saleEmail) foundEmail = saleEmail;
                     if (!foundPhone && salePhone) foundPhone = salePhone;
                     if (!foundCpf && saleCpf) foundCpf = saleCpf;
+                    if (sale.password && !foundSalePassword) foundSalePassword = sale.password;
                     
                     // Verifica se esta venda/acesso manual já expirou
                     const isExpired = sale.expiresAt && (new Date(sale.expiresAt).getTime() <= now);
@@ -570,6 +662,37 @@ adminRoutes.post('/verify-access', async (c) => {
             productsSet.add('tabela-racao');
         }
 
+        // Sincroniza produtos descobertos no free_users para que fique persistente
+        if (freeUserMatched && productsSet.size > 0) {
+            try {
+                const rawFree = await c.env.HISTORY.get('free_users');
+                if (rawFree) {
+                    const freeUsers = JSON.parse(rawFree);
+                    const idx = freeUsers.findIndex(u => u.email === freeUserMatched.email);
+                    if (idx !== -1) {
+                        const existingProds = new Set(freeUsers[idx].products || []);
+                        let hasNew = false;
+                        productsSet.forEach(p => {
+                            if (!existingProds.has(p)) {
+                                existingProds.add(p);
+                                hasNew = true;
+                            }
+                        });
+                        if (foundCpf && !freeUsers[idx].cpf) {
+                            freeUsers[idx].cpf = foundCpf;
+                            hasNew = true;
+                        }
+                        if (hasNew) {
+                            freeUsers[idx].products = Array.from(existingProds);
+                            await c.env.HISTORY.put('free_users', JSON.stringify(freeUsers));
+                        }
+                    }
+                }
+            } catch (mergeErr) {
+                console.error('[FREE USER MERGE ERROR]', mergeErr);
+            }
+        }
+
         // Checa se há expiração vinculada diretamente ao CPF no KV
         if (foundCpf && !hasLifetimeSale) {
             const expKey = await c.env.HISTORY.get('exp_' + foundCpf.replace(/\D/g, ''));
@@ -601,14 +724,45 @@ adminRoutes.post('/verify-access', async (c) => {
             productsSet.clear();
         }
         
-        if (foundName && !isBlocked) {
-            const cleanCpfKey = foundCpf ? foundCpf.replace(/\D/g, '') : cleanNum || 'nocpf';
-            const defaultPW = cleanCpfKey.slice(0, 4) || '1234';
-            const storedPW = await c.env.HISTORY.get('pw_' + cleanCpfKey) || defaultPW;
-            
-            const pInput = (password || '').trim();
-            const pSaved = (storedPW || '').trim();
-            if (pInput && pInput !== pSaved && pInput.toLowerCase() !== pSaved.toLowerCase()) {
+        // ─── VERIFICAÇÃO INTELIGENTE DE SENHA MULTI-FATOR ───
+        if (foundName && !isBlocked && password) {
+            const pInput = password.trim().toLowerCase();
+            const validPasswords = new Set();
+
+            // 1. Senha personalizada cadastrada pelo usuário na conta gratuita
+            if (freeUserMatched && freeUserMatched.password) {
+                validPasswords.add(freeUserMatched.password.trim().toLowerCase());
+            }
+
+            // 2. Os 4 primeiros dígitos do CPF (padrão universal enviado no WhatsApp e e-mail)
+            const cleanCpfKey = foundCpf ? foundCpf.replace(/\D/g, '') : cleanNum || '';
+            if (cleanCpfKey.length >= 4) {
+                validPasswords.add(cleanCpfKey.slice(0, 4).toLowerCase());
+                validPasswords.add(cleanCpfKey.toLowerCase());
+            }
+
+            // 3. Senha gravada na venda do histórico
+            if (foundSalePassword) {
+                validPasswords.add(foundSalePassword.trim().toLowerCase());
+            }
+
+            // 4. Senha armazenada na chave pw_ do KV
+            if (cleanCpfKey) {
+                const storedPW = await c.env.HISTORY.get('pw_' + cleanCpfKey);
+                if (storedPW) {
+                    validPasswords.add(storedPW.trim().toLowerCase());
+                }
+            }
+
+            // 5. Se houver telefone, permite também os 4 primeiros dígitos do celular
+            if (foundPhone) {
+                const cleanPh = foundPhone.replace(/\D/g, '');
+                if (cleanPh.length >= 4) {
+                    validPasswords.add(cleanPh.slice(0, 4).toLowerCase());
+                }
+            }
+
+            if (!validPasswords.has(pInput)) {
                 return c.json({ found: true, error: 'Senha incorreta.' }, 401);
             }
         }
