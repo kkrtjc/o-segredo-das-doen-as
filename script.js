@@ -613,10 +613,10 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                 {
                     id: 'bump-6361',
                     title: 'TABELA DE RAÇÃO PRÁTICA',
-                    price: 11.90,
-                    priceCard: 11.90,
+                    price: 14.90,
+                    priceCard: 14.90,
                     image: 'tabela_racao_bump.webp',
-                    description: '<span style="color: #ff4444;"><strong>💸 Economia Inteligente:</strong></span> Monte sua própria ração balanceada e forte, reduzindo seus gastos mensais com ração <strong style="color:#fbbf24;">em até 60%</strong> por apenas R$ 11,90.',
+                    description: '<div style="display: flex; flex-direction: column; gap: 3px; margin: 4px 0; text-align: left; font-size: 0.68rem; line-height: 1.25;"><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Inicial Profissional</strong> (0 a 30 dias)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Crescimento Ideal</strong> (31 a 120 dias)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Postura</strong> (121 dias+)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Corte / Engorda</strong></div></div>',
                     tag: 'OFERTA ÚNICA'
                 }
             ];
@@ -626,10 +626,10 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                 {
                     id: 'bump-6361',
                     title: 'TABELA DE RAÇÃO PRÁTICA',
-                    price: 11.90,
-                    priceCard: 11.90,
+                    price: 14.90,
+                    priceCard: 14.90,
                     image: 'tabela_racao_bump.webp',
-                    description: '<span style="color: #ff4444;"><strong>💸 Economia Inteligente:</strong></span> Monte sua própria ração balanceada e forte, reduzindo seus gastos mensais com ração <strong style="color:#fbbf24;">em até 60%</strong> por apenas R$ 11,90.',
+                    description: '<div style="display: flex; flex-direction: column; gap: 3px; margin: 4px 0; text-align: left; font-size: 0.68rem; line-height: 1.25;"><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Inicial Profissional</strong> (0 a 30 dias)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Crescimento Ideal</strong> (31 a 120 dias)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Postura</strong> (121 dias+)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Corte / Engorda</strong></div></div>',
                     tag: 'OFERTA ÚNICA'
                 }
             ];
@@ -811,13 +811,13 @@ function renderOrderBumps(bumps) {
                         </div>
 
                         <!-- Description -->
-                        <p style="color: #fff; font-size: 0.65rem; line-height: 1.3; text-shadow: 1px 1px 2px #000; margin: 6px 0; text-align: center; font-weight: 500;">
+                        <div style="color: #fff; font-size: 0.65rem; line-height: 1.3; text-shadow: 1px 1px 2px #000; margin: 4px 0; width: 100%;">
                             ${desc}
-                        </p>
+                        </div>
 
                         <!-- Price -->
                         <div style="text-align: center; margin-top: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px;">
-                            <span style="color: #a3a3a3; font-size: 0.75rem; text-decoration: line-through; text-shadow: 1px 1px 1px #000;">De R$ ${isManejo ? '99,90' : (isDoencas ? '89,90' : '59,90')}</span>
+                            <span style="color: #a3a3a3; font-size: 0.75rem; text-decoration: line-through; text-shadow: 1px 1px 1px #000;">De R$ ${isManejo ? '99,90' : (isDoencas ? '89,90' : '39,90')}</span>
                             <span style="color: #4ade80; font-size: 0.85rem; font-weight: 800; text-shadow: 0 0 8px rgba(74,222,128,0.4), 1px 1px 2px #000; line-height: 1.15;">
                                 Por apenas <span style="font-size: 1.05rem;">R$ ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.price)).replace('R$ ', '')}</span><br>
                                 ${isManejo ? 'você salva seus pintinhos' : (isDoencas ? 'você aprende sobre as principais doenças.' : ', você economiza até 60% na ração')}
@@ -903,8 +903,8 @@ function updateTotal() {
                         bumpPriceForCard = 49.90;
                     }
                     if (bump.id === 'bump-6361') {
-                        bumpPriceForPix = 11.90;
-                        bumpPriceForCard = 11.90;
+                        bumpPriceForPix = 14.90;
+                        bumpPriceForCard = 14.90;
                     }
                 } else {
                     if (bump.id === 'ebook-manejo') {
@@ -912,8 +912,8 @@ function updateTotal() {
                         bumpPriceForCard = 27.90;
                     }
                     if (bump.id === 'bump-6361') {
-                        bumpPriceForPix = 11.90;
-                        bumpPriceForCard = 11.90;
+                        bumpPriceForPix = 14.90;
+                        bumpPriceForCard = 14.90;
                     }
                 }
             }
@@ -985,10 +985,10 @@ function updateTotal() {
         if (window.acceptedPixUpsell && (currentPaymentMethod === 'pix' || currentPaymentMethod === 'card' || currentPaymentMethod === 'boleto')) {
             if (cart.mainProduct.id === 'ebook-pintinhos') {
                 if (id === 'ebook-doencas') priceForMethod = 49.90;
-                if (id === 'bump-6361') priceForMethod = 11.90;
+                if (id === 'bump-6361') priceForMethod = 14.90;
             } else {
                 if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 27.90;
-                if (id === 'bump-6361') priceForMethod = 11.90;
+                if (id === 'bump-6361') priceForMethod = 14.90;
             }
         }
 
@@ -1334,11 +1334,11 @@ function setupPixUpsellModal() {
     if (cart.mainProduct && cart.mainProduct.id === 'ebook-pintinhos') {
         const hasRacao = cart.bumps.includes('bump-6361');
         const mainPrice = Number(cart.mainProduct.price) || 37.00;
-        const racaoPrice = hasRacao ? 11.90 : 0;
+        const racaoPrice = hasRacao ? 14.90 : 0;
         const doencasPrice = 49.90;
         const currentTotal = mainPrice + racaoPrice;
         const totalWithUpsell = currentTotal + doencasPrice;
-        const originalTotal = (mainPrice + (hasRacao ? 11.90 : 0) + 89.90);
+        const originalTotal = (mainPrice + (hasRacao ? 14.90 : 0) + 89.90);
 
         const fmtCurrent = currentTotal.toFixed(2).replace('.', ',');
         const fmtTotal = totalWithUpsell.toFixed(2).replace('.', ',');
@@ -1392,7 +1392,7 @@ function setupPixUpsellModal() {
                     ${hasRacao ? `
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span>🌾 Tabela de Ração Prática:</span>
-                        <strong style="color: #ffffff;">R$ 11,90</strong>
+                        <strong style="color: #ffffff;">R$ 14,90</strong>
                     </div>` : ''}
                     <div style="display: flex; justify-content: space-between; align-items: center; color: #34d399;">
                         <span>💊 Guia Completo das Doenças:</span>
@@ -1414,7 +1414,7 @@ function setupPixUpsellModal() {
 
     const hasRacao = cart.bumps.includes('bump-6361');
     const mainPrice = Number(cart.mainProduct?.price) || 49.90;
-    const racaoPrice = hasRacao ? 11.90 : 0;
+    const racaoPrice = hasRacao ? 14.90 : 0;
     const pintinhosPrice = 27.90;
     const currentTotal = mainPrice + racaoPrice;
     const totalWithUpsell = currentTotal + pintinhosPrice;
@@ -1472,7 +1472,7 @@ function setupPixUpsellModal() {
                 ${hasRacao ? `
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span>🌾 Tabela de Ração Prática:</span>
-                    <strong style="color: #ffffff;">R$ 11,90</strong>
+                    <strong style="color: #ffffff;">R$ 14,90</strong>
                 </div>` : ''}
                 <div style="display: flex; justify-content: space-between; align-items: center; color: #34d399;">
                     <span>🐣 Manual de Manejo dos Pintinhos:</span>
@@ -1605,7 +1605,7 @@ async function handlePayment(method) {
                 };
             } else {
                 // Fallback de emergência (mesmo do updateTotal)
-                const fallbackPrice = (id === 'ebook-manejo') ? 27.90 : ((id === 'ebook-doencas') ? 49.90 : 11.90);
+                const fallbackPrice = (id === 'ebook-manejo') ? 27.90 : ((id === 'ebook-doencas') ? 49.90 : 14.90);
                 b = { 
                     id: id, 
                     title: id === 'ebook-manejo' ? 'Manual de Pintinhos' : (id === 'ebook-doencas' ? 'Guia Completo das Doenças' : 'Tabela de Ração Prática'),
@@ -1622,10 +1622,10 @@ async function handlePayment(method) {
             if (window.acceptedPixUpsell && (method === 'pix' || method === 'card' || method === 'boleto')) {
                 if (cart.mainProduct.id === 'ebook-pintinhos') {
                     if (b.id === 'ebook-doencas') bumpPrice = 49.90;
-                    if (b.id === 'bump-6361') bumpPrice = 11.90;
+                    if (b.id === 'bump-6361') bumpPrice = 14.90;
                 } else {
                     if (b.id === 'ebook-manejo') bumpPrice = 27.90;
-                    if (b.id === 'bump-6361') bumpPrice = 11.90;
+                    if (b.id === 'bump-6361') bumpPrice = 14.90;
                 }
             }
 
