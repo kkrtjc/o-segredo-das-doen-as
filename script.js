@@ -613,10 +613,10 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                 {
                     id: 'bump-6361',
                     title: 'TABELA DE RAÇÃO PRÁTICA',
-                    price: 19.90,
-                    priceCard: 19.90,
+                    price: 11.90,
+                    priceCard: 11.90,
                     image: 'tabela_racao_bump.webp',
-                    description: '<span style="color: #ff4444;"><strong>💸 Economia Inteligente:</strong></span> Monte sua própria ração balanceada e forte, reduzindo seus gastos mensais com ração <strong style="color:#fbbf24;">em até 60%</strong> por apenas R$ 19,90.',
+                    description: '<span style="color: #ff4444;"><strong>💸 Economia Inteligente:</strong></span> Monte sua própria ração balanceada e forte, reduzindo seus gastos mensais com ração <strong style="color:#fbbf24;">em até 60%</strong> por apenas R$ 11,90.',
                     tag: 'OFERTA ÚNICA'
                 }
             ];
@@ -626,10 +626,10 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                 {
                     id: 'bump-6361',
                     title: 'TABELA DE RAÇÃO PRÁTICA',
-                    price: 19.90,
-                    priceCard: 19.90,
+                    price: 11.90,
+                    priceCard: 11.90,
                     image: 'tabela_racao_bump.webp',
-                    description: '<span style="color: #ff4444;"><strong>💸 Economia Inteligente:</strong></span> Monte sua própria ração balanceada e forte, reduzindo seus gastos mensais com ração <strong style="color:#fbbf24;">em até 60%</strong> por apenas R$ 19,90.',
+                    description: '<span style="color: #ff4444;"><strong>💸 Economia Inteligente:</strong></span> Monte sua própria ração balanceada e forte, reduzindo seus gastos mensais com ração <strong style="color:#fbbf24;">em até 60%</strong> por apenas R$ 11,90.',
                     tag: 'OFERTA ÚNICA'
                 }
             ];
@@ -903,8 +903,8 @@ function updateTotal() {
                         bumpPriceForCard = 49.90;
                     }
                     if (bump.id === 'bump-6361') {
-                        bumpPriceForPix = 19.90;
-                        bumpPriceForCard = 19.90;
+                        bumpPriceForPix = 11.90;
+                        bumpPriceForCard = 11.90;
                     }
                 } else {
                     if (bump.id === 'ebook-manejo') {
@@ -912,8 +912,8 @@ function updateTotal() {
                         bumpPriceForCard = 27.90;
                     }
                     if (bump.id === 'bump-6361') {
-                        bumpPriceForPix = 19.90;
-                        bumpPriceForCard = 19.90;
+                        bumpPriceForPix = 11.90;
+                        bumpPriceForCard = 11.90;
                     }
                 }
             }
@@ -985,10 +985,10 @@ function updateTotal() {
         if (window.acceptedPixUpsell && (currentPaymentMethod === 'pix' || currentPaymentMethod === 'card' || currentPaymentMethod === 'boleto')) {
             if (cart.mainProduct.id === 'ebook-pintinhos') {
                 if (id === 'ebook-doencas') priceForMethod = 49.90;
-                if (id === 'bump-6361') priceForMethod = 19.90;
+                if (id === 'bump-6361') priceForMethod = 11.90;
             } else {
                 if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 27.90;
-                if (id === 'bump-6361') priceForMethod = 19.90;
+                if (id === 'bump-6361') priceForMethod = 11.90;
             }
         }
 
@@ -1334,11 +1334,11 @@ function setupPixUpsellModal() {
     if (cart.mainProduct && cart.mainProduct.id === 'ebook-pintinhos') {
         const hasRacao = cart.bumps.includes('bump-6361');
         const mainPrice = Number(cart.mainProduct.price) || 37.00;
-        const racaoPrice = hasRacao ? 19.90 : 0;
+        const racaoPrice = hasRacao ? 11.90 : 0;
         const doencasPrice = 49.90;
         const currentTotal = mainPrice + racaoPrice;
         const totalWithUpsell = currentTotal + doencasPrice;
-        const originalTotal = (mainPrice + (hasRacao ? 19.90 : 0) + 89.90);
+        const originalTotal = (mainPrice + (hasRacao ? 11.90 : 0) + 89.90);
 
         const fmtCurrent = currentTotal.toFixed(2).replace('.', ',');
         const fmtTotal = totalWithUpsell.toFixed(2).replace('.', ',');
@@ -1392,7 +1392,7 @@ function setupPixUpsellModal() {
                     ${hasRacao ? `
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span>🌾 Tabela de Ração Prática:</span>
-                        <strong style="color: #ffffff;">R$ 19,90</strong>
+                        <strong style="color: #ffffff;">R$ 11,90</strong>
                     </div>` : ''}
                     <div style="display: flex; justify-content: space-between; align-items: center; color: #34d399;">
                         <span>💊 Guia Completo das Doenças:</span>
@@ -1414,7 +1414,7 @@ function setupPixUpsellModal() {
 
     const hasRacao = cart.bumps.includes('bump-6361');
     const mainPrice = Number(cart.mainProduct?.price) || 49.90;
-    const racaoPrice = hasRacao ? 19.90 : 0;
+    const racaoPrice = hasRacao ? 11.90 : 0;
     const pintinhosPrice = 27.90;
     const currentTotal = mainPrice + racaoPrice;
     const totalWithUpsell = currentTotal + pintinhosPrice;
@@ -1472,7 +1472,7 @@ function setupPixUpsellModal() {
                 ${hasRacao ? `
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span>🌾 Tabela de Ração Prática:</span>
-                    <strong style="color: #ffffff;">R$ 19,90</strong>
+                    <strong style="color: #ffffff;">R$ 11,90</strong>
                 </div>` : ''}
                 <div style="display: flex; justify-content: space-between; align-items: center; color: #34d399;">
                     <span>🐣 Manual de Manejo dos Pintinhos:</span>
@@ -1605,7 +1605,7 @@ async function handlePayment(method) {
                 };
             } else {
                 // Fallback de emergência (mesmo do updateTotal)
-                const fallbackPrice = (id === 'ebook-manejo') ? 27.90 : ((id === 'ebook-doencas') ? 49.90 : 19.90);
+                const fallbackPrice = (id === 'ebook-manejo') ? 27.90 : ((id === 'ebook-doencas') ? 49.90 : 11.90);
                 b = { 
                     id: id, 
                     title: id === 'ebook-manejo' ? 'Manual de Pintinhos' : (id === 'ebook-doencas' ? 'Guia Completo das Doenças' : 'Tabela de Ração Prática'),
@@ -1622,10 +1622,10 @@ async function handlePayment(method) {
             if (window.acceptedPixUpsell && (method === 'pix' || method === 'card' || method === 'boleto')) {
                 if (cart.mainProduct.id === 'ebook-pintinhos') {
                     if (b.id === 'ebook-doencas') bumpPrice = 49.90;
-                    if (b.id === 'bump-6361') bumpPrice = 19.90;
+                    if (b.id === 'bump-6361') bumpPrice = 11.90;
                 } else {
                     if (b.id === 'ebook-manejo') bumpPrice = 27.90;
-                    if (b.id === 'bump-6361') bumpPrice = 19.90;
+                    if (b.id === 'bump-6361') bumpPrice = 11.90;
                 }
             }
 
