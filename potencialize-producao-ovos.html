@@ -105,6 +105,7 @@
             position: relative;
             display: flex;
             flex-direction: column;
+            touch-action: pan-y;
         }
         .slider-track {
             display: flex;
@@ -112,6 +113,8 @@
             transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
             align-items: stretch;
             height: 100%;
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
         }
 
         /* ─── CADA PÁGINA (SLIDE) ─── */
@@ -124,6 +127,8 @@
             overflow-y: auto;
             max-height: calc(100vh - 65px);
             -webkit-overflow-scrolling: touch;
+            content-visibility: auto;
+            contain-intrinsic-size: 800px;
         }
 
         /* ─── IMAGEM DE REFERÊNCIA ─── */
@@ -143,6 +148,7 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            image-rendering: auto;
         }
 
         /* ─── CABEÇALHO DO MÓDULO ─── */
@@ -407,7 +413,7 @@
             <!-- ═══════════════════════════════════════════════════════════════════ -->
             <article class="slide-page" id="page-1">
                 <div class="slide-image-wrapper">
-                    <img src="modulo_luz.jpg" alt="Iluminação no Galinheiro para Fotoperíodo" loading="eager">
+                    <img src="modulo_luz.webp" alt="Iluminação no Galinheiro para Fotoperíodo" width="1080" height="608" loading="eager" fetchpriority="high" decoding="async">
                 </div>
                 <div class="slide-meta">
                     <span class="slide-tag">Módulo 01</span>
@@ -447,7 +453,7 @@
             <!-- ═══════════════════════════════════════════════════════════════════ -->
             <article class="slide-page" id="page-2">
                 <div class="slide-image-wrapper">
-                    <img src="modulo_calcio.jpg" alt="Calcário Grosso e Qualidade da Casca" loading="lazy">
+                    <img src="modulo_calcio.webp" alt="Calcário Grosso e Qualidade da Casca" width="1080" height="608" loading="lazy" decoding="async">
                 </div>
                 <div class="slide-meta">
                     <span class="slide-tag">Módulo 02</span>
@@ -487,7 +493,7 @@
             <!-- ═══════════════════════════════════════════════════════════════════ -->
             <article class="slide-page" id="page-3">
                 <div class="slide-image-wrapper">
-                    <img src="modulo_nutricao.jpg" alt="Ração Balanceada e Tamanho dos Ovos" loading="lazy">
+                    <img src="modulo_nutricao.webp" alt="Ração Balanceada e Tamanho dos Ovos" width="1080" height="608" loading="lazy" decoding="async">
                 </div>
                 <div class="slide-meta">
                     <span class="slide-tag">Módulo 03</span>
@@ -527,7 +533,7 @@
             <!-- ═══════════════════════════════════════════════════════════════════ -->
             <article class="slide-page" id="page-4">
                 <div class="slide-image-wrapper">
-                    <img src="modulo_calor.webp" alt="Manejo do Calor e Água Fresca" loading="lazy">
+                    <img src="modulo_calor.webp" alt="Manejo do Calor e Água Fresca" width="1080" height="608" loading="lazy" decoding="async">
                 </div>
                 <div class="slide-meta">
                     <span class="slide-tag">Módulo 04</span>
@@ -561,7 +567,7 @@
             <!-- ═══════════════════════════════════════════════════════════════════ -->
             <article class="slide-page" id="page-5">
                 <div class="slide-image-wrapper">
-                    <img src="modulo_ninho.webp" alt="Ninho Escuro e Ovos Frescos" loading="lazy">
+                    <img src="modulo_ninho.webp" alt="Ninho Escuro e Ovos Frescos" width="1080" height="608" loading="lazy" decoding="async">
                 </div>
                 <div class="slide-meta">
                     <span class="slide-tag">Módulo 05</span>
@@ -596,7 +602,7 @@
             <!-- ═══════════════════════════════════════════════════════════════════ -->
             <article class="slide-page" id="page-6">
                 <div class="slide-image-wrapper">
-                    <img src="modulo_insumos.webp" alt="Suplementos Minerais para Galinhas" loading="lazy">
+                    <img src="modulo_insumos.webp" alt="Suplementos Minerais para Galinhas" width="1080" height="608" loading="lazy" decoding="async">
                 </div>
                 <div class="slide-meta">
                     <span class="slide-tag">Módulo 06</span>
@@ -662,7 +668,7 @@
             <!-- ═══════════════════════════════════════════════════════════════════ -->
             <article class="slide-page" id="page-7">
                 <div class="slide-image-wrapper">
-                    <img src="modulo_rotina.webp" alt="Rotina Diária do Criador de Sucesso" loading="lazy">
+                    <img src="modulo_rotina.webp" alt="Rotina Diária do Criador de Sucesso" width="1080" height="608" loading="lazy" decoding="async">
                 </div>
                 <div class="slide-meta">
                     <span class="slide-tag">Módulo 07</span>
@@ -765,9 +771,9 @@
         const viewport = document.getElementById('slider-viewport');
 
         function updateSlider() {
-            // Desloca o track horizontalmente
+            // Desloca o track horizontalmente com aceleração de hardware (GPU)
             const percentage = currentSlide * (100 / totalSlides);
-            track.style.transform = `translateX(-${percentage}%)`;
+            track.style.transform = `translate3d(-${percentage}%, 0, 0)`;
 
             // Atualiza botões
             prevBtn.disabled = (currentSlide === 0);
