@@ -6,1124 +6,801 @@
     <title>Potencialize a Produção de Ovos | Protocolo Elite</title>
     <!-- FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Plus Jakarta Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #030712;
-            --surface-color: rgba(15, 23, 42, 0.75);
-            --surface-card: #0b1324;
-            --surface-border: rgba(255, 255, 255, 0.08);
-            --surface-border-gold: rgba(251, 191, 36, 0.3);
-            --accent-gold: #fbbf24;
-            --accent-gold-dark: #d97706;
+            --surface-card: #0c1322;
+            --surface-hover: #111a2e;
+            --border-subtle: rgba(255, 255, 255, 0.07);
+            --border-highlight: rgba(251, 191, 36, 0.25);
+            --accent-gold: #f59e0b;
+            --accent-gold-soft: #fbbf24;
             --accent-green: #10b981;
             --accent-blue: #38bdf8;
-            --accent-rose: #f43f5e;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --safe-bottom: env(safe-area-inset-bottom, 20px);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --safe-bottom: env(safe-area-inset-bottom, 24px);
+            --radius-sm: 8px;
             --radius-md: 14px;
-            --radius-lg: 20px;
+            --radius-lg: 18px;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-main);
+            color: var(--text-primary);
             min-height: 100vh;
-            padding-bottom: calc(40px + var(--safe-bottom));
-            background-image: 
-                radial-gradient(circle at 15% 10%, rgba(251, 191, 36, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 85% 60%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
-            background-attachment: fixed;
-            line-height: 1.5;
+            line-height: 1.65;
+            padding-bottom: calc(50px + var(--safe-bottom));
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* HEADER */
-        .top-navbar {
+        /* ─── TOPO LIMPO E MINIMALISTA ─── */
+        .top-nav {
             position: sticky;
             top: 0;
             z-index: 100;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            background: rgba(3, 7, 18, 0.88);
-            border-bottom: 1px solid var(--surface-border);
-            padding: 14px 20px;
+            background: rgba(3, 7, 18, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 12px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-
-        .brand-badge {
-            display: inline-flex;
+        .top-brand {
+            display: flex;
             align-items: center;
             gap: 8px;
-            font-weight: 900;
-            font-size: 14px;
-            color: #fff;
-            letter-spacing: -0.3px;
-        }
-        .brand-badge i {
-            color: var(--accent-gold);
-            font-size: 16px;
-        }
-        .brand-pill {
-            background: rgba(251, 191, 36, 0.15);
-            color: var(--accent-gold);
-            border: 1px solid rgba(251, 191, 36, 0.3);
-            padding: 2px 8px;
-            border-radius: 999px;
-            font-size: 10px;
+            font-size: 13px;
             font-weight: 800;
-            text-transform: uppercase;
+            color: #fff;
+            letter-spacing: -0.2px;
+        }
+        .top-brand i {
+            color: var(--accent-gold);
+            font-size: 15px;
+        }
+        .top-badge {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3px 9px;
+            border-radius: 999px;
+            border: 1px solid var(--border-subtle);
         }
 
-        .container {
-            max-width: 860px;
+        /* ─── CONTAINER PRINCIPAL ─── */
+        .main-wrapper {
+            max-width: 780px;
             margin: 0 auto;
-            padding: 20px 16px;
+            padding: 24px 18px;
         }
 
-        /* HERO CARD */
-        .hero-banner {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
-            border: 1px solid var(--surface-border-gold);
-            border-radius: var(--radius-lg);
-            padding: 24px 20px;
-            margin-bottom: 24px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        /* ─── CABEÇALHO EDITORIAL ─── */
+        .doc-header {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-subtle);
         }
-        .hero-banner::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 260px;
-            height: 260px;
-            background: radial-gradient(circle, rgba(251, 191, 36, 0.18) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .hero-tag {
+        .doc-category {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(251, 191, 36, 0.15);
             color: var(--accent-gold);
-            border: 1px solid rgba(251, 191, 36, 0.35);
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 800;
-            margin-bottom: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .hero-title {
-            font-size: clamp(22px, 5vw, 32px);
-            font-weight: 900;
-            line-height: 1.15;
-            color: #fff;
+            letter-spacing: 0.8px;
             margin-bottom: 10px;
         }
-        .hero-title span {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .doc-title {
+            font-size: clamp(24px, 5.5vw, 34px);
+            font-weight: 900;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+            color: #fff;
+            margin-bottom: 12px;
         }
-        .hero-desc {
-            font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.5;
-            margin-bottom: 16px;
-            max-width: 620px;
-        }
-
-        .scientific-proof-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(16, 185, 129, 0.12);
-            border: 1px solid rgba(16, 185, 129, 0.35);
-            color: #34d399;
-            padding: 6px 14px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 700;
+        .doc-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 680px;
         }
 
-        /* NAVIGATION TABS */
-        .tabs-nav {
+        /* ─── ÍNDICE RÁPIDO LIMPO ─── */
+        .quick-nav {
             display: flex;
             gap: 8px;
-            margin-bottom: 24px;
             overflow-x: auto;
-            padding-bottom: 4px;
+            padding-bottom: 6px;
+            margin-bottom: 32px;
             scrollbar-width: none;
         }
-        .tabs-nav::-webkit-scrollbar { display: none; }
-        .tab-btn {
+        .quick-nav::-webkit-scrollbar { display: none; }
+        .nav-chip {
             background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--surface-border);
-            color: var(--text-muted);
-            padding: 10px 16px;
-            border-radius: 12px;
-            font-size: 13px;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 12px;
             font-weight: 700;
-            cursor: pointer;
+            padding: 8px 14px;
+            border-radius: 999px;
+            text-decoration: none;
             white-space: nowrap;
             transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
-        .tab-btn:hover {
-            background: rgba(255, 255, 255, 0.08);
+        .nav-chip:hover {
             color: #fff;
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.07);
         }
-        .tab-btn.active {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(217, 119, 6, 0.2) 100%);
-            border-color: var(--accent-gold);
+        .nav-chip i {
+            font-size: 11px;
             color: var(--accent-gold);
-            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.15);
         }
 
-        /* CARD CONTAINERS */
-        .card {
-            background: var(--surface-color);
-            border: 1px solid var(--surface-border);
+        /* ─── CAPÍTULOS / MÓDULOS EDUCATIVOS ─── */
+        .chapter-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(12px);
+            padding: 24px 20px;
+            margin-bottom: 24px;
+            transition: border-color 0.2s;
         }
-        .card-gold {
-            border-color: var(--surface-border-gold);
-            background: linear-gradient(180deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.75) 100%);
+        .chapter-card:hover {
+            border-color: rgba(255, 255, 255, 0.12);
         }
-        .card-header {
+
+        .chapter-meta {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--surface-border);
+            gap: 8px;
+            margin-bottom: 8px;
         }
-        .card-title {
-            font-size: 17px;
+        .chapter-num {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .chapter-tag {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .chapter-title {
+            font-size: 19px;
             font-weight: 800;
             color: #fff;
+            line-height: 1.3;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        .card-title i {
+        .chapter-title i {
             color: var(--accent-gold);
             font-size: 18px;
         }
 
-        /* SCIENTIFIC METRIC GRID */
-        .metric-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        @media (max-width: 600px) {
-            .metric-grid { grid-template-columns: 1fr; }
-        }
-        .metric-box {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--surface-border);
-            border-radius: var(--radius-md);
-            padding: 14px;
-            text-align: center;
-        }
-        .metric-val {
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--accent-gold);
-            line-height: 1.1;
-            margin-bottom: 4px;
-        }
-        .metric-lbl {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-        .metric-sub {
-            font-size: 11px;
-            color: #34d399;
-            margin-top: 4px;
-            font-weight: 600;
-        }
-
-        /* SCIENTIFIC NOTE CALLOUT */
-        .sci-note {
-            background: rgba(56, 189, 248, 0.08);
-            border-left: 4px solid var(--accent-blue);
-            padding: 12px 14px;
-            border-radius: 8px;
-            margin: 16px 0;
-            font-size: 12px;
-            color: #e0f2fe;
-            line-height: 1.5;
-        }
-        .sci-note strong {
-            color: #38bdf8;
-        }
-        .sci-cite {
-            font-size: 10px;
-            color: #94a3b8;
-            margin-top: 6px;
-            display: block;
-            font-style: italic;
-        }
-
-        /* PILLAR LIST */
-        .pillar-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--surface-border);
-            border-radius: var(--radius-md);
-            padding: 16px;
+        .chapter-body p {
+            font-size: 14px;
+            color: #cbd5e1;
             margin-bottom: 12px;
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            line-height: 1.65;
         }
-        .pillar-item:hover {
-            border-color: rgba(251, 191, 36, 0.3);
-            transform: translateY(-2px);
+        .chapter-body p:last-child {
+            margin-bottom: 0;
         }
-        .pillar-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-        .pillar-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: rgba(251, 191, 36, 0.15);
-            color: var(--accent-gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-        .pillar-title {
-            font-size: 15px;
-            font-weight: 800;
+        .chapter-body strong {
             color: #fff;
-        }
-        .pillar-badge {
-            margin-left: auto;
-            background: rgba(16, 185, 129, 0.15);
-            color: #34d399;
-            font-size: 10px;
-            font-weight: 800;
-            padding: 2px 8px;
-            border-radius: 999px;
-            text-transform: uppercase;
-        }
-        .pillar-desc {
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-        .pillar-action {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px dashed rgba(255, 255, 255, 0.08);
-            font-size: 12px;
-            color: #fbbf24;
             font-weight: 700;
+        }
+
+        /* ─── BLOCO DE EMBASAMENTO CIENTÍFICO ─── */
+        .scientific-insight {
+            background: rgba(56, 189, 248, 0.05);
+            border-left: 3px solid var(--accent-blue);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 12px 14px;
+            margin: 14px 0;
+            font-size: 13px;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+        .scientific-insight-header {
             display: flex;
             align-items: center;
             gap: 6px;
-        }
-
-        /* CALCULATORS */
-        .calc-form-group {
-            margin-bottom: 14px;
-        }
-        .calc-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-        .calc-label span:last-child {
-            color: var(--accent-gold);
-        }
-        .calc-input, .calc-select {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--surface-border);
-            border-radius: 10px;
-            padding: 10px 14px;
-            font-size: 14px;
-            color: #fff;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        .calc-input:focus, .calc-select:focus {
-            border-color: var(--accent-gold);
-        }
-
-        .calc-result-box {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.15) 100%);
-            border: 1px solid rgba(16, 185, 129, 0.35);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            margin-top: 16px;
-            text-align: center;
-        }
-        .calc-result-val {
-            font-size: 28px;
-            font-weight: 900;
-            color: #34d399;
-            margin-bottom: 4px;
-        }
-        .calc-result-sub {
-            font-size: 12px;
-            color: #e2e8f0;
-            line-height: 1.4;
-        }
-
-        /* PRODUCT REFERENCE CARDS */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-        @media (max-width: 600px) {
-            .product-grid { grid-template-columns: 1fr; }
-        }
-        .product-card {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--surface-border);
-            border-radius: var(--radius-md);
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .product-tag {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 800;
             text-transform: uppercase;
-            color: var(--accent-gold);
+            color: var(--accent-blue);
             margin-bottom: 4px;
+            letter-spacing: 0.4px;
+        }
+
+        /* ─── CONDUTA PRÁTICA (O QUE FAZER) ─── */
+        .action-box {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            margin-top: 14px;
+        }
+        .action-box-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 800;
+            color: #34d399;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+        .action-box-content {
+            font-size: 13px;
+            color: #f1f5f9;
+            line-height: 1.55;
+        }
+        .action-box-content strong {
+            color: #34d399;
+        }
+
+        /* ─── TABELA LIMPA DE INSUMOS ─── */
+        .products-table {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .product-row {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .product-row-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
         }
         .product-name {
             font-size: 14px;
             font-weight: 800;
             color: #fff;
-            margin-bottom: 6px;
-        }
-        .product-purpose {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-        .product-dosage {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 8px;
-            padding: 8px;
-            font-size: 11px;
-            color: #38bdf8;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .product-why {
-            font-size: 11px;
-            color: #a7f3d0;
-            font-weight: 600;
-        }
-
-        /* CHECKLIST */
-        .check-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 13px;
-        }
-        .check-item:last-child { border-bottom: none; }
-        .check-icon {
-            color: var(--accent-green);
-            font-size: 14px;
-            margin-top: 3px;
-        }
-
-        /* ACTION BUTTON */
-        .btn-primary {
-            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-            color: #000;
-            font-weight: 800;
-            padding: 14px 20px;
-            border-radius: 12px;
-            border: none;
-            width: 100%;
-            cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 8px;
-            font-size: 14px;
-            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
-            transition: all 0.2s;
         }
-        .btn-primary:active { transform: scale(0.98); }
-
-        /* FOOTER */
-        .footer-note {
-            text-align: center;
+        .product-tag {
             font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 30px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            background: rgba(251, 191, 36, 0.1);
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+        .product-details {
+            font-size: 13px;
+            color: var(--text-secondary);
             line-height: 1.5;
+        }
+        .product-dosage {
+            font-size: 12px;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-top: 2px;
+        }
+
+        /* ─── CRONOGRAMA MINIMALISTA ─── */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 14px;
+        }
+        .timeline-step {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .timeline-step:last-child {
+            border-bottom: none;
+        }
+        .timeline-time {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--accent-gold);
+            min-width: 55px;
+            font-family: monospace;
+            padding-top: 2px;
+        }
+        .timeline-content {
+            flex: 1;
+        }
+        .timeline-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 3px;
+        }
+        .timeline-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ─── RODAPÉ LIMPO ─── */
+        .doc-footer {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-subtle);
+            text-align: center;
+        }
+        .doc-footer p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
 
-    <!-- TOP BAR -->
-    <header class="top-navbar">
-        <div class="brand-badge">
+    <!-- TOPO MINIMALISTA -->
+    <header class="top-nav">
+        <div class="top-brand">
             <i class="fa-solid fa-crown"></i>
             <span>PROTOCOLO ELITE</span>
         </div>
-        <div class="brand-pill">
-            <i class="fa-solid fa-flask"></i> Módulo Científico
+        <div class="top-badge">
+            Alta Postura
         </div>
     </header>
 
-    <main class="container">
+    <div class="main-wrapper">
 
-        <!-- HERO SECTION -->
-        <section class="hero-banner">
-            <div class="hero-tag">
-                <i class="fa-solid fa-egg"></i> Maximizador de Postura & Taxa Diária
+        <!-- CABEÇALHO PRINCIPAL -->
+        <header class="doc-header">
+            <div class="doc-category">
+                <i class="fa-solid fa-egg"></i> Manual Técnico de Produção
             </div>
-            <h1 class="hero-title">
-                Potencialize a <span>Produção de Ovos</span>
+            <h1 class="doc-title">
+                Potencialize a Produção de Ovos
             </h1>
-            <p class="hero-desc">
-                O método técnico e cientificamente validado para destravar o pico de postura das suas poedeiras, manter a casca grossa e garantir ovos todos os dias sem esgotar o organismo da ave.
+            <p class="doc-subtitle">
+                Guia educativo e prático baseado em fisiologia aviária e nutrição para destravar o pico de postura, evitar quedas sazonais e garantir cascas fortes todos os dias.
             </p>
-            <div class="scientific-proof-badge">
-                <i class="fa-solid fa-circle-check"></i>
-                <span>Baseado em pesquisas EMBRAPA, NRC Poultry e Fisiologia Aviária</span>
-            </div>
-        </section>
+        </header>
 
-        <!-- TABS SELECTOR -->
-        <nav class="tabs-nav" id="main-tabs">
-            <button class="tab-btn active" onclick="switchTab('pilares')">
-                <i class="fa-solid fa-dna"></i> 5 Pilares Científicos
-            </button>
-            <button class="tab-btn" onclick="switchTab('calculadoras')">
-                <i class="fa-solid fa-calculator"></i> Calculadoras Interativas
-            </button>
-            <button class="tab-btn" onclick="switchTab('produtos')">
-                <i class="fa-solid fa-pills"></i> Produtos de Referência
-            </button>
-            <button class="tab-btn" onclick="switchTab('rotina')">
-                <i class="fa-solid fa-calendar-check"></i> Cronograma Diário
-            </button>
+        <!-- ÍNDICE DE NAVEGAÇÃO RÁPIDA -->
+        <nav class="quick-nav" aria-label="Navegação rápida pelos módulos">
+            <a href="#modulo-luz" class="nav-chip"><i class="fa-solid fa-sun"></i> Fotoperíodo</a>
+            <a href="#modulo-calcio" class="nav-chip"><i class="fa-solid fa-bone"></i> Cálcio Noturno</a>
+            <a href="#modulo-nutricao" class="nav-chip"><i class="fa-solid fa-wheat-awn"></i> Nutrição & Metionina</a>
+            <a href="#modulo-calor" class="nav-chip"><i class="fa-solid fa-temperature-arrow-down"></i> Controle do Calor</a>
+            <a href="#modulo-ninho" class="nav-chip"><i class="fa-solid fa-feather"></i> Ninhos & Choco</a>
+            <a href="#modulo-insumos" class="nav-chip"><i class="fa-solid fa-pills"></i> Insumos de Referência</a>
+            <a href="#modulo-rotina" class="nav-chip"><i class="fa-solid fa-clock"></i> Cronograma Diário</a>
         </nav>
 
         <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- ABA 1: 5 PILARES CIENTÍFICOS                                       -->
+        <!-- MÓDULO 1: FOTOPERÍODO & ESTÍMULO DA LUZ                           -->
         <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <div id="tab-pilares" class="tab-content">
-            
-            <!-- RESUMO DAS MÉTRICAS IDEAIS -->
-            <div class="metric-grid">
-                <div class="metric-box">
-                    <div class="metric-val">15 - 16 h</div>
-                    <div class="metric-lbl">Fotoperíodo Diário</div>
-                    <div class="metric-sub">Estímulo Hipotalâmico</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-val">3,8% - 4,2%</div>
-                    <div class="metric-lbl">Cálcio na Ração</div>
-                    <div class="metric-sub">70% grosso à tarde</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-val">+85%</div>
-                    <div class="metric-lbl">Taxa de Postura Elite</div>
-                    <div class="metric-sub">Em lote estabilizado</div>
-                </div>
+        <section id="modulo-luz" class="chapter-card">
+            <div class="chapter-meta">
+                <span class="chapter-num">Módulo 01</span>
+                <span class="chapter-tag">• Fisiologia Hormonal</span>
             </div>
+            <h2 class="chapter-title">
+                <i class="fa-solid fa-lightbulb"></i>
+                O Estímulo da Luz: Ativando a Glândula Pineal
+            </h2>
 
-            <div class="card card-gold">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fa-solid fa-microscope"></i> Fisiologia da Postura: O Que a Ciência Revela
-                    </div>
-                </div>
-                
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
-                    A formação de um ovo leva aproximadamente <strong style="color:#fff;">24 a 26 horas</strong> no trato reprodutivo da poedeira. Para manter ovos contínuos e saudáveis, 5 processos biológicos precisam estar em perfeita sincronia:
+            <div class="chapter-body">
+                <p>
+                    A galinha não ovula apenas porque comeu ração. A ovulação diária é disparada por um <strong>estímulo luminoso direto no cérebro</strong>. Fótons de luz atravessam os ossos finos do crânio da ave e alcançam fotorreceptores no hipotálamo e na glândula pineal.
+                </p>
+                <p>
+                    Esse estímulo faz o hipotálamo secretar o hormônio <strong>GnRH</strong>, que comanda a hipófise a liberar <strong>FSH</strong> (para amadurecer a gema no ovário) e <strong>LH</strong> (que faz o folículo estourar e liberar o ovo para o oviduto).
                 </p>
 
-                <!-- PILAR 1 -->
-                <div class="pillar-item">
-                    <div class="pillar-header">
-                        <div class="pillar-icon"><i class="fa-solid fa-lightbulb"></i></div>
-                        <div>
-                            <div class="pillar-title">1. Estímulo de Luz (Glândula Pineal & Eixo GnRH)</div>
-                        </div>
-                        <span class="pillar-badge">Fotoperíodo</span>
+                <div class="scientific-insight">
+                    <div class="scientific-insight-header">
+                        <i class="fa-solid fa-microscope"></i> Comprovação Científica (Embrapa / Hy-Line)
                     </div>
-                    <p class="pillar-desc">
-                        A luz não serve apenas para a ave enxergar a comida. Fótons de luz atravessam o crânio e estimulam a glândula pineal e o hipotálamo, liberando os hormônios <strong>FSH</strong> (crescimento dos folículos ovarianos) e <strong>LH</strong> (ovulação). Dias curtos no outono/inverno avisam o cérebro da ave que a estação acabou, paralisando a postura para a muda de penas.
-                    </p>
-                    <div class="sci-note">
-                        <strong>Comprovação Científica:</strong> Estudos da <em>Poultry Science Association</em> e normas da <em>Embrapa Suínos e Aves</em> comprovam que poedeiras mantidas sob <strong>16 horas de luz contínua (natural + artificial)</strong> mantêm a taxa de ovulação ativa até 40% superior a lotes sob luz natural de inverno.
-                        <span class="sci-cite">Referência: Embrapa Circular Técnica 48 / Hy-Line International Management Guide</span>
-                    </div>
-                    <div class="pillar-action">
-                        <i class="fa-solid fa-arrow-right"></i> Conduta Prática: Ligar lâmpada LED quente (2700K a 3000K) de manhã antes do sol ou ao entardecer até totalizar 16h de luz.
-                    </div>
+                    Para manter a liberação hormonal contínua, poedeiras exigem <strong>15 a 16 horas de luz diária constante</strong>. Quando os dias encurtam no outono e inverno (11h a 12h de luz), o cérebro da ave interpreta que a estação reprodutiva encerrou, cessa a produção e inicia a queda de penas (muda natural).
                 </div>
 
-                <!-- PILAR 2 -->
-                <div class="pillar-item">
-                    <div class="pillar-header">
-                        <div class="pillar-icon"><i class="fa-solid fa-bone"></i></div>
-                        <div>
-                            <div class="pillar-title">2. A Regra do Cálcio Noturno (Granulometria 2-4mm)</div>
-                        </div>
-                        <span class="pillar-badge">Casca Perfeita</span>
+                <div class="action-box">
+                    <div class="action-box-title">
+                        <i class="fa-solid fa-check"></i> Conduta Prática Recomendada
                     </div>
-                    <p class="pillar-desc">
-                        A casca consome cerca de <strong>2,2 gramas de cálcio puro</strong> por ovo, e sua deposição ocorre quase inteiramente durante a noite (no útero/glândula da casca). Se a ave recebe apenas calcário em pó fino de manhã, ele é absorvido rápido e esvazia o papo em poucas horas. À noite, no escuro, a galinha é forçada a retirar cálcio dos ossos medulares, desgastando o esqueleto e gerando ovos de casca fina.
-                    </p>
-                    <div class="sci-note">
-                        <strong>Comprovação Científica:</strong> Fornecer de <strong>60% a 70% do cálcio na forma de partículas grossas (2 a 4 mm)</strong> no final da tarde retém o mineral na moela durante a noite. O cálcio é liberado lentamente durante a madrugada, garantindo cascas duras e sem quebras.
-                        <span class="sci-cite">Referência: Rostagno et al. (Tabelas Brasileiras para Aves e Suínos, UFV)</span>
-                    </div>
-                    <div class="pillar-action">
-                        <i class="fa-solid fa-arrow-right"></i> Conduta Prática: Oferecer farinha de ostra ou calcário calcítico grosso em cocho separado a partir das 15h30.
+                    <div class="action-box-content">
+                        • <strong>Instale uma lâmpada LED quente (amarela, 2700K a 3000K)</strong> de 9W a 12W no galinheiro.<br>
+                        • <strong>Use um timer analógico ou digital:</strong> programe para ligar às <strong>05:00</strong> da manhã (antes do sol nascer) e completar as horas necessárias à tarde até às <strong>21:00</strong>, totalizando 16 horas biológicas.<br>
+                        • <em>Atenção:</em> Nunca reduza o número de horas de luz enquanto o lote estiver em fase de postura.
                     </div>
                 </div>
-
-                <!-- PILAR 3 -->
-                <div class="pillar-item">
-                    <div class="pillar-header">
-                        <div class="pillar-icon"><i class="fa-solid fa-cubes-stacked"></i></div>
-                        <div>
-                            <div class="pillar-title">3. Aminoácidos Limitantes: Metionina e Lisina</div>
-                        </div>
-                        <span class="pillar-badge">Tamanho & Clara</span>
-                    </div>
-                    <p class="pillar-desc">
-                        Não adianta dar apenas milho ou restos de comida. O milho é pura energia e engorda a ave (galinha gorda cria gordura no oviduto e para de botar). Para fabricar a gema e a albumina (clara), a ave precisa de aminoácidos sulfurados, com <strong>Metionina</strong> sendo o 1º aminoácido limitante. A falta de metionina faz o ovo diminuir de tamanho ou a produção cessar.
-                    </p>
-                    <div class="sci-note">
-                        <strong>Comprovação Científica:</strong> Níveis adequados de 0,38% a 0,42% de metionina digestível na dieta aumentam o peso médio dos ovos em até 8% e evitam o canibalismo e arranque de penas no plantel.
-                    </div>
-                    <div class="pillar-action">
-                        <i class="fa-solid fa-arrow-right"></i> Conduta Prática: Utilizar ração com farelo de soja bem balanceado ou premix com DL-Metionina sintética.
-                    </div>
-                </div>
-
-                <!-- PILAR 4 -->
-                <div class="pillar-item">
-                    <div class="pillar-header">
-                        <div class="pillar-icon"><i class="fa-solid fa-temperature-arrow-down"></i></div>
-                        <div>
-                            <div class="pillar-title">4. Controle do Estresse Térmico & Alcalose Respiratória</div>
-                        </div>
-                        <span class="pillar-badge">Anti-Calor</span>
-                    </div>
-                    <p class="pillar-desc">
-                        Galinhas não suam. Em dias com temperatura acima de 28°C, a ave abre as asas e passa a respirar rápido (ofego). Esse processo expele dióxido de carbono ($CO_2$) em excesso, diminuindo o ácido carbônico no sangue e gerando <strong>alcalose respiratória</strong>. Sem íons de bicarbonato suficientes, o organismo não consegue formar o carbonato de cálcio ($CaCO_3$) da casca.
-                    </p>
-                    <div class="pillar-action">
-                        <i class="fa-solid fa-arrow-right"></i> Conduta Prática: Adicionar 0,2% de bicarbonato de sódio na água e vitamina C em dias de calor extremo, com água fresca na sombra.
-                    </div>
-                </div>
-
-                <!-- PILAR 5 -->
-                <div class="pillar-item">
-                    <div class="pillar-header">
-                        <div class="pillar-icon"><i class="fa-solid fa-feather"></i></div>
-                        <div>
-                            <div class="pillar-title">5. Manejo de Ninho & Desativação do Choco</div>
-                        </div>
-                        <span class="pillar-badge">Manejo</span>
-                    </div>
-                    <p class="pillar-desc">
-                        Quando uma poedeira fica choca, a glândula pituitária libera o hormônio <strong>Prolactina</strong>. A prolactina interrompe a ovulação de forma imediata e regride os folículos ovarianos. Além disso, ovos deixados muito tempo no ninho estimulam o choco e provocam ovofagia (galinhas bicando e comendo os próprios ovos).
-                    </p>
-                    <div class="pillar-action">
-                        <i class="fa-solid fa-arrow-right"></i> Conduta Prática: 1 ninho escuro para cada 4 galinhas, coleta 3x ao dia e isolamento imediato da galinha choca em gaiola arejada de fundo ripado por 3 dias.
-                    </div>
-                </div>
-
             </div>
-        </div>
+        </section>
 
         <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- ABA 2: CALCULADORAS INTERATIVAS                                    -->
+        <!-- MÓDULO 2: CÁLCIO NOTURNO & CASCA                                   -->
         <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <div id="tab-calculadoras" class="tab-content" style="display: none;">
-            
-            <!-- CALC 1: TAXA DE POSTURA -->
-            <div class="card card-gold">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fa-solid fa-chart-line"></i> Diagnóstico de Taxa de Postura (%)
-                    </div>
-                    <span class="brand-pill">Diagnóstico Instantâneo</span>
-                </div>
-                
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
-                    Calcule o rendimento biológico do seu lote e descubra se suas aves estão em nível amador ou padrão comercial de alta produtividade.
+        <section id="modulo-calcio" class="chapter-card">
+            <div class="chapter-meta">
+                <span class="chapter-num">Módulo 02</span>
+                <span class="chapter-tag">• Nutrição Mineral</span>
+            </div>
+            <h2 class="chapter-title">
+                <i class="fa-solid fa-bone"></i>
+                O Segredo do Cálcio Noturno (Granulometria 2 a 4mm)
+            </h2>
+
+            <div class="chapter-body">
+                <p>
+                    A formação da casca dura de 18 a 20 horas e consome mais de <strong>2 gramas de cálcio puro por ovo</strong>. Mais de 80% dessa calcificação acontece <strong>durante a noite e madrugada</strong>, enquanto a galinha está no poleiro dormindo.
+                </p>
+                <p>
+                    Se a galinha recebe apenas calcário fino (em pó) de manhã, o mineral é digerido e esvazia do sistema digestivo em 2 a 3 horas. À meia-noite, a ave não tem mais cálcio circulando no sangue e é forçada a retirar cálcio dos seus próprios ossos (ossos medulares). Isso causa fraqueza nas pernas, peito seco e ovos com casca fina ou quebradiça.
                 </p>
 
-                <div class="calc-form-group">
-                    <div class="calc-label">
-                        <span>Total de Galinhas Poedeiras</span>
-                        <span id="lbl-total-birds">50 aves</span>
+                <div class="scientific-insight">
+                    <div class="scientific-insight-header">
+                        <i class="fa-solid fa-microscope"></i> Comprovação Científica (Rostagno et al. / UFV)
                     </div>
-                    <input type="number" id="calc-birds" class="calc-input" value="50" min="1" oninput="calculateLayRate()">
+                    Fornecer <strong>60% a 70% do cálcio diário em partículas grossas (2 a 4 mm)</strong> permite que o mineral fique retido na moela da ave durante o repouso noturno. O cálcio grosso vai se dissolvendo aos poucos na madrugada, alimentando diretamente o útero para formar uma casca espessa e resistente.
                 </div>
 
-                <div class="calc-form-group">
-                    <div class="calc-label">
-                        <span>Ovos Colhidos Hoje</span>
-                        <span id="lbl-total-eggs">35 ovos</span>
+                <div class="action-box">
+                    <div class="action-box-title">
+                        <i class="fa-solid fa-check"></i> Conduta Prática Recomendada
                     </div>
-                    <input type="number" id="calc-eggs" class="calc-input" value="35" min="0" oninput="calculateLayRate()">
-                </div>
-
-                <div id="lay-rate-result" class="calc-result-box">
-                    <div class="calc-result-val" id="res-lay-percent">70.0%</div>
-                    <div class="calc-result-sub" id="res-lay-diagnosis">
-                        Taxa Moderada • Há potencial para destravar até 85%+ com fotoperíodo e cálcio grosso.
+                    <div class="action-box-content">
+                        • <strong>Horário do Cálcio:</strong> Forneça <strong>calcário calcítico grosso (pedrisco)</strong> ou <strong>farinha de concha de ostra</strong> sempre no final da tarde, por volta das <strong>15h30 às 16h30</strong>.<br>
+                        • <strong>Quantidade:</strong> Cerca de <strong>4 a 5 gramas por ave adulta</strong> colocadas em cocho lateral ou misturadas ao trato da tarde.<br>
+                        • Não confie apenas no calcário em pó da ração comercial matinal.
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- CALC 2: CALCULADORA DE PROGRAMA DE LUZ -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fa-solid fa-sun"></i> Programa de Luz / Fotoperíodo
-                    </div>
-                    <span class="brand-pill">16h Científicas</span>
-                </div>
+        <!-- ═══════════════════════════════════════════════════════════════════ -->
+        <!-- MÓDULO 3: AMINOÁCIDOS & PROTEÍNA                                   -->
+        <!-- ═══════════════════════════════════════════════════════════════════ -->
+        <section id="modulo-nutricao" class="chapter-card">
+            <div class="chapter-meta">
+                <span class="chapter-num">Módulo 03</span>
+                <span class="chapter-tag">• Bioquímica da Clara</span>
+            </div>
+            <h2 class="chapter-title">
+                <i class="fa-solid fa-wheat-awn"></i>
+                Metionina e Lisina: Os Verdadeiros Construtores do Ovo
+            </h2>
 
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
-                    Insira o nascer e pôr do sol aproximado na sua região para saber os horários exatos de acendimento da lâmpada no galinheiro.
+            <div class="chapter-body">
+                <p>
+                    O maior erro de criadores iniciantes é alimentar galinhas em postura apenas com milho triturado ou restos de horta. O milho fornece quase que exclusivamente energia (amido). Ele engorda a galinha, mas <strong>galinha com gordura visceral no abdômen comprime o oviduto e para de botar</strong>.
+                </p>
+                <p>
+                    O volume do ovo e a firmeza da clara (albumina) dependem de aminoácidos sulfurados específicos. A <strong>Metionina</strong> é o primeiro aminoácido limitante em aves. Se faltar metionina, o corpo da galinha reduz o tamanho do ovo ou simplesmente aborta o ciclo de postura para poupar proteína muscular.
                 </p>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div class="calc-form-group">
-                        <div class="calc-label"><span>Nascer do Sol</span></div>
-                        <input type="time" id="sun-rise" class="calc-input" value="06:00" onchange="calculateLightProgram()">
+                <div class="scientific-insight">
+                    <div class="scientific-insight-header">
+                        <i class="fa-solid fa-microscope"></i> Comprovação Científica (NRC Poultry Nutrition)
                     </div>
-                    <div class="calc-form-group">
-                        <div class="calc-label"><span>Pôr do Sol</span></div>
-                        <input type="time" id="sun-set" class="calc-input" value="18:00" onchange="calculateLightProgram()">
-                    </div>
+                    Poedeiras em pico necessitam de no mínimo <strong>0,38% a 0,42% de metionina digestível</strong> e <strong>0,75% a 0,85% de lisina</strong> na matéria seca da dieta. Dietas suplementadas garantem ovos categoria Grande/Extra e diminuem drasticamente o canibalismo e o vício de arrancar penas no lote.
                 </div>
 
-                <div class="calc-form-group">
-                    <div class="calc-label"><span>Tipo de Suplementação de Luz</span></div>
-                    <select id="light-strategy" class="calc-select" onchange="calculateLightProgram()">
-                        <option value="morning">Apenas de manhã (Mais recomendado no inverno)</option>
-                        <option value="evening">Apenas à tarde / noite</option>
-                        <option value="both">Dividido (Manhã e Noite)</option>
-                    </select>
-                </div>
-
-                <div id="light-result" class="calc-result-box" style="background: rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.35);">
-                    <div class="calc-result-val" style="color: var(--accent-gold);" id="res-light-schedule">
-                        Ligar 02:00 às 06:00
+                <div class="action-box">
+                    <div class="action-box-title">
+                        <i class="fa-solid fa-check"></i> Conduta Prática Recomendada
                     </div>
-                    <div class="calc-result-sub" id="res-light-desc">
-                        Luz natural: 12h • Luz artificial complementar: 4h • Total: 16h biológicas. Lâmpada LED quente (2700K) de 9W a 12W a 2m de altura.
+                    <div class="action-box-content">
+                        • Garanta ração balanceada para poedeiras com <strong>16% a 17,5% de Proteína Bruta</strong> formulada com farelo de soja de qualidade.<br>
+                        • Mantenha o consumo em aproximadamente <strong>110g a 115g de ração por ave/dia</strong>.<br>
+                        • Se fabrica a própria ração na propriedade, adicione premix específico para poedeiras contendo <strong>DL-Metionina sintética</strong>.
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- CALC 3: DEMANDA DE CÁLCIO E RAÇÃO NOTURNA -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fa-solid fa-wheat-awn"></i> Ração e Calcário Grosso Noturno
-                    </div>
-                    <span class="brand-pill">Absorção Lenta</span>
-                </div>
+        <!-- ═══════════════════════════════════════════════════════════════════ -->
+        <!-- MÓDULO 4: ESTRESSE TÉRMICO & CLIMA                                 -->
+        <!-- ═══════════════════════════════════════════════════════════════════ -->
+        <section id="modulo-calor" class="chapter-card">
+            <div class="chapter-meta">
+                <span class="chapter-num">Módulo 04</span>
+                <span class="chapter-tag">• Fisiologia Respiratória</span>
+            </div>
+            <h2 class="chapter-title">
+                <i class="fa-solid fa-temperature-arrow-down"></i>
+                Estresse Térmico e a Queda de Postura no Calor
+            </h2>
 
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
-                    Calcule a quantidade diária recomendada de ração balanceada (115g/ave) e de calcário grosso/concha de ostra para ofertar às 16h.
+            <div class="chapter-body">
+                <p>
+                    Galinhas não têm glândulas sudoríparas (não transpiram). Quando a temperatura passa dos 28°C, a única forma de dissipar calor é através da respiração ofegante (pantanejo com bico aberto).
+                </p>
+                <p>
+                    Esse ofego contínuo expele dióxido de carbono ($CO_2$) em excesso do organismo da ave, reduzindo a concentração de ácido carbônico no sangue e gerando um quadro chamado <strong>alcalose respiratória</strong>. Com o sangue alcalino, os íons de bicarbonato caem drasticamente, tornando o organismo incapaz de sintetizar o carbonato de cálcio da casca.
                 </p>
 
-                <div class="calc-form-group">
-                    <div class="calc-label"><span>Tamanho do Plantel</span></div>
-                    <input type="number" id="feed-birds" class="calc-input" value="50" min="1" oninput="calculateFeedDemand()">
-                </div>
-
-                <div class="calc-result-box" style="background: rgba(56, 189, 248, 0.1); border-color: rgba(56, 189, 248, 0.35);">
-                    <div class="calc-result-val" style="color: #38bdf8;" id="res-feed-amount">
-                        5,75 kg / dia
+                <div class="action-box">
+                    <div class="action-box-title">
+                        <i class="fa-solid fa-check"></i> Conduta Prática Recomendada
                     </div>
-                    <div class="calc-result-sub" id="res-feed-details">
-                        • Ração Postura: 5,75 kg divididos em 2 tratos.<br>
-                        • <strong>Calcário Grosso (2 a 4mm):</strong> ~200g a 250g colocados às 16h para reforço na casca.
+                    <div class="action-box-content">
+                        • <strong>Água Sempre Fresca e na Sombra:</strong> Galinhas não bebem água morna. Se a água esquentar, a ingestão cai e a postura despenca em 48h.<br>
+                        • <strong>Bicarbonato de Sódio Técnico:</strong> Em dias com mais de 30°C, dissolva <strong>2g de bicarbonato de sódio por litro de água</strong> (ou 0,2% na ração) para repor os íons de bicarbonato perdidos no ofego.<br>
+                        • <strong>Vitamina C (Antiestresse):</strong> Uso de 200mg a 250mg por litro nos períodos mais quentes do ano ajuda a proteger os vasos sanguíneos do ovário.
                     </div>
                 </div>
             </div>
-
-        </div>
+        </section>
 
         <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- ABA 3: PRODUTOS DE REFERÊNCIA                                      -->
+        <!-- MÓDULO 5: MANEJO DE NINHOS & ANTI-CHOCO                            -->
         <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <div id="tab-produtos" class="tab-content" style="display: none;">
-            <div class="card card-gold">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fa-solid fa-boxes-packing"></i> Insumos e Suplementos de Referência
-                    </div>
-                    <span class="brand-pill">Testados & Aprovados</span>
-                </div>
+        <section id="modulo-ninho" class="chapter-card">
+            <div class="chapter-meta">
+                <span class="chapter-num">Módulo 05</span>
+                <span class="chapter-tag">• Manejo Comportamental</span>
+            </div>
+            <h2 class="chapter-title">
+                <i class="fa-solid fa-feather"></i>
+                Manejo de Ninhos e Quebra do Choco
+            </h2>
 
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
-                    Esses são os suplementos e produtos comerciais com eficácia biológica comprovada para reposição de minerais, proteção hepática e absorção intestinal em poedeiras:
+            <div class="chapter-body">
+                <p>
+                    Quando uma galinha entra no choco, a hipófise começa a produzir altos níveis do hormônio <strong>Prolactina</strong>. A prolactina atrofia o ovário e encerra a produção de ovos imediatamente. Pior: galinhas no ninho estimulam outras aves a chocarem e aumentam o risco de <strong>ovofagia</strong> (aves que quebram e comem os ovos).
                 </p>
 
-                <div class="product-grid">
+                <div class="action-box">
+                    <div class="action-box-title">
+                        <i class="fa-solid fa-check"></i> Regras de Manejo do Ninho
+                    </div>
+                    <div class="action-box-content">
+                        • <strong>Proporção Correta:</strong> Mantenha no mínimo <strong>1 ninho para cada 4 a 5 poedeiras</strong>. Ninhos insuficientes forçam a postura no chão, onde os ovos quebram ou são pisoteados.<br>
+                        • <strong>Ambiente Escuro e Confortável:</strong> Instale os ninhos em locais menos iluminados do galinheiro, com maravalha ou palha sempre limpa e seca.<br>
+                        • <strong>Coleta 3 Vezes ao Dia:</strong> Colete às 10h, às 14h e às 17h. O ninho vazio desestimula o choco e a quebra de ovos.<br>
+                        • <strong>Deschoco Imediato (Gaiola Vazada):</strong> Se identificar ave querendo chocar, coloque-a em uma gaiola de piso suspenso de tela ou ripas vazadas (sem fundo aquecido) com água e ração à vontade e luz direta por 3 dias. A ausência de calor no peito quebra o choco e devolve a ave à postura em poucos dias.
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                    <!-- PRODUTO 1 -->
-                    <div class="product-card">
-                        <div>
-                            <div class="product-tag">Mineral de Absorção Lenta</div>
-                            <div class="product-name">Farinha de Ostra ou Calcário Calcítico Grosso</div>
-                            <div class="product-purpose">
-                                Partículas de 2mm a 4mm. Ficam retidas na moela durante a noite, liberando cálcio ionizado enquanto a ave dorme.
-                            </div>
+        <!-- ═══════════════════════════════════════════════════════════════════ -->
+        <!-- MÓDULO 6: PRODUTOS DE REFERÊNCIA                                   -->
+        <!-- ═══════════════════════════════════════════════════════════════════ -->
+        <section id="modulo-insumos" class="chapter-card">
+            <div class="chapter-meta">
+                <span class="chapter-num">Módulo 06</span>
+                <span class="chapter-tag">• Guia de Suplementação</span>
+            </div>
+            <h2 class="chapter-title">
+                <i class="fa-solid fa-pills"></i>
+                Insumos & Suplementos de Referência
+            </h2>
+
+            <div class="chapter-body">
+                <p>
+                    Abaixo estão os insumos comerciais comprovados pela avicultura de postura para sanar deficiências comuns do plantel:
+                </p>
+
+                <div class="products-table">
+
+                    <div class="product-row">
+                        <div class="product-row-top">
+                            <span class="product-name">
+                                <i class="fa-solid fa-circle-dot" style="color: var(--accent-gold); font-size: 8px;"></i>
+                                Calcário Calcítico Grosso ou Concha de Ostra
+                            </span>
+                            <span class="product-tag">Casca Noturna</span>
                         </div>
-                        <div>
-                            <div class="product-dosage">
-                                <i class="fa-solid fa-spoon"></i> Dosagem: 4g a 5g por galinha/dia (às 16h)
-                            </div>
-                            <div class="product-why">
-                                <i class="fa-solid fa-check"></i> Elimina ovos de casca mole e rugosa.
-                            </div>
+                        <div class="product-details">
+                            Granulometria de 2 a 4 mm. Fica retido na moela, liberando cálcio lentamente durante o sono da ave.
+                        </div>
+                        <div class="product-dosage">
+                            <i class="fa-solid fa-spoon"></i> Dosagem: 4g a 5g por ave diariamente, servido às 16h.
                         </div>
                     </div>
 
-                    <!-- PRODUTO 2 -->
-                    <div class="product-card">
-                        <div>
-                            <div class="product-tag">Premix Completo com Vitamina D3</div>
-                            <div class="product-name">Núcleo/Premix Mineral Poedeira Elite</div>
-                            <div class="product-purpose">
-                                Contém Vitamina D3 (indispensável para absorver o cálcio), Zinco quelatado, Manganês e Selênio orgânico.
-                            </div>
+                    <div class="product-row">
+                        <div class="product-row-top">
+                            <span class="product-name">
+                                <i class="fa-solid fa-circle-dot" style="color: var(--accent-gold); font-size: 8px;"></i>
+                                Premix Mineral e Vitamínico com Vitamina D3
+                            </span>
+                            <span class="product-tag">Absorção & Fígado</span>
                         </div>
-                        <div>
-                            <div class="product-dosage">
-                                <i class="fa-solid fa-spoon"></i> Dosagem: 2% a 4% misturado na ração
-                            </div>
-                            <div class="product-why">
-                                <i class="fa-solid fa-check"></i> Sustenta a persistência de postura após os 6 meses.
-                            </div>
+                        <div class="product-details">
+                            Fornece Vitamina D3 (indispensável para o transporte de cálcio pelo intestino), Zinco, Manganês e Selênio orgânico.
+                        </div>
+                        <div class="product-dosage">
+                            <i class="fa-solid fa-spoon"></i> Dosagem: 2% a 4% misturado na ração conforme recomendação do fabricante.
                         </div>
                     </div>
 
-                    <!-- PRODUTO 3 -->
-                    <div class="product-card">
-                        <div>
-                            <div class="product-tag">Aminoácido Essencial Limitante</div>
-                            <div class="product-name">DL-Metionina Sintética 99%</div>
-                            <div class="product-purpose">
-                                O primeiro aminoácido que limita a síntese de proteínas nas aves. Controla diretamente o calibre e peso do ovo.
-                            </div>
+                    <div class="product-row">
+                        <div class="product-row-top">
+                            <span class="product-name">
+                                <i class="fa-solid fa-circle-dot" style="color: var(--accent-gold); font-size: 8px;"></i>
+                                DL-Metionina Sintética (Grau Ração)
+                            </span>
+                            <span class="product-tag">Calibre & Volume</span>
                         </div>
-                        <div>
-                            <div class="product-dosage">
-                                <i class="fa-solid fa-spoon"></i> Dosagem: 1g a 1,5g por kg de ração
-                            </div>
-                            <div class="product-why">
-                                <i class="fa-solid fa-check"></i> Ovos maiores, gemas densas e menos estresse.
-                            </div>
+                        <div class="product-details">
+                            Primeiro aminoácido limitante. Responsável direto pela densidade da clara e tamanho uniforme dos ovos.
+                        </div>
+                        <div class="product-dosage">
+                            <i class="fa-solid fa-spoon"></i> Dosagem: 1g a 1,5g por kg de ração total.
                         </div>
                     </div>
 
-                    <!-- PRODUTO 4 -->
-                    <div class="product-card">
-                        <div>
-                            <div class="product-tag">Antiestresse Térmico & Eletrólito</div>
-                            <div class="product-name">Bicarbonato de Sódio Técnico</div>
-                            <div class="product-purpose">
-                                Fornece íons $HCO_3^-$ no sangue quando a galinha está ofegando no calor, reequilibrando o pH e salvando a casca.
-                            </div>
+                    <div class="product-row">
+                        <div class="product-row-top">
+                            <span class="product-name">
+                                <i class="fa-solid fa-circle-dot" style="color: var(--accent-gold); font-size: 8px;"></i>
+                                Bicarbonato de Sódio Técnico
+                            </span>
+                            <span class="product-tag">Antiestresse Térmico</span>
                         </div>
-                        <div>
-                            <div class="product-dosage">
-                                <i class="fa-solid fa-spoon"></i> Dosagem: 2g por litro de água nos dias quentes
-                            </div>
-                            <div class="product-why">
-                                <i class="fa-solid fa-check"></i> Impede queda de postura em ondas de calor.
-                            </div>
+                        <div class="product-details">
+                            Equilibra o pH sanguíneo em dias de calor intenso (+28°C) e evita ovos com casca fina ou sem casca.
+                        </div>
+                        <div class="product-dosage">
+                            <i class="fa-solid fa-spoon"></i> Dosagem: 2g por litro de água fresca nos dias mais quentes.
                         </div>
                     </div>
 
-                    <!-- PRODUTO 5 -->
-                    <div class="product-card">
-                        <div>
-                            <div class="product-tag">Acidificante Natural & Imunidade</div>
-                            <div class="product-name">Vinagre de Maçã Orgânico</div>
-                            <div class="product-purpose">
-                                Acidifica ligeiramente o papo e o proventrículo (pH 3.5 - 4.0), aumentando a solubilização do cálcio e blindando contra E. coli.
-                            </div>
+                    <div class="product-row">
+                        <div class="product-row-top">
+                            <span class="product-name">
+                                <i class="fa-solid fa-circle-dot" style="color: var(--accent-gold); font-size: 8px;"></i>
+                                Vinagre de Maçã Orgânico (Acidificante Natural)
+                            </span>
+                            <span class="product-tag">Saúde Intestinal</span>
                         </div>
-                        <div>
-                            <div class="product-dosage">
-                                <i class="fa-solid fa-spoon"></i> Dosagem: 2ml a 3ml por litro de água (3x/semana)
-                            </div>
-                            <div class="product-why">
-                                <i class="fa-solid fa-check"></i> Maior absorção de nutrientes e fezes secas.
-                            </div>
+                        <div class="product-details">
+                            Mantém o pH do papo e do proventrículo ácido, combatendo bactérias patogênicas e facilitando a dissolução do cálcio.
+                        </div>
+                        <div class="product-dosage">
+                            <i class="fa-solid fa-spoon"></i> Dosagem: 2ml a 3ml por litro de água, 2 a 3 vezes por semana.
                         </div>
                     </div>
 
-                    <!-- PRODUTO 6 -->
-                    <div class="product-card">
-                        <div>
-                            <div class="product-tag">Complexo Vitamínico de Choque</div>
-                            <div class="product-name">Aminomix / Glicopan / Vita Gold</div>
-                            <div class="product-purpose">
-                                Polivitamínicos solúveis de rápida ação para recuperação de lotes pós-vacinação, estresse de mudança ou pós-muda.
-                            </div>
+                    <div class="product-row">
+                        <div class="product-row-top">
+                            <span class="product-name">
+                                <i class="fa-solid fa-circle-dot" style="color: var(--accent-gold); font-size: 8px;"></i>
+                                Complexo Polivitamínico (Ex: Aminomix / Vita Gold)
+                            </span>
+                            <span class="product-tag">Choque de Produção</span>
                         </div>
-                        <div>
-                            <div class="product-dosage">
-                                <i class="fa-solid fa-spoon"></i> Dosagem: 1ml por litro durante 5 a 7 dias
-                            </div>
-                            <div class="product-why">
-                                <i class="fa-solid fa-check"></i> Desperta poedeiras travadas ou apáticas.
-                            </div>
+                        <div class="product-details">
+                            Uso estratégico para recuperar aves recém-saídas da muda ou que reduziram a postura após vacinas ou estresse.
+                        </div>
+                        <div class="product-dosage">
+                            <i class="fa-solid fa-spoon"></i> Dosagem: 1ml por litro de água durante 5 a 7 dias consecutivos.
                         </div>
                     </div>
 
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <!-- ABA 4: CRONOGRAMA & ROTINA DIÁRIA                                  -->
+        <!-- MÓDULO 7: CRONOGRAMA DIÁRIO                                        -->
         <!-- ═══════════════════════════════════════════════════════════════════ -->
-        <div id="tab-rotina" class="tab-content" style="display: none;">
-            <div class="card card-gold">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fa-solid fa-clock"></i> O Protocolo Diário dos Melhores Criadores
-                    </div>
-                    <span class="brand-pill">Checklist Prático</span>
-                </div>
-
-                <div class="check-item">
-                    <i class="fa-solid fa-circle-check check-icon"></i>
-                    <div>
-                        <strong style="color: #fff;">05:00 - Acendimento da Luz Suplementar:</strong>
-                        <div style="color: var(--text-muted); font-size: 12px;">Timer automático acende a lâmpada amarela para acordar o lote e ativar o hipotálamo.</div>
-                    </div>
-                </div>
-
-                <div class="check-item">
-                    <i class="fa-solid fa-circle-check check-icon"></i>
-                    <div>
-                        <strong style="color: #fff;">06:30 - Primeiro Trato (50% da Ração) & Água Fresca:</strong>
-                        <div style="color: var(--text-muted); font-size: 12px;">Ração fresca no cocho para estimular a ingestão matinal. Bebedouros lavados.</div>
-                    </div>
-                </div>
-
-                <div class="check-item">
-                    <i class="fa-solid fa-circle-check check-icon"></i>
-                    <div>
-                        <strong style="color: #fff;">10:00 - Primeira Coleta de Ovos:</strong>
-                        <div style="color: var(--text-muted); font-size: 12px;">Cerca de 70% dos ovos são postos pela manhã. Coleta precoce evita ovos sujos e bicados.</div>
-                    </div>
-                </div>
-
-                <div class="check-item">
-                    <i class="fa-solid fa-circle-check check-icon"></i>
-                    <div>
-                        <strong style="color: #fff;">14:30 - Segunda Coleta & Verificação de Ninhos:</strong>
-                        <div style="color: var(--text-muted); font-size: 12px;">Retirada de ovos restantes e inspeção: se houver ave insistindo em deitar sem ovo, isolar imediatamente para evitar o choco.</div>
-                    </div>
-                </div>
-
-                <div class="check-item">
-                    <i class="fa-solid fa-circle-check check-icon"></i>
-                    <div>
-                        <strong style="color: #fff;">16:00 - Segundo Trato (Ração + Reforço de Calcário Grosso):</strong>
-                        <div style="color: var(--text-muted); font-size: 12px;">Momento crucial! 50% restante da ração com o calcário grosso/concha de ostra para estocar na moela.</div>
-                    </div>
-                </div>
-
-                <div class="check-item">
-                    <i class="fa-solid fa-circle-check check-icon"></i>
-                    <div>
-                        <strong style="color: #fff;">21:00 - Desligamento Programado da Luz:</strong>
-                        <div style="color: var(--text-muted); font-size: 12px;">Completando as 16 horas totais de luz (ex: 05h às 21h). Silêncio e escuridão total para descanso e formação do ovo.</div>
-                    </div>
-                </div>
-
+        <section id="modulo-rotina" class="chapter-card">
+            <div class="chapter-meta">
+                <span class="chapter-num">Módulo 07</span>
+                <span class="chapter-tag">• Rotina de Campo</span>
             </div>
-        </div>
+            <h2 class="chapter-title">
+                <i class="fa-solid fa-clock"></i>
+                Cronograma de Manejo Diário de Alta Postura
+            </h2>
 
-        <!-- FOOTER -->
-        <footer class="footer-note">
-            <p><strong>Protocolo Elite de Criação</strong> • Conteúdo com base técnica em Fisiologia Aviária e Nutrição Animal.</p>
-            <p style="margin-top: 4px; color: #64748b;">Este material foi desenvolvido para uso exclusivo dos membros e integração ao ecossistema Protocolo Elite.</p>
+            <div class="chapter-body">
+                <p>
+                    A consistência dos horários é o maior segredo de lotes com mais de 85% de postura. Siga este roteiro diário:
+                </p>
+
+                <div class="timeline">
+                    <div class="timeline-step">
+                        <span class="timeline-time">05:00</span>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Luz Artificial Acende (Timer)</div>
+                            <div class="timeline-desc">Lâmpada LED amarela acende automaticamente para ativar a glândula pineal e iniciar a digestão matinal.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-step">
+                        <span class="timeline-time">06:30</span>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Primeiro Trato (50% da Ração) & Troca de Água</div>
+                            <div class="timeline-desc">Forneça metade da cota diária de ração de postura. Lave os bebedouros e forneça água fresca e limpa.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-step">
+                        <span class="timeline-time">10:00</span>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Primeira Coleta de Ovos do Dia</div>
+                            <div class="timeline-desc">Cerca de 70% dos ovos são postos pela manhã. Coleta precoce evita sujeira, quebras e que as galinhas comam os ovos.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-step">
+                        <span class="timeline-time">14:30</span>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Segunda Coleta & Inspeção Anti-Choco</div>
+                            <div class="timeline-desc">Recolha os ovos restantes e retire aves que insistirem em permanecer no ninho vazio.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-step">
+                        <span class="timeline-time">16:00</span>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Segundo Trato + Reforço de Cálcio Grosso</div>
+                            <div class="timeline-desc">50% restante da ração e adição do calcário grosso (2-4mm) ou concha de ostra para estocagem na moela durante a noite.</div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-step">
+                        <span class="timeline-time">21:00</span>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Luz Apaga (Descanso e Calcificação)</div>
+                            <div class="timeline-desc">Completando 16 horas biológicas de luz diária. Escuridão total e silêncio para a ave descansar e o útero calcificar o ovo.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RODAPÉ LIMPO -->
+        <footer class="doc-footer">
+            <p>
+                <strong>Protocolo Elite de Criação</strong> • Módulo Educativo de Alta Postura.<br>
+                Desenvolvido com base em Fisiologia Aviária e Nutrição de Poedeiras.
+            </p>
         </footer>
 
-    </main>
+    </div>
 
-    <script>
-        // ─── TABS SWITCHER ────────────────────────────────────────────────────────
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            
-            const target = document.getElementById('tab-' + tabId);
-            if (target) target.style.display = 'block';
-
-            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick')?.includes(tabId));
-            if (activeBtn) activeBtn.classList.add('active');
-        }
-
-        // ─── CALCULADORA 1: TAXA DE POSTURA ───────────────────────────────────────
-        function calculateLayRate() {
-            const birds = Math.max(1, parseInt(document.getElementById('calc-birds').value) || 1);
-            const eggs = Math.max(0, parseInt(document.getElementById('calc-eggs').value) || 0);
-            
-            document.getElementById('lbl-total-birds').textContent = `${birds} aves`;
-            document.getElementById('lbl-total-eggs').textContent = `${eggs} ovos`;
-
-            const percent = ((eggs / birds) * 100);
-            const percentFmt = percent.toFixed(1) + '%';
-            
-            const resVal = document.getElementById('res-lay-percent');
-            const resDiag = document.getElementById('res-lay-diagnosis');
-            const box = document.getElementById('lay-rate-result');
-
-            resVal.textContent = percentFmt;
-
-            if (percent >= 85) {
-                resVal.style.color = '#10b981';
-                box.style.borderColor = 'rgba(16, 185, 129, 0.4)';
-                resDiag.innerHTML = '🏆 <strong>Nível Elite Comercial:</strong> Seu lote está em pico máximo de produtividade! Mantenha a oferta de cálcio grosso e o fotoperíodo.';
-            } else if (percent >= 65) {
-                resVal.style.color = '#fbbf24';
-                box.style.borderColor = 'rgba(251, 191, 36, 0.4)';
-                resDiag.innerHTML = '⚠️ <strong>Taxa Moderada (Tem potencial para subir):</strong> Com iluminação constante de 16h e suplementação de calcário grosso às 16h, você pode alcançar 80% a 90%.';
-            } else {
-                resVal.style.color = '#f43f5e';
-                box.style.borderColor = 'rgba(244, 63, 94, 0.4)';
-                resDiag.innerHTML = '🚨 <strong>Taxa Baixa (Galinhas Travadas):</strong> Há bloqueio nutricional, falta de horas de luz, verminose ou estresse. Aplique os 5 Pilares para recuperar o plantel.';
-            }
-        }
-
-        // ─── CALCULADORA 2: PROGRAMA DE LUZ ───────────────────────────────────────
-        function calculateLightProgram() {
-            const sunrise = document.getElementById('sun-rise').value || '06:00';
-            const sunset = document.getElementById('sun-set').value || '18:00';
-            const strategy = document.getElementById('light-strategy').value;
-
-            const [rHour, rMin] = sunrise.split(':').map(Number);
-            const [sHour, sMin] = sunset.split(':').map(Number);
-
-            const naturalHours = (sHour + sMin/60) - (rHour + rMin/60);
-            const neededHours = Math.max(0, 16 - naturalHours);
-
-            const resSchedule = document.getElementById('res-light-schedule');
-            const resDesc = document.getElementById('res-light-desc');
-
-            if (neededHours <= 0) {
-                resSchedule.textContent = 'Luz Natural Suficiente (16h)';
-                resDesc.textContent = 'No pico do verão não é necessário acender luz artificial, a menos que o dia encurte.';
-                return;
-            }
-
-            const neededFmt = neededHours.toFixed(1) + 'h';
-
-            if (strategy === 'morning') {
-                const turnOnDec = (rHour + rMin/60) - neededHours;
-                const turnOnHour = Math.floor((turnOnDec + 24) % 24);
-                const turnOnMin = Math.round((turnOnDec % 1) * 60);
-                const strOn = `${String(turnOnHour).padStart(2, '0')}:${String(turnOnMin).padStart(2, '0')}`;
-                
-                resSchedule.textContent = `Ligar ${strOn} às ${sunrise}`;
-                resDesc.innerHTML = `Luz natural: ~${naturalHours.toFixed(1)}h • <strong>Luz artificial de manhã: ${neededFmt}</strong> • Total biológico: 16 horas.`;
-            } else if (strategy === 'evening') {
-                const turnOffDec = (sHour + sMin/60) + neededHours;
-                const turnOffHour = Math.floor(turnOffDec % 24);
-                const turnOffMin = Math.round((turnOffDec % 1) * 60);
-                const strOff = `${String(turnOffHour).padStart(2, '0')}:${String(turnOffMin).padStart(2, '0')}`;
-                
-                resSchedule.textContent = `Ligar ${sunset} às ${strOff}`;
-                resDesc.innerHTML = `Luz natural: ~${naturalHours.toFixed(1)}h • <strong>Luz artificial à noite: ${neededFmt}</strong> • Total biológico: 16 horas.`;
-            } else {
-                const half = neededHours / 2;
-                const turnOnHour = Math.floor((((rHour + rMin/60) - half) + 24) % 24);
-                const turnOffHour = Math.floor(((sHour + sMin/60) + half) % 24);
-                
-                resSchedule.textContent = `${String(turnOnHour).padStart(2,'0')}:00 às ${sunrise} e ${sunset} às ${String(turnOffHour).padStart(2,'0')}:00`;
-                resDesc.innerHTML = `Dividido: ${half.toFixed(1)}h de manhã e ${half.toFixed(1)}h à noite para atingir as 16 horas perfeitas.`;
-            }
-        }
-
-        // ─── CALCULADORA 3: DEMANDA DE ALIMENTO & CÁLCIO ─────────────────────────
-        function calculateFeedDemand() {
-            const birds = Math.max(1, parseInt(document.getElementById('feed-birds').value) || 1);
-            const totalKg = (birds * 0.115).toFixed(2).replace('.', ',');
-            const morningKg = (birds * 0.115 * 0.5).toFixed(2).replace('.', ',');
-            const afternoonKg = (birds * 0.115 * 0.5).toFixed(2).replace('.', ',');
-            const coarseCalcG = Math.round(birds * 4.5); // 4.5g por ave
-            
-            document.getElementById('res-feed-amount').textContent = `${totalKg} kg de ração / dia`;
-            document.getElementById('res-feed-details').innerHTML = `
-                • <strong>Trato 1 (Manhã):</strong> ${morningKg} kg de ração de postura balanceada.<br>
-                • <strong>Trato 2 (16h):</strong> ${afternoonKg} kg de ração.<br>
-                • <strong>Reforço de Cálcio Grosso (16h):</strong> <strong>${coarseCalcG} g</strong> de calcário calcítico grosso (2-4mm) ou farinha de ostra para garantir a casca da madrugada.
-            `;
-        }
-
-        // Inicializar cálculos ao carregar
-        document.addEventListener('DOMContentLoaded', () => {
-            calculateLayRate();
-            calculateLightProgram();
-            calculateFeedDemand();
-        });
-    </script>
 </body>
 </html>
