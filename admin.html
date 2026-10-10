@@ -271,6 +271,21 @@
         }
         .btn-action-wpp:active { transform: scale(0.96); }
 
+        .btn-action-copy {
+            background: linear-gradient(135deg, rgba(225, 48, 108, 0.15) 0%, rgba(131, 58, 180, 0.15) 100%);
+            color: #f43f5e; border: 1px solid rgba(225, 48, 108, 0.4);
+            padding: 8px 14px; border-radius: 10px;
+            font-size: 12px; font-weight: 800; text-decoration: none; display: inline-flex;
+            align-items: center; gap: 6px; width: fit-content;
+            cursor: pointer; transition: all 0.15s; font-family: inherit;
+        }
+        .btn-action-copy:hover {
+            background: linear-gradient(135deg, rgba(225, 48, 108, 0.28) 0%, rgba(131, 58, 180, 0.28) 100%);
+            border-color: rgba(225, 48, 108, 0.7);
+            color: #fff;
+        }
+        .btn-action-copy:active { transform: scale(0.96); }
+
         .empty-state { padding: 40px 20px; text-align: center; color: var(--text-muted); font-size: 13px; font-weight: 600; }
 
         /* BOTTOM NAV */
@@ -1805,13 +1820,73 @@
                     <div class="list-item-sub" style="font-size: 11px; margin-top: 2px;">
                         <i class="fa-regular fa-clock"></i> ${dStr}
                     </div>
-                    ${cleanPhone ? `
-                    <a href="https://wa.me/${cleanPhone}?text=${wppMsg}" target="_blank" class="btn-action-wpp">
-                        <i class="fa-brands fa-whatsapp"></i> Chamar no WhatsApp
-                    </a>` : ''}
+                    <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center;">
+                        ${cleanPhone ? `
+                        <a href="https://wa.me/${cleanPhone}?text=${wppMsg}" target="_blank" class="btn-action-wpp" style="margin-top: 0;">
+                            <i class="fa-brands fa-whatsapp"></i> Chamar no WhatsApp
+                        </a>` : ''}
+                        <button type="button" class="btn-action-copy" style="margin-top: 0;" data-msg="${encodeURIComponent(fullMsg)}" onclick="copySaleMessage(this)">
+                            <i class="fa-brands fa-instagram"></i> Copiar Mensagem (Instagram)
+                        </button>
+                    </div>
                 </div>`;
             });
             container.innerHTML = html;
+        }
+
+        function copySaleMessage(btn) {
+            const raw = btn.getAttribute('data-msg');
+            const msg = decodeURIComponent(raw || '');
+            if (!msg) return;
+
+            const originalHtml = btn.innerHTML;
+            const originalBg = btn.style.background;
+            const originalBorder = btn.style.borderColor;
+            const originalColor = btn.style.color;
+
+            const onSuccess = () => {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Mensagem Copiada!';
+                btn.style.background = '#10b981';
+                btn.style.borderColor = '#10b981';
+                btn.style.color = '#fff';
+                if (typeof showToast === 'function') {
+                    showToast('Mensagem copiada! Pronta para colar no Instagram.');
+                }
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.style.background = originalBg;
+                    btn.style.borderColor = originalBorder;
+                    btn.style.color = originalColor;
+                }, 2200);
+            };
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(msg).then(onSuccess).catch(() => {
+                    fallbackCopyText(msg, onSuccess);
+                });
+            } else {
+                fallbackCopyText(msg, onSuccess);
+            }
+        }
+
+        function fallbackCopyText(text, cb) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.top = '0';
+            textArea.style.left = '-9999px';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful && cb) cb();
+                else if (cb) cb();
+            } catch (err) {
+                prompt('Copie a mensagem abaixo (Ctrl+C):', text);
+            }
+            document.body.removeChild(textArea);
         }
 
         function renderAbandonsList(abandons) {
@@ -1869,10 +1944,15 @@
                     <div class="list-item-sub"><i class="fa-regular fa-envelope"></i> ${email}</div>
                     <div class="list-item-sub"><i class="fa-solid fa-phone"></i> ${phone || 'Sem telefone'}</div>
                     ${originDescription}
-                    ${cleanPhone ? `
-                    <a href="https://wa.me/${cleanPhone}?text=${recoveryMsg}" target="_blank" class="btn-action-wpp" style="background: ${isPlatform ? '#9333ea' : '#10b981'};">
-                        <i class="fa-brands fa-whatsapp"></i> ${isPlatform ? 'Chamar Aluno no WhatsApp' : 'Recuperar no WhatsApp'}
-                    </a>` : ''}
+                    <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center;">
+                        ${cleanPhone ? `
+                        <a href="https://wa.me/${cleanPhone}?text=${recoveryMsg}" target="_blank" class="btn-action-wpp" style="margin-top: 0; background: ${isPlatform ? '#9333ea' : '#10b981'};">
+                            <i class="fa-brands fa-whatsapp"></i> ${isPlatform ? 'Chamar Aluno no WhatsApp' : 'Recuperar no WhatsApp'}
+                        </a>` : ''}
+                        <button type="button" class="btn-action-copy" style="margin-top: 0;" data-msg="${recoveryMsg}" onclick="copySaleMessage(this)">
+                            <i class="fa-brands fa-instagram"></i> Copiar Mensagem (Instagram)
+                        </button>
+                    </div>
                 </div>`;
             });
             container.innerHTML = html;
