@@ -419,6 +419,23 @@
                     <span>Baixar Tabela</span>
                 </a>
             </div>
+
+            <!-- Potencialize a Produção de Ovos -->
+            <div class="download-item" id="item-ovos" style="display: none;">
+                <div class="download-header">
+                    <div class="download-icon">
+                        <i class="fa-solid fa-egg"></i>
+                    </div>
+                    <div class="download-info">
+                        <h3>Potencialize a Produção de Ovos</h3>
+                        <p>Protocolo completo de alta postura no aplicativo</p>
+                    </div>
+                </div>
+                <a href="https://protocolo-elite.pages.dev/" class="btn-download" style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                    <span>Acessar no App</span>
+                </a>
+            </div>
         </div>
 
         <div class="whatsapp-section">
@@ -475,6 +492,7 @@
                 const itemManejo = document.getElementById('item-manejo');
                 const itemDoencas = document.getElementById('item-doencas');
                 const itemOrderbump = document.getElementById('item-orderbump');
+                const itemOvos = document.getElementById('item-ovos');
                 const successMsg = document.getElementById('success-msg');
                 const whatsappBtn = document.getElementById('whatsapp-btn');
 
@@ -483,10 +501,11 @@
 
                 let showManejo = hasKeyword('manejo') || hasKeyword('pintinho') || hasKeyword('ebook-manejo') || hasKeyword('combo-elite');
                 let showDoencas = hasKeyword('doenca') || hasKeyword('saude') || hasKeyword('protocolo') || hasKeyword('elite') || hasKeyword('ebook-doencas') || hasKeyword('combo');
-                let showBump = hasKeyword('bump') || hasKeyword('racao') || hasKeyword('tabela') || hasKeyword('combo-plataforma');
+                let showBump = hasKeyword('bump-6361') || hasKeyword('racao') || hasKeyword('tabela') || hasKeyword('combo-plataforma');
+                let showOvos = hasKeyword('bump-ovos') || hasKeyword('ovos') || hasKeyword('postura') || hasKeyword('potencialize');
 
                 // 🚨 SEGURANÇA: Se nenhum item for detectado, libera APENAS o principal (Doenças)
-                if (!showManejo && !showDoencas && !showBump) {
+                if (!showManejo && !showDoencas && !showBump && !showOvos) {
                     console.warn('Fallback ativado: Liberando apenas produto principal.');
                     showDoencas = true;
                     if (successMsg) successMsg.innerText = 'Seu acesso foi liberado!';
@@ -510,12 +529,20 @@
                     const link = itemOrderbump.querySelector('.btn-download');
                     link.href = `${API_URL}/download/orderbump${token ? '?t=' + token : ''}`;
                 }
+                if (showOvos && itemOvos) {
+                    itemOvos.style.display = 'block';
+                    const link = itemOvos.querySelector('.btn-download');
+                    if (link) {
+                        link.href = cleanCpf ? `https://protocolo-elite.pages.dev/?cpf=${encodeURIComponent(cleanCpf)}` : 'https://protocolo-elite.pages.dev/';
+                    }
+                }
 
                 // Mensagens de Sucesso Personalizadas
                 if (successMsg) {
                     if (showManejo && showDoencas) successMsg.innerText = 'Seu Combo e bônus foram liberados!';
                     else if (showManejo) successMsg.innerText = 'Seu Manual de Pintinhos foi liberado!';
                     else if (showDoencas) successMsg.innerText = 'Seu Guia de Doenças foi liberado!';
+                    else if (showOvos) successMsg.innerText = 'Seu Protocolo de Ovos foi liberado!';
                 }
 
                 if (whatsappBtn) {

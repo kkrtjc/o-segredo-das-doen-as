@@ -240,11 +240,11 @@ adminRoutes.post('/config/reset', async (c) => {
                 title: 'O Segredo das Doenças Avícolas', price: 49.90, originalPrice: 147.00,
                 description: 'Identifique e trate mais de 10 doenças nas galinhas', isFeatured: true, badge: 'OFERTA PRINCIPAL',
                 features: ['Doenças Avícolas', 'Tabela de vacinação', 'Tabela de vermifugação', 'Protocolo de prevenção'],
-                cover: 'capadasdoencas.webp', orderBumps: ['bump-6361']
+                cover: 'capadasdoencas.webp', orderBumps: ['bump-6361', 'bump-ovos']
             },
             'ebook-pintinhos': {
                 title: 'Manual de Manejo de Pintinhos', price: 27.90, originalPrice: 67.00, enabled: true,
-                description: 'Aprenda a melhor forma de tratar e manejar seus pintinhos', cover: 'capadospintinhos.webp', orderBumps: ['bump-6361']
+                description: 'Aprenda a melhor forma de tratar e manejar seus pintinhos', cover: 'capadospintinhos.webp', orderBumps: ['bump-6361', 'bump-ovos']
             },
             'ebook-manejo': {
                 title: 'Manual de Manejo de Pintinhos', price: 27.90, originalPrice: 67.00, enabled: true,
@@ -252,15 +252,16 @@ adminRoutes.post('/config/reset', async (c) => {
             },
             'combo-plataforma': {
                 title: 'Combo Completo Plataforma', price: 49.90, originalPrice: 147.00,
-                description: 'Acesso completo à plataforma de e-books avícolas', badge: 'MELHOR OFERTA', cover: 'combo', orderBumps: ['bump-6361']
+                description: 'Acesso completo à plataforma de e-books avícolas', badge: 'MELHOR OFERTA', cover: 'combo', orderBumps: ['bump-6361', 'bump-ovos']
             },
             'combo-elite': {
                 title: 'Combo Completo Plataforma', price: 49.90, originalPrice: 147.00,
-                description: 'Acesso completo à plataforma de e-books avícolas', badge: 'MELHOR OFERTA', cover: 'combo', orderBumps: ['bump-6361']
+                description: 'Acesso completo à plataforma de e-books avícolas', badge: 'MELHOR OFERTA', cover: 'combo', orderBumps: ['bump-6361', 'bump-ovos']
             }
         },
         orderBumps: {
-            'bump-6361': { id: 'bump-6361', title: 'Tabela de Ração Prática', price: 19.90, description: 'Aprenda a formular sua própria ração balanceada.', image: 'tabela_racao_bump.webp' }
+            'bump-6361': { id: 'bump-6361', title: 'Tabela de Ração Prática', price: 14.90, description: 'Aprenda a formular sua própria ração balanceada.', image: 'tabela_racao_bump.webp' },
+            'bump-ovos': { id: 'bump-ovos', title: 'Potencialize a Produção de Ovos', price: 14.90, description: 'Protocolo de Alta Postura.', image: 'potencialize_ovos_bump.webp' }
         }
     };
     await saveDB(c.env, defaultDB);
@@ -547,7 +548,7 @@ adminRoutes.post('/verify-access', async (c) => {
                 email: 'suporte@protocoloelite.com.br',
                 phone: '33999999999',
                 cpf: '144.777.516-30',
-                products: ['ebook-manejo', 'tabela-racao', 'ebook-doencas']
+                products: ['ebook-manejo', 'tabela-racao', 'ebook-doencas', 'potencialize-ovos']
             });
         }
 
@@ -636,7 +637,7 @@ adminRoutes.post('/verify-access', async (c) => {
                     // Mapeia os títulos dos itens para os IDs de produtos do app (suporta strings e objetos)
                     const titleStr = (sale.items || []).map(i => {
                         if (typeof i === 'string') return i.toLowerCase();
-                        if (i && typeof i === 'object') return (i.title || '').toLowerCase();
+                        if (i && typeof i === 'object') return `${i.id || ''} ${i.title || ''}`.toLowerCase();
                         return '';
                     }).join(' ');
                     
@@ -651,6 +652,10 @@ adminRoutes.post('/verify-access', async (c) => {
                     // 3. Manejo de Pintinhos (apenas se comprou o manual de pintinhos OU combo elite)
                     if (titleStr.includes('manejo') || titleStr.includes('pintinho') || titleStr.includes('combo-elite')) {
                         productsSet.add('ebook-manejo');
+                    }
+                    // 4. Potencialize a Produção de Ovos
+                    if (titleStr.includes('potencialize') || titleStr.includes('produção de ovo') || titleStr.includes('producao de ovo') || titleStr.includes('alta postura') || titleStr.includes('bump-ovos') || titleStr.includes('potencialize-ovos')) {
+                        productsSet.add('potencialize-ovos');
                     }
                 }
             }

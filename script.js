@@ -607,7 +607,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
 
         cart.mainProduct = { ...productData, id: productId };
 
-        // HOTFIX: Force the bumps based on productId (Apenas Tabela de Ração como bump no checkout)
+        // HOTFIX: Force the bumps based on productId (Tabela de Ração e Potencialize a Produção de Ovos)
         if (productId === 'ebook-doencas' || productId === 'combo-plataforma' || productId === 'combo-elite') {
             cart.mainProduct.fullBumps = [
                 {
@@ -618,6 +618,15 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                     image: 'tabela_racao_bump.webp',
                     description: '<div style="display: flex; flex-direction: column; gap: 3px; margin: 4px 0; text-align: left; font-size: 0.68rem; line-height: 1.25;"><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Inicial Profissional</strong> (0 a 30 dias)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Crescimento Ideal</strong> (31 a 120 dias)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Postura</strong> (121 dias+)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Corte / Engorda</strong></div><div style="display: flex; align-items: center; gap: 5px; color: #fbbf24;"><span style="color: #fbbf24; font-weight: 900;">✓</span> <strong>Calculadora Inteligente de Insumos</strong></div></div>',
                     tag: 'OFERTA ÚNICA'
+                },
+                {
+                    id: 'bump-ovos',
+                    title: 'POTENCIALIZE A PRODUÇÃO DE OVOS',
+                    price: 14.90,
+                    priceCard: 14.90,
+                    image: 'potencialize_ovos_bump.webp',
+                    description: '<div style="display: flex; flex-direction: column; gap: 3px; margin: 4px 0; text-align: left; font-size: 0.68rem; line-height: 1.25;"><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fotoperíodo 16h</strong> (Estímulo Pineal Hormonal)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Cálcio Noturno Lento</strong> (Partículas 2 a 4mm)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Manejo do Calor & Bicarbonato</strong> (+30°C)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Quebra do Choco em 3 Dias</strong> (Gaiola Suspensa)</div></div>',
+                    tag: 'ALTA POSTURA'
                 }
             ];
             productData.fullBumps = cart.mainProduct.fullBumps;
@@ -631,6 +640,15 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                     image: 'tabela_racao_bump.webp',
                     description: '<div style="display: flex; flex-direction: column; gap: 3px; margin: 4px 0; text-align: left; font-size: 0.68rem; line-height: 1.25;"><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Inicial Profissional</strong> (0 a 30 dias)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Crescimento Ideal</strong> (31 a 120 dias)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Postura</strong> (121 dias+)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Corte / Engorda</strong></div><div style="display: flex; align-items: center; gap: 5px; color: #fbbf24;"><span style="color: #fbbf24; font-weight: 900;">✓</span> <strong>Calculadora Inteligente de Insumos</strong></div></div>',
                     tag: 'OFERTA ÚNICA'
+                },
+                {
+                    id: 'bump-ovos',
+                    title: 'POTENCIALIZE A PRODUÇÃO DE OVOS',
+                    price: 14.90,
+                    priceCard: 14.90,
+                    image: 'potencialize_ovos_bump.webp',
+                    description: '<div style="display: flex; flex-direction: column; gap: 3px; margin: 4px 0; text-align: left; font-size: 0.68rem; line-height: 1.25;"><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fotoperíodo 16h</strong> (Estímulo Pineal Hormonal)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Cálcio Noturno Lento</strong> (Partículas 2 a 4mm)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Manejo do Calor & Bicarbonato</strong> (+30°C)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Quebra do Choco em 3 Dias</strong> (Gaiola Suspensa)</div></div>',
+                    tag: 'ALTA POSTURA'
                 }
             ];
             productData.fullBumps = cart.mainProduct.fullBumps;
@@ -758,17 +776,19 @@ function renderOrderBumps(bumps) {
         if (!imgSrc || imgSrc.trim() === '') {
             if (bump.id === 'ebook-doencas' || bump.id === 'bump-doencas') imgSrc = 'capadasdoencas.webp';
             else if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') imgSrc = 'capadospintinhos.webp';
-            else if (bump.id === 'ebook-doencas' || bump.id === 'bump-doencas') imgSrc = 'capadasdoencas.webp';
             else if (bump.id === 'bump-6361') imgSrc = 'tabela_racao_bump.webp';
+            else if (bump.id === 'bump-ovos') imgSrc = 'potencialize_ovos_bump.webp';
             else if (bump.title?.includes('Pintinhos') || bump.title?.includes('Manejo')) imgSrc = 'capadospintinhos.webp';
             else if (bump.title?.includes('Ração') || bump.title?.includes('Racao') || bump.title?.includes('Tabela')) imgSrc = 'tabela_racao_bump.webp';
+            else if (bump.title?.includes('Ovos') || bump.title?.includes('Postura')) imgSrc = 'potencialize_ovos_bump.webp';
         }
 
         const isCombo = (bump.id === 'combo-elite-bump');
         const isManejo = (bump.id === 'ebook-manejo' || bump.title?.includes('Pintinhos'));
         const isDoencas = (bump.id === 'ebook-doencas' || bump.title?.includes('Doenças'));
+        const isOvos = (bump.id === 'bump-ovos' || bump.title?.includes('Ovos') || bump.title?.includes('Postura'));
         
-        let title = isManejo ? '🐣 SALVE SEUS PINTINHOS' : (isDoencas ? '💊 TRATE SUAS GALINHAS' : '💰 CORTE SUA CONTA DE RAÇÃO');
+        let title = isManejo ? '🐣 SALVE SEUS PINTINHOS' : (isDoencas ? '💊 TRATE SUAS GALINHAS' : (isOvos ? '🥚 ALTA PRODUÇÃO DE OVOS' : '💰 CORTE SUA CONTA DE RAÇÃO'));
         if (isCombo) title = '<span style="color: #000; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 0 5px #fff; display: inline-block; padding: 2px 4px; border-radius: 4px; background: rgba(255,255,255,0.1);">⚠️ SEUS PINTINHOS VÃO MORRER SEM ISSO</span>';
 
         let desc = bump.description;
@@ -777,10 +797,12 @@ function renderOrderBumps(bumps) {
                 ? '<span style="color: #ff4444;"><strong>8 em cada 10 pintinhos morrem antes dos 20 dias.</strong></span> Temperatura errada, ração imprópria, ambiente inapropriado. <span style="color: #4ade80;"><strong>O manual te ensina o passo a passo completo</strong></span> do nascimento à fase adulta.' 
                 : (isDoencas 
                     ? 'Com o <strong>Guia Completo das Doenças</strong> você aprende a <strong style="color: #4ade80;">identificar e tratar mais de 10 tipos diferentes de doenças</strong> nas galinhas. O tratamento que os maiores criadores usam em suas aves. <span style="color: #ff4444;"><strong>Não espere sua ave adoecer!</strong></span>'
-                    : '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até 60% na ração</strong> das suas aves.');
+                    : (isOvos
+                        ? '<span style="color: #fbbf24;"><strong>Dobre a postura do seu plantel.</strong></span> Controle de fotoperíodo, cálcio noturno lento, conforto térmico e quebra de choco.'
+                        : '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até 60% na ração</strong> das suas aves.'));
         }
 
-        const bumpLabel = isManejo ? 'MANUAL DE ELITE<br>DOS PINTINHOS' : (isDoencas ? 'GUIA COMPLETO<br>DAS DOENÇAS' : 'TABELA DE RAÇÃO');
+        const bumpLabel = isManejo ? 'MANUAL DE ELITE<br>DOS PINTINHOS' : (isDoencas ? 'GUIA COMPLETO<br>DAS DOENÇAS' : (isOvos ? 'ALTA PRODUÇÃO<br>DE OVOS' : 'TABELA DE RAÇÃO'));
 
         return `
             <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
@@ -820,7 +842,7 @@ function renderOrderBumps(bumps) {
                             <span style="color: #a3a3a3; font-size: 0.75rem; text-decoration: line-through; text-shadow: 1px 1px 1px #000;">De R$ ${isManejo ? '99,90' : (isDoencas ? '89,90' : '39,90')}</span>
                             <span style="color: #4ade80; font-size: 0.85rem; font-weight: 800; text-shadow: 0 0 8px rgba(74,222,128,0.4), 1px 1px 2px #000; line-height: 1.15;">
                                 Por apenas <span style="font-size: 1.05rem;">R$ ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.price)).replace('R$ ', '')}</span><br>
-                                ${isManejo ? 'você salva seus pintinhos' : (isDoencas ? 'você aprende sobre as principais doenças.' : ', você economiza até 60% na ração')}
+                                ${isManejo ? 'você salva seus pintinhos' : (isDoencas ? 'você aprende sobre as principais doenças.' : (isOvos ? 'você multiplica a postura de ovos' : ', você economiza até 60% na ração'))}
                             </span>
                         </div>
                     </div>
@@ -906,12 +928,20 @@ function updateTotal() {
                         bumpPriceForPix = 14.90;
                         bumpPriceForCard = 14.90;
                     }
+                    if (bump.id === 'bump-ovos') {
+                        bumpPriceForPix = 14.90;
+                        bumpPriceForCard = 14.90;
+                    }
                 } else {
                     if (bump.id === 'ebook-manejo') {
                         bumpPriceForPix = 27.90;
                         bumpPriceForCard = 27.90;
                     }
                     if (bump.id === 'bump-6361') {
+                        bumpPriceForPix = 14.90;
+                        bumpPriceForCard = 14.90;
+                    }
+                    if (bump.id === 'bump-ovos') {
                         bumpPriceForPix = 14.90;
                         bumpPriceForCard = 14.90;
                     }
@@ -978,17 +1008,19 @@ function updateTotal() {
         if (!bump && window.siteConfig) bump = window.siteConfig.products[id];
         if (!bump) bump = prefetchedProducts[id];
         
-        let bumpTitle = bump?.title || (id === 'ebook-doencas' ? 'Guia Completo das Doenças' : (id === 'bump-6361' ? 'Tabela de Ração Prática' : 'Oferta Adicional'));
-        let bumpImg = (id === 'ebook-doencas' || id.includes('doencas')) ? 'capadasdoencas.webp' : ((id === 'bump-6361' || id.includes('racao')) ? 'tabela_racao_bump.webp' : 'capadospintinhos.webp');
-        let priceForMethod = bump?.price || 49.90;
+        let bumpTitle = bump?.title || (id === 'ebook-doencas' ? 'Guia Completo das Doenças' : (id === 'bump-6361' ? 'Tabela de Ração Prática' : (id === 'bump-ovos' ? 'Potencialize a Produção de Ovos' : 'Oferta Adicional')));
+        let bumpImg = (id === 'ebook-doencas' || id.includes('doencas')) ? 'capadasdoencas.webp' : ((id === 'bump-6361' || id.includes('racao')) ? 'tabela_racao_bump.webp' : ((id === 'bump-ovos' || id.includes('ovos')) ? 'potencialize_ovos_bump.webp' : 'capadospintinhos.webp'));
+        let priceForMethod = bump?.price || 14.90;
         
         if (window.acceptedPixUpsell && (currentPaymentMethod === 'pix' || currentPaymentMethod === 'card' || currentPaymentMethod === 'boleto')) {
             if (cart.mainProduct.id === 'ebook-pintinhos') {
                 if (id === 'ebook-doencas') priceForMethod = 49.90;
                 if (id === 'bump-6361') priceForMethod = 14.90;
+                if (id === 'bump-ovos') priceForMethod = 14.90;
             } else {
                 if (id === 'ebook-manejo' || id.includes('manejo')) priceForMethod = 27.90;
                 if (id === 'bump-6361') priceForMethod = 14.90;
+                if (id === 'bump-ovos') priceForMethod = 14.90;
             }
         }
 
@@ -1333,12 +1365,14 @@ function setupPixUpsellModal() {
 
     if (cart.mainProduct && cart.mainProduct.id === 'ebook-pintinhos') {
         const hasRacao = cart.bumps.includes('bump-6361');
-        const mainPrice = Number(cart.mainProduct.price) || 37.00;
+        const hasOvos = cart.bumps.includes('bump-ovos');
+        const mainPrice = Number(cart.mainProduct.price) || 27.90;
         const racaoPrice = hasRacao ? 14.90 : 0;
+        const ovosPrice = hasOvos ? 14.90 : 0;
         const doencasPrice = 49.90;
-        const currentTotal = mainPrice + racaoPrice;
+        const currentTotal = mainPrice + racaoPrice + ovosPrice;
         const totalWithUpsell = currentTotal + doencasPrice;
-        const originalTotal = (mainPrice + (hasRacao ? 14.90 : 0) + 89.90);
+        const originalTotal = (mainPrice + racaoPrice + ovosPrice + 89.90);
 
         const fmtCurrent = currentTotal.toFixed(2).replace('.', ',');
         const fmtTotal = totalWithUpsell.toFixed(2).replace('.', ',');
@@ -1394,6 +1428,11 @@ function setupPixUpsellModal() {
                         <span>🌾 Tabela de Ração Prática:</span>
                         <strong style="color: #ffffff;">R$ 14,90</strong>
                     </div>` : ''}
+                    ${hasOvos ? `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>🥚 Potencialize a Produção de Ovos:</span>
+                        <strong style="color: #ffffff;">R$ 14,90</strong>
+                    </div>` : ''}
                     <div style="display: flex; justify-content: space-between; align-items: center; color: #34d399;">
                         <span>💊 Guia Completo das Doenças:</span>
                         <strong style="color: #34d399;">+ R$ 49,90</strong>
@@ -1408,17 +1447,19 @@ function setupPixUpsellModal() {
         }
 
         if (ctaBtnText) ctaBtnText.innerText = `Aprender sobre as doenças (Total: R$ ${fmtTotal})`;
-        if (rejectBtn) rejectBtn.innerText = `Levar apenas o manejo de pintinhos (R$ ${fmtCurrent})`;
+        if (rejectBtn) rejectBtn.innerText = `Levar apenas o que escolhi (R$ ${fmtCurrent})`;
         return;
     }
 
     const hasRacao = cart.bumps.includes('bump-6361');
+    const hasOvos = cart.bumps.includes('bump-ovos');
     const mainPrice = Number(cart.mainProduct?.price) || 49.90;
     const racaoPrice = hasRacao ? 14.90 : 0;
+    const ovosPrice = hasOvos ? 14.90 : 0;
     const pintinhosPrice = 27.90;
-    const currentTotal = mainPrice + racaoPrice;
+    const currentTotal = mainPrice + racaoPrice + ovosPrice;
     const totalWithUpsell = currentTotal + pintinhosPrice;
-    const originalTotal = (mainPrice + racaoPrice + 67.00);
+    const originalTotal = (mainPrice + racaoPrice + ovosPrice + 67.00);
 
     const fmtCurrent = currentTotal.toFixed(2).replace('.', ',');
     const fmtTotal = totalWithUpsell.toFixed(2).replace('.', ',');
@@ -1474,6 +1515,11 @@ function setupPixUpsellModal() {
                     <span>🌾 Tabela de Ração Prática:</span>
                     <strong style="color: #ffffff;">R$ 14,90</strong>
                 </div>` : ''}
+                ${hasOvos ? `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>🥚 Potencialize a Produção de Ovos:</span>
+                    <strong style="color: #ffffff;">R$ 14,90</strong>
+                </div>` : ''}
                 <div style="display: flex; justify-content: space-between; align-items: center; color: #34d399;">
                     <span>🐣 Manual de Manejo dos Pintinhos:</span>
                     <strong style="color: #34d399;">+ R$ 27,90</strong>
@@ -1488,7 +1534,7 @@ function setupPixUpsellModal() {
     }
 
     if (ctaBtnText) ctaBtnText.innerText = `Aprender sobre o manejo de pintinhos (Total: R$ ${fmtTotal})`;
-    if (rejectBtn) rejectBtn.innerText = `Levar apenas o guia das doenças (R$ ${fmtCurrent})`;
+    if (rejectBtn) rejectBtn.innerText = `Levar apenas o que escolhi (R$ ${fmtCurrent})`;
 }
 
 
@@ -1496,6 +1542,7 @@ window.acceptPixUpsell = function() {
     window.bypassPixUpsell = true;
     window.acceptedPixUpsell = true;
     window.originalHadRacao = cart.bumps.includes('bump-6361');
+    window.originalHadOvos = cart.bumps.includes('bump-ovos');
     window.originalHadManejo = cart.bumps.includes('ebook-manejo');
     // Inject bumps dynamically
     if (cart.mainProduct.id === 'ebook-pintinhos') {
@@ -1608,7 +1655,7 @@ async function handlePayment(method) {
                 const fallbackPrice = (id === 'ebook-manejo') ? 27.90 : ((id === 'ebook-doencas') ? 49.90 : 14.90);
                 b = { 
                     id: id, 
-                    title: id === 'ebook-manejo' ? 'Manual de Pintinhos' : (id === 'ebook-doencas' ? 'Guia Completo das Doenças' : 'Tabela de Ração Prática'),
+                    title: id === 'ebook-manejo' ? 'Manual de Pintinhos' : (id === 'ebook-doencas' ? 'Guia Completo das Doenças' : (id === 'bump-ovos' ? 'Potencialize a Produção de Ovos' : 'Tabela de Ração Prática')),
                     price: fallbackPrice, 
                     priceCard: fallbackPrice
                 };
@@ -1623,9 +1670,11 @@ async function handlePayment(method) {
                 if (cart.mainProduct.id === 'ebook-pintinhos') {
                     if (b.id === 'ebook-doencas') bumpPrice = 49.90;
                     if (b.id === 'bump-6361') bumpPrice = 14.90;
+                    if (b.id === 'bump-ovos') bumpPrice = 14.90;
                 } else {
                     if (b.id === 'ebook-manejo') bumpPrice = 27.90;
                     if (b.id === 'bump-6361') bumpPrice = 14.90;
+                    if (b.id === 'bump-ovos') bumpPrice = 14.90;
                 }
             }
 

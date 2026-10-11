@@ -178,20 +178,22 @@
 
     var hasManejo = itemsStr.indexOf('pintinho') !== -1 || itemsStr.indexOf('manejo') !== -1;
     var hasDoencas = itemsStr.indexOf('doenca') !== -1 || itemsStr.indexOf('doença') !== -1 || itemsStr.indexOf('combo') !== -1;
+    var hasRacao = itemsStr.indexOf('racao') !== -1 || itemsStr.indexOf('ração') !== -1 || itemsStr.indexOf('tabela') !== -1 || itemsStr.indexOf('bump-6361') !== -1;
+    var hasOvos = itemsStr.indexOf('ovos') !== -1 || itemsStr.indexOf('postura') !== -1 || itemsStr.indexOf('bump-ovos') !== -1 || itemsStr.indexOf('potencialize') !== -1;
 
-    if (hasManejo && hasDoencas) {
-        if (stepProducts) stepProducts.innerHTML = 'Acesse o <strong>Guia das Doenças</strong>, o <strong>Manual de Pintinhos</strong> e a <strong>Tabela de Ração</strong> na plataforma.';
-        if (btnPdf) btnPdf.href = 'downloads.html?items=' + encodeURIComponent(itemsStr);
-        if (txtPdf) txtPdf.textContent = 'Baixar seus E-books em PDF';
-    } else if (hasManejo) {
-        if (stepProducts) stepProducts.innerHTML = 'Acesse o <strong>Manual de Manejo de Pintinhos</strong> e todas as orientações exclusivas na plataforma.';
-        if (btnPdf) btnPdf.href = API_URL + '/download/manejo';
-        if (txtPdf) txtPdf.textContent = 'Baixar Manual de Pintinhos em PDF';
-    } else {
-        if (stepProducts) stepProducts.innerHTML = 'Acesse o <strong>Guia das Doenças</strong>, a <strong>Tabela de Ração</strong> e todas as ferramentas da plataforma.';
-        if (btnPdf) btnPdf.href = API_URL + '/download/doencas';
-        if (txtPdf) txtPdf.textContent = 'Baixar Guia das Doenças em PDF';
+    var prodsList = [];
+    if (hasDoencas) prodsList.push('o <strong>Guia das Doenças</strong>');
+    if (hasManejo) prodsList.push('o <strong>Manual de Pintinhos</strong>');
+    if (hasRacao) prodsList.push('a <strong>Tabela de Ração</strong>');
+    if (hasOvos) prodsList.push('o protocolo de <strong>Alta Produção de Ovos</strong>');
+    if (prodsList.length === 0) prodsList.push('seus materiais adquiridos');
+
+    if (stepProducts) {
+        stepProducts.innerHTML = 'Acesse ' + prodsList.join(', ') + ' e todas as ferramentas da plataforma.';
     }
+
+    if (btnPdf) btnPdf.href = 'downloads.html?items=' + encodeURIComponent(itemsStr);
+    if (txtPdf) txtPdf.textContent = 'Baixar seus materiais em PDF / Acessos';
 
     var btn = document.getElementById('btn-access');
     var accessUrl = PROTOCOLO_URL;
