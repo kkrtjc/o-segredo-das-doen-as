@@ -633,6 +633,14 @@
         }
         .btn-edit-bid:active { transform: scale(0.96); }
 
+        .btn-rename-pill {
+            background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #94a3b8; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;
+            cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px;
+        }
+        .btn-rename-pill:hover { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border-color: rgba(56, 189, 248, 0.4); }
+        .btn-rename-pill:active { transform: scale(0.95); }
+
         /* ─── CLIENTS & COMMUNITY TAB STYLES ─── */
         .clients-kpi-grid {
             display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px;
@@ -822,7 +830,7 @@
         <div id="view-campaign-metrics" class="tab-view">
             
             <!-- 2 GRANDES ABAS COM FOTOS DAS CAPAS -->
-            <div class="campaign-selector-container">
+            <div class="campaign-selector-container" id="campaign-selector-container">
                 <div class="campaign-selector-label">
                     <i class="fa-solid fa-layer-group"></i> Selecione a Campanha / Produto:
                 </div>
@@ -1068,13 +1076,34 @@
                         </button>
                     </div>
 
+                    <!-- BANNER DO MATERIAL / PRODUTO IDENTIFICADO DA CAMPANHA -->
+                    <div id="meta-campaign-product-banner" style="display:flex; align-items:center; gap:14px; background:rgba(15, 23, 42, 0.7); border:1px solid var(--surface-border); border-radius:18px; padding:12px 16px; margin-bottom:16px;">
+                        <div style="width:52px; height:68px; border-radius:10px; overflow:hidden; flex-shrink:0; border:1px solid rgba(255,255,255,0.1); background:#000;">
+                            <img id="meta-detail-prod-img" src="capadasdoencas.webp" alt="Capa" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://osegredodasgalinhas.pages.dev/capadasdoencas.webp'">
+                        </div>
+                        <div style="flex:1;">
+                            <div style="font-size:10px; font-weight:800; text-transform:uppercase; color:#38bdf8; display:flex; align-items:center; gap:6px;">
+                                <i class="fa-solid fa-bookmark"></i> Material / Conteúdo Vinculado
+                            </div>
+                            <div id="meta-detail-prod-title" style="font-size:15px; font-weight:900; color:#fff; margin-top:2px;">
+                                O Segredo das Doenças
+                            </div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">
+                                Preço Base: <strong id="meta-detail-prod-price" style="color:var(--accent-gold);">R$ 49,90</strong> • <span id="meta-detail-prod-tag" style="color:#cbd5e1;">Guia de Prevenção & Cura</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- MASTER CARD DA CAMPANHA (STATUS, ORÇAMENTO E KPIS) -->
                     <div class="meta-master-card" id="meta-master-card">
                         <div class="meta-master-header">
                             <div class="meta-camp-title-box">
-                                <div class="meta-camp-title">
+                                <div class="meta-camp-title" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                                     <i class="fa-brands fa-meta" style="color: #38bdf8;"></i>
                                     <span id="meta-camp-name">Carregando campanha...</span>
+                                    <button class="btn-rename-pill" id="btn-rename-detail" onclick="onDetailRenameClick()" title="Alterar Nome da Campanha (Não afeta o algoritmo da Meta)">
+                                        <i class="fa-solid fa-pen"></i> Renomear
+                                    </button>
                                 </div>
                                 <div class="meta-camp-sub" id="meta-camp-id">ID: ...</div>
                             </div>
@@ -1548,17 +1577,21 @@
             const btnMeta = document.getElementById('btn-mode-meta');
             const cntSite = document.getElementById('container-site-metrics');
             const cntMeta = document.getElementById('container-meta-ads');
+            const selectorContainer = document.getElementById('campaign-selector-container');
 
             if (mode === 'site') {
                 btnSite.classList.add('active');
                 btnMeta.classList.remove('active');
                 cntSite.style.display = 'block';
                 cntMeta.style.display = 'none';
+                if (selectorContainer) selectorContainer.style.display = 'block';
             } else {
                 btnSite.classList.remove('active');
                 btnMeta.classList.add('active');
                 cntSite.style.display = 'none';
                 cntMeta.style.display = 'block';
+                // Quando selecionar Gestor Meta ADS, não exibe as capas grandes de produtos do topo
+                if (selectorContainer) selectorContainer.style.display = 'none';
                 if (currentDetailCampId) {
                     openCampaignDetail(currentDetailCampId);
                 } else {
@@ -2787,11 +2820,15 @@
                 const data = await res.json();
                 const rawList = data.data || [];
 
-                // Formatar cada campanha com o formatMetaInsights
+                // Formatar cada campanha com o formatMetaInsights e carregar nome customizado
+                const customNames = JSON.parse(localStorage.getItem('mura_custom_campaign_names') || '{}');
                 allMetaCampaignsList = rawList.map(camp => {
                     const rawInsight = (camp.insights && camp.insights.data && camp.insights.data[0]) ? camp.insights.data[0] : {};
+                    const customName = customNames[camp.id];
                     return {
                         ...camp,
+                        displayName: customName || camp.name,
+                        originalName: camp.name,
                         parsedInsights: formatMetaInsights(rawInsight)
                     };
                 });
@@ -2910,13 +2947,18 @@
 
                 const roasColor = ins.roas >= 2.0 ? 'var(--accent-green)' : (ins.roas >= 1.0 ? '#fbbf24' : 'var(--text-muted)');
 
+                const safeCampName = (c.displayName || c.name || '').replace(/'/g, "\\'");
+
                 html += `
                 <div class="meta-camp-card">
                     <div class="meta-camp-card-top">
                         <div style="flex: 1;">
                             <div class="meta-camp-title-text">
                                 <i class="fa-brands fa-meta" style="color: #38bdf8; font-size: 16px;"></i>
-                                <span>${c.name}</span>
+                                <span>${c.displayName || c.name}</span>
+                                <button class="btn-rename-pill" onclick="promptRenameCampaign('${c.id}', '${safeCampName}', event)" title="Alterar Nome da Campanha (Não afeta o algoritmo da Meta)">
+                                    <i class="fa-solid fa-pen"></i> Renomear
+                                </button>
                             </div>
                             <div class="meta-camp-badges-row">
                                 ${statusBadge}
@@ -3078,9 +3120,12 @@
         }
 
         function renderMetaCampaignUI(campData, insights, adsets, ads) {
-            // Nome e ID
-            document.getElementById('meta-camp-name').textContent = campData.name || 'Campanha Meta';
+            // Nome, ID e Identificação do Material/Produto
+            const customNames = JSON.parse(localStorage.getItem('mura_custom_campaign_names') || '{}');
+            const displayName = customNames[campData.id] || campData.name || 'Campanha Meta';
+            document.getElementById('meta-camp-name').textContent = displayName;
             document.getElementById('meta-camp-id').textContent = `ID: ${campData.id}`;
+            updateDetailProductBanner(displayName);
 
             // Botão Status Toggle (Campanha)
             const statusBadgeEl = document.getElementById('meta-camp-status-badge');
@@ -3463,6 +3508,106 @@
             } catch (e) {
                 alert(`Erro ao alterar anúncio: ${e.message}`);
             }
+        }
+
+        // Identificação automática do material / produto vinculado à campanha
+        function identifyCampaignProduct(campName = '') {
+            const n = (campName || '').toLowerCase();
+            if (n.includes('pinto') || n.includes('pintinho') || n.includes('irmas') || n.includes('irmãs')) {
+                return {
+                    id: 'pintinhos',
+                    title: 'Manual de Manejo de Pintinhos',
+                    price: 'R$ 27,90',
+                    img: 'capadospintinhos.webp',
+                    fallbackImg: 'https://osegredodasgalinhas.pages.dev/capadospintinhos.webp',
+                    tag: 'Front-end R$ 27,90 + Order Bumps'
+                };
+            }
+            return {
+                id: 'doencas',
+                title: 'O Segredo das Doenças / Protocolo Elite',
+                price: 'R$ 49,90',
+                img: 'capadasdoencas.webp',
+                fallbackImg: 'https://osegredodasgalinhas.pages.dev/capadasdoencas.webp',
+                tag: 'Guia Completo de Prevenção e Cura'
+            };
+        }
+
+        function updateDetailProductBanner(campName) {
+            const prod = identifyCampaignProduct(campName);
+            const imgEl = document.getElementById('meta-detail-prod-img');
+            const titleEl = document.getElementById('meta-detail-prod-title');
+            const priceEl = document.getElementById('meta-detail-prod-price');
+            const tagEl = document.getElementById('meta-detail-prod-tag');
+
+            if (imgEl) {
+                imgEl.src = prod.img;
+                imgEl.onerror = () => { imgEl.src = prod.fallbackImg; };
+            }
+            if (titleEl) titleEl.textContent = prod.title;
+            if (priceEl) priceEl.textContent = prod.price;
+            if (tagEl) tagEl.textContent = prod.tag;
+        }
+
+        function onDetailRenameClick() {
+            if (!currentDetailCampId) return;
+            const nameEl = document.getElementById('meta-camp-name');
+            const currName = nameEl ? nameEl.textContent.trim() : '';
+            promptRenameCampaign(currentDetailCampId, currName);
+        }
+
+        // Alteração de Nome da Campanha (Não afeta a entrega ou aprendizado do algoritmo)
+        async function promptRenameCampaign(campId, currentName, event) {
+            if (event) event.stopPropagation();
+
+            const novoNome = prompt(
+                `Alterar Nome da Campanha:\n\n(Atenção: alterar o nome é 100% seguro e NÃO afeta o aprendizado ou entrega do algoritmo da Meta)\n\nNovo nome da campanha:`,
+                currentName
+            );
+
+            if (!novoNome || !novoNome.trim() || novoNome.trim() === currentName.trim()) return;
+
+            const finalName = novoNome.trim();
+            showToast('Atualizando nome da campanha...');
+
+            // 1. Salva imediatamente em memória e no localStorage para resposta instantânea
+            const customNames = JSON.parse(localStorage.getItem('mura_custom_campaign_names') || '{}');
+            customNames[campId] = finalName;
+            localStorage.setItem('mura_custom_campaign_names', JSON.stringify(customNames));
+
+            const campInList = allMetaCampaignsList.find(c => String(c.id) === String(campId));
+            if (campInList) {
+                campInList.displayName = finalName;
+            }
+
+            // Atualiza tela de detalhes se estiver aberta
+            if (currentDetailCampId === campId) {
+                const nameEl = document.getElementById('meta-camp-name');
+                if (nameEl) nameEl.textContent = finalName;
+                updateDetailProductBanner(finalName);
+            }
+
+            renderCampaignsListUI();
+
+            // 2. Sincroniza com a Meta Ads API oficial (metadados puros - não reinicia fase de aprendizado)
+            try {
+                const res = await fetch(`${META_BASE_URL}/${campId}?access_token=${META_CONFIG.token}&name=${encodeURIComponent(finalName)}`, {
+                    method: 'POST'
+                });
+                if (res.ok) {
+                    showToast('Nome atualizado com sucesso no Meta Ads!');
+                } else {
+                    const err = await res.json().catch(() => ({}));
+                    console.warn('Aviso API Meta rename:', err);
+                    showToast('Nome salvo no gestor!');
+                }
+            } catch (e) {
+                console.warn('Erro requisição rename:', e);
+                showToast('Nome salvo no gestor!');
+            }
+
+            metaCache.campaigns = {};
+            metaCache.allCampaigns = null;
         }
 
         // Helper de compatibilidade
