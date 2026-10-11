@@ -1262,13 +1262,19 @@
         const WORKER_URL = 'https://mura-api.joaopaulojaguar.workers.dev';
         const META_BASE_URL = 'https://graph.facebook.com/v21.0';
         const META_CONFIG = {
-            token: localStorage.getItem('mura_meta_token') || 'EAA1XjSxttDIBSn3622OmErdgxlrcgZC28JCNS8VoWVmUJZBDom5yhV4jKYFPh463wbLjhZBZBbpHfbF2FnncDpUmf8Y0v6rTVJFNqK0c4YlhheZBPjIbEU8qELtmKbZA1AQnA0H4YnNycFFg49Ozb6jk3qYlzlfVuUhhnOU80swHBbFEfO9yTpXJ1zexH3ZAGccMZBfYgTWyeW5lbV2vycvYyyi5sxVka9QDKnAmPRd3JhoJk0sTvOp9fPdSWXQVKQiXG5dC0hB3iLJ8DQM9HySfJovZA',
+            token: 'EAA1XjSxttDIBSitW7c3NU6Hl4wPJrk9xzs0IjNb2kGHioLJuZCbjAsZAamv3TB0krxNm985ZAnYiXmN3rr65CVzB4q8jTWRDHzKwDKiRgpZAvWwID8B9Bye949Ib1BOde8DwxdHf88F6WLeYO4EJaSGPCD5S2orv6oa4NZAi6ZC30Unk86YPg17AQZA3DE5BQ3xXwZDZD',
             accountId: 'act_1844429770281783',
             campaigns: {
                 'doencas': { id: '120250065949900447', title: 'O Segredo das Doenças', fallbackName: 'coast cap 30' },
                 'pintinhos': { id: '120250000378930447', title: 'Manual de Manejo de Pintinhos', fallbackName: 'pitinhos' }
             }
         };
+        // Se houver token antigo ou nenhum no localStorage, atualiza com o novo
+        if (!localStorage.getItem('mura_meta_token') || localStorage.getItem('mura_meta_token').includes('BSn3622')) {
+            localStorage.setItem('mura_meta_token', META_CONFIG.token);
+        } else {
+            META_CONFIG.token = localStorage.getItem('mura_meta_token') || META_CONFIG.token;
+        }
 
         let currentPass = '';
         let currentCampaign = 'doencas'; // 'doencas' ou 'pintinhos'
