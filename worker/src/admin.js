@@ -105,6 +105,9 @@ export async function logSale(env, customer, items, paymentId, method, site = 'a
                 if (titleStr.includes('manejo') || titleStr.includes('pintinho') || titleStr.includes('combo-elite')) {
                     prodSet.add('ebook-manejo');
                 }
+                if (titleStr.includes('potencialize') || titleStr.includes('produção de ovo') || titleStr.includes('producao de ovo') || titleStr.includes('alta postura') || titleStr.includes('bump-ovos') || titleStr.includes('potencialize-ovos')) {
+                    prodSet.add('potencialize-ovos');
+                }
                 if (bCpf && !freeUsers[idx].cpf) freeUsers[idx].cpf = bCpf;
                 freeUsers[idx].products = Array.from(prodSet);
                 await env.HISTORY.put('free_users', JSON.stringify(freeUsers));
@@ -937,6 +940,9 @@ adminRoutes.get('/admin/clients-metrics', async (c) => {
         if (titleStr.includes('manejo') || titleStr.includes('pintinho') || titleStr.includes('combo-elite')) {
             client.productsSet.add('ebook-manejo');
         }
+        if (titleStr.includes('potencialize') || titleStr.includes('produção de ovo') || titleStr.includes('producao de ovo') || titleStr.includes('alta postura') || titleStr.includes('bump-ovos') || titleStr.includes('potencialize-ovos')) {
+            client.productsSet.add('potencialize-ovos');
+        }
     }
 
     const clientsList = [];
@@ -1239,6 +1245,7 @@ adminRoutes.post('/admin/search-user', async (c) => {
                     if (titleStr.includes('doença') || titleStr.includes('doenca') || titleStr.includes('elite') || titleStr.includes('protocolo') || titleStr.includes('combo')) productsSet.add('ebook-doencas');
                     if (titleStr.includes('manejo') || titleStr.includes('pintinho') || titleStr.includes('combo-elite')) productsSet.add('ebook-manejo');
                     if (titleStr.includes('tabela') || titleStr.includes('ração') || titleStr.includes('racao') || titleStr.includes('bump') || titleStr.includes('combo')) productsSet.add('tabela-racao');
+                    if (titleStr.includes('potencialize') || titleStr.includes('produção de ovo') || titleStr.includes('producao de ovo') || titleStr.includes('alta postura') || titleStr.includes('bump-ovos') || titleStr.includes('potencialize-ovos')) productsSet.add('potencialize-ovos');
                 }
             }
         }
@@ -1466,6 +1473,7 @@ adminRoutes.post('/admin/grant-access', async (c) => {
                 if (p === 'ebook-doencas') return 'PROTOCOLO ELITE: A Cura das Aves';
                 if (p === 'ebook-manejo') return 'Manejo de Pintinhos (Upsell)';
                 if (p === 'tabela-racao') return 'Tabela de Raçao';
+                if (p === 'potencialize-ovos') return 'Potencialize a Produção de Ovos';
                 return p;
             }),
             total: 0,
