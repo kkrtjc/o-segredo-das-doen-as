@@ -90,7 +90,7 @@
         }
         .progress-bar-fill {
             height: 100%;
-            width: 14.28%;
+            width: 12.5%;
             background: linear-gradient(90deg, #f59e0b, #10b981);
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -109,7 +109,7 @@
         }
         .slider-track {
             display: flex;
-            width: 700%; /* 7 módulos = 700% */
+            width: 800%; /* 8 páginas (7 módulos + FAQ) = 800% */
             transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
             align-items: stretch;
             height: 100%;
@@ -119,7 +119,7 @@
 
         /* ─── CADA PÁGINA (SLIDE) ─── */
         .slide-page {
-            width: 14.2857%; /* 100% / 7 */
+            width: 12.5%; /* 100% / 8 */
             padding: 18px 18px 110px 18px; /* Espaço para o menu inferior */
             box-sizing: border-box;
             display: flex;
@@ -129,6 +129,63 @@
             -webkit-overflow-scrolling: touch;
             content-visibility: auto;
             contain-intrinsic-size: 800px;
+        }
+
+        /* ─── FAQ ACCORDION / CARDS ─── */
+        .faq-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+            overflow: hidden;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+        .faq-item:focus-within, .faq-item:hover {
+            border-color: rgba(245, 158, 11, 0.3);
+            background: rgba(255, 255, 255, 0.035);
+        }
+        .faq-question {
+            padding: 14px 16px;
+            font-size: 14px;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .faq-question i {
+            color: var(--accent-gold);
+            font-size: 12px;
+            transition: transform 0.25s ease;
+        }
+        .faq-item.open .faq-question i {
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            padding: 0 16px 14px 16px;
+            font-size: 13px;
+            color: #cbd5e1;
+            line-height: 1.6;
+            display: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding-top: 10px;
+        }
+        .faq-item.open .faq-answer {
+            display: block;
+        }
+        .faq-badge {
+            font-size: 10px;
+            font-weight: 800;
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-gold-soft);
+            padding: 2px 7px;
+            border-radius: 999px;
+            letter-spacing: 0.3px;
+            display: inline-block;
+            margin-bottom: 4px;
         }
 
         /* ─── IMAGEM DE REFERÊNCIA ─── */
@@ -732,6 +789,102 @@
                 </div>
             </article>
 
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <!-- PÁGINA 8: DÚVIDAS FREQUENTES (FAQ)                                  -->
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <article class="slide-page" id="page-8">
+                <div class="slide-image-wrapper">
+                    <img src="modulo_faq.webp" alt="Dúvidas Frequentes sobre Produção de Ovos" width="1080" height="608" loading="lazy" decoding="async">
+                </div>
+                <div class="slide-meta">
+                    <span class="slide-tag">Perguntas & Respostas</span>
+                    <span class="slide-subtag">• Suporte ao Criador</span>
+                </div>
+                <h1 class="slide-title">
+                    Dúvidas Frequentes sobre Alta Postura
+                </h1>
+                <div class="slide-content">
+                    <p>
+                        Respostas práticas e científicas para as dúvidas mais comuns do dia a dia no galinheiro:
+                    </p>
+
+                    <!-- DÚVIDA 1: LUZ ARTIFICIAL X LUZ NATURAL -->
+                    <div class="faq-item open">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Posso trocar a luz artificial pela luz natural do sol durante o dia?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <span class="faq-badge">ILUMINAÇÃO BIOLÓGICA</span>
+                            <p><strong>Sim, e deve!</strong> Durante o dia, a luz do sol é a melhor fonte de luz e radiação saudável para as aves. O objetivo da lâmpada artificial não é substituir o sol do dia, e sim <strong>complementar as horas que faltam</strong>.</p>
+                            <p style="margin-top: 6px;">No Brasil, os dias têm cerca de 11h a 12h de sol no outono e inverno. Para atingir as <strong>16 horas necessárias</strong>, a lâmpada LED deve acender antes do amanhecer (ex: às 05:00) e/ou no fim da tarde até às 21:00. Durante o dia claro, as lâmpadas podem ficar desligadas.</p>
+                        </div>
+                    </div>
+
+                    <!-- DÚVIDA 2: LUZ DE NOITE INTEIRA -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Se eu deixar a luz acesa a noite inteira, elas botam mais ovos?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <span class="faq-badge">FISIOLOGIA & DESCANSO</span>
+                            <p><strong>Não! Nunca faça isso.</strong> A galinha precisa obrigatoriamente de <strong>pelo menos 8 horas de escuridão total ininterrupta</strong> para descansar, fixar o cálcio dos ossos no útero e produzir melatonina.</p>
+                            <p style="margin-top: 6px;">Luz 24 horas estressa a ave, causa picagem de penas, canibalismo e exaustão reprodutiva prematura.</p>
+                        </div>
+                    </div>
+
+                    <!-- DÚVIDA 3: CÁLCIO FINO VS GROSSO -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Posso dar apenas a casca de ovo triturada no lugar do calcário?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <span class="faq-badge">MINERALIZAÇÃO</span>
+                            <p><strong>Pode, com duas regras cruciais:</strong> primeiro, a casca deve ser <strong>bem tostada no forno</strong> para eliminar bactérias (como <em>Salmonella</em>) e para que as aves não identifiquem o cheiro de ovo (evitando que aprendam a bicar os próprios ovos nos ninhos).</p>
+                            <p style="margin-top: 6px;">Segundo, não quebre em pó fino; deixe pedacinhos quebrados de 2 a 4 mm para ter a mesma digestão lenta e noturna da moela.</p>
+                        </div>
+                    </div>
+
+                    <!-- DÚVIDA 4: ÁGUA COM VINAGRE -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>O vinagre de maçã pode ser oferecido todos os dias na água?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <span class="faq-badge">DIGESTÃO & pH</span>
+                            <p>O ideal é usar de <strong>2 a 3 vezes por semana</strong> (2ml a 3ml por litro). O uso contínuo diário pode tornar a água ácida demais a ponto de diminuir a ingestão hídrica voluntária das aves, o que reduziria a postura.</p>
+                        </div>
+                    </div>
+
+                    <!-- DÚVIDA 5: CHOCO TEIMOSO -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Molhar a galinha ou mergulhar na água tira o choco?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <span class="faq-badge">BEM-ESTAR & EFICIÊNCIA</span>
+                            <p><strong>Não recomendamos molhar a ave</strong>, pois causa estresse térmico, risco de choque e problemas respiratórios (coriza/pneumonia). O método correto e científico é a <strong>gaiola suspensa de fundo de arame</strong> por 3 dias em local bem ventilado e iluminado. A ventilação direta no abdômen dissipa o calor que sustenta a prolactina e ela volta a botar rapidamente.</p>
+                        </div>
+                    </div>
+
+                    <!-- DÚVIDA 6: GALINHA GORDA -->
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Restos de comida da cozinha ajudam a aumentar os ovos?</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <span class="faq-badge">ALIMENTAÇÃO BALANCEADA</span>
+                            <p>Restos de comida (arroz, massas, pães) têm muito carboidrato e sal. Engordam a galinha excessivamente e formam uma camada de banha na cloaca que comprime o oviduto, paralisando a postura. Use restos apenas como agrado esporádico e foque sempre na ração balanceada de postura.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
         </div>
     </main>
 
@@ -750,6 +903,7 @@
                 <span class="dot" onclick="goToSlide(4)"></span>
                 <span class="dot" onclick="goToSlide(5)"></span>
                 <span class="dot" onclick="goToSlide(6)"></span>
+                <span class="dot" onclick="goToSlide(7)"></span>
             </div>
 
             <button class="btn-nav btn-next" id="btn-next" onclick="goToNext()">
@@ -759,7 +913,7 @@
     </footer>
 
     <script>
-        const totalSlides = 7;
+        const totalSlides = 8;
         let currentSlide = 0;
 
         const track = document.getElementById('slider-track');
@@ -769,6 +923,13 @@
         const fillEl = document.getElementById('progress-fill');
         const dots = document.querySelectorAll('.dot');
         const viewport = document.getElementById('slider-viewport');
+
+        function toggleFaq(el) {
+            const item = el.closest('.faq-item');
+            if (item) {
+                item.classList.toggle('open');
+            }
+        }
 
         function updateSlider() {
             // Desloca o track horizontalmente com aceleração de hardware (GPU)
@@ -786,7 +947,11 @@
             }
 
             // Atualiza badge de contagem
-            counterEl.textContent = `Módulo ${currentSlide + 1} de ${totalSlides}`;
+            if (currentSlide === 7) {
+                counterEl.textContent = `Dúvidas Frequentes (FAQ)`;
+            } else {
+                counterEl.textContent = `Módulo ${currentSlide + 1} de 7`;
+            }
 
             // Atualiza barra de progresso
             const progressPct = ((currentSlide + 1) / totalSlides) * 100;
