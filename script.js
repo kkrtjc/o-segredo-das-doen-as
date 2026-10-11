@@ -630,7 +630,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                 }
             ];
             productData.fullBumps = cart.mainProduct.fullBumps;
-        } else if (productId === 'ebook-pintinhos') {
+        } else if (productId === 'ebook-pintinhos' || productId === 'ebook-manejo') {
             cart.mainProduct.fullBumps = [
                 {
                     id: 'bump-6361',
