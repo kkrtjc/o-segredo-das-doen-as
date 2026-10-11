@@ -517,6 +517,121 @@
             display: flex; justify-content: space-between; font-size: 9px;
             color: var(--text-muted); font-weight: 700; margin-top: 4px;
         }
+        /* ─── GESTOR DINÂMICO DE META ADS ─── */
+        .meta-view-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
+        }
+        .meta-filter-tabs {
+            display: flex; gap: 4px; background: rgba(0,0,0,0.35); padding: 4px; border-radius: 14px; border: 1px solid var(--surface-border);
+        }
+        .meta-filter-tab {
+            padding: 6px 14px; border-radius: 10px; border: none; font-size: 11px; font-weight: 800; cursor: pointer;
+            background: transparent; color: var(--text-muted); transition: all 0.2s; white-space: nowrap;
+        }
+        .meta-filter-tab:active { transform: scale(0.96); }
+        .meta-filter-tab.active {
+            background: rgba(255, 255, 255, 0.1); color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .meta-filter-tab.tab-active.active { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+        .meta-filter-tab.tab-paused.active { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; }
+
+        .meta-camp-card {
+            background: var(--surface-color); border: 1px solid var(--surface-border);
+            border-radius: 20px; padding: 16px; margin-bottom: 14px; transition: all 0.2s;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.25); position: relative; overflow: hidden;
+        }
+        .meta-camp-card:hover { border-color: rgba(56, 189, 248, 0.4); }
+        .meta-camp-card-top {
+            display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 12px;
+        }
+        .meta-camp-title-text {
+            font-size: 15px; font-weight: 900; color: #fff; line-height: 1.35;
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+        }
+        .meta-camp-badges-row {
+            display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 5px;
+        }
+        .meta-badge-status {
+            font-size: 9px; font-weight: 900; padding: 3px 8px; border-radius: 6px; text-transform: uppercase;
+        }
+        .meta-badge-status.active { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+        .meta-badge-status.paused { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); }
+        .meta-camp-badge-strat {
+            font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 6px;
+            background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);
+            text-transform: uppercase;
+        }
+        .meta-camp-badge-budget {
+            font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 6px;
+            background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        .meta-camp-metrics-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px;
+        }
+        @media (max-width: 580px) {
+            .meta-camp-metrics-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        .meta-camp-metric-box {
+            background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px; padding: 9px 10px; text-align: left;
+        }
+        .meta-camp-metric-box .box-lbl {
+            font-size: 9px; font-weight: 800; text-transform: uppercase; color: var(--text-muted);
+        }
+        .meta-camp-metric-box .box-val {
+            font-size: 14px; font-weight: 900; color: #fff; margin-top: 2px;
+        }
+        .meta-camp-metric-box .box-sub {
+            font-size: 10px; color: var(--text-muted); font-weight: 700; margin-top: 2px;
+        }
+        .meta-camp-card-actions {
+            display: flex; justify-content: space-between; align-items: center; gap: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06); padding-top: 10px; flex-wrap: wrap;
+        }
+        .btn-open-camp {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            color: #fff; border: 1px solid rgba(56, 189, 248, 0.4); padding: 8px 16px; border-radius: 10px;
+            font-size: 12px; font-weight: 800; cursor: pointer; transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-open-camp:hover { background: #0284c7; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35); }
+        .btn-open-camp:active { transform: scale(0.96); }
+
+        .meta-back-btn {
+            background: rgba(255, 255, 255, 0.08); border: 1px solid var(--surface-border);
+            color: #fff; padding: 8px 14px; border-radius: 12px; font-size: 12px; font-weight: 800;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
+        }
+        .meta-back-btn:hover { background: rgba(255, 255, 255, 0.15); }
+        .meta-back-btn:active { transform: scale(0.96); }
+
+        /* ADSETS & BID SECTION */
+        .meta-adsets-section {
+            background: var(--surface-color); border: 1px solid var(--surface-border);
+            border-radius: 20px; padding: 16px; margin-bottom: 16px;
+        }
+        .meta-adset-card {
+            background: rgba(0, 0, 0, 0.3); border: 1px solid var(--surface-border);
+            border-radius: 14px; padding: 12px 14px; margin-bottom: 10px;
+        }
+        .meta-adset-card:last-child { margin-bottom: 0; }
+        .meta-adset-top {
+            display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px;
+        }
+        .meta-adset-name { font-size: 13px; font-weight: 800; color: #fff; }
+        .meta-adset-meta {
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 11px; color: var(--text-muted);
+        }
+        .meta-adset-bid-pill {
+            background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 3px 8px; border-radius: 6px; font-weight: 800; font-size: 11px; display: inline-flex; align-items: center; gap: 4px;
+        }
+        .btn-edit-bid {
+            background: rgba(56, 189, 248, 0.18); border: 1px solid rgba(56, 189, 248, 0.4);
+            color: #38bdf8; padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 800;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .btn-edit-bid:active { transform: scale(0.96); }
 
         /* ─── CLIENTS & COMMUNITY TAB STYLES ─── */
         .clients-kpi-grid {
@@ -868,20 +983,21 @@
                 <!-- ALERTA DE TOKEN EXPIRADO -->
                 <div id="meta-token-alert" style="display:none; background:rgba(239,68,68,0.18); border:1px solid rgba(239,68,68,0.45); border-radius:14px; padding:12px 16px; margin-bottom:14px; align-items:center; justify-content:space-between; gap:10px;">
                     <div style="font-size:12px; color:#f87171; font-weight:700;">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Token da Meta Expirado (sessão de 1h encerrada).
+                        <i class="fa-solid fa-triangle-exclamation"></i> Token da Meta Expirado (sessão encerrada).
                     </div>
                     <button onclick="promptUpdateMetaToken()" style="background:#ef4444; color:#fff; border:none; padding:7px 12px; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer; white-space:nowrap;">
                         Renovar Token
                     </button>
                 </div>
 
-                <!-- FILTRO RÁPIDO DE PERÍODO META -->
+                <!-- FILTRO RÁPIDO DE PERÍODO META (SINCRONIZADO 100% COM ADS MANAGER) -->
                 <div class="period-pill-container" id="meta-period-pills">
-                    <button class="period-pill" onclick="setMetaPeriod('today', this)">Hoje</button>
+                    <button class="period-pill active" onclick="setMetaPeriod('today', this)">Hoje</button>
                     <button class="period-pill" onclick="setMetaPeriod('yesterday', this)">Ontem</button>
                     <button class="period-pill" onclick="setMetaPeriod('last_7d', this)">7 Dias</button>
                     <button class="period-pill" onclick="setMetaPeriod('this_month', this)">Este Mês</button>
                     <button class="period-pill" onclick="setMetaPeriod('last_30d', this)">30 Dias</button>
+                    <button class="period-pill" onclick="setMetaPeriod('maximum', this)">Máximo</button>
                 </div>
 
                 <!-- CARD DE SALDO E RECARGA DA CONTA META -->
@@ -900,147 +1016,210 @@
                     </button>
                 </div>
 
-                <!-- MASTER CARD DA CAMPANHA (STATUS, ORÇAMENTO E KPIS) -->
-                <div class="meta-master-card" id="meta-master-card">
-                    <div class="meta-master-header">
-                        <div class="meta-camp-title-box">
-                            <div class="meta-camp-title">
-                                <i class="fa-brands fa-meta" style="color: #38bdf8;"></i>
-                                <span id="meta-camp-name">Carregando campanha...</span>
-                            </div>
-                            <div class="meta-camp-sub" id="meta-camp-id">ID: ...</div>
-                        </div>
-                        <div id="meta-camp-status-badge">
-                            <span class="meta-status-toggle-btn status-paused"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
-                        </div>
-                    </div>
-
-                    <!-- ORÇAMENTO DIÁRIO (CBO) -->
-                    <div class="meta-budget-row">
+                <!-- ════════ SUB-TELA A: LISTAGEM DINÂMICA DE TODAS AS CAMPANHAS ════════ -->
+                <div id="meta-campaigns-list-view">
+                    <!-- CABEÇALHO DA LISTAGEM COM FILTRO ATIVAS / INATIVAS E ATUALIZAR -->
+                    <div class="meta-view-header">
                         <div>
-                            <div class="meta-budget-label">Orçamento Diário Atual</div>
-                            <div class="meta-budget-val" id="meta-camp-budget">R$ --,-- <span style="font-size:12px; font-weight:600; color:var(--text-muted);">/dia</span></div>
+                            <div style="font-size: 15px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-brands fa-meta" style="color: #38bdf8;"></i> Campanhas da Conta (<span id="meta-camp-total-count">0</span>)
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 2px;">
+                                Métricas oficiais sincronizadas em tempo real com o Gerenciador da Meta
+                            </div>
                         </div>
-                        <button class="btn-edit-budget" id="btn-edit-budget" onclick="promptEditBudget()">
-                            <i class="fa-solid fa-pen-to-square"></i> Alterar Valor
+                        <button class="ios-btn" style="width: auto; padding: 7px 14px; font-size: 11px; border-radius: 10px;" onclick="loadAllMetaCampaigns(true)">
+                            <i class="fa-solid fa-rotate" id="meta-refresh-icon"></i> Atualizar
                         </button>
                     </div>
 
-                    <!-- KPIS PRINCIPAIS (GASTO, FATURAMENTO REAL COM UPSELL/BUMP, ROAS REAL E CPA) -->
-                    <div class="meta-kpi-summary-grid">
-                        <div class="meta-kpi-card gold">
-                            <div class="lbl">Gasto no Período</div>
-                            <div class="val" id="meta-kpi-spend">R$ 0,00</div>
+                    <!-- ABAS DE FILTRO: TODAS | ATIVAS | INATIVAS -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+                        <div class="meta-filter-tabs">
+                            <button class="meta-filter-tab active" id="tab-filter-all" onclick="filterMetaCampaigns('all', this)">
+                                Todas (<span id="count-meta-all">0</span>)
+                            </button>
+                            <button class="meta-filter-tab tab-active" id="tab-filter-active" onclick="filterMetaCampaigns('active', this)">
+                                <i class="fa-solid fa-circle" style="font-size: 6px; margin-right: 2px;"></i> Ativas (<span id="count-meta-active">0</span>)
+                            </button>
+                            <button class="meta-filter-tab tab-paused" id="tab-filter-paused" onclick="filterMetaCampaigns('paused', this)">
+                                <i class="fa-solid fa-circle" style="font-size: 6px; margin-right: 2px;"></i> Inativas (<span id="count-meta-paused">0</span>)
+                            </button>
                         </div>
-                        <div class="meta-kpi-card green">
-                            <div class="lbl">Faturamento Real</div>
-                            <div class="val" id="meta-kpi-revenue" style="color: var(--accent-green);">R$ 0,00</div>
+                        <div style="flex: 1; min-width: 180px;">
+                            <input type="text" id="meta-campaign-search" placeholder="Filtrar por nome..." oninput="onSearchMetaCampaigns(this.value)" style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--surface-border); border-radius: 10px; padding: 6px 12px; color: #fff; font-size: 11px; outline: none;">
                         </div>
-                        <div class="meta-kpi-card">
-                            <div class="lbl">ROAS Real</div>
-                            <div class="val" id="meta-kpi-roas" style="color: #fbbf24;">0.00x</div>
-                        </div>
-                        <div class="meta-kpi-card blue">
-                            <div class="lbl">Compras (CPA)</div>
-                            <div class="val" id="meta-kpi-purchases">0 <span style="font-size: 11px; color: var(--text-muted); font-weight:700;" id="meta-kpi-cpa">(R$ --)</span></div>
-                        </div>
+                    </div>
+
+                    <!-- CONTAINER DAS CAMPANHAS -->
+                    <div id="meta-campaigns-cards-container">
+                        <div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i> Carregando campanhas da Meta...</div>
                     </div>
                 </div>
 
-                <!-- ALERTA DE SATURAÇÃO / FADIGA (DINÂMICO) -->
-                <div id="meta-alert-frequency" class="meta-alert-warning" style="display: none;">
-                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 18px;"></i>
-                    <div>
-                        <strong>Atenção à Frequência (<span id="meta-freq-val">0.0</span>):</strong>
-                        O público já viu esse anúncio repetidas vezes. Risco de fadiga e aumento de CPA. Considere renovar os criativos!
+                <!-- ════════ SUB-TELA B: DETALHES, CONJUNTOS (BID CAP/COST CAP) & CRIATIVOS ════════ -->
+                <div id="meta-campaign-detail-view" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 10px; flex-wrap: wrap;">
+                        <button class="meta-back-btn" onclick="backToCampaignsList()">
+                            <i class="fa-solid fa-arrow-left"></i> Voltar p/ Lista de Campanhas
+                        </button>
+                        <button class="ios-btn" style="width: auto; padding: 7px 14px; font-size: 11px; border-radius: 10px;" onclick="reloadCurrentDetail(true)">
+                            <i class="fa-solid fa-rotate" id="meta-detail-refresh-icon"></i> Atualizar Campanha
+                        </button>
                     </div>
-                </div>
 
-                <!-- FUNIL DE TRÁFEGO PAGO -->
-                <div class="section-header-title">
-                    <i class="fa-solid fa-filter" style="color: #38bdf8;"></i> Funil Completo de Tráfego Pago
-                </div>
+                    <!-- MASTER CARD DA CAMPANHA (STATUS, ORÇAMENTO E KPIS) -->
+                    <div class="meta-master-card" id="meta-master-card">
+                        <div class="meta-master-header">
+                            <div class="meta-camp-title-box">
+                                <div class="meta-camp-title">
+                                    <i class="fa-brands fa-meta" style="color: #38bdf8;"></i>
+                                    <span id="meta-camp-name">Carregando campanha...</span>
+                                </div>
+                                <div class="meta-camp-sub" id="meta-camp-id">ID: ...</div>
+                            </div>
+                            <div id="meta-camp-status-badge">
+                                <span class="meta-status-toggle-btn status-paused"><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                            </div>
+                        </div>
 
-                <!-- 1. TOPO: ALCANCE E CUSTOS DE EXIBIÇÃO -->
-                <div class="meta-funnel-card">
-                    <div class="meta-funnel-title">
-                        <i class="fa-solid fa-bullhorn" style="color: var(--accent-blue);"></i> 1. Alcance & Exibição (Topo)
-                    </div>
-                    <div class="meta-submetrics-grid">
-                        <div class="meta-submetric-item">
-                            <div class="sub-lbl">Impressões</div>
-                            <div class="sub-val" id="meta-metric-impressions">0</div>
+                        <!-- ORÇAMENTO DIÁRIO (CBO) -->
+                        <div class="meta-budget-row">
+                            <div>
+                                <div class="meta-budget-label">Orçamento Diário Atual</div>
+                                <div class="meta-budget-val" id="meta-camp-budget">R$ --,-- <span style="font-size:12px; font-weight:600; color:var(--text-muted);">/dia</span></div>
+                            </div>
+                            <button class="btn-edit-budget" id="btn-edit-budget" onclick="promptEditBudget()">
+                                <i class="fa-solid fa-pen-to-square"></i> Alterar Orçamento
+                            </button>
                         </div>
-                        <div class="meta-submetric-item">
-                            <div class="sub-lbl">Alcance Único</div>
-                            <div class="sub-val" id="meta-metric-reach">0</div>
-                        </div>
-                        <div class="meta-submetric-item">
-                            <div class="sub-lbl">Frequência</div>
-                            <div class="sub-val" id="meta-metric-frequency">0.00</div>
-                        </div>
-                        <div class="meta-submetric-item">
-                            <div class="sub-lbl">CPM (Custo p/ 1.000)</div>
-                            <div class="sub-val" id="meta-metric-cpm">R$ 0,00</div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- 2. MEIO: ENGAJAMENTO E CLIQUES -->
-                <div class="meta-funnel-card">
-                    <div class="meta-funnel-title">
-                        <i class="fa-solid fa-arrow-pointer" style="color: var(--accent-gold);"></i> 2. Atenção & Tráfego (Meio)
+                        <!-- KPIS PRINCIPAIS (GASTO, FATURAMENTO REAL, ROAS E CPA) -->
+                        <div class="meta-kpi-summary-grid">
+                            <div class="meta-kpi-card gold">
+                                <div class="lbl">Gasto no Período</div>
+                                <div class="val" id="meta-kpi-spend">R$ 0,00</div>
+                            </div>
+                            <div class="meta-kpi-card green">
+                                <div class="lbl">Faturamento Real</div>
+                                <div class="val" id="meta-kpi-revenue" style="color: var(--accent-green);">R$ 0,00</div>
+                            </div>
+                            <div class="meta-kpi-card">
+                                <div class="lbl">ROAS Real</div>
+                                <div class="val" id="meta-kpi-roas" style="color: #fbbf24;">0.00x</div>
+                            </div>
+                            <div class="meta-kpi-card blue">
+                                <div class="lbl">Compras (CPA)</div>
+                                <div class="val" id="meta-kpi-purchases">0 <span style="font-size: 11px; color: var(--text-muted); font-weight:700;" id="meta-kpi-cpa">(R$ --)</span></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="meta-submetrics-grid">
-                        <div class="meta-submetric-item">
-                            <div class="sub-lbl">Cliques no Link</div>
-                            <div class="sub-val" id="meta-metric-clicks">0</div>
-                        </div>
-                        <div class="meta-submetric-item">
-                            <div class="sub-lbl">CTR (Taxa de Clique)</div>
-                            <div class="sub-val" id="meta-metric-ctr">0.00%</div>
-                        </div>
-                        <div class="meta-submetric-item">
-                            <div class="sub-lbl">CPC (Custo p/ Clique)</div>
-                            <div class="sub-val" id="meta-metric-cpc">R$ 0,00</div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- 3. FUNDO: CHECKOUTS E VENDAS -->
-                <div class="meta-funnel-card">
-                    <div class="meta-funnel-title">
-                        <i class="fa-solid fa-sack-dollar" style="color: var(--accent-green);"></i> 3. Conversão & Vendas (Fundo)
-                    </div>
-                    <div class="meta-submetrics-grid">
-                        <div class="meta-submetric-item">
-                            <div class="sub-lbl">Checkouts Iniciados</div>
-                            <div class="sub-val" id="meta-metric-checkouts">0</div>
-                        </div>
-                        <div class="meta-submetric-item">
-                            <div class="sub-lbl">Custo p/ Checkout</div>
-                            <div class="sub-val" id="meta-metric-cost-checkout">R$ 0,00</div>
-                        </div>
-                        <div class="meta-submetric-item">
-                            <div class="sub-lbl">Compras (Pixel)</div>
-                            <div class="sub-val" id="meta-metric-purchases" style="color: var(--accent-green);">0</div>
-                        </div>
-                        <div class="meta-submetric-item">
-                            <div class="sub-lbl">CPA (Custo p/ Venda)</div>
-                            <div class="sub-val" id="meta-metric-cpa" style="color: var(--accent-gold);">R$ 0,00</div>
+                    <!-- ALERTA DE SATURAÇÃO / FADIGA (DINÂMICO) -->
+                    <div id="meta-alert-frequency" class="meta-alert-warning" style="display: none;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 18px;"></i>
+                        <div>
+                            <strong>Atenção à Frequência (<span id="meta-freq-val">0.0</span>):</strong>
+                            O público já viu esse anúncio repetidas vezes. Risco de fadiga e aumento de CPA. Considere renovar os criativos!
                         </div>
                     </div>
-                </div>
 
-                <!-- RAIO-X DOS CRIATIVOS / ANÚNCIOS -->
-                <div class="section-header-title" style="justify-content: space-between;">
-                    <span><i class="fa-solid fa-photo-film" style="color: #a855f7;"></i> Criativos & Anúncios</span>
-                    <button class="ios-btn" style="width: auto; padding: 6px 12px; font-size: 11px; border-radius: 8px;" onclick="loadMetaCampaignData(true)">
-                        <i class="fa-solid fa-rotate"></i> Atualizar Anúncios
-                    </button>
-                </div>
-                <div id="meta-ads-list">
-                    <div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i> Carregando anúncios do Meta Ads...</div>
+                    <!-- ─── CONJUNTOS DE ANÚNCIOS & EDIÇÃO DE BID CAP / COST CAP ─── -->
+                    <div class="meta-adsets-section">
+                        <div class="section-header-title" style="margin-top: 0; margin-bottom: 12px; justify-content: space-between;">
+                            <span><i class="fa-solid fa-layer-group" style="color: #38bdf8;"></i> Conjuntos & Lances (Bid Cap / Cost Cap)</span>
+                        </div>
+                        <div id="meta-adsets-list">
+                            <div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i> Carregando conjuntos...</div>
+                        </div>
+                    </div>
+
+                    <!-- FUNIL DE TRÁFEGO PAGO -->
+                    <div class="section-header-title">
+                        <i class="fa-solid fa-filter" style="color: #38bdf8;"></i> Funil Completo de Tráfego Pago
+                    </div>
+
+                    <!-- 1. TOPO: ALCANCE E CUSTOS DE EXIBIÇÃO -->
+                    <div class="meta-funnel-card">
+                        <div class="meta-funnel-title">
+                            <i class="fa-solid fa-bullhorn" style="color: var(--accent-blue);"></i> 1. Alcance & Exibição (Topo)
+                        </div>
+                        <div class="meta-submetrics-grid">
+                            <div class="meta-submetric-item">
+                                <div class="sub-lbl">Impressões</div>
+                                <div class="sub-val" id="meta-metric-impressions">0</div>
+                            </div>
+                            <div class="meta-submetric-item">
+                                <div class="sub-lbl">Alcance Único</div>
+                                <div class="sub-val" id="meta-metric-reach">0</div>
+                            </div>
+                            <div class="meta-submetric-item">
+                                <div class="sub-lbl">Frequência</div>
+                                <div class="sub-val" id="meta-metric-frequency">0.00</div>
+                            </div>
+                            <div class="meta-submetric-item">
+                                <div class="sub-lbl">CPM (Custo p/ 1.000)</div>
+                                <div class="sub-val" id="meta-metric-cpm">R$ 0,00</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. MEIO: ENGAJAMENTO E CLIQUES -->
+                    <div class="meta-funnel-card">
+                        <div class="meta-funnel-title">
+                            <i class="fa-solid fa-arrow-pointer" style="color: var(--accent-gold);"></i> 2. Atenção & Tráfego (Meio)
+                        </div>
+                        <div class="meta-submetrics-grid">
+                            <div class="meta-submetric-item">
+                                <div class="sub-lbl">Cliques no Link</div>
+                                <div class="sub-val" id="meta-metric-clicks">0</div>
+                            </div>
+                            <div class="meta-submetric-item">
+                                <div class="sub-lbl">CTR (Taxa de Clique)</div>
+                                <div class="sub-val" id="meta-metric-ctr">0.00%</div>
+                            </div>
+                            <div class="meta-submetric-item">
+                                <div class="sub-lbl">CPC (Custo p/ Clique)</div>
+                                <div class="sub-val" id="meta-metric-cpc">R$ 0,00</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. FUNDO: CHECKOUTS E VENDAS -->
+                    <div class="meta-funnel-card">
+                        <div class="meta-funnel-title">
+                            <i class="fa-solid fa-sack-dollar" style="color: var(--accent-green);"></i> 3. Conversão & Vendas (Fundo)
+                        </div>
+                        <div class="meta-submetrics-grid">
+                            <div class="meta-submetric-item">
+                                <div class="sub-lbl">Checkouts Iniciados</div>
+                                <div class="sub-val" id="meta-metric-checkouts">0</div>
+                            </div>
+                            <div class="meta-submetric-item">
+                                <div class="sub-lbl">Custo p/ Checkout</div>
+                                <div class="sub-val" id="meta-metric-cost-checkout">R$ 0,00</div>
+                            </div>
+                            <div class="meta-submetric-item">
+                                <div class="sub-lbl">Compras (Pixel)</div>
+                                <div class="sub-val" id="meta-metric-purchases" style="color: var(--accent-green);">0</div>
+                            </div>
+                            <div class="meta-submetric-item">
+                                <div class="sub-lbl">CPA (Custo p/ Venda)</div>
+                                <div class="sub-val" id="meta-metric-cpa" style="color: var(--accent-gold);">R$ 0,00</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RAIO-X DOS CRIATIVOS / ANÚNCIOS -->
+                    <div class="section-header-title" style="justify-content: space-between;">
+                        <span><i class="fa-solid fa-photo-film" style="color: #a855f7;"></i> Criativos & Anúncios da Campanha</span>
+                        <button class="ios-btn" style="width: auto; padding: 6px 12px; font-size: 11px; border-radius: 8px;" onclick="reloadCurrentDetail(true)">
+                            <i class="fa-solid fa-rotate"></i> Atualizar Anúncios
+                        </button>
+                    </div>
+                    <div id="meta-ads-list">
+                        <div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i> Carregando anúncios do Meta Ads...</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1283,11 +1462,16 @@
         let customEndDate = '';
 
         let currentViewMode = 'site'; // 'site' ou 'meta'
-        let currentMetaPeriod = 'maximum'; // 'today', 'yesterday', 'last_7d', 'this_month', 'last_30d', 'maximum'
+        let currentMetaPeriod = 'today'; // 'today', 'yesterday', 'last_7d', 'this_month', 'last_30d', 'maximum'
+        let currentDetailCampId = null;
+        let allMetaCampaignsList = [];
+        let currentMetaCampaignFilter = 'all'; // 'all', 'active', 'paused'
+        let metaCampaignSearchQuery = '';
 
         // Cache inteligente em memória para evitar Rate Limit (OAuthException 17)
         const metaCache = {
             campaigns: {},
+            allCampaigns: null,
             ttl: 60 * 1000 // 60s
         };
 
@@ -1375,7 +1559,11 @@
                 btnMeta.classList.add('active');
                 cntSite.style.display = 'none';
                 cntMeta.style.display = 'block';
-                loadMetaCampaignData();
+                if (currentDetailCampId) {
+                    openCampaignDetail(currentDetailCampId);
+                } else {
+                    loadAllMetaCampaigns();
+                }
                 loadMetaAccountBalance();
             }
         }
@@ -1385,7 +1573,13 @@
             currentMetaPeriod = period;
             document.querySelectorAll('#meta-period-pills .period-pill').forEach(p => p.classList.remove('active'));
             if (btn) btn.classList.add('active');
-            loadMetaCampaignData(false);
+            metaCache.campaigns = {};
+            metaCache.allCampaigns = null;
+            if (currentDetailCampId) {
+                openCampaignDetail(currentDetailCampId, true);
+            } else {
+                loadAllMetaCampaigns(true);
+            }
         }
 
         // Alternância de Campanha (Doenças vs Pintinhos)
@@ -2554,37 +2748,262 @@
             }
         }
 
-        async function loadMetaCampaignData(forceRefresh = false) {
-            const campInfo = META_CONFIG.campaigns[currentCampaign];
-            if (!campInfo) return;
+        // ==========================================
+        // GESTOR DINÂMICO DE META ADS (CAMPANHAS, CONJUNTOS & ANÚNCIOS)
+        // ==========================================
 
-            const campId = campInfo.id;
+        async function loadAllMetaCampaigns(forceRefresh = false) {
+            const token = META_CONFIG.token;
+            const actId = META_CONFIG.accountId;
+            if (!token || !actId) return;
+
+            const cacheKey = `all_camps_${currentMetaPeriod}`;
+            const now = Date.now();
+            const container = document.getElementById('meta-campaigns-cards-container');
+            const refreshIcon = document.getElementById('meta-refresh-icon');
+            if (refreshIcon) refreshIcon.classList.add('fa-spin');
+
+            if (!forceRefresh && metaCache.allCampaigns && metaCache.allCampaigns[cacheKey] && (now - metaCache.allCampaigns[cacheKey].time < metaCache.ttl)) {
+                allMetaCampaignsList = metaCache.allCampaigns[cacheKey].data;
+                renderCampaignsListUI();
+                if (refreshIcon) refreshIcon.classList.remove('fa-spin');
+                return;
+            }
+
+            if (!allMetaCampaignsList.length || forceRefresh) {
+                if (container) container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i> Consultando campanhas em tempo real na Meta...</div>';
+            }
+
+            try {
+                const preset = currentMetaPeriod || 'today';
+                const fields = `id,name,status,effective_status,daily_budget,lifetime_budget,bid_strategy,objective,updated_time,insights.date_preset(${preset}){spend,impressions,reach,frequency,clicks,inline_link_clicks,inline_link_click_ctr,cost_per_inline_link_click,cpc,cpm,actions,action_values,cost_per_action_type,purchase_roas}`;
+                const res = await fetch(`${META_BASE_URL}/${actId}/campaigns?access_token=${token}&fields=${fields}&limit=50`);
+                
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err?.error?.message || `Erro HTTP ${res.status}`);
+                }
+
+                const data = await res.json();
+                const rawList = data.data || [];
+
+                // Formatar cada campanha com o formatMetaInsights
+                allMetaCampaignsList = rawList.map(camp => {
+                    const rawInsight = (camp.insights && camp.insights.data && camp.insights.data[0]) ? camp.insights.data[0] : {};
+                    return {
+                        ...camp,
+                        parsedInsights: formatMetaInsights(rawInsight)
+                    };
+                });
+
+                // Ordenar: ATIVAS primeiro, depois maior gasto no período
+                allMetaCampaignsList.sort((a, b) => {
+                    const aActive = (a.status === 'ACTIVE' || a.effective_status === 'ACTIVE');
+                    const bActive = (b.status === 'ACTIVE' || b.effective_status === 'ACTIVE');
+                    if (aActive && !bActive) return -1;
+                    if (!aActive && bActive) return 1;
+                    return (b.parsedInsights.spend || 0) - (a.parsedInsights.spend || 0);
+                });
+
+                if (!metaCache.allCampaigns) metaCache.allCampaigns = {};
+                metaCache.allCampaigns[cacheKey] = {
+                    data: allMetaCampaignsList,
+                    time: now
+                };
+
+                renderCampaignsListUI();
+            } catch (err) {
+                console.error('Erro ao listar campanhas Meta:', err);
+                showToast(`Erro Meta: ${err.message}`);
+                const isTokenErr = String(err.message).toLowerCase().includes('token') || String(err.message).toLowerCase().includes('session') || String(err.message).toLowerCase().includes('oauth');
+                if (isTokenErr) {
+                    const alertEl = document.getElementById('meta-token-alert');
+                    if (alertEl) alertEl.style.display = 'flex';
+                }
+                if (container) {
+                    container.innerHTML = `
+                        <div class="empty-state" style="color: var(--ios-red);">
+                            <i class="fa-solid fa-circle-exclamation" style="font-size:24px; margin-bottom:8px;"></i>
+                            <br>Falha ao comunicar com a Meta API:<br><span style="font-size:12px; color:var(--text-muted);">${err.message}</span>
+                            <br><br>
+                            ${isTokenErr 
+                                ? `<button class="ios-btn" style="width:auto; padding:10px 20px; font-size:13px; background:#ef4444;" onclick="promptUpdateMetaToken()"><i class="fa-solid fa-key"></i> Inserir Novo Token da Meta</button>` 
+                                : `<button class="ios-btn" style="width:auto; padding:8px 16px; font-size:12px;" onclick="loadAllMetaCampaigns(true)">Tentar Novamente</button>`
+                            }
+                        </div>`;
+                }
+            } finally {
+                if (refreshIcon) refreshIcon.classList.remove('fa-spin');
+            }
+        }
+
+        function filterMetaCampaigns(filterType, btn) {
+            currentMetaCampaignFilter = filterType;
+            document.querySelectorAll('.meta-filter-tabs .meta-filter-tab').forEach(t => t.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            renderCampaignsListUI();
+        }
+
+        function onSearchMetaCampaigns(query) {
+            metaCampaignSearchQuery = query ? query.trim() : '';
+            renderCampaignsListUI();
+        }
+
+        function renderCampaignsListUI() {
+            const container = document.getElementById('meta-campaigns-cards-container');
+            if (!container) return;
+
+            const totalCount = allMetaCampaignsList.length;
+            const activeCount = allMetaCampaignsList.filter(c => c.status === 'ACTIVE' || c.effective_status === 'ACTIVE').length;
+            const pausedCount = totalCount - activeCount;
+
+            const elTotal = document.getElementById('meta-camp-total-count');
+            const elAll = document.getElementById('count-meta-all');
+            const elActive = document.getElementById('count-meta-active');
+            const elPaused = document.getElementById('count-meta-paused');
+
+            if (elTotal) elTotal.textContent = totalCount;
+            if (elAll) elAll.textContent = totalCount;
+            if (elActive) elActive.textContent = activeCount;
+            if (elPaused) elPaused.textContent = pausedCount;
+
+            let filtered = allMetaCampaignsList.filter(c => {
+                const isActive = (c.status === 'ACTIVE' || c.effective_status === 'ACTIVE');
+                if (currentMetaCampaignFilter === 'active' && !isActive) return false;
+                if (currentMetaCampaignFilter === 'paused' && isActive) return false;
+                if (metaCampaignSearchQuery) {
+                    const q = metaCampaignSearchQuery.toLowerCase();
+                    const n = (c.name || '').toLowerCase();
+                    const id = (c.id || '').toLowerCase();
+                    if (!n.includes(q) && !id.includes(q)) return false;
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state">Nenhuma campanha encontrada com o filtro selecionado.</div>';
+                return;
+            }
+
+            let html = '';
+            filtered.forEach(c => {
+                const isActive = (c.status === 'ACTIVE' || c.effective_status === 'ACTIVE');
+                const ins = c.parsedInsights || {};
+                
+                let stratBadge = '';
+                if (c.bid_strategy === 'LOWEST_COST_WITH_BID_CAP') {
+                    stratBadge = '<span class="meta-camp-badge-strat" style="background:rgba(239,68,68,0.15); color:#f87171; border-color:rgba(239,68,68,0.3);"><i class="fa-solid fa-bullseye"></i> Bid Cap</span>';
+                } else if (c.bid_strategy === 'COST_CAP') {
+                    stratBadge = '<span class="meta-camp-badge-strat" style="background:rgba(56,189,248,0.15); color:#38bdf8; border-color:rgba(56,189,248,0.3);"><i class="fa-solid fa-shield-halved"></i> Cost Cap</span>';
+                } else if (c.bid_strategy === 'LOWEST_COST_WITHOUT_CAP') {
+                    stratBadge = '<span class="meta-camp-badge-strat"><i class="fa-solid fa-chart-line"></i> Menor Custo</span>';
+                } else if (c.bid_strategy) {
+                    stratBadge = `<span class="meta-camp-badge-strat">${c.bid_strategy}</span>`;
+                }
+
+                const budgetBRL = c.daily_budget ? (parseFloat(c.daily_budget) / 100) : (c.lifetime_budget ? parseFloat(c.lifetime_budget) / 100 : 0);
+                const budgetTxt = budgetBRL > 0 ? `${formatBRL(budgetBRL)}/dia` : 'Orçamento no Conjunto';
+
+                const statusBadge = isActive
+                    ? `<span class="meta-badge-status active"><i class="fa-solid fa-circle-check"></i> ATIVA</span>`
+                    : `<span class="meta-badge-status paused"><i class="fa-solid fa-circle-pause"></i> PAUSADA</span>`;
+
+                const roasColor = ins.roas >= 2.0 ? 'var(--accent-green)' : (ins.roas >= 1.0 ? '#fbbf24' : 'var(--text-muted)');
+
+                html += `
+                <div class="meta-camp-card">
+                    <div class="meta-camp-card-top">
+                        <div style="flex: 1;">
+                            <div class="meta-camp-title-text">
+                                <i class="fa-brands fa-meta" style="color: #38bdf8; font-size: 16px;"></i>
+                                <span>${c.name}</span>
+                            </div>
+                            <div class="meta-camp-badges-row">
+                                ${statusBadge}
+                                ${stratBadge}
+                                <span class="meta-camp-badge-budget"><i class="fa-solid fa-coins"></i> ${budgetTxt}</span>
+                                <span style="font-size: 10px; color: var(--text-muted); font-weight: 700;">ID: ${c.id}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GRID COM AS PRINCIPAIS MÉTRICAS AO LADO / DENTRO DO CARD -->
+                    <div class="meta-camp-metrics-grid">
+                        <div class="meta-camp-metric-box">
+                            <div class="box-lbl">Gasto no Período</div>
+                            <div class="box-val" style="color: var(--accent-gold);">${formatBRL(ins.spend)}</div>
+                            <div class="box-sub">${ins.impressions.toLocaleString('pt-BR')} impr.</div>
+                        </div>
+                        <div class="meta-camp-metric-box">
+                            <div class="box-lbl">Compras & CPA</div>
+                            <div class="box-val" style="color: ${ins.purchases > 0 ? 'var(--accent-green)' : '#fff'};">${ins.purchases} <span style="font-size: 11px;">venda(s)</span></div>
+                            <div class="box-sub">CPA: ${ins.purchases > 0 ? formatBRL(ins.cost_per_purchase) : '--'}</div>
+                        </div>
+                        <div class="meta-camp-metric-box">
+                            <div class="box-lbl">Faturamento & ROAS</div>
+                            <div class="box-val" style="color: var(--accent-green);">${formatBRL(ins.revenue)}</div>
+                            <div class="box-sub">ROAS: <strong style="color: ${roasColor};">${ins.roas > 0 ? ins.roas.toFixed(2) + 'x' : '--'}</strong></div>
+                        </div>
+                        <div class="meta-camp-metric-box">
+                            <div class="box-lbl">Cliques & Tráfego</div>
+                            <div class="box-val">${ins.clicks.toLocaleString('pt-BR')} <span style="font-size: 11px;">cliques</span></div>
+                            <div class="box-sub">CTR: ${(ins.ctr || 0).toFixed(2)}% • CPC: ${formatBRL(ins.cpc)}</div>
+                        </div>
+                    </div>
+
+                    <div class="meta-camp-card-actions">
+                        <button class="btn-ad-toggle ${isActive ? 'active' : 'paused'}" onclick="toggleMetaCampaignStatus('${c.id}', '${isActive ? 'PAUSED' : 'ACTIVE'}', event)">
+                            <i class="fa-solid fa-${isActive ? 'pause' : 'play'}"></i> ${isActive ? 'Pausar Campanha' : 'Ativar Campanha'}
+                        </button>
+                        <button class="btn-open-camp" onclick="openCampaignDetail('${c.id}')">
+                            <i class="fa-solid fa-arrow-right-to-bracket"></i> Ver Detalhes, Conjuntos & Criativos
+                        </button>
+                    </div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        async function openCampaignDetail(campId, forceRefresh = false) {
+            currentDetailCampId = campId;
+            const listView = document.getElementById('meta-campaigns-list-view');
+            const detailView = document.getElementById('meta-campaign-detail-view');
+            if (listView) listView.style.display = 'none';
+            if (detailView) detailView.style.display = 'block';
+
+            const refreshIcon = document.getElementById('meta-detail-refresh-icon');
+            if (refreshIcon) refreshIcon.classList.add('fa-spin');
+
             const token = META_CONFIG.token;
             const cacheKey = `${campId}_${currentMetaPeriod}`;
             const now = Date.now();
 
-            // Verificar se temos dados frescos em cache
             if (!forceRefresh && metaCache.campaigns[cacheKey] && (now - metaCache.campaigns[cacheKey].time < metaCache.ttl)) {
                 const cached = metaCache.campaigns[cacheKey];
-                renderMetaCampaignUI(cached.campData, cached.insights, cached.ads);
+                renderMetaCampaignUI(cached.campData, cached.insights, cached.adsets, cached.ads);
+                if (refreshIcon) refreshIcon.classList.remove('fa-spin');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 return;
             }
 
-            document.getElementById('meta-camp-name').innerHTML = `${campInfo.fallbackName} <i class="fa-solid fa-circle-notch fa-spin" style="font-size:13px; color:#38bdf8;"></i>`;
+            document.getElementById('meta-camp-name').innerHTML = `Campanha ${campId} <i class="fa-solid fa-circle-notch fa-spin" style="font-size:13px; color:#38bdf8;"></i>`;
             document.getElementById('meta-camp-id').textContent = `ID: ${campId}`;
+            document.getElementById('meta-adsets-list').innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i> Carregando conjuntos e lances...</div>';
+            document.getElementById('meta-ads-list').innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i> Carregando anúncios e criativos...</div>';
 
             try {
                 const dateQuery = getMetaDateParam(currentMetaPeriod);
-                // 1. Metadados e Insights da Campanha + Lista de Anúncios + Insights de Todos os Anúncios em lote (level=ad) com action_values e purchase_roas
-                const [campRes, insightsRes, adsRes, adInsightsRes] = await Promise.all([
-                    fetch(`${META_BASE_URL}/${campId}?access_token=${token}&fields=id,name,status,daily_budget,lifetime_budget`),
+                const [campRes, insightsRes, adsetsRes, adsRes, adInsightsRes] = await Promise.all([
+                    fetch(`${META_BASE_URL}/${campId}?access_token=${token}&fields=id,name,status,daily_budget,lifetime_budget,bid_strategy`),
                     fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&${dateQuery}&fields=spend,impressions,reach,frequency,clicks,inline_link_clicks,inline_link_click_ctr,cost_per_inline_link_click,cpc,cpm,actions,action_values,cost_per_action_type,purchase_roas`),
+                    fetch(`${META_BASE_URL}/${campId}/adsets?access_token=${token}&fields=id,name,status,effective_status,bid_amount,daily_budget,lifetime_budget,bid_strategy,optimization_goal&limit=50`),
                     fetch(`${META_BASE_URL}/${campId}/ads?access_token=${token}&fields=id,name,status,creative{thumbnail_url,image_url}&limit=100`),
                     fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&level=ad&${dateQuery}&fields=ad_id,ad_name,spend,impressions,reach,frequency,clicks,inline_link_clicks,inline_link_click_ctr,cost_per_inline_link_click,cpc,cpm,actions,action_values,cost_per_action_type,purchase_roas,video_play_actions,video_p25_watched_actions,video_p50_watched_actions,video_p75_watched_actions,video_p100_watched_actions&limit=100`)
                 ]);
 
                 if (!campRes.ok) {
-                    const err = await campRes.json();
+                    const err = await campRes.json().catch(() => ({}));
                     throw new Error(err?.error?.message || 'Falha ao buscar campanha na Meta');
                 }
 
@@ -2593,65 +3012,72 @@
                 const rawInsights = (insightsJson.data && insightsJson.data[0]) ? insightsJson.data[0] : {};
                 const parsedInsights = formatMetaInsights(rawInsights);
 
+                const adsetsJson = adsetsRes.ok ? await adsetsRes.json() : { data: [] };
+                const rawAdsets = adsetsJson.data || [];
+
                 const adsJson = adsRes.ok ? await adsRes.json() : { data: [] };
                 const rawAds = adsJson.data || [];
 
                 const adInsightsJson = adInsightsRes.ok ? await adInsightsRes.json() : { data: [] };
                 const rawAdInsightsList = adInsightsJson.data || [];
 
-                // 2. Mapear anúncios com os insights retornados da Meta em lote
-                const adsWithInsights = rawAds.map((ad) => {
-                    const matchedInsight = rawAdInsightsList.find(i => String(i.ad_id) === String(ad.id));
+                const adsWithInsights = rawAds.map(ad => {
+                    const matched = rawAdInsightsList.find(i => String(i.ad_id) === String(ad.id));
                     return {
                         ...ad,
                         thumbnail: ad.creative?.thumbnail_url || ad.creative?.image_url || null,
-                        insights: formatMetaInsights(matchedInsight || {})
+                        insights: formatMetaInsights(matched || {})
                     };
                 });
 
-                // Ordenar: ATIVOS primeiro, depois maior gasto
                 adsWithInsights.sort((a, b) => {
                     if (a.status === 'ACTIVE' && b.status !== 'ACTIVE') return -1;
                     if (b.status === 'ACTIVE' && a.status !== 'ACTIVE') return 1;
                     return (b.insights.spend || 0) - (a.insights.spend || 0);
                 });
 
-                // Salvar no Cache
                 metaCache.campaigns[cacheKey] = {
                     campData,
                     insights: parsedInsights,
+                    adsets: rawAdsets,
                     ads: adsWithInsights,
                     time: now
                 };
 
-                renderMetaCampaignUI(campData, parsedInsights, adsWithInsights);
+                renderMetaCampaignUI(campData, parsedInsights, rawAdsets, adsWithInsights);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
 
             } catch (err) {
-                console.error('Meta Ads Error:', err);
+                console.error('Erro ao abrir detalhes da campanha:', err);
                 showToast(`Erro Meta: ${err.message}`);
-                document.getElementById('meta-camp-name').textContent = campInfo.fallbackName;
-                document.getElementById('meta-camp-status-badge').innerHTML = `<span class="meta-status-toggle-btn status-paused"><i class="fa-solid fa-triangle-exclamation"></i> Erro</span>`;
-                
                 const isTokenErr = String(err.message).toLowerCase().includes('token') || String(err.message).toLowerCase().includes('session') || String(err.message).toLowerCase().includes('oauth');
                 if (isTokenErr) {
                     const alertEl = document.getElementById('meta-token-alert');
                     if (alertEl) alertEl.style.display = 'flex';
                 }
-
-                document.getElementById('meta-ads-list').innerHTML = `
-                    <div class="empty-state" style="color: var(--ios-red);">
-                        <i class="fa-solid fa-circle-exclamation" style="font-size:24px; margin-bottom:8px;"></i>
-                        <br>Erro de comunicação com a Meta API:<br><span style="font-size:12px; color:var(--text-muted);">${err.message}</span>
-                        <br><br>
-                        ${isTokenErr 
-                            ? `<button class="ios-btn" style="width:auto; padding:10px 20px; font-size:13px; background:#ef4444;" onclick="promptUpdateMetaToken()"><i class="fa-solid fa-key"></i> Inserir Novo Token da Meta</button>` 
-                            : `<button class="ios-btn" style="width:auto; padding:8px 16px; font-size:12px;" onclick="loadMetaCampaignData(true)">Tentar Novamente</button>`
-                        }
-                    </div>`;
+            } finally {
+                if (refreshIcon) refreshIcon.classList.remove('fa-spin');
             }
         }
 
-        function renderMetaCampaignUI(campData, insights, ads) {
+        async function reloadCurrentDetail(forceRefresh = true) {
+            if (currentDetailCampId) {
+                await openCampaignDetail(currentDetailCampId, forceRefresh);
+            } else {
+                await loadAllMetaCampaigns(forceRefresh);
+            }
+        }
+
+        function backToCampaignsList() {
+            currentDetailCampId = null;
+            const listView = document.getElementById('meta-campaigns-list-view');
+            const detailView = document.getElementById('meta-campaign-detail-view');
+            if (detailView) detailView.style.display = 'none';
+            if (listView) listView.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderMetaCampaignUI(campData, insights, adsets, ads) {
             // Nome e ID
             document.getElementById('meta-camp-name').textContent = campData.name || 'Campanha Meta';
             document.getElementById('meta-camp-id').textContent = `ID: ${campData.id}`;
@@ -2677,11 +3103,8 @@
 
             // 4 KPIs Principais
             document.getElementById('meta-kpi-spend').textContent = formatBRL(insights.spend);
-            
-            // Faturamento Real (inclui Order Bump e Upsell enviados pelo Pixel)
             document.getElementById('meta-kpi-revenue').textContent = formatBRL(insights.revenue);
 
-            // ROAS Real
             const roasVal = insights.roas || (insights.spend > 0 && insights.revenue > 0 ? (insights.revenue / insights.spend) : 0);
             const roasEl = document.getElementById('meta-kpi-roas');
             roasEl.textContent = roasVal > 0 ? `${roasVal.toFixed(2)}x` : '0.00x';
@@ -2693,11 +3116,10 @@
                 roasEl.style.color = 'var(--text-muted)';
             }
 
-            // Compras e CPA
             const cpaStr = insights.purchases > 0 ? formatBRL(insights.cost_per_purchase) : 'R$ --,--';
             document.getElementById('meta-kpi-purchases').innerHTML = `${insights.purchases} <span style="font-size: 11px; color: var(--text-muted); font-weight:700;">(CPA ${cpaStr})</span>`;
 
-            // Alerta de Frequência / Saturação de Público
+            // Alerta de Frequência
             const freqAlert = document.getElementById('meta-alert-frequency');
             if (insights.frequency >= 2.5) {
                 document.getElementById('meta-freq-val').textContent = insights.frequency.toFixed(2);
@@ -2706,15 +3128,14 @@
                 freqAlert.style.display = 'none';
             }
 
-            // Funil - Topo (Alcance & Exibição)
+            // Funil - Topo
             document.getElementById('meta-metric-impressions').textContent = insights.impressions.toLocaleString('pt-BR');
             document.getElementById('meta-metric-reach').textContent = insights.reach.toLocaleString('pt-BR');
             document.getElementById('meta-metric-frequency').textContent = insights.frequency > 0 ? insights.frequency.toFixed(2) : '0.00';
             document.getElementById('meta-metric-cpm').textContent = formatBRL(insights.cpm);
 
-            // Funil - Meio (Atenção & Cliques)
+            // Funil - Meio
             document.getElementById('meta-metric-clicks').textContent = insights.clicks.toLocaleString('pt-BR');
-            
             const ctrEl = document.getElementById('meta-metric-ctr');
             ctrEl.textContent = `${insights.ctr.toFixed(2)}%`;
             if (insights.ctr >= 1.5) {
@@ -2724,17 +3145,84 @@
             } else {
                 ctrEl.style.color = 'var(--ios-red)';
             }
-
             document.getElementById('meta-metric-cpc').textContent = formatBRL(insights.cpc);
 
-            // Funil - Fundo (Conversão & Vendas)
+            // Funil - Fundo
             document.getElementById('meta-metric-checkouts').textContent = insights.checkouts;
             document.getElementById('meta-metric-cost-checkout').textContent = insights.checkouts > 0 ? formatBRL(insights.cost_per_checkout) : 'R$ --,--';
             document.getElementById('meta-metric-purchases').textContent = insights.purchases;
             document.getElementById('meta-metric-cpa').textContent = insights.purchases > 0 ? formatBRL(insights.cost_per_purchase) : 'R$ --,--';
 
-            // Lista de Anúncios / Criativos
+            // Conjuntos & Lances (Bid Cap / Cost Cap)
+            renderMetaAdsetsList(adsets);
+
+            // Criativos & Anúncios
             renderMetaAdsList(ads);
+        }
+
+        function renderMetaAdsetsList(adsets) {
+            const container = document.getElementById('meta-adsets-list');
+            if (!container) return;
+
+            if (!adsets || adsets.length === 0) {
+                container.innerHTML = '<div class="empty-state">Nenhum conjunto de anúncios encontrado para esta campanha.</div>';
+                return;
+            }
+
+            let html = '';
+            adsets.forEach(adset => {
+                const isActive = (adset.status === 'ACTIVE' || adset.effective_status === 'ACTIVE');
+                const bidVal = adset.bid_amount ? (parseFloat(adset.bid_amount) / 100) : 0;
+                const bidTxt = bidVal > 0 ? `Lance (Bid/Cost Cap): ${formatBRL(bidVal)}` : 'Lance: Menor Custo (Sem Teto)';
+                
+                let stratLabel = 'Menor Custo';
+                if (adset.bid_strategy === 'LOWEST_COST_WITH_BID_CAP') stratLabel = 'Bid Cap';
+                else if (adset.bid_strategy === 'COST_CAP') stratLabel = 'Cost Cap';
+                else if (adset.bid_amount) stratLabel = 'Cap Definido';
+
+                const optGoalMap = {
+                    'OFFSITE_CONVERSIONS': 'Conversões / Compras',
+                    'LINK_CLICKS': 'Cliques no Link',
+                    'IMPRESSIONS': 'Impressões',
+                    'REACH': 'Alcance',
+                    'LANDING_PAGE_VIEWS': 'Visualizações da Página'
+                };
+                const optTxt = optGoalMap[adset.optimization_goal] || adset.optimization_goal || 'Conversões';
+                const safeName = (adset.name || 'Conjunto').replace(/'/g, "\\'");
+
+                html += `
+                <div class="meta-adset-card">
+                    <div class="meta-adset-top">
+                        <div>
+                            <div class="meta-adset-name">${adset.name}</div>
+                            <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">
+                                ID: ${adset.id} • Otimização: <strong style="color: #cbd5e1;">${optTxt}</strong>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 6px; align-items: center;">
+                            <button class="btn-ad-toggle ${isActive ? 'active' : 'paused'}" onclick="toggleMetaAdsetStatus('${adset.id}', '${isActive ? 'PAUSED' : 'ACTIVE'}')">
+                                <i class="fa-solid fa-${isActive ? 'check' : 'pause'}"></i> ${isActive ? 'ATIVO' : 'PAUSADO'}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="meta-adset-meta" style="margin-top: 8px; justify-content: space-between;">
+                        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                            <span class="meta-adset-bid-pill">
+                                <i class="fa-solid fa-crosshairs"></i> ${bidTxt}
+                            </span>
+                            <span style="font-size: 10px; color: var(--text-muted); font-weight: 700;">
+                                Estratégia: ${stratLabel}
+                            </span>
+                        </div>
+                        <button class="btn-edit-bid" onclick="promptEditBid('${adset.id}', ${bidVal}, '${safeName}')">
+                            <i class="fa-solid fa-pen-to-square"></i> Editar Lance (Bid/Cost Cap)
+                        </button>
+                    </div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
         }
 
         function renderMetaAdsList(ads) {
@@ -2822,7 +3310,9 @@
             container.innerHTML = html;
         }
 
-        async function toggleMetaCampaignStatus(campaignId, targetStatus) {
+        // Alteração de Status da Campanha
+        async function toggleMetaCampaignStatus(campaignId, targetStatus, event) {
+            if (event) event.stopPropagation();
             const actionText = (targetStatus === 'ACTIVE') ? 'ativar' : 'pausar';
             if (!confirm(`Deseja realmente ${actionText} esta campanha no Meta Ads?`)) return;
 
@@ -2832,24 +3322,93 @@
                     method: 'POST'
                 });
                 if (!res.ok) {
-                    const err = await res.json();
+                    const err = await res.json().catch(() => ({}));
                     throw new Error(err?.error?.message || 'Falha ao alterar status');
                 }
                 showToast(`Campanha ${targetStatus === 'ACTIVE' ? 'ativada' : 'pausada'} com sucesso!`);
                 metaCache.campaigns = {};
-                await loadMetaCampaignData(true);
+                metaCache.allCampaigns = null;
+                if (currentDetailCampId === campaignId) {
+                    await openCampaignDetail(campaignId, true);
+                } else {
+                    await loadAllMetaCampaigns(true);
+                }
             } catch (e) {
                 alert(`Erro ao alterar status: ${e.message}`);
             }
         }
 
-        async function promptEditBudget() {
-            const campInfo = META_CONFIG.campaigns[currentCampaign];
-            const campId = campInfo.id;
-            const currentBudgetEl = document.getElementById('meta-camp-budget');
-            const currentText = currentBudgetEl ? currentBudgetEl.textContent.replace(/[^\d,.-]/g, '').replace(',', '.') : '50';
-            
-            const novoValorStr = prompt(`Informe o novo orçamento diário em Reais (R$/dia):`, currentText.trim());
+        // Alteração de Status do Conjunto de Anúncios (AdSet)
+        async function toggleMetaAdsetStatus(adsetId, targetStatus) {
+            const actionText = (targetStatus === 'ACTIVE') ? 'ativar' : 'pausar';
+            if (!confirm(`Deseja realmente ${actionText} este conjunto de anúncios no Meta Ads?`)) return;
+
+            showToast(`Atualizando conjunto no Meta...`);
+            try {
+                const res = await fetch(`${META_BASE_URL}/${adsetId}?access_token=${META_CONFIG.token}&status=${targetStatus}`, {
+                    method: 'POST'
+                });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err?.error?.message || 'Falha ao alterar conjunto');
+                }
+                showToast(`Conjunto ${targetStatus === 'ACTIVE' ? 'ativado' : 'pausado'}!`);
+                metaCache.campaigns = {};
+                if (currentDetailCampId) {
+                    await openCampaignDetail(currentDetailCampId, true);
+                }
+            } catch (e) {
+                alert(`Erro ao alterar status do conjunto: ${e.message}`);
+            }
+        }
+
+        // Edição de Lance (Bid Cap / Cost Cap) no Conjunto de Anúncios
+        async function promptEditBid(adsetId, currentBid, adsetName) {
+            const currentStr = currentBid > 0 ? currentBid.toFixed(2).replace('.', ',') : '0,00';
+            const novoValorStr = prompt(`Informe o novo valor de Bid Cap / Cost Cap para o conjunto "${adsetName}" (em Reais R$):`, currentStr);
+            if (!novoValorStr) return;
+
+            const novoValor = parseFloat(novoValorStr.replace(',', '.'));
+            if (isNaN(novoValor) || novoValor < 1) {
+                alert('Por favor informe um valor de lance válido (mínimo R$ 1,00).');
+                return;
+            }
+
+            const bidCents = Math.round(novoValor * 100);
+            showToast(`Atualizando lance para R$ ${novoValor.toFixed(2).replace('.', ',')}...`);
+
+            try {
+                const res = await fetch(`${META_BASE_URL}/${adsetId}?access_token=${META_CONFIG.token}&bid_amount=${bidCents}`, {
+                    method: 'POST'
+                });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err?.error?.message || 'Falha ao alterar lance');
+                }
+                showToast(`Bid atualizado com sucesso para R$ ${novoValor.toFixed(2).replace('.', ',')}!`);
+                metaCache.campaigns = {};
+                if (currentDetailCampId) {
+                    await openCampaignDetail(currentDetailCampId, true);
+                }
+            } catch (e) {
+                alert(`Erro ao atualizar lance: ${e.message}`);
+            }
+        }
+
+        // Edição de Orçamento Diário (CBO)
+        async function promptEditBudget(campId, currentBudget) {
+            const targetCampId = campId || currentDetailCampId;
+            if (!targetCampId) return;
+
+            let defaultVal = '50';
+            if (currentBudget) {
+                defaultVal = currentBudget.toString();
+            } else {
+                const el = document.getElementById('meta-camp-budget');
+                if (el) defaultVal = el.textContent.replace(/[^\d,.-]/g, '').replace(',', '.').trim();
+            }
+
+            const novoValorStr = prompt('Informe o novo orçamento diário em Reais (R$/dia):', defaultVal);
             if (!novoValorStr) return;
 
             const novoValor = parseFloat(novoValorStr.replace(',', '.'));
@@ -2862,21 +3421,27 @@
             showToast(`Atualizando orçamento para ${formatBRL(novoValor)}/dia...`);
 
             try {
-                const res = await fetch(`${META_BASE_URL}/${campId}?access_token=${META_CONFIG.token}&daily_budget=${dailyBudgetCents}`, {
+                const res = await fetch(`${META_BASE_URL}/${targetCampId}?access_token=${META_CONFIG.token}&daily_budget=${dailyBudgetCents}`, {
                     method: 'POST'
                 });
                 if (!res.ok) {
-                    const err = await res.json();
+                    const err = await res.json().catch(() => ({}));
                     throw new Error(err?.error?.message || 'Falha ao alterar orçamento');
                 }
                 showToast(`Orçamento alterado para ${formatBRL(novoValor)}/dia!`);
                 metaCache.campaigns = {};
-                await loadMetaCampaignData(true);
+                metaCache.allCampaigns = null;
+                if (currentDetailCampId) {
+                    await openCampaignDetail(currentDetailCampId, true);
+                } else {
+                    await loadAllMetaCampaigns(true);
+                }
             } catch (e) {
                 alert(`Erro ao atualizar orçamento: ${e.message}`);
             }
         }
 
+        // Alteração de Status do Anúncio (Criativo)
         async function toggleMetaAdStatus(adId, targetStatus) {
             const actionText = (targetStatus === 'ACTIVE') ? 'ativar' : 'pausar';
             if (!confirm(`Deseja realmente ${actionText} este anúncio no Meta Ads?`)) return;
@@ -2887,14 +3452,25 @@
                     method: 'POST'
                 });
                 if (!res.ok) {
-                    const err = await res.json();
+                    const err = await res.json().catch(() => ({}));
                     throw new Error(err?.error?.message || 'Falha ao alterar anúncio');
                 }
                 showToast(`Anúncio ${targetStatus === 'ACTIVE' ? 'ativado' : 'pausado'}!`);
                 metaCache.campaigns = {};
-                await loadMetaCampaignData(true);
+                if (currentDetailCampId) {
+                    await openCampaignDetail(currentDetailCampId, true);
+                }
             } catch (e) {
                 alert(`Erro ao alterar anúncio: ${e.message}`);
+            }
+        }
+
+        // Helper de compatibilidade
+        function loadMetaCampaignData(force = false) {
+            if (currentDetailCampId) {
+                openCampaignDetail(currentDetailCampId, force);
+            } else {
+                loadAllMetaCampaigns(force);
             }
         }
 
@@ -2916,9 +3492,14 @@
                 localStorage.setItem('mura_meta_token', novoToken.trim());
                 META_CONFIG.token = novoToken.trim();
                 metaCache.campaigns = {};
+                metaCache.allCampaigns = null;
                 showToast('Token da Meta atualizado com sucesso!');
                 if (currentViewMode === 'meta') {
-                    loadMetaCampaignData(true);
+                    if (currentDetailCampId) {
+                        openCampaignDetail(currentDetailCampId, true);
+                    } else {
+                        loadAllMetaCampaigns(true);
+                    }
                     loadMetaAccountBalance();
                 }
             }
