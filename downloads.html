@@ -533,7 +533,10 @@
                     itemOvos.style.display = 'block';
                     const link = itemOvos.querySelector('.btn-download');
                     if (link) {
-                        link.href = cleanCpf ? `https://protocolo-elite.pages.dev/?cpf=${encodeURIComponent(cleanCpf)}` : 'https://protocolo-elite.pages.dev/';
+                        link.href = cleanCpf ? `https://protocolo-elite.pages.dev/?cpf=${encodeURIComponent(cleanCpf)}&hasOvos=1` : 'https://protocolo-elite.pages.dev/?hasOvos=1';
+                    }
+                    if (btnApp && cleanCpf) {
+                        btnApp.href = `https://protocolo-elite.pages.dev/?cpf=${encodeURIComponent(cleanCpf)}&hasOvos=1`;
                     }
                 }
 

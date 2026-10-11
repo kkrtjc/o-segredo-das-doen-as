@@ -204,6 +204,9 @@
         accessUrl += '/?email=' + encodeURIComponent(email);
         if(senha) accessUrl += '&senha=' + encodeURIComponent(senha);
     }
+    if(hasOvos){
+        accessUrl += (accessUrl.indexOf('?') === -1 ? '?' : '&') + 'hasOvos=1';
+    }
     btn.href = accessUrl;
 
     // PIXEL: Purchase — PONTO ÚNICO de disparo no navegador (deduplicado com CAPI Webhook)
