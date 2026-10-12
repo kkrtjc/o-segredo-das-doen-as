@@ -1483,6 +1483,25 @@ adminRoutes.post('/admin/grant-access', async (c) => {
         });
 
         await saveHistory(c.env, history);
+
+        let emailSent = false;
+        if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+            try {
+                const { sendManualAccessEmail } = await import('./email.js');
+                emailSent = await sendManualAccessEmail(c.env, {
+                    name: name || 'Criador',
+                    email: email.trim().toLowerCase(),
+                    phone: phone || '',
+                    cpf: cleanCPF,
+                    senha: clientPassword,
+                    duration: dur,
+                    products: products
+                });
+            } catch (emailErr) {
+                console.error('[GRANT ACCESS EMAIL ERROR]', emailErr);
+            }
+        }
+
         return c.json({ 
             success: true, 
             message: dur === '15m' 
@@ -1498,7 +1517,8 @@ adminRoutes.post('/admin/grant-access', async (c) => {
             phone: phone || '',
             password: clientPassword,
             duration: dur,
-            expiresAt: expiresAt
+            expiresAt: expiresAt,
+            emailSent: emailSent
         });
         
     } catch (err) {
