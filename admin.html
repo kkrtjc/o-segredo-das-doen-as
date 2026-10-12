@@ -486,6 +486,52 @@
             background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3);
         }
 
+        .btn-preview-ad {
+            font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 8px;
+            cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(99, 102, 241, 0.2));
+            border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8;
+        }
+        .btn-preview-ad:hover { background: rgba(56, 189, 248, 0.35); color: #fff; transform: translateY(-1px); }
+        .btn-preview-ad:active { transform: scale(0.96); }
+
+        .btn-ad-mini-action {
+            background: rgba(255, 255, 255, 0.08); border: 1px solid var(--surface-border);
+            color: #94a3b8; width: 28px; height: 28px; border-radius: 7px;
+            font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .btn-ad-mini-action:hover { background: rgba(255, 255, 255, 0.18); color: #fff; border-color: rgba(255,255,255,0.25); }
+        .btn-ad-mini-action:active { transform: scale(0.92); }
+
+        .btn-adset-action {
+            background: rgba(255, 255, 255, 0.08); border: 1px solid var(--surface-border);
+            color: #cbd5e1; padding: 4px 9px; border-radius: 8px; font-size: 11px; font-weight: 700;
+            cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px;
+        }
+        .btn-adset-action:hover { background: rgba(255, 255, 255, 0.16); color: #fff; }
+        .btn-adset-action:active { transform: scale(0.96); }
+
+        .meta-ad-thumb-wrapper {
+            position: relative; width: 58px; height: 58px; border-radius: 12px; overflow: hidden;
+            flex-shrink: 0; cursor: pointer;
+        }
+        .meta-ad-thumb-wrapper:hover .meta-thumb-overlay { opacity: 1; }
+        .meta-thumb-overlay {
+            position: absolute; inset: 0; background: rgba(0,0,0,0.45);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 16px; opacity: 0; transition: opacity 0.2s;
+        }
+
+        .ad-format-tab {
+            flex: 1; padding: 6px 10px; border-radius: 8px; border: none; font-size: 11px; font-weight: 800;
+            cursor: pointer; background: transparent; color: var(--text-muted); transition: all 0.2s;
+            display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+        }
+        .ad-format-tab.active {
+            background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
         .meta-ad-stats-row {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px;
             background: rgba(0, 0, 0, 0.3); padding: 10px; border-radius: 12px;
@@ -1086,6 +1132,9 @@
                                     <button class="btn-rename-pill" id="btn-rename-detail" onclick="onDetailRenameClick()" title="Alterar Nome da Campanha (Não afeta o algoritmo da Meta)">
                                         <i class="fa-solid fa-pen"></i> Renomear
                                     </button>
+                                    <button class="btn-rename-pill" onclick="onDetailDuplicateCampClick()" title="Duplicar Campanha Inteira (Pausada)" style="border-color: rgba(56,189,248,0.3); color:#38bdf8;">
+                                        <i class="fa-solid fa-copy"></i> Duplicar Campanha
+                                    </button>
                                 </div>
                                 <div class="meta-camp-sub" id="meta-camp-id">ID: ...</div>
                             </div>
@@ -1446,6 +1495,109 @@
         </div>
     </div>
 
+    <!-- MODAL DE PRÉVIA / VÍDEO DO CRIATIVO META ADS -->
+    <div id="modal-ad-preview" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:9999; backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:16px;">
+        <div style="background:#0f172a; border:1px solid var(--surface-border); border-radius:24px; padding:20px; width:100%; max-width:540px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 20px 50px rgba(0,0,0,0.7); position:relative; overflow:hidden;">
+            <!-- Header do Modal -->
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap:10px;">
+                <div style="flex:1; min-width:0;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:10px; font-weight:800; background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3); padding:2px 8px; border-radius:6px; text-transform:uppercase;">
+                            <i class="fa-solid fa-play"></i> Prévia Oficial Meta
+                        </span>
+                        <span id="ad-preview-status-pill" style="font-size:10px; font-weight:800; padding:2px 8px; border-radius:6px; text-transform:uppercase;"></span>
+                    </div>
+                    <div id="ad-preview-title" style="font-size:15px; font-weight:900; color:#fff; margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Nome do Anúncio</div>
+                    <div id="ad-preview-id" style="font-size:10px; color:var(--text-muted); font-family:monospace;">ID: ...</div>
+                </div>
+                <button onclick="closeAdPreviewModal()" style="background:rgba(255,255,255,0.1); border:none; color:#fff; width:34px; height:34px; border-radius:50%; font-size:15px; cursor:pointer; flex-shrink:0;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Seletor de Formato de Exibição -->
+            <div style="display:flex; gap:6px; margin-bottom:12px; background:rgba(0,0,0,0.35); padding:4px; border-radius:12px; border:1px solid var(--surface-border);">
+                <button class="ad-format-tab active" id="tab-fmt-desktop" onclick="switchAdPreviewFormat('DESKTOP_FEED_STANDARD', this)">
+                    <i class="fa-solid fa-desktop"></i> Feed Desktop
+                </button>
+                <button class="ad-format-tab" id="tab-fmt-mobile" onclick="switchAdPreviewFormat('MOBILE_FEED_STANDARD', this)">
+                    <i class="fa-solid fa-mobile-screen"></i> Feed Mobile
+                </button>
+                <button class="ad-format-tab" id="tab-fmt-ig" onclick="switchAdPreviewFormat('INSTAGRAM_STANDARD', this)">
+                    <i class="fa-brands fa-instagram"></i> Instagram
+                </button>
+            </div>
+
+            <!-- Container do Iframe / Player com Scroll Suave -->
+            <div id="ad-preview-content" style="flex:1; overflow-y:auto; overflow-x:hidden; background:#000; border-radius:16px; border:1px solid rgba(255,255,255,0.08); min-height:360px; max-height:65vh; display:flex; align-items:center; justify-content:center; position:relative;">
+                <div class="empty-state"><i class="fa-solid fa-circle-notch fa-spin"></i> Carregando prévia do vídeo...</div>
+            </div>
+
+            <!-- Footer com Ações Rápidas -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.08);">
+                <button id="btn-preview-toggle-status" onclick="toggleAdStatusFromPreview()" style="background:rgba(255,255,255,0.08); border:1px solid var(--surface-border); color:#fff; padding:6px 14px; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer;">
+                    <i class="fa-solid fa-power-off"></i> Alterar Status
+                </button>
+                <button onclick="closeAdPreviewModal()" style="background:transparent; border:1px solid var(--surface-border); color:var(--text-muted); padding:6px 14px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CRIAR ANÚNCIO NO CONJUNTO -->
+    <div id="modal-new-ad" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:9999; backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:16px;">
+        <div style="background:#0f172a; border:1px solid var(--surface-border); border-radius:24px; padding:22px; width:100%; max-width:480px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 20px 50px rgba(0,0,0,0.7);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <div style="font-size:16px; font-weight:900; color:#fff; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-plus-circle" style="color:#38bdf8;"></i> Novo Anúncio no Conjunto
+                </div>
+                <button onclick="closeNewAdModal()" style="background:rgba(255,255,255,0.1); border:none; color:#fff; width:32px; height:32px; border-radius:50%; font-size:14px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div style="overflow-y:auto; flex:1; padding-right:2px;">
+                <!-- Conjunto de Destino -->
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:11px; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">Conjunto de Anúncios</label>
+                    <select id="new-ad-target-adset" style="width:100%; background:rgba(0,0,0,0.4); border:1px solid var(--surface-border); border-radius:12px; padding:10px 12px; color:#fff; font-size:12px; font-weight:600; outline:none;"></select>
+                </div>
+
+                <!-- Nome do Anúncio -->
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:11px; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">Nome do Anúncio</label>
+                    <input type="text" id="new-ad-name" placeholder="Ex: [VÍDEO] Teste Novo Hook 01" style="width:100%; background:rgba(0,0,0,0.4); border:1px solid var(--surface-border); border-radius:12px; padding:10px 12px; color:#fff; font-size:13px; font-weight:600; outline:none;">
+                </div>
+
+                <!-- Seleção de Criativo Existente da Campanha/Conta -->
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:11px; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">
+                        Criativo a Utilizar
+                    </label>
+                    <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">
+                        Escolha um criativo já aprovado e validado da sua conta:
+                    </p>
+                    <div id="new-ad-creatives-list" style="max-height:180px; overflow-y:auto; background:rgba(0,0,0,0.3); border:1px solid var(--surface-border); border-radius:12px; padding:8px; display:flex; flex-direction:column; gap:6px;">
+                        <!-- preenchido dinamicamente -->
+                    </div>
+                </div>
+
+                <div style="background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.25); border-radius:12px; padding:10px 12px; margin-bottom:16px;">
+                    <div style="font-size:11px; color:#38bdf8; font-weight:700; display:flex; align-items:center; gap:6px;">
+                        <i class="fa-solid fa-shield-halved"></i> Segurança Anti-Desperdício:
+                    </div>
+                    <div style="font-size:10px; color:#cbd5e1; margin-top:2px;">
+                        O novo anúncio será criado como <strong>PAUSADO</strong> para você revisar antes de ativar.
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button onclick="closeNewAdModal()" style="flex:1; background:transparent; border:1px solid var(--surface-border); color:var(--text-muted); padding:10px; border-radius:12px; font-size:12px; font-weight:700; cursor:pointer;">Cancelar</button>
+                <button onclick="submitCreateNewAd()" id="btn-submit-create-ad" style="flex:2; background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color:#fff; border:none; padding:10px; border-radius:12px; font-size:12px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+                    <i class="fa-solid fa-plus"></i> Criar Anúncio (Pausado)
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="toast"></div>
 
     <script>
@@ -1478,6 +1630,13 @@
         let allMetaCampaignsList = [];
         let currentMetaCampaignFilter = 'all'; // 'all', 'active', 'paused'
         let metaCampaignSearchQuery = '';
+        let currentCampaignAds = [];
+        let currentCampaignAdsets = [];
+        let currentPreviewAdId = null;
+        let currentPreviewCreativeId = null;
+        let currentPreviewFormat = 'DESKTOP_FEED_STANDARD';
+        let currentNewAdTargetAdsetId = null;
+        let selectedCreativeForNewAd = null;
 
         // Cache inteligente em memória para evitar Rate Limit (OAuthException 17)
         const metaCache = {
@@ -2941,6 +3100,9 @@
                                 <button class="btn-rename-pill" onclick="promptRenameCampaign('${c.id}', '${safeCampName}', event)" title="Alterar Nome da Campanha (Não afeta o algoritmo da Meta)">
                                     <i class="fa-solid fa-pen"></i> Renomear
                                 </button>
+                                <button class="btn-rename-pill" onclick="duplicateMetaCampaign('${c.id}', '${safeCampName}', event)" title="Duplicar Campanha Inteira (Pausada)" style="color:#38bdf8; border-color:rgba(56,189,248,0.3);">
+                                    <i class="fa-solid fa-copy"></i> Duplicar
+                                </button>
                             </div>
                             <div class="meta-camp-badges-row">
                                 ${statusBadge}
@@ -3005,6 +3167,8 @@
 
             if (!forceRefresh && metaCache.campaigns[cacheKey] && (now - metaCache.campaigns[cacheKey].time < metaCache.ttl)) {
                 const cached = metaCache.campaigns[cacheKey];
+                currentCampaignAds = cached.ads || [];
+                currentCampaignAdsets = cached.adsets || [];
                 renderMetaCampaignUI(cached.campData, cached.insights, cached.adsets, cached.ads);
                 if (refreshIcon) refreshIcon.classList.remove('fa-spin');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -3022,7 +3186,7 @@
                     fetch(`${META_BASE_URL}/${campId}?access_token=${token}&fields=id,name,status,daily_budget,lifetime_budget,bid_strategy`),
                     fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&${dateQuery}&fields=spend,impressions,reach,frequency,clicks,inline_link_clicks,inline_link_click_ctr,cost_per_inline_link_click,cpc,cpm,actions,action_values,cost_per_action_type,purchase_roas`),
                     fetch(`${META_BASE_URL}/${campId}/adsets?access_token=${token}&fields=id,name,status,effective_status,bid_amount,daily_budget,lifetime_budget,bid_strategy,optimization_goal&limit=50`),
-                    fetch(`${META_BASE_URL}/${campId}/ads?access_token=${token}&fields=id,name,status,creative{thumbnail_url,image_url}&limit=100`),
+                    fetch(`${META_BASE_URL}/${campId}/ads?access_token=${token}&fields=id,name,status,adset_id,creative{id,name,thumbnail_url,image_url,video_id,title,body}&limit=100`),
                     fetch(`${META_BASE_URL}/${campId}/insights?access_token=${token}&level=ad&${dateQuery}&fields=ad_id,ad_name,spend,impressions,reach,frequency,clicks,inline_link_clicks,inline_link_click_ctr,cost_per_inline_link_click,cpc,cpm,actions,action_values,cost_per_action_type,purchase_roas,video_play_actions,video_p25_watched_actions,video_p50_watched_actions,video_p75_watched_actions,video_p100_watched_actions&limit=100`)
                 ]);
 
@@ -3059,6 +3223,9 @@
                     if (b.status === 'ACTIVE' && a.status !== 'ACTIVE') return 1;
                     return (b.insights.spend || 0) - (a.insights.spend || 0);
                 });
+
+                currentCampaignAds = adsWithInsights;
+                currentCampaignAdsets = rawAdsets;
 
                 metaCache.campaigns[cacheKey] = {
                     campData,
@@ -3214,20 +3381,38 @@
                     'LANDING_PAGE_VIEWS': 'Visualizações da Página'
                 };
                 const optTxt = optGoalMap[adset.optimization_goal] || adset.optimization_goal || 'Conversões';
-                const safeName = (adset.name || 'Conjunto').replace(/'/g, "\\'");
+                const safeName = (adset.name || 'Conjunto').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+                const adsInAdset = (currentCampaignAds || []).filter(a => String(a.adset_id) === String(adset.id));
+                const adsetBudgetBRL = adset.daily_budget ? (parseFloat(adset.daily_budget) / 100) : 0;
 
                 html += `
                 <div class="meta-adset-card">
                     <div class="meta-adset-top">
-                        <div>
-                            <div class="meta-adset-name">${adset.name}</div>
+                        <div style="flex:1; min-width:200px;">
+                            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                <div class="meta-adset-name">${adset.name}</div>
+                                <span style="font-size:10px; font-weight:800; background:rgba(255,255,255,0.06); padding:2px 7px; border-radius:5px; color:#94a3b8;">
+                                    ${adsInAdset.length} anúncio(s)
+                                </span>
+                            </div>
                             <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">
                                 ID: ${adset.id} • Otimização: <strong style="color: #cbd5e1;">${optTxt}</strong>
+                                ${adsetBudgetBRL > 0 ? ` • Orçamento: <strong style="color:var(--accent-gold);">${formatBRL(adsetBudgetBRL)}/dia</strong>` : ''}
                             </div>
                         </div>
-                        <div style="display: flex; gap: 6px; align-items: center;">
+                        <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
                             <button class="btn-ad-toggle ${isActive ? 'active' : 'paused'}" onclick="toggleMetaAdsetStatus('${adset.id}', '${isActive ? 'PAUSED' : 'ACTIVE'}')">
                                 <i class="fa-solid fa-${isActive ? 'check' : 'pause'}"></i> ${isActive ? 'ATIVO' : 'PAUSADO'}
+                            </button>
+                            <button class="btn-adset-action" onclick="openNewAdModal('${adset.id}')" style="background:rgba(56,189,248,0.15); color:#38bdf8; border-color:rgba(56,189,248,0.35);">
+                                <i class="fa-solid fa-plus"></i> Novo Anúncio
+                            </button>
+                            <button class="btn-adset-action" onclick="duplicateMetaAdset('${adset.id}', '${safeName}')" title="Duplicar Conjunto">
+                                <i class="fa-solid fa-copy"></i> Duplicar
+                            </button>
+                            <button class="btn-adset-action" onclick="promptRenameAdset('${adset.id}', '${safeName}')" title="Renomear Conjunto">
+                                <i class="fa-solid fa-pen"></i> Renomear
                             </button>
                         </div>
                     </div>
@@ -3241,9 +3426,15 @@
                                 Estratégia: ${stratLabel}
                             </span>
                         </div>
-                        <button class="btn-edit-bid" onclick="promptEditBid('${adset.id}', ${bidVal}, '${safeName}')">
-                            <i class="fa-solid fa-pen-to-square"></i> Editar Lance (Bid/Cost Cap)
-                        </button>
+                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                            ${adsetBudgetBRL > 0 ? `
+                            <button class="btn-edit-bid" onclick="promptEditAdsetBudget('${adset.id}', ${adsetBudgetBRL}, '${safeName}')" style="color:#fbbf24; border-color:rgba(251,191,36,0.3); background:rgba(251,191,36,0.1);">
+                                <i class="fa-solid fa-coins"></i> Orçamento ABO
+                            </button>` : ''}
+                            <button class="btn-edit-bid" onclick="promptEditBid('${adset.id}', ${bidVal}, '${safeName}')">
+                                <i class="fa-solid fa-pen-to-square"></i> Editar Lance (Cap)
+                            </button>
+                        </div>
                     </div>
                 </div>`;
             });
@@ -3264,22 +3455,50 @@
             ads.forEach(ad => {
                 const ins = ad.insights || {};
                 const isAdActive = (ad.status === 'ACTIVE');
-                const thumbHtml = ad.thumbnail 
+                const safeAdName = (ad.name || 'Anúncio').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                const creativeId = ad.creative?.id || '';
+                const adsetId = ad.adset_id || '';
+                const adsetObj = (currentCampaignAdsets || []).find(s => String(s.id) === String(adsetId));
+                const adsetName = adsetObj ? adsetObj.name : 'Conjunto';
+
+                const thumbImg = ad.thumbnail 
                     ? `<img src="${ad.thumbnail}" class="meta-ad-thumb" alt="${ad.name}" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'meta-ad-thumb\\'><i class=\\'fa-solid fa-play\\'></i></div>';">`
                     : `<div class="meta-ad-thumb"><i class="fa-solid fa-photo-film" style="color:var(--text-muted); font-size:20px;"></i></div>`;
+
+                const clickableThumbHtml = `
+                    <div class="meta-ad-thumb-wrapper" onclick="openAdPreviewModal('${ad.id}', '${safeAdName}', '${creativeId}', '${ad.status}')" title="Clique para ver o vídeo / prévia deste anúncio">
+                        ${thumbImg}
+                        <div class="meta-thumb-overlay"><i class="fa-solid fa-play"></i></div>
+                    </div>
+                `;
 
                 const isVideo = ins.video3s > 0;
 
                 html += `
                 <div class="meta-ad-card">
                     <div class="meta-ad-header">
-                        ${thumbHtml}
+                        ${clickableThumbHtml}
                         <div class="meta-ad-info">
-                            <div class="meta-ad-name" title="${ad.name}">${ad.name}</div>
-                            <div class="meta-ad-id">ID: ${ad.id}</div>
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+                                <div class="meta-ad-name" title="${ad.name}">${ad.name}</div>
+                                <div style="display:flex; gap:4px;">
+                                    <button class="btn-ad-mini-action" onclick="promptRenameAd('${ad.id}', '${safeAdName}')" title="Renomear Anúncio">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:2px;">
+                                <div class="meta-ad-id">ID: ${ad.id}</div>
+                                <span style="font-size:9px; font-weight:700; color:var(--text-muted); background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:4px;">
+                                    <i class="fa-solid fa-layer-group" style="font-size:8px;"></i> ${adsetName}
+                                </span>
+                            </div>
                             <div class="meta-ad-actions">
                                 <button class="btn-ad-toggle ${isAdActive ? 'active' : 'paused'}" onclick="toggleMetaAdStatus('${ad.id}', '${isAdActive ? 'PAUSED' : 'ACTIVE'}')">
-                                    <i class="fa-solid fa-${isAdActive ? 'check' : 'pause'}"></i> ${isAdActive ? 'ATIVO (Pausar)' : 'PAUSADO (Ativar)'}
+                                    <i class="fa-solid fa-${isAdActive ? 'check' : 'pause'}"></i> ${isAdActive ? 'ATIVO' : 'PAUSADO'}
+                                </button>
+                                <button class="btn-preview-ad" onclick="openAdPreviewModal('${ad.id}', '${safeAdName}', '${creativeId}', '${ad.status}')">
+                                    <i class="fa-solid fa-play"></i> Ver Vídeo / Prévia
                                 </button>
                             </div>
                         </div>
@@ -3550,6 +3769,390 @@
             metaCache.campaigns = {};
             metaCache.allCampaigns = null;
         }
+
+        // ─── PRÉVIA INTERATIVA DE CRIATIVO & VÍDEO META ADS ───
+        async function openAdPreviewModal(adId, adName, creativeId, status) {
+            currentPreviewAdId = adId;
+            currentPreviewCreativeId = creativeId;
+            currentPreviewFormat = 'DESKTOP_FEED_STANDARD';
+
+            const modal = document.getElementById('modal-ad-preview');
+            const titleEl = document.getElementById('ad-preview-title');
+            const idEl = document.getElementById('ad-preview-id');
+            const statusPill = document.getElementById('ad-preview-status-pill');
+            const toggleBtn = document.getElementById('btn-preview-toggle-status');
+
+            if (titleEl) titleEl.textContent = adName || 'Prévia do Anúncio';
+            if (idEl) idEl.textContent = `ID do Anúncio: ${adId} ${creativeId ? '• Criativo: ' + creativeId : ''}`;
+
+            const isActive = (status === 'ACTIVE');
+            if (statusPill) {
+                statusPill.textContent = isActive ? 'Ativo' : 'Pausado';
+                statusPill.style.background = isActive ? 'rgba(16, 185, 129, 0.2)' : 'rgba(148, 163, 184, 0.15)';
+                statusPill.style.color = isActive ? '#34d399' : '#94a3b8';
+                statusPill.style.border = `1px solid ${isActive ? 'rgba(16, 185, 129, 0.4)' : 'rgba(148, 163, 184, 0.3)'}`;
+            }
+
+            if (toggleBtn) {
+                toggleBtn.innerHTML = `<i class="fa-solid fa-${isActive ? 'pause' : 'play'}"></i> ${isActive ? 'Pausar Anúncio' : 'Ativar Anúncio'}`;
+                toggleBtn.onclick = () => {
+                    closeAdPreviewModal();
+                    toggleMetaAdStatus(adId, isActive ? 'PAUSED' : 'ACTIVE');
+                };
+            }
+
+            document.querySelectorAll('.ad-format-tab').forEach(t => t.classList.remove('active'));
+            const defTab = document.getElementById('tab-fmt-desktop');
+            if (defTab) defTab.classList.add('active');
+
+            if (modal) modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+
+            await loadAdPreviewIframe();
+        }
+
+        async function switchAdPreviewFormat(format, tabEl) {
+            currentPreviewFormat = format;
+            document.querySelectorAll('.ad-format-tab').forEach(t => t.classList.remove('active'));
+            if (tabEl) tabEl.classList.add('active');
+            await loadAdPreviewIframe();
+        }
+
+        async function loadAdPreviewIframe() {
+            const container = document.getElementById('ad-preview-content');
+            if (!container || !currentPreviewAdId) return;
+
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                    <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 26px; color: #38bdf8; margin-bottom: 12px;"></i>
+                    <div style="font-size: 13px; font-weight: 800; color: #fff;">Gerando prévia oficial na Meta...</div>
+                    <div style="font-size: 11px; margin-top: 4px;">Renderizando vídeo, som e layout do feed</div>
+                </div>
+            `;
+
+            try {
+                const targetId = currentPreviewCreativeId || currentPreviewAdId;
+                const res = await fetch(`${META_BASE_URL}/${targetId}/previews?ad_format=${currentPreviewFormat}&access_token=${META_CONFIG.token}`);
+                const data = await res.json();
+
+                if (!res.ok || data.error) {
+                    throw new Error(data?.error?.message || 'Falha ao obter prévia da Meta');
+                }
+
+                const previewItem = (data.data && data.data[0]) ? data.data[0] : null;
+                if (!previewItem || !previewItem.body) {
+                    container.innerHTML = '<div class="empty-state">Nenhuma prévia retornada pela Meta para este formato.</div>';
+                    return;
+                }
+
+                container.innerHTML = previewItem.body;
+                const iframe = container.querySelector('iframe');
+                if (iframe) {
+                    iframe.style.width = '100%';
+                    iframe.style.minHeight = '460px';
+                    iframe.style.border = 'none';
+                    iframe.style.borderRadius = '12px';
+                    iframe.allow = 'autoplay; fullscreen';
+                }
+            } catch (err) {
+                console.error('Erro ao carregar prévia:', err);
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 30px 16px; color: #f87171;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 24px; margin-bottom: 8px;"></i>
+                        <div style="font-size: 13px; font-weight: 800;">Não foi possível carregar a prévia interativa</div>
+                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px; max-width: 320px; margin-left: auto; margin-right: auto;">
+                            ${err.message}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function closeAdPreviewModal() {
+            const modal = document.getElementById('modal-ad-preview');
+            if (modal) modal.style.display = 'none';
+            const container = document.getElementById('ad-preview-content');
+            if (container) container.innerHTML = '';
+            document.body.style.overflow = '';
+        }
+
+        function toggleAdStatusFromPreview() {
+            // delegada dinamicamente
+        }
+
+        // ─── CRIAÇÃO DE ANÚNCIO NO CONJUNTO ───
+        function openNewAdModal(targetAdsetId) {
+            currentNewAdTargetAdsetId = targetAdsetId;
+            const modal = document.getElementById('modal-new-ad');
+            const selectAdset = document.getElementById('new-ad-target-adset');
+            const creativesContainer = document.getElementById('new-ad-creatives-list');
+            const inputName = document.getElementById('new-ad-name');
+
+            if (inputName) inputName.value = '';
+
+            if (selectAdset && currentCampaignAdsets) {
+                selectAdset.innerHTML = currentCampaignAdsets.map(a => `
+                    <option value="${a.id}" ${String(a.id) === String(targetAdsetId) ? 'selected' : ''}>
+                        ${a.name} (ID: ${a.id})
+                    </option>
+                `).join('');
+            }
+
+            if (creativesContainer) {
+                const uniqueCreatives = [];
+                const seen = new Set();
+                (currentCampaignAds || []).forEach(ad => {
+                    if (ad.creative && ad.creative.id && !seen.has(ad.creative.id)) {
+                        seen.add(ad.creative.id);
+                        uniqueCreatives.push(ad);
+                    }
+                });
+
+                if (uniqueCreatives.length === 0) {
+                    creativesContainer.innerHTML = '<div style="font-size:11px; color:var(--text-muted); text-align:center; padding:10px;">Nenhum criativo encontrado na campanha.</div>';
+                } else {
+                    selectedCreativeForNewAd = uniqueCreatives[0].creative.id;
+                    creativesContainer.innerHTML = uniqueCreatives.map((ad, idx) => `
+                        <div class="creative-pick-item" onclick="selectCreativeForNewAd('${ad.creative.id}', this)" style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:10px; background:${idx === 0 ? 'rgba(56,189,248,0.15)' : 'rgba(255,255,255,0.03)'}; border:1px solid ${idx === 0 ? 'rgba(56,189,248,0.4)' : 'rgba(255,255,255,0.06)'}; cursor:pointer; transition:all 0.15s;">
+                            <img src="${ad.thumbnail || 'capadasdoencas.webp'}" style="width:36px; height:36px; border-radius:6px; object-fit:cover; background:#000;" onerror="this.onerror=null; this.src='capadasdoencas.webp';">
+                            <div style="flex:1; min-width:0;">
+                                <div style="font-size:12px; font-weight:800; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${ad.name}</div>
+                                <div style="font-size:10px; color:var(--text-muted);">Criativo ID: ${ad.creative.id}</div>
+                            </div>
+                            <i class="fa-solid fa-check-circle" style="color:${idx === 0 ? '#38bdf8' : 'transparent'}; font-size:14px;"></i>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            if (modal) modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function selectCreativeForNewAd(creativeId, el) {
+            selectedCreativeForNewAd = creativeId;
+            document.querySelectorAll('#new-ad-creatives-list .creative-pick-item').forEach(item => {
+                item.style.background = 'rgba(255,255,255,0.03)';
+                item.style.borderColor = 'rgba(255,255,255,0.06)';
+                const check = item.querySelector('i');
+                if (check) check.style.color = 'transparent';
+            });
+            if (el) {
+                el.style.background = 'rgba(56,189,248,0.15)';
+                el.style.borderColor = 'rgba(56,189,248,0.4)';
+                const check = el.querySelector('i');
+                if (check) check.style.color = '#38bdf8';
+            }
+        }
+
+        function closeNewAdModal() {
+            const modal = document.getElementById('modal-new-ad');
+            if (modal) modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        async function submitCreateNewAd() {
+            const selectAdset = document.getElementById('new-ad-target-adset');
+            const inputName = document.getElementById('new-ad-name');
+            const btn = document.getElementById('btn-submit-create-ad');
+
+            const adsetId = selectAdset ? selectAdset.value : currentNewAdTargetAdsetId;
+            const name = inputName ? inputName.value.trim() : '';
+
+            if (!adsetId) {
+                alert('Selecione um conjunto de anúncios.');
+                return;
+            }
+            if (!name) {
+                alert('Informe o nome do novo anúncio.');
+                return;
+            }
+            if (!selectedCreativeForNewAd) {
+                alert('Selecione um criativo para este anúncio.');
+                return;
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Criando no Meta...';
+            }
+
+            showToast('Enviando anúncio para a Meta Ads...');
+            try {
+                const bodyParams = new URLSearchParams({
+                    access_token: META_CONFIG.token,
+                    name: name,
+                    adset_id: adsetId,
+                    creative: JSON.stringify({ creative_id: selectedCreativeForNewAd }),
+                    status: 'PAUSED'
+                });
+
+                const res = await fetch(`${META_BASE_URL}/${META_CONFIG.accountId}/ads`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: bodyParams
+                });
+
+                const data = await res.json();
+                if (!res.ok || data.error) {
+                    throw new Error(data?.error?.error_user_msg || data?.error?.message || 'Falha ao criar anúncio');
+                }
+
+                showToast('Novo anúncio criado com sucesso (Pausado)!');
+                closeNewAdModal();
+                metaCache.campaigns = {};
+                if (currentDetailCampId) await openCampaignDetail(currentDetailCampId, true);
+            } catch (e) {
+                alert(`Aviso da Meta ao criar anúncio:\n\n${e.message}`);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-plus"></i> Criar Anúncio (Pausado)';
+                }
+            }
+        }
+
+        // ─── DUPLICAÇÃO E EDIÇÃO RÁPIDA ───
+        function onDetailDuplicateCampClick() {
+            if (!currentDetailCampId) return;
+            const nameEl = document.getElementById('meta-camp-name');
+            const currName = nameEl ? nameEl.textContent.trim() : 'Campanha';
+            duplicateMetaCampaign(currentDetailCampId, currName);
+        }
+
+        async function duplicateMetaCampaign(campId, campName, event) {
+            if (event) event.stopPropagation();
+            const targetCampId = campId || currentDetailCampId;
+            if (!targetCampId) return;
+
+            if (!confirm(`Deseja DUPLICAR a campanha "${campName || 'Campanha'}"?\n\nA nova cópia será criada como PAUSADA na sua conta para sua total segurança.`)) return;
+
+            showToast('Duplicando campanha na Meta...');
+            try {
+                const res = await fetch(`${META_BASE_URL}/${targetCampId}/copies?access_token=${META_CONFIG.token}&deep_copy=false&status_option=PAUSED`, {
+                    method: 'POST'
+                });
+                const data = await res.json();
+                if (!res.ok || data.error) {
+                    throw new Error(data?.error?.message || 'Falha ao duplicar campanha');
+                }
+
+                const newId = data.copied_campaign_id;
+                showToast('Campanha duplicada com sucesso!');
+                metaCache.campaigns = {};
+                metaCache.allCampaigns = null;
+
+                if (newId) {
+                    await openCampaignDetail(newId, true);
+                } else {
+                    await loadAllMetaCampaigns(true);
+                }
+            } catch (e) {
+                alert(`Erro ao duplicar campanha: ${e.message}`);
+            }
+        }
+
+        async function duplicateMetaAdset(adsetId, adsetName) {
+            if (!currentDetailCampId) return;
+            if (!confirm(`Deseja DUPLICAR o conjunto "${adsetName || 'Conjunto'}"?\n\nO novo conjunto será criado como PAUSADO dentro desta mesma campanha.`)) return;
+
+            showToast('Duplicando conjunto na Meta...');
+            try {
+                const res = await fetch(`${META_BASE_URL}/${adsetId}/copies?access_token=${META_CONFIG.token}&campaign_id=${currentDetailCampId}&deep_copy=false&status_option=PAUSED`, {
+                    method: 'POST'
+                });
+                const data = await res.json();
+                if (!res.ok || data.error) {
+                    throw new Error(data?.error?.message || 'Falha ao duplicar conjunto');
+                }
+
+                showToast('Conjunto duplicado com sucesso!');
+                metaCache.campaigns = {};
+                await openCampaignDetail(currentDetailCampId, true);
+            } catch (e) {
+                alert(`Erro ao duplicar conjunto: ${e.message}`);
+            }
+        }
+
+        async function promptRenameAdset(adsetId, currentName) {
+            const novoNome = prompt('Novo nome para o Conjunto de Anúncios:', currentName);
+            if (!novoNome || !novoNome.trim() || novoNome.trim() === currentName.trim()) return;
+
+            showToast('Atualizando nome do conjunto...');
+            try {
+                const res = await fetch(`${META_BASE_URL}/${adsetId}?access_token=${META_CONFIG.token}&name=${encodeURIComponent(novoNome.trim())}`, {
+                    method: 'POST'
+                });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err?.error?.message || 'Falha ao renomear');
+                }
+                showToast('Conjunto renomeado com sucesso!');
+                metaCache.campaigns = {};
+                if (currentDetailCampId) await openCampaignDetail(currentDetailCampId, true);
+            } catch (e) {
+                alert(`Erro ao renomear conjunto: ${e.message}`);
+            }
+        }
+
+        async function promptEditAdsetBudget(adsetId, currentBudget, adsetName) {
+            const currentStr = currentBudget > 0 ? currentBudget.toFixed(2).replace('.', ',') : '50,00';
+            const novoValorStr = prompt(`Informe o novo orçamento diário para o conjunto "${adsetName}" (em Reais R$/dia):`, currentStr);
+            if (!novoValorStr) return;
+
+            const novoValor = parseFloat(novoValorStr.replace(',', '.'));
+            if (isNaN(novoValor) || novoValor < 5) {
+                alert('Por favor informe um orçamento diário válido (mínimo R$ 5,00).');
+                return;
+            }
+
+            const dailyBudgetCents = Math.round(novoValor * 100);
+            showToast(`Atualizando orçamento do conjunto para ${formatBRL(novoValor)}/dia...`);
+            try {
+                const res = await fetch(`${META_BASE_URL}/${adsetId}?access_token=${META_CONFIG.token}&daily_budget=${dailyBudgetCents}`, {
+                    method: 'POST'
+                });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err?.error?.message || 'Falha ao alterar orçamento do conjunto');
+                }
+                showToast(`Orçamento do conjunto atualizado para ${formatBRL(novoValor)}/dia!`);
+                metaCache.campaigns = {};
+                if (currentDetailCampId) await openCampaignDetail(currentDetailCampId, true);
+            } catch (e) {
+                alert(`Erro ao atualizar orçamento do conjunto: ${e.message}`);
+            }
+        }
+
+        async function promptRenameAd(adId, currentName) {
+            const novoNome = prompt('Novo nome para o Anúncio:', currentName);
+            if (!novoNome || !novoNome.trim() || novoNome.trim() === currentName.trim()) return;
+
+            showToast('Atualizando nome do anúncio...');
+            try {
+                const res = await fetch(`${META_BASE_URL}/${adId}?access_token=${META_CONFIG.token}&name=${encodeURIComponent(novoNome.trim())}`, {
+                    method: 'POST'
+                });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err?.error?.message || 'Falha ao renomear anúncio');
+                }
+                showToast('Anúncio renomeado com sucesso!');
+                metaCache.campaigns = {};
+                if (currentDetailCampId) await openCampaignDetail(currentDetailCampId, true);
+            } catch (e) {
+                alert(`Erro ao renomear anúncio: ${e.message}`);
+            }
+        }
+
+        // Fechar modais com ESC
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeAdPreviewModal();
+                closeNewAdModal();
+                closeAddFundsModal();
+            }
+        });
 
         // Helper de compatibilidade
         function loadMetaCampaignData(force = false) {
