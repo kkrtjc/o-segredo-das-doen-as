@@ -1311,6 +1311,7 @@ function switchMethod(method) {
     const btnPix = document.getElementById('btn-pay-pix');
     const btnCard = document.getElementById('btn-pay-card');
     const btnBoleto = document.getElementById('btn-pay-boleto');
+    const cardNotice = document.getElementById('card-return-notice');
 
     if (method === 'pix') {
         if (pixArea) { pixArea.style.display = 'block'; }
@@ -1318,6 +1319,7 @@ function switchMethod(method) {
         if (btnPix) btnPix.style.display = 'block';
         if (btnCard) btnCard.style.display = 'none';
         if (btnBoleto) btnBoleto.style.display = 'none';
+        if (cardNotice) cardNotice.style.display = 'none';
         const pixFields = document.getElementById('pix-fields');
         if (pixFields) pixFields.style.display = 'block';
 
@@ -1327,6 +1329,7 @@ function switchMethod(method) {
         if (btnPix) btnPix.style.display = 'none';
         if (btnCard) btnCard.style.display = 'block';
         if (btnBoleto) btnBoleto.style.display = 'none';
+        if (cardNotice) cardNotice.style.display = 'block';
         const pixFields = document.getElementById('pix-fields');
         if (pixFields) pixFields.style.display = 'block'; // KEEP VISIBLE
 
@@ -1336,6 +1339,7 @@ function switchMethod(method) {
         if (btnPix) btnPix.style.display = 'none';
         if (btnCard) btnCard.style.display = 'none';
         if (btnBoleto) btnBoleto.style.display = 'block';
+        if (cardNotice) cardNotice.style.display = 'none';
         const pixFields = document.getElementById('pix-fields');
         if (pixFields) pixFields.style.display = 'block';
     }
@@ -1713,6 +1717,8 @@ async function handlePayment(method) {
             document.getElementById('qr-code-img').style.opacity = '0';
             document.getElementById('pix-receiver-info').classList.add('hidden');
             document.getElementById('btn-copy-pix').style.display = 'none';
+            const pixNotice = document.getElementById('pix-return-notice');
+            if (pixNotice) pixNotice.style.display = 'none';
         } else {
             document.getElementById('boleto-barcode-display').innerText = 'Gerando código...';
             document.getElementById('btn-copy-boleto').style.display = 'none';
@@ -2395,6 +2401,10 @@ document.querySelector('.close-modal')?.addEventListener('click', async () => {
         if (boletoResult) boletoResult.classList.add('hidden');
         const boletoImg = document.getElementById('boleto-display-img');
         if (boletoImg) revokeBoletoIllustrationObjectUrl(boletoImg);
+        const pixNotice = document.getElementById('pix-return-notice');
+        if (pixNotice) pixNotice.style.display = 'none';
+        const cardNotice = document.getElementById('card-return-notice');
+        if (cardNotice) cardNotice.style.display = 'none';
         if (window.activePixPoll) {
             clearInterval(window.activePixPoll);
             window.activePixPoll = null;
@@ -2522,6 +2532,8 @@ function showPixResult(data, items) {
     qrImg.style.opacity = '1';
     if (receiverInfo) receiverInfo.classList.remove('hidden');
     if (copyBtn) copyBtn.style.display = 'block';
+    const pixNotice = document.getElementById('pix-return-notice');
+    if (pixNotice) pixNotice.style.display = 'block';
 
     qrImg.onload = () => {
         // Imagem carregou com sucesso
