@@ -763,9 +763,12 @@ function renderOrderBumps(bumps) {
     area.style.marginTop = '0.5rem';
 
     const bumpHeader = `
-        <div style="text-align: center; margin-bottom: 6px; padding: 8px 12px; background: rgba(245,158,11,0.08); border-radius: 8px; border: 1px solid rgba(245,158,11,0.25);">
-            <p style="color: #fbbf24; font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; margin: 0; line-height: 1.4;">
-                ⚡ Oferta exclusiva pra você economizar na sua criação.
+        <div style="text-align: center; margin-bottom: 8px; padding: 8px 12px; background: rgba(245,158,11,0.08); border-radius: 8px; border: 1px solid rgba(245,158,11,0.25);">
+            <p style="color: #fbbf24; font-size: 0.74rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 2px 0; line-height: 1.35;">
+                ⚡ Esses Conteúdos estão com desconto por pouco tempo
+            </p>
+            <p style="color: #cbd5e1; font-size: 0.7rem; font-weight: 600; margin: 0; line-height: 1.3;">
+                Não perca essa oportunidade única.
             </p>
         </div>
     `;
