@@ -332,10 +332,16 @@ adminRoutes.post('/history/resend-email', async (c) => {
     const history = await getHistory(c.env);
     const sale = history.find(h => h.paymentId === paymentId);
     if (!sale) return c.json({ error: 'Venda não encontrada' }, 404);
-    const { sendEmail } = await import('./email.js');
-    const customer = { name: sale.name, email: sale.email, phone: sale.phone };
+    const customer = { 
+        name: sale.customer?.name || sale.name, 
+        email: sale.customer?.email || sale.email, 
+        phone: sale.customer?.phone || sale.phone,
+        cpf: sale.customer?.cpf || sale.cpf 
+    };
     const items = (sale.items || []).map(title => ({ title }));
-    const ok = await sendEmail(c.env, customer, items, paymentId);
+    const cleanCpf = (customer.cpf || '').replace(/\D/g, '');
+    const salePassword = sale.password || (cleanCpf ? await c.env.HISTORY.get('pw_' + cleanCpf) : null);
+    const ok = await sendEmail(c.env, customer, items, paymentId, null, null, null, null, null, sale.site || 'app', null, salePassword);
     return c.json(ok ? { success: true } : { error: 'Falha ao enviar e-mail' }, ok ? 200 : 500);
 });
 

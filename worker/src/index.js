@@ -156,6 +156,8 @@ app.get('/api/payment/:id', async (c) => {
             await c.env.HISTORY.put(lockKey, 'locked', { expirationTtl: 7200 });
             const isNewSale = await logSale(c.env, customer, items, result.id, result.payment_method_id === 'pix' ? 'pix' : 'cartão', metadata.site || 'app');
             if (isNewSale) {
+                const cleanCpf = (customer.cpf || '').replace(/\D/g, '');
+                const salePassword = cleanCpf ? await c.env.HISTORY.get('pw_' + cleanCpf) : null;
                 await sendEmail(c.env, customer, items, result.id,
                     metadata.facebook_event_id,
                     metadata.fbc,
@@ -163,7 +165,8 @@ app.get('/api/payment/:id', async (c) => {
                     metadata.user_agent,
                     null,
                     metadata.site || 'app',
-                    metadata.external_id);
+                    metadata.external_id,
+                    salePassword);
             }
         }
         

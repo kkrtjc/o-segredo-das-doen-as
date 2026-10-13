@@ -2169,10 +2169,15 @@
                     senhaLinhaWpp += ` *(4 primeiros dígitos do seu CPF)*`;
                 }
 
-                const itens = (sale.items || []).join(' + ') || 'Manual de Manejo de Pintinhos';
-                const appLink = 'https://protocolo-elite.pages.dev/?login=1';
+                const saleItems = sale.items || [];
+                const isPintinhosSale = currentCampaign === 'pintinhos' || saleItems.some(i => String(i).toLowerCase().includes('pintinho') || String(i).toLowerCase().includes('manejo'));
+                const defaultProd = isPintinhosSale ? 'Manual de Manejo de Pintinhos' : 'PROTOCOLO ELITE: A Cura das Aves';
+                const itens = saleItems.length > 0 ? saleItems.join(' + ') : defaultProd;
 
-                const fullMsg = `Olá, ${nome}! 🐣🐔\n\nSeu acesso ao *Protocolo Elite* está liberado com sucesso!\n\n📱 *Link de Acesso Direto:*\n${appLink}\n\n🔑 *Seus Dados de Login:*\n• *Login (CPF):* ${formattedCpf}\n${email ? `• *Ou pelo E-mail:* ${email}\n` : ''}${senhaLinhaWpp}\n\n👉 _Basta clicar no link acima para abrir a tela de login. Digite seu CPF (ou seu E-mail) e sua senha e clique em Entrar!_\n\n⭐ *Grupo VIP dos Criadores:*\nhttps://chat.whatsapp.com/JXkGitHbLd3AeY8LqiLdYB\n\nQualquer dúvida estou à disposição por aqui!`;
+                const directLoginLink = `https://protocolo-elite.pages.dev/?login=1&cpf=${rawCpf}&senha=${encodeURIComponent(senhaAcesso)}`;
+                const emojiHeader = isPintinhosSale ? '🐣🐔' : '🐔';
+
+                const fullMsg = `Olá, ${nome}! ${emojiHeader}\n\nSeu acesso ao *Protocolo Elite* está liberado com sucesso!\n\n🌟 *Validade do Acesso:* Vitalício (Acesso Permanente)\n\n📱 *Link de Acesso Direto:*\n${directLoginLink}\n\n👉 _É só clicar no link acima! Seus dados de login já estarão preenchidos na tela, basta clicar em Entrar:_\n\n🔑 *Seus Dados de Login:*\n• *Login (CPF):* ${formattedCpf}\n${email ? `• *Ou pelo E-mail:* ${email}\n` : ''}${senhaLinhaWpp}\n\n📦 *Conteúdos Liberados:*\n• ${itens}\n\nQualquer dúvida estou à disposição por aqui!`;
                 const wppMsg = encodeURIComponent(fullMsg);
 
                 html += `
@@ -2648,13 +2653,15 @@
                     const fullPhone = cleanPhone.startsWith('55') ? cleanPhone : '55' + cleanPhone;
                     const firstName = (c.name || 'Cliente').split(' ')[0];
                     const cleanCpfOnly = (c.cleanCpf || '').replace(/\D/g, '');
-                    const directLink = `https://protocolo-elite.pages.dev/?login=1&cpf=${cleanCpfOnly}`;
+                    const clientPwd = c.password || (cleanCpfOnly.length >= 4 ? cleanCpfOnly.slice(0, 4) : '1234');
+                    const directLink = `https://protocolo-elite.pages.dev/?login=1&cpf=${cleanCpfOnly}&senha=${encodeURIComponent(clientPwd)}`;
+                    const formattedCpfClient = cleanCpfOnly.length === 11 ? `${cleanCpfOnly.slice(0,3)}.${cleanCpfOnly.slice(3,6)}.${cleanCpfOnly.slice(6,9)}-${cleanCpfOnly.slice(9)}` : (c.cpf || cleanCpfOnly);
 
                     let wppText = '';
                     if (act.status === 'recent_pending') {
-                        wppText = `Olá, ${firstName}! Tudo bem? Aqui é o João Paulo do Protocolo Elite.\n\nVi que você acabou de garantir seu acesso ao ${c.levelLabel}! Passando para te dar as boas-vindas e enviar seu link direto de acesso:\n${directLink}\n\nFicou alguma dúvida? Estou por aqui para te apoiar!`;
+                        wppText = `Olá, ${firstName}! 🐔\n\nSeu acesso ao *Protocolo Elite* está liberado com sucesso!\n\n🌟 *Validade do Acesso:* Vitalício (Acesso Permanente)\n\n📱 *Link de Acesso Direto:*\n${directLink}\n\n👉 _Basta clicar no link acima! Seus dados de login já estarão preenchidos na tela:_\n\n🔑 *Seus Dados de Login:*\n• *Login (CPF):* ${formattedCpfClient}\n${c.email ? `• *Ou pelo E-mail:* ${c.email}\n` : ''}• *Senha de Acesso:* ${clientPwd}\n\nFicou alguma dúvida? Estou por aqui para te apoiar!`;
                     } else if (act.status === 'historical') {
-                        wppText = `Olá, ${firstName}! Tudo bem? Aqui é o João Paulo do Protocolo Elite. Passando para saber como estão suas aves e te lembrar que você tem acesso liberado à nossa plataforma atualizada:\n${directLink}\n\nQualquer dúvida é só me chamar!`;
+                        wppText = `Olá, ${firstName}! Tudo bem? Aqui é o João Paulo do Protocolo Elite. Passando para saber como estão suas aves e te lembrar dos seus dados de acesso:\n\n📱 *Link Direto:* ${directLink}\n🔑 *Login:* ${formattedCpfClient} | *Senha:* ${clientPwd}\n\nQualquer dúvida é só me chamar!`;
                     } else {
                         wppText = `Olá, ${firstName}! Tudo bem? Aqui é o João Paulo do Protocolo Elite. Passando para saber como estão suas aves e se você está conseguindo aplicar os manejos da plataforma! Qualquer dúvida é só me chamar por aqui.`;
                     }

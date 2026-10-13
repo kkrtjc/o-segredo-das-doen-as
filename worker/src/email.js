@@ -14,9 +14,10 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
         // CPF limpo para construir o link do Protocolo Elite
         const cleanCPF = (customer.cpf || '').replace(/\D/g, '');
 
-        // Link do Protocolo Elite — ?login=1 abre o modal de login direto (funciona no iOS)
+        // Link do Protocolo Elite — com login e senha pré-preenchidos para acesso em 1 clique
         const PROTOCOLO_ELITE_URL = 'https://protocolo-elite.pages.dev';
-        const accessLink = `${PROTOCOLO_ELITE_URL}/?login=1`;
+        const clientPwd = senha || cleanCPF.slice(0, 4) || '1234';
+        const accessLink = `${PROTOCOLO_ELITE_URL}/?login=1&cpf=${cleanCPF}&senha=${encodeURIComponent(clientPwd)}`;
 
         // CPF formatado para exibição no e-mail (XXX.XXX.XXX-XX)
         const cpfFormatted = cleanCPF.length === 11
@@ -55,21 +56,21 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
       <div class="cpf-label" style="margin-top: 6px; font-size: 11px; color: #888;">Você também pode entrar com seu e-mail cadastrado</div>
       <div style="margin-top: 14px; border-top: 1px solid #e5e7eb; padding-top: 12px;">
         <div class="cpf-label">🔒 Sua Senha de Acesso</div>
-        <div class="cpf-value" style="font-size: 26px; color: #D4AF37; letter-spacing: 3px;">${senha || cleanCPF.slice(0, 4) || '1234'}</div>
+        <div class="cpf-value" style="font-size: 26px; color: #D4AF37; letter-spacing: 3px;">${clientPwd}</div>
         <div class="cpf-label" style="margin-top: 4px; font-size: 11px;">Guarde esta senha com segurança</div>
       </div>
     </div>
 
     <div style="text-align:center;margin:30px 0;">
       <a href="${accessLink}" class="btn">ACESSAR O PROTOCOLO ELITE ➔</a>
-      <p style="color:#666;font-size:13px;margin-top:10px;">Clique no botão acima. Seu CPF já estará pré-preenchido.</p>
+      <p style="color:#666;font-size:13px;margin-top:10px;">Clique no botão acima. Seus dados já estarão preenchidos.</p>
     </div>
 
     <div class="info-box">
       <strong>📱 Como acessar:</strong><br>
       1. Clique no botão acima para abrir o aplicativo.<br>
       2. Faça login com seu CPF: <strong>${cpfFormatted}</strong> (ou com seu e-mail: <strong>${customer.email}</strong>).<br>
-      3. Use a sua senha: <strong>${senha || cleanCPF.slice(0, 4) || '1234'}</strong>.<br>
+      3. Use a sua senha: <strong>${clientPwd}</strong>.<br>
       4. Você pode alterar esta senha a qualquer momento nas configurações do aplicativo.
     </div>
 
@@ -86,16 +87,31 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
 </html>`;
 
         const webhookUrl = 'https://hook.us2.make.com/jelleujxca0ntlko5lirhhsfdvlyhetf';
+
+        const productListStr = (items || []).map(i => {
+            const t = typeof i === 'string' ? i : (i.title || i.id || '');
+            return `• ${t}`;
+        }).join('\n');
+
+        const whatsappMessage = `Olá, ${customer.name || 'Criador'}! 🐔\n\nSeu acesso ao *Protocolo Elite* está liberado com sucesso!\n\n🌟 *Validade do Acesso:* Vitalício (Acesso Permanente)\n\n📱 *Link de Acesso Direto:*\n${accessLink}\n\n👉 _É só clicar no link acima! Seus dados de login já estarão preenchidos na tela, basta clicar em Entrar:_\n\n🔑 *Seus Dados de Login:*\n• *Login (CPF):* ${cpfFormatted}\n${customer.email ? `• *Ou pelo E-mail:* ${customer.email}\n` : ''}• *Senha de Acesso:* ${clientPwd}\n\n${productListStr ? `📦 *Conteúdos Liberados:*\n${productListStr}\n\n` : ''}Qualquer dúvida estou à disposição por aqui!`;
+
         const payload = {
             to: customer.email,
+            phone: customer.phone || '',
+            customer_phone: customer.phone || '',
             subject: '✅ Seu Acesso ao Protocolo Elite foi Liberado!',
             html: htmlContent,
-            text: `Olá ${customer.name},\n\nSeu pagamento foi confirmado! Seu acesso ao Protocolo Elite está liberado.\n\n🔑 Seu Login (CPF): ${cpfFormatted}\n🔒 Sua Senha de Acesso: ${senha || cleanCPF.slice(0, 4) || '1234'}\n\nVocê também pode logar com seu e-mail cadastrado usando a mesma senha.\n\nClique no link abaixo para acessar:\n${accessLink}\n\nSe precisar de ajuda, fale no WhatsApp:\nhttps://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20com%20meu%20acesso%20ao%20Protocolo%20Elite\n\nAtt,\nGalos Mura Brasil`,
+            text: `Olá ${customer.name},\n\nSeu pagamento foi confirmado! Seu acesso ao Protocolo Elite está liberado.\n\n🔑 Seu Login (CPF): ${cpfFormatted}\n🔒 Sua Senha de Acesso: ${clientPwd}\n\nVocê também pode logar com seu e-mail cadastrado usando a mesma senha.\n\nClique no link abaixo para acessar direto:\n${accessLink}\n\nSe precisar de ajuda, fale no WhatsApp:\nhttps://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20com%20meu%20acesso%20ao%20Protocolo%20Elite\n\nAtt,\nGalos Mura Brasil`,
+            whatsapp_message: whatsappMessage,
+            whatsapp_text: whatsappMessage,
             download_link: accessLink,
             customer_name: customer.name || '',
             customer_cpf: cpfFormatted,
+            customer_password: clientPwd,
+            password: clientPwd,
             access_link: accessLink,
             whatsapp_link: 'https://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20com%20meu%20acesso%20ao%20Protocolo%20Elite',
+            items: (items || []).map(i => (typeof i === 'string' ? i : i.title)).join(', '),
             // Campos opcionais sempre como string (nunca null/undefined) para evitar erro de validação no Make
             facebook_event_id: facebookEventId || '',
             fbc: fbc || '',
