@@ -543,6 +543,144 @@
             font-size: 13px; font-weight: 800; color: #fff; margin-top: 2px;
         }
 
+        /* ─── CONTADOR DE FREQUÊNCIA DE CRIATIVOS ─── */
+        .meta-freq-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 9px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .meta-freq-counter .freq-tag-pill {
+            font-size: 9px;
+            font-weight: 900;
+            text-transform: uppercase;
+            padding: 1px 6px;
+            border-radius: 5px;
+            letter-spacing: 0.5px;
+        }
+        .meta-freq-counter.freq-otimo {
+            background: rgba(16, 185, 129, 0.18);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.45);
+        }
+        .meta-freq-counter.freq-otimo .freq-tag-pill {
+            background: rgba(16, 185, 129, 0.35);
+            color: #ecfdf5;
+        }
+        .meta-freq-counter.freq-aceitavel {
+            background: rgba(245, 158, 11, 0.18);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.45);
+        }
+        .meta-freq-counter.freq-aceitavel .freq-tag-pill {
+            background: rgba(245, 158, 11, 0.35);
+            color: #fffbeb;
+        }
+        .meta-freq-counter.freq-precario {
+            background: rgba(239, 68, 68, 0.22);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.55);
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.25);
+        }
+        .meta-freq-counter.freq-precario .freq-tag-pill {
+            background: rgba(239, 68, 68, 0.45);
+            color: #fff;
+            animation: pulse-badge-red 1.8s infinite ease-in-out;
+        }
+        .meta-freq-counter.freq-none {
+            background: rgba(148, 163, 184, 0.12);
+            color: #94a3b8;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+        }
+        .meta-freq-counter.freq-none .freq-tag-pill {
+            background: rgba(148, 163, 184, 0.2);
+            color: #cbd5e1;
+        }
+        @keyframes pulse-badge-red {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .meta-thumb-freq-tag {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            font-size: 9px;
+            font-weight: 900;
+            padding: 1px 5px;
+            border-radius: 5px;
+            z-index: 2;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.6);
+            letter-spacing: 0.3px;
+        }
+        .meta-thumb-freq-tag.freq-otimo { background: rgba(16, 185, 129, 0.95); color: #fff; }
+        .meta-thumb-freq-tag.freq-aceitavel { background: rgba(245, 158, 11, 0.95); color: #fff; }
+        .meta-thumb-freq-tag.freq-precario { background: rgba(239, 68, 68, 0.95); color: #fff; animation: pulse-badge-red 1.8s infinite; }
+        .meta-thumb-freq-tag.freq-none { background: rgba(51, 65, 85, 0.85); color: #cbd5e1; }
+
+        .meta-ad-card.meta-ad-card-fatigue {
+            border-color: rgba(239, 68, 68, 0.4);
+            background: linear-gradient(180deg, rgba(239, 68, 68, 0.05) 0%, var(--surface-color) 40%);
+        }
+
+        .meta-freq-legend-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            padding: 8px 12px;
+            margin-bottom: 12px;
+        }
+        .meta-freq-legend-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .meta-freq-legend-items {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .meta-freq-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+        .meta-freq-pill.freq-otimo {
+            background: rgba(16, 185, 129, 0.18);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+        .meta-freq-pill.freq-aceitavel {
+            background: rgba(245, 158, 11, 0.18);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+        .meta-freq-pill.freq-precario {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.45);
+        }
+
         .video-retention-box {
             background: rgba(0, 0, 0, 0.2); border: 1px solid var(--surface-border);
             border-radius: 12px; padding: 10px 12px;
@@ -1506,6 +1644,7 @@
                             <i class="fa-solid fa-play"></i> Prévia Oficial Meta
                         </span>
                         <span id="ad-preview-status-pill" style="font-size:10px; font-weight:800; padding:2px 8px; border-radius:6px; text-transform:uppercase;"></span>
+                        <span id="ad-preview-freq-pill" style="display:none;"></span>
                     </div>
                     <div id="ad-preview-title" style="font-size:15px; font-weight:900; color:#fff; margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Nome do Anúncio</div>
                     <div id="ad-preview-id" style="font-size:10px; color:var(--text-muted); font-family:monospace;">ID: ...</div>
@@ -2784,7 +2923,8 @@
 
             const impressions = parseInt(raw.impressions || 0, 10);
             const reach = parseInt(raw.reach || 0, 10);
-            const frequency = parseFloat(raw.frequency || 0);
+            const rawFreq = parseFloat(raw.frequency || 0);
+            const frequency = rawFreq > 0 ? rawFreq : (reach > 0 && impressions > 0 ? (impressions / reach) : 0);
 
             // Cliques no Link (padrão exato da coluna 'Cliques no Link' do Gerenciador de Anúncios)
             const linkClicksAction = actions.find(a => a.action_type === 'link_click');
@@ -2843,6 +2983,76 @@
                 videoP75: video3s > 0 && videoP75 > 0 ? Math.min(100, Math.round((videoP75 / video3s) * 100)) : 0,
                 videoP100: video3s > 0 && videoP100 > 0 ? Math.min(100, Math.round((videoP100 / video3s) * 100)) : 0
             };
+        }
+
+        // ─── CLASSIFICADOR DE FREQUÊNCIA DE CRIATIVOS & CAMPANHAS ───
+        function getMetaFrequencyStatus(frequency, impressions = 0, spend = 0) {
+            const freq = parseFloat(frequency || 0);
+            const imp = parseInt(impressions || 0, 10);
+            const sp = parseFloat(spend || 0);
+
+            if (imp === 0 && sp === 0) {
+                return {
+                    val: 0,
+                    valStr: '--',
+                    label: 'Sem Veiculação',
+                    class: 'freq-none',
+                    color: '#94a3b8',
+                    textColor: '#94a3b8',
+                    bg: 'rgba(148, 163, 184, 0.12)',
+                    border: 'rgba(148, 163, 184, 0.3)',
+                    dot: 'fa-minus',
+                    desc: 'Anúncio sem gasto ou impressões no período selecionado.'
+                };
+            }
+
+            const effectiveFreq = freq > 0 ? freq : (imp > 0 ? 1.0 : 0);
+            const valStr = effectiveFreq > 0 ? effectiveFreq.toFixed(2) + 'x' : '--';
+
+            // Frequência de Criativo:
+            // ÓTIMO (Verde): <= 1.80x (Criativo fresco, audiência nova)
+            // ACEITÁVEL (Amarelo): 1.81x a 2.80x (Anúncio repetindo, monitorar)
+            // PRECÁRIO (Vermelho): > 2.80x (Fadiga de criativo, saturação de audiência)
+            if (effectiveFreq <= 1.80) {
+                return {
+                    val: effectiveFreq,
+                    valStr: valStr,
+                    label: 'Ótimo',
+                    class: 'freq-otimo',
+                    color: '#10b981',
+                    textColor: '#34d399',
+                    bg: 'rgba(16, 185, 129, 0.18)',
+                    border: 'rgba(16, 185, 129, 0.45)',
+                    dot: 'fa-circle-check',
+                    desc: 'Frequência Ótima (≤ 1.80x): Criativo fresco alcançando pessoas novas, excelente entrega sem saturação.'
+                };
+            } else if (effectiveFreq <= 2.80) {
+                return {
+                    val: effectiveFreq,
+                    valStr: valStr,
+                    label: 'Aceitável',
+                    class: 'freq-aceitavel',
+                    color: '#f59e0b',
+                    textColor: '#fbbf24',
+                    bg: 'rgba(245, 158, 11, 0.18)',
+                    border: 'rgba(245, 158, 11, 0.45)',
+                    dot: 'fa-triangle-exclamation',
+                    desc: 'Frequência Aceitável (1.81x – 2.80x): Criativo começando a se repetir para o mesmo público. Fique de olho no CPA.'
+                };
+            } else {
+                return {
+                    val: effectiveFreq,
+                    valStr: valStr,
+                    label: 'Precário',
+                    class: 'freq-precario',
+                    color: '#ef4444',
+                    textColor: '#f87171',
+                    bg: 'rgba(239, 68, 68, 0.22)',
+                    border: 'rgba(239, 68, 68, 0.55)',
+                    dot: 'fa-triangle-exclamation',
+                    desc: 'Frequência Precária (> 2.80x): Fadiga de criativo! O mesmo anúncio está sendo exibido repetidamente para as mesmas pessoas, encarecendo os custos. Considere trocar ou pausar.'
+                };
+            }
         }
 
         function getMetaDateParam(period) {
@@ -3094,6 +3304,7 @@
                     : `<span class="meta-badge-status paused"><i class="fa-solid fa-circle-pause"></i> PAUSADA</span>`;
 
                 const roasColor = ins.roas >= 2.0 ? 'var(--accent-green)' : (ins.roas >= 1.0 ? '#fbbf24' : 'var(--text-muted)');
+                const campFreq = getMetaFrequencyStatus(ins.frequency, ins.impressions, ins.spend);
 
                 const safeCampName = (c.displayName || c.name || '').replace(/'/g, "\\'");
 
@@ -3115,6 +3326,9 @@
                                 ${statusBadge}
                                 ${stratBadge}
                                 <span class="meta-camp-badge-budget"><i class="fa-solid fa-coins"></i> ${budgetTxt}</span>
+                                <span class="meta-camp-badge-budget" style="background:${campFreq.bg}; color:${campFreq.textColor}; border:1px solid ${campFreq.border};" title="${campFreq.desc}">
+                                    <i class="fa-solid ${campFreq.dot}"></i> Freq: ${campFreq.valStr} (${campFreq.label})
+                                </span>
                                 <span style="font-size: 10px; color: var(--text-muted); font-weight: 700;">ID: ${c.id}</span>
                             </div>
                         </div>
@@ -3319,10 +3533,11 @@
             const cpaStr = insights.purchases > 0 ? formatBRL(insights.cost_per_purchase) : 'R$ --,--';
             document.getElementById('meta-kpi-purchases').innerHTML = `${insights.purchases} <span style="font-size: 11px; color: var(--text-muted); font-weight:700;">(CPA ${cpaStr})</span>`;
 
-            // Alerta de Frequência
+            // Alerta e Indicador de Frequência da Campanha
+            const campFreq = getMetaFrequencyStatus(insights.frequency, insights.impressions, insights.spend);
             const freqAlert = document.getElementById('meta-alert-frequency');
-            if (insights.frequency >= 2.5) {
-                document.getElementById('meta-freq-val').textContent = insights.frequency.toFixed(2);
+            if (campFreq.class === 'freq-precario') {
+                document.getElementById('meta-freq-val').textContent = campFreq.valStr;
                 freqAlert.style.display = 'flex';
             } else {
                 freqAlert.style.display = 'none';
@@ -3331,7 +3546,10 @@
             // Funil - Topo
             document.getElementById('meta-metric-impressions').textContent = insights.impressions.toLocaleString('pt-BR');
             document.getElementById('meta-metric-reach').textContent = insights.reach.toLocaleString('pt-BR');
-            document.getElementById('meta-metric-frequency').textContent = insights.frequency > 0 ? insights.frequency.toFixed(2) : '0.00';
+            const freqMetricEl = document.getElementById('meta-metric-frequency');
+            if (freqMetricEl) {
+                freqMetricEl.innerHTML = `${campFreq.valStr} <span style="font-size:10px; font-weight:800; padding:1px 6px; border-radius:4px; background:${campFreq.bg}; color:${campFreq.textColor}; border:1px solid ${campFreq.border};">${campFreq.label}</span>`;
+            }
             document.getElementById('meta-metric-cpm').textContent = formatBRL(insights.cpm);
 
             // Funil - Meio
@@ -3458,7 +3676,18 @@
                 return;
             }
 
-            let html = '';
+            let html = `
+            <div class="meta-freq-legend-bar">
+                <div class="meta-freq-legend-title">
+                    <i class="fa-solid fa-gauge-high" style="color:var(--accent-gold);"></i> Contador de Frequência dos Criativos:
+                </div>
+                <div class="meta-freq-legend-items">
+                    <span class="meta-freq-pill freq-otimo" title="Menos de 1.80 exibições por pessoa"><i class="fa-solid fa-circle-check"></i> Ótimo (&le; 1.80x)</span>
+                    <span class="meta-freq-pill freq-aceitavel" title="Entre 1.81 e 2.80 exibições por pessoa"><i class="fa-solid fa-triangle-exclamation"></i> Aceitável (1.81x - 2.80x)</span>
+                    <span class="meta-freq-pill freq-precario" title="Mais de 2.80 exibições por pessoa - Saturação / Fadiga"><i class="fa-solid fa-triangle-exclamation"></i> Precário (&gt; 2.80x)</span>
+                </div>
+            </div>`;
+
             ads.forEach(ad => {
                 const ins = ad.insights || {};
                 const isAdActive = (ad.status === 'ACTIVE');
@@ -3468,6 +3697,8 @@
                 const adsetObj = (currentCampaignAdsets || []).find(s => String(s.id) === String(adsetId));
                 const adsetName = adsetObj ? adsetObj.name : 'Conjunto';
 
+                const freqStatus = getMetaFrequencyStatus(ins.frequency, ins.impressions, ins.spend);
+
                 const thumbImg = ad.thumbnail 
                     ? `<img src="${ad.thumbnail}" class="meta-ad-thumb" alt="${ad.name}" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'meta-ad-thumb\\'><i class=\\'fa-solid fa-play\\'></i></div>';">`
                     : `<div class="meta-ad-thumb"><i class="fa-solid fa-photo-film" style="color:var(--text-muted); font-size:20px;"></i></div>`;
@@ -3476,25 +3707,36 @@
                     <div class="meta-ad-thumb-wrapper" onclick="openAdPreviewModal('${ad.id}', '${safeAdName}', '${creativeId}', '${ad.status}')" title="Clique para ver o vídeo / prévia deste anúncio">
                         ${thumbImg}
                         <div class="meta-thumb-overlay"><i class="fa-solid fa-play"></i></div>
+                        <div class="meta-thumb-freq-tag ${freqStatus.class}" title="Frequência do Criativo: ${freqStatus.valStr} (${freqStatus.label})">
+                            ${freqStatus.valStr}
+                        </div>
                     </div>
                 `;
 
                 const isVideo = ins.video3s > 0;
 
                 html += `
-                <div class="meta-ad-card">
+                <div class="meta-ad-card ${freqStatus.class === 'freq-precario' && isAdActive ? 'meta-ad-card-fatigue' : ''}">
                     <div class="meta-ad-header">
                         ${clickableThumbHtml}
                         <div class="meta-ad-info">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
-                                <div class="meta-ad-name" title="${ad.name}">${ad.name}</div>
-                                <div style="display:flex; gap:4px;">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; flex-wrap:wrap;">
+                                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; min-width:0; flex:1;">
+                                    <div class="meta-ad-name" title="${ad.name}">${ad.name}</div>
+                                    <!-- CONTADOR DE FREQUÊNCIA NA FRENTE DO CRIATIVO -->
+                                    <div class="meta-freq-counter ${freqStatus.class}" title="${freqStatus.desc}">
+                                        <i class="fa-solid ${freqStatus.dot}"></i>
+                                        <span>Freq: <strong>${freqStatus.valStr}</strong></span>
+                                        <span class="freq-tag-pill">${freqStatus.label}</span>
+                                    </div>
+                                </div>
+                                <div style="display:flex; gap:4px; flex-shrink:0;">
                                     <button class="btn-ad-mini-action" onclick="promptRenameAd('${ad.id}', '${safeAdName}')" title="Renomear Anúncio">
                                         <i class="fa-solid fa-pen"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:2px;">
+                            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:4px;">
                                 <div class="meta-ad-id">ID: ${ad.id}</div>
                                 <span style="font-size:9px; font-weight:700; color:var(--text-muted); background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:4px;">
                                     <i class="fa-solid fa-layer-group" style="font-size:8px;"></i> ${adsetName}
@@ -3511,8 +3753,14 @@
                         </div>
                     </div>
 
-                    <!-- Métricas do Criativo com Faturamento e ROAS Real -->
+                    <!-- Métricas do Criativo com Frequência, Gasto, Faturamento e ROAS Real -->
                     <div class="meta-ad-stats-row">
+                        <div class="meta-ad-stat-col" title="${freqStatus.desc}">
+                            <div class="lbl">Frequência</div>
+                            <div class="val" style="color:${freqStatus.textColor}; font-weight:900;">
+                                ${freqStatus.valStr} <span style="font-size:10px; font-weight:800; color:${freqStatus.textColor};">(${freqStatus.label})</span>
+                            </div>
+                        </div>
                         <div class="meta-ad-stat-col">
                             <div class="lbl">Gasto</div>
                             <div class="val" style="color:var(--accent-gold);">${formatBRL(ins.spend)}</div>
@@ -3798,6 +4046,18 @@
                 statusPill.style.background = isActive ? 'rgba(16, 185, 129, 0.2)' : 'rgba(148, 163, 184, 0.15)';
                 statusPill.style.color = isActive ? '#34d399' : '#94a3b8';
                 statusPill.style.border = `1px solid ${isActive ? 'rgba(16, 185, 129, 0.4)' : 'rgba(148, 163, 184, 0.3)'}`;
+            }
+
+            // Contador e Status de Frequência do Criativo na Prévia
+            const matchedAd = (currentCampaignAds || []).find(a => String(a.id) === String(adId));
+            const adIns = matchedAd?.insights || {};
+            const freqStatus = getMetaFrequencyStatus(adIns.frequency, adIns.impressions, adIns.spend);
+            const freqPill = document.getElementById('ad-preview-freq-pill');
+            if (freqPill) {
+                freqPill.innerHTML = `<i class="fa-solid ${freqStatus.dot}"></i> Freq: <strong>${freqStatus.valStr}</strong> (${freqStatus.label})`;
+                freqPill.className = `meta-freq-counter ${freqStatus.class}`;
+                freqPill.style.display = 'inline-flex';
+                freqPill.title = freqStatus.desc;
             }
 
             if (toggleBtn) {
