@@ -2417,302 +2417,73 @@
 
             /* Order Bump - CLEAN MOBILE DESIGN */
 
+            /* Order Bump - LAYOUT HORIZONTAL EMPILHADO (1 POR LINHA) */
             #checkout-page #order-bump-area {
-
-                margin-top: 16px;
-
+                margin-top: 14px;
+                width: 100%;
             }
-
-
-
-            #checkout-page .order-bump-container {
-
-                position: relative;
-
-                overflow: hidden;
-
-                border: 2px solid #fbbf24 !important;
-
-                border-radius: 12px;
-
-                cursor: pointer;
-
-                min-height: auto !important;
-
-                margin-bottom: 10px;
-
-                background: #fffbeb !important;
-
-                box-shadow: none !important;
-
-                display: flex !important;
-
-                flex-direction: row !important;
-
-                align-items: stretch !important;
-
-                padding: 0 !important;
-
-            }
-
-
-
-            #checkout-page .order-bump-container.selected {
-
-                border-color: #22c55e !important;
-
-                background: #000 !important; /* Base black under image */
-
-                box-shadow: 0 0 15px rgba(34, 197, 94, 0.4) !important;
-
-                border-width: 3px !important;
-
-            }
-
-
-
-            #checkout-page .order-bump-container:not(.selected) {
-
-                animation: none !important;
-
-            }
-
-
-
-            /* MOSTRAR imagens dos bumps no mobile com layout otimizado */
-
-            #checkout-page .order-bump-container img {
-
-                display: block !important;
-
-                position: absolute !important;
-
-                top: 0 !important;
-
-                left: 0 !important;
-
-                width: 100% !important;
-
-                height: 100% !important;
-
-                object-fit: cover !important;
-
-                z-index: 0 !important;
-
-                pointer-events: none !important;
-
-            }
-
-
-
-            /* MOSTRAR gradient overlay dos bumps para legibilidade */
-
-            #checkout-page .order-bump-container div[style*="linear-gradient"] {
-
-                display: block !important;
-
-                position: absolute !important;
-
-                top: 0 !important;
-
-                left: 0 !important;
-
-                width: 100% !important;
-
-                height: 100% !important;
-
-                z-index: 1 !important;
-
-                background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 90%) !important;
-
-                pointer-events: none !important;
-
-            }
-
-
-
-            /* Forcar layout limpo dos bumps */
-
-            #checkout-page .order-bump-container>div[style*="z-index: 2"] {
-
-                position: relative !important;
-
-                z-index: 1 !important;
-
-                padding: 12px !important;
-
-                width: 100% !important;
-
-                height: auto !important;
-
-                justify-content: flex-start !important;
-
-                background: transparent !important;
-
-            }
-
-
-
-            /* CORES E TIPOGRAFIA DOS ORDER BUMPS - FORCA ALTO CONTRASTE */
-
-            #checkout-page .order-bump-container .order-bump-title,
-
-            #checkout-page .order-bump-title {
-
-                color: #fbbf24 !important; /* Gold */
-
-                font-size: 1rem !important;
-
-                font-weight: 900 !important;
-
-                text-shadow: 0 2px 6px rgba(0,0,0,1) !important;
-
-                line-height: 1.2 !important;
-
-                margin-bottom: 6px !important;
-
-                display: block !important;
-
-                letter-spacing: -0.2px !important;
-
-                padding-right: 28px !important;
-
-            }
-
-
-
-            #checkout-page .order-bump-container .order-bump-description,
-
-            #checkout-page .order-bump-description {
-
-                color: #f1f5f9 !important;
-
-                font-size: 0.75rem !important;
-
-                line-height: 1.35 !important;
-
-                text-shadow: 0 1px 4px rgba(0,0,0,1) !important;
-
-            }
-
-
-
-            /* Permite cores inline (vermelho/verde) nas spans da descricao */
-
-            #checkout-page .order-bump-description span,
-
-            #checkout-page .order-bump-description strong {
-
-                text-shadow: 0 1px 4px rgba(0,0,0,0.9) !important;
-
-            }
-
-
-
-            #checkout-page .order-bump-container .order-bump-price,
-
-            #checkout-page .order-bump-price {
-
-                color: #4ade80 !important; /* Verde brilhante = ganho */
-
-                font-size: 1.1rem !important;
-
-                font-weight: 900 !important;
-
-                text-shadow: 0 2px 4px rgba(0,0,0,0.9) !important;
-
-            }
-
-
-
-            #checkout-page .order-bump-container .order-bump-old-price {
-
-                color: #fca5a5 !important; /* Rosa = prejuizo evitado */
-
-                text-decoration: line-through !important;
-
-                font-size: 0.75rem !important;
-
-                opacity: 1 !important;
-
-                font-weight: 600 !important;
-
-            }
-
-
-
-            #checkout-page .bump-check-wrapper {
-
-                border-color: #fbbf24 !important;
-
-            }
-
-
-
-            #checkout-page .order-bump-container:not(.selected) {
-
-                box-shadow: 0 0 0 2px rgba(251,191,36,0.3);
-
-                animation: bumpPulse 2.5s ease-in-out infinite;
-
-            }
-
-
-
-            @keyframes bumpPulse {
-
-                0%, 100% { box-shadow: 0 0 0 2px rgba(251,191,36,0.2); }
-
-                50% { box-shadow: 0 0 0 3px rgba(251,191,36,0.6), 0 4px 16px rgba(0,0,0,0.4); }
-
-            }
-
-
-
-            #checkout-page .order-bump-container.selected {
-
-                animation: none !important;
-
-            }
-
-
-
-            #checkout-page .order-bump-container.selected .bump-check-wrapper {
-
-                background: #22c55e !important;
-
-                border-color: #22c55e !important;
-
-            }
-
-
-
-            /* GRID dos bumps - lado a lado no checkout puro */
 
             #checkout-page .order-bump-grid-view {
-
-                display: grid !important;
-
-                grid-template-columns: 1fr 1fr !important;
-
+                display: flex !important;
+                flex-direction: column !important;
                 gap: 8px !important;
-
+                width: 100% !important;
             }
 
+            #checkout-page .order-bump-container {
+                position: relative !important;
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                gap: 10px !important;
+                padding: 10px 12px !important;
+                border: 2px solid rgba(251, 191, 36, 0.45) !important;
+                border-radius: 12px !important;
+                background: rgba(15, 23, 42, 0.85) !important;
+                cursor: pointer !important;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+                margin-bottom: 0 !important;
+                min-height: auto !important;
+                box-sizing: border-box !important;
+                transition: all 0.2s ease !important;
+            }
 
+            #checkout-page .order-bump-container:hover {
+                border-color: #fbbf24 !important;
+                background: rgba(30, 41, 59, 0.95) !important;
+            }
+
+            #checkout-page .order-bump-container.selected {
+                border-color: #22c55e !important;
+                background: rgba(34, 197, 94, 0.1) !important;
+                box-shadow: 0 0 14px rgba(34, 197, 94, 0.25) !important;
+            }
+
+            #checkout-page .order-bump-container .bump-check-wrapper {
+                width: 24px !important;
+                height: 24px !important;
+                border-radius: 6px !important;
+                border: 2px solid #fbbf24 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                background: rgba(0,0,0,0.6) !important;
+                flex-shrink: 0 !important;
+                transition: all 0.15s ease !important;
+            }
+
+            #checkout-page .order-bump-container.selected .bump-check-wrapper {
+                background: #22c55e !important;
+                border-color: #22c55e !important;
+            }
 
             @media (min-width: 480px) {
-
                 #checkout-page .order-bump-grid-view {
-
-                    display: grid !important;
-
-                    grid-template-columns: 1fr 1fr !important;
-
+                    display: flex !important;
+                    flex-direction: column !important;
                     gap: 8px !important;
-
                 }
-
             }
 
 
@@ -3389,54 +3160,11 @@
 
 
 
-                /* FORCE ORDER BUMPS TO BE SIDE-BY-SIDE ON MOBILE */
-
+                /* ORDER BUMPS NO MOBILE: 1 COLUNA EMPILHADA LIMPA */
                 #checkout-page .order-bump-grid-view {
-
-                    display: grid !important;
-
-                    grid-template-columns: 1fr 1fr !important;
-
-                    gap: 10px !important;
-
-                }
-
-
-
-                #checkout-page .order-bump-grid-view .order-bump-title {
-
-                    font-size: 0.7rem !important;
-
-                    line-height: 1.1 !important;
-
-                }
-
-
-
-                #checkout-page .order-bump-grid-view .order-bump-description {
-
-                    font-size: 0.55rem !important;
-
-                    line-height: 1.2 !important;
-
-                    margin: 4px 0 !important;
-
-                }
-
-
-
-                #checkout-page .order-bump-grid-view .order-bump-price {
-
-                    font-size: 0.7rem !important;
-
-                }
-
-
-
-                #checkout-page .order-bump-grid-view .order-bump-old-price {
-
-                    font-size: 0.55rem !important;
-
+                    display: flex !important;
+                    flex-direction: column !important;
+                    gap: 8px !important;
                 }
 
 
@@ -4862,112 +4590,7 @@
 
     </div>
 
-    <!-- PIX / CARTAO UPSELL RECAPTURE MODAL (SUPER COMPACTO, ELEGANTE E 100% RESPONSIVO) -->
-    <div id="pix-upsell-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999999; display: flex; align-items: center; justify-content: center; overflow-y: auto; overflow-x: hidden; padding: 12px 10px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-sizing: border-box;">
-        <div id="pix-upsell-modal-box" style="background: linear-gradient(165deg, #0b1120 0%, #1e293b 100%); border: 2px solid #f59e0b; border-radius: 16px; padding: 14px 12px; max-width: 370px; width: 100%; margin: auto; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.85); animation: fadeInUp 0.25s ease-out; position: relative; box-sizing: border-box;">
-            
-            <!-- Badge Superior -->
-            <div style="background: linear-gradient(90deg, #ef4444, #dc2626); color: #ffffff; font-size: 0.65rem; font-weight: 900; padding: 2px 10px; border-radius: 14px; display: inline-flex; align-items: center; gap: 4px; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; box-shadow: 0 4px 10px rgba(239,68,68,0.3);">
-                <span>⚡</span> OFERTA ÚNICA DE BALCÃO
-            </div>
-
-            <!-- Título Principal -->
-            <h3 id="pix-upsell-title" style="font-size: clamp(0.92rem, 3.8vw, 1.05rem); font-weight: 900; color: #ffffff; margin: 0 0 4px 0; line-height: 1.25; font-family: 'Outfit', sans-serif; letter-spacing: -0.2px;">
-                ⚠️ ESPERE! NÃO FINALIZE ANTES DE VER ISSO...
-            </h3>
-
-            <!-- Texto de Gancho -->
-            <p id="pix-upsell-description" style="font-size: clamp(0.72rem, 2.8vw, 0.78rem); color: #cbd5e1; margin: 0 0 8px 0; line-height: 1.35; font-weight: 500;">
-                Aproveite esta condição única de balcão para levar o guia completo das doenças das galinhas.
-            </p>
-
-            <!-- Card Central do Produto: Capa pequena na esquerda + Lista na direita -->
-            <div style="background: rgba(15, 23, 42, 0.88); border: 1.5px solid rgba(245, 158, 11, 0.35); border-radius: 12px; padding: 7px 10px; margin-bottom: 7px; text-align: left; box-sizing: border-box; display: flex; align-items: center; gap: 10px;">
-                <img id="pix-upsell-img" src="capadasdoencas.webp" alt="Guia Completo das Doenças" style="width: 52px; height: auto; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); flex-shrink: 0; object-fit: contain;">
-                
-                <div style="min-width: 0; flex: 1;">
-                    <div id="pix-upsell-prod-category" style="color: #f59e0b; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px;">GUIA COMPLETO ADICIONAL</div>
-                    <h4 id="pix-upsell-prod-title" style="color: #ffffff; font-size: 0.82rem; font-weight: 800; margin: 1px 0 3px 0; line-height: 1.2;">O Segredo das Doenças</h4>
-                    
-                    <!-- Lista de Benefícios Chave -->
-                    <div id="pix-upsell-list" style="font-size: 0.68rem; color: #e2e8f0; line-height: 1.25; display: flex; flex-direction: column; gap: 1px;">
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
-                            <span>Mais de 10 doenças catalogadas</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
-                            <span>Protocolo de vermifugação</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
-                            <span>Prevenção e biossegurança</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
-                            <span>Tratamento detalhado</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Resumo Transparente do Pedido Completo -->
-            <div id="pix-upsell-summary-box" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 6px 10px; margin-bottom: 7px; text-align: left; box-sizing: border-box;">
-                <div style="color: #94a3b8; font-size: 0.62rem; font-weight: 800; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.3px;">
-                    📦 O QUE VOCÊ VAI RECEBER:
-                </div>
-                <div id="pix-upsell-items-list" style="display: flex; flex-direction: column; gap: 2px; font-size: 0.7rem; color: #f1f5f9;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>🐣 Manual de Manejo dos Pintinhos:</span>
-                        <strong style="color: #ffffff;">R$ 27,90</strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; color: #34d399;">
-                        <span>💊 Guia Completo das Doenças:</span>
-                        <strong style="color: #34d399;">+ R$ 49,90</strong>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Box de Destaque do Preço e Total Final -->
-            <div style="background: rgba(16, 185, 129, 0.12); border: 1.5px solid rgba(16, 185, 129, 0.45); border-radius: 10px; padding: 6px 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; text-align: left; gap: 6px; box-sizing: border-box;">
-                <div style="flex: 1; min-width: 0;">
-                    <div style="color: #cbd5e1; font-size: 0.68rem; font-weight: 700; line-height: 1.2;">
-                        TOTAL SE VOCÊ ACEITAR:
-                    </div>
-                    <span id="pix-upsell-original-price" style="color: #94a3b8; font-size: 0.65rem; text-decoration: line-through; display: block; line-height: 1.2;">De R$ 177,70</span>
-                </div>
-                <div style="text-align: right; flex-shrink: 0;">
-                    <span id="pix-upsell-total-value" style="color: #10b981; font-size: clamp(1.1rem, 4.2vw, 1.25rem); font-weight: 900; white-space: nowrap; line-height: 1.1;">R$ 77,80</span>
-                    <span style="color: #94a3b8; font-size: 0.6rem; font-weight: 600; display: block;">no PIX ou até 4x no cartão</span>
-                </div>
-            </div>
-
-            <!-- Botões de Ação -->
-            <div style="display: flex; flex-direction: column; gap: 4px;">
-                <button onclick="acceptPixUpsell()" class="btn-upsell-cta" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); font-size: clamp(0.82rem, 3.4vw, 0.92rem); padding: 11px 8px; border-radius: 10px; font-weight: 900; border: none; color: #ffffff; width: 100%; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); cursor: pointer; text-transform: uppercase; letter-spacing: 0.2px; transition: transform 0.15s, opacity 0.15s; display: flex; align-items: center; justify-content: center; gap: 6px; line-height: 1.2; box-sizing: border-box;">
-                    <i class="fa-solid fa-check" style="flex-shrink: 0;"></i>
-                    <span id="pix-upsell-cta-text">Aprender sobre as doenças (Total: R$ 77,80)</span>
-                </button>
-
-                <button id="pix-upsell-reject-btn" onclick="rejectPixUpsell()" style="background: transparent; border: none; color: #94a3b8; font-size: clamp(0.7rem, 2.6vw, 0.75rem); text-decoration: underline; padding: 4px; font-weight: 600; cursor: pointer; transition: color 0.2s; line-height: 1.25; width: 100%; box-sizing: border-box;">
-                    Levar apenas o guia das doenças (R$ 49,90)
-                </button>
-            </div>
-
-        </div>
-    </div>
-
-    <style>
-        #pix-upsell-modal.hidden { display: none !important; }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(14px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .btn-upsell-cta:active {
-            transform: scale(0.98);
-            opacity: 0.92;
-        }
-    </style>
+    <!-- PIX / CARTAO UPSELL RECAPTURE MODAL REMOVIDO: OFERTA AGORA ESTÁ NOS ORDER BUMPS DIRETOS -->
 
     <!-- Toast Notifications (Fundo Branco Centralizado) -->
     <div id="toast-container" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999999; display: flex; flex-direction: column; align-items: center; gap: 10px; pointer-events: none; width: max-content; max-width: calc(100vw - 32px);"></div>
@@ -4982,7 +4605,7 @@
     })();
     </script>
     <script src="smart_fields.js" defer></script>
-    <script src="script.js?v=45" defer></script>
+    <script src="script.js?v=46" defer></script>
     <script>
     // ─── META ADVANCED MATCHING — INPUT LISTENERS ─────────────────────────────
     // Quando o usuário preenche email/telefone no checkout, atualiza o Pixel

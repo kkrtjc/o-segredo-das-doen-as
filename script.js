@@ -633,6 +633,15 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         } else if (productId === 'ebook-pintinhos' || productId === 'ebook-manejo') {
             cart.mainProduct.fullBumps = [
                 {
+                    id: 'ebook-doencas',
+                    title: 'GUIA COMPLETO DAS DOENÇAS',
+                    price: 49.90,
+                    priceCard: 49.90,
+                    image: 'capadasdoencas.webp',
+                    description: '<div style="display: flex; flex-direction: column; gap: 3px; margin: 4px 0; text-align: left; font-size: 0.68rem; line-height: 1.25;"><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Identifique e Trate +10 Doenças</strong> das galinhas</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Tabela de Vacinação & Vermifugação</strong> correta</div><div style="display: flex; align-items: center; gap: 5px; color: #fbbf24;"><span style="color: #fbbf24; font-weight: 900;">✓</span> <strong>Protocolo de Prevenção e Biossegurança</strong></div></div>',
+                    tag: 'MAIS VENDIDO'
+                },
+                {
                     id: 'bump-6361',
                     title: 'TABELA DE RAÇÃO PRÁTICA',
                     price: 14.90,
@@ -805,56 +814,55 @@ function renderOrderBumps(bumps) {
                         : '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até 60% na ração</strong> das suas aves.'));
         }
 
-        const bumpLabel = isManejo ? 'MANUAL DE ELITE<br>DOS PINTINHOS' : (isDoencas ? 'GUIA COMPLETO<br>DAS DOENÇAS' : (isOvos ? 'ALTA PRODUÇÃO<br>DE OVOS' : 'TABELA DE RAÇÃO'));
+        const bumpLabel = isManejo ? 'MANUAL DE PINTINHOS' : (isDoencas ? 'GUIA DAS DOENÇAS' : (isOvos ? 'ALTA POSTURA DE OVOS' : 'TABELA DE RAÇÃO'));
 
         return `
-            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-                <div style="font-weight: 900; color: #fff; font-size: 0.75rem; text-transform: uppercase; text-align: center; text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 0 4px 6px rgba(0,0,0,0.5); letter-spacing: 0.5px; line-height: 1.1; margin-bottom: -5px; z-index: 2; position: relative;">
-                    ${bumpLabel}
-                </div>
-                <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="min-height: 160px; padding: 0; position: relative; overflow: hidden; border-radius: 10px; cursor: pointer; width: 100%; border: 3px solid ${isSelected ? '#10b981' : '#ffc107'}; background: #000; box-shadow: 0 4px 15px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.8);">
-                    
-                    <!-- Background Image -->
-                    ${imgSrc ? `<img src="${imgSrc}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: ${isManejo ? 'center 0%' : 'center'}; z-index: 0; opacity: 0.85;">` : ''}
-                    
-                    <!-- Gradient Overlay -->
-                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.9) 70%, rgba(0,0,0,1) 100%); z-index: 1;"></div>
-                    
-                    <!-- Content -->
-                    <div style="position: relative; z-index: 2; display: flex; flex-direction: column; padding: 10px; width: 100%; height: 100%; min-height: 160px; justify-content: space-between;">
-                        
-                        <input type="checkbox" id="bump-chk-${bump.id}" ${isSelected ? 'checked' : ''} style="display: none;">
-                        
-                        <!-- Top Bar (Title + Checkbox) -->
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 4px;">
-                            <strong style="color: #ffd700; font-size: 0.85rem; line-height: 1.1; text-shadow: 2px 2px 4px #000, 0 0 10px rgba(0,0,0,0.8); text-align: left;">
-                                ${title}
-                            </strong>
-                            <div class="bump-check-wrapper" style="width: 22px; height: 22px; border-radius: 4px; border: 2px solid ${isSelected ? '#10b981' : '#ffc107'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#10b981' : 'rgba(0,0,0,0.7)'}; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
-                                ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.75rem;"></i>' : ''}
-                            </div>
-                        </div>
+            <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; margin-bottom: 8px; border-radius: 10px; cursor: pointer; width: 100%; border: 2px solid ${isSelected ? '#22c55e' : 'rgba(251,191,36,0.5)'}; background: ${isSelected ? 'rgba(34,197,94,0.08)' : 'rgba(15,23,42,0.75)'}; box-shadow: ${isSelected ? '0 0 12px rgba(34,197,94,0.25)' : 'none'}; transition: all 0.2s ease; box-sizing: border-box; position: relative;">
+                
+                <input type="checkbox" id="bump-chk-${bump.id}" ${isSelected ? 'checked' : ''} style="display: none;">
 
-                        <!-- Description -->
-                        <div style="color: #fff; font-size: 0.65rem; line-height: 1.3; text-shadow: 1px 1px 2px #000; margin: 4px 0; width: 100%;">
-                            ${desc}
-                        </div>
+                <!-- Imagem Reduzida com cantos arredondados -->
+                ${imgSrc ? `
+                    <div style="width: 48px; height: 56px; flex-shrink: 0; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 2px 6px rgba(0,0,0,0.5); background: #000; position: relative;">
+                        <img src="${imgSrc}" alt="${bumpLabel}" style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+                    </div>
+                ` : ''}
 
-                        <!-- Price -->
-                        <div style="text-align: center; margin-top: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px;">
-                            <span style="color: #a3a3a3; font-size: 0.75rem; text-decoration: line-through; text-shadow: 1px 1px 1px #000;">De R$ ${isManejo ? '99,90' : (isDoencas ? '89,90' : '39,90')}</span>
-                            <span style="color: #4ade80; font-size: 0.85rem; font-weight: 800; text-shadow: 0 0 8px rgba(74,222,128,0.4), 1px 1px 2px #000; line-height: 1.15;">
-                                Por apenas <span style="font-size: 1.05rem;">R$ ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.price)).replace('R$ ', '')}</span><br>
-                                ${isManejo ? 'você salva seus pintinhos' : (isDoencas ? 'você aprende sobre as principais doenças.' : (isOvos ? 'você multiplica a postura de ovos' : ', você economiza até 60% na ração'))}
-                            </span>
-                        </div>
+                <!-- Conteúdo Central: Título + Descrição curta -->
+                <div style="flex: 1; min-width: 0; text-align: left;">
+                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px;">
+                        <span style="background: ${isSelected ? '#22c55e' : '#f59e0b'}; color: #000; font-size: 0.6rem; font-weight: 900; padding: 1px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.3px; line-height: 1.2;">
+                            ${bump.tag || 'OFERTA ÚNICA'}
+                        </span>
+                        <strong style="color: #ffffff; font-size: 0.82rem; font-weight: 800; line-height: 1.2; letter-spacing: -0.2px;">
+                            ${bumpLabel}
+                        </strong>
+                    </div>
+
+                    <!-- Descrição Limpa com marcadores -->
+                    <div style="color: #cbd5e1; font-size: 0.68rem; line-height: 1.25; margin: 3px 0 4px 0;">
+                        ${desc}
+                    </div>
+
+                    <!-- Preço de Oportunidade -->
+                    <div style="display: flex; align-items: baseline; gap: 6px;">
+                        <span style="color: #94a3b8; font-size: 0.65rem; text-decoration: line-through;">De R$ ${isDoencas ? '89,90' : (isManejo ? '67,00' : '39,90')}</span>
+                        <span style="color: #22c55e; font-size: 0.88rem; font-weight: 900; line-height: 1;">
+                            + R$ ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.price)).replace('R$ ', '')}
+                        </span>
                     </div>
                 </div>
+
+                <!-- Checkbox lateral destacada -->
+                <div class="bump-check-wrapper" style="width: 24px; height: 24px; border-radius: 6px; border: 2px solid ${isSelected ? '#22c55e' : '#f59e0b'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#22c55e' : 'rgba(0,0,0,0.6)'}; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.4); transition: all 0.15s ease;">
+                    ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.8rem; font-weight: 900;"></i>' : '<i class="fa-solid fa-plus" style="color: #f59e0b; font-size: 0.75rem;"></i>'}
+                </div>
+
             </div>`;
     }).join('');
 
     area.innerHTML = bumpHeader + `
-        <div class="order-bump-grid-view" style="grid-template-columns: ${filteredBumps.length === 1 ? '1fr' : '1fr 1fr'} !important;">
+        <div class="order-bump-grid-view" style="display: flex !important; flex-direction: column !important; gap: 8px !important; width: 100% !important;">
             ${bumpHtml}
         </div>
     `;
@@ -1611,26 +1619,8 @@ async function handlePayment(method) {
     console.log('[UPSELL DEBUG] product:', cart.mainProduct ? cart.mainProduct.id : 'none');
     console.log('[UPSELL DEBUG] bumps:', cart.bumps);
     
-    // Show upsell if not bypassed
-    const shouldShowPixUpsell = !window.bypassPixUpsell && (method === 'pix' || method === 'card' || method === 'boleto') && cart.mainProduct && (
-        ((cart.mainProduct.id === 'combo-plataforma' || cart.mainProduct.id === 'combo-elite' || cart.mainProduct.id === 'ebook-doencas') && !cart.bumps.includes('ebook-manejo')) ||
-        (cart.mainProduct.id === 'ebook-pintinhos' && !cart.bumps.includes('ebook-doencas'))
-    );
-    
-    console.log('[UPSELL DEBUG] shouldShowPixUpsell:', shouldShowPixUpsell);
-
-    if (shouldShowPixUpsell) {
-        captureAbandonedLead({
-            type: 'upsell_modal_shown',
-            reason: cart.mainProduct.id === 'ebook-pintinhos' ? 'Abriu formulário e parou na oferta de Doencas' : 'Abriu formulário e parou na oferta de Pintinhos'
-        });
-        setupPixUpsellModal();
-        const upsellModal = document.getElementById('pix-upsell-modal');
-        if (upsellModal) {
-            upsellModal.classList.remove('hidden');
-            return; // Stops the generation, waits for user action
-        }
-    }
+    // --- PIX/CARD UPSELL RECAPTURE INTERCEPT (DESATIVADO: OFERTA AGORA VAI DIRETO NO ORDER BUMP) ---
+    const shouldShowPixUpsell = false;
 
 
     // ─── META ADVANCED MATCHING ──────────────────────────────────────────────

@@ -247,7 +247,7 @@ adminRoutes.post('/config/reset', async (c) => {
             },
             'ebook-pintinhos': {
                 title: 'Manual de Manejo de Pintinhos', price: 27.90, originalPrice: 67.00, enabled: true,
-                description: 'Aprenda a melhor forma de tratar e manejar seus pintinhos', cover: 'capadospintinhos.webp', orderBumps: ['bump-6361', 'bump-ovos']
+                description: 'Aprenda a melhor forma de tratar e manejar seus pintinhos', cover: 'capadospintinhos.webp', orderBumps: ['ebook-doencas', 'bump-6361', 'bump-ovos']
             },
             'ebook-manejo': {
                 title: 'Manual de Manejo de Pintinhos', price: 27.90, originalPrice: 67.00, enabled: true,
@@ -610,6 +610,16 @@ adminRoutes.post('/verify-access', async (c) => {
                 let isMatch = false;
                 if (cleanId.includes('@')) {
                     if (saleEmail === cleanId) isMatch = true;
+                    // Fix: venda manual pode não ter email — cruzar pelo CPF/telefone do freeUser vinculado ao email
+                    if (!isMatch && freeUserMatched) {
+                        const fuCpf = (freeUserMatched.cpf || '').replace(/\D/g, '');
+                        const fuPhone = (freeUserMatched.phone || '').replace(/\D/g, '');
+                        if (fuCpf && saleCpf && saleCpf === fuCpf) isMatch = true;
+                        if (fuPhone && salePhone && (salePhone === fuPhone || salePhone.includes(fuPhone) || fuPhone.includes(salePhone))) isMatch = true;
+                    }
+                    // Fix: se já achamos o CPF/telefone do cliente em outra venda, cruzar com essa também
+                    if (!isMatch && foundCpf && saleCpf && saleCpf === foundCpf) isMatch = true;
+                    if (!isMatch && foundPhone && salePhone && (salePhone === foundPhone || salePhone.includes(foundPhone) || foundPhone.includes(salePhone))) isMatch = true;
                 } else {
                     if (cleanNum.length === 11 && saleCpf === cleanNum) isMatch = true;
                     if ((cleanNum.length === 10 || cleanNum.length === 11) && salePhone.includes(cleanNum)) isMatch = true;
