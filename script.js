@@ -817,45 +817,52 @@ function renderOrderBumps(bumps) {
         const bumpLabel = isManejo ? 'MANUAL DE PINTINHOS' : (isDoencas ? 'GUIA DAS DOENÇAS' : (isOvos ? 'ALTA POSTURA DE OVOS' : 'TABELA DE RAÇÃO'));
 
         return `
-            <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; margin-bottom: 8px; border-radius: 10px; cursor: pointer; width: 100%; border: 2px solid ${isSelected ? '#22c55e' : 'rgba(251,191,36,0.5)'}; background: ${isSelected ? 'rgba(34,197,94,0.08)' : 'rgba(15,23,42,0.75)'}; box-shadow: ${isSelected ? '0 0 12px rgba(34,197,94,0.25)' : 'none'}; transition: all 0.2s ease; box-sizing: border-box; position: relative;">
+            <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="display: flex; align-items: stretch; justify-content: flex-start; gap: 0; padding: 0; margin-bottom: 10px; border-radius: 12px; cursor: pointer; width: 100%; border: 2px solid ${isSelected ? '#22c55e' : 'rgba(251,191,36,0.6)'}; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); box-shadow: ${isSelected ? '0 0 18px rgba(34,197,94,0.35), 0 4px 16px rgba(0,0,0,0.6)' : '0 4px 16px rgba(0,0,0,0.5)'}; transition: all 0.2s ease; box-sizing: border-box; position: relative; overflow: hidden;">
                 
                 <input type="checkbox" id="bump-chk-${bump.id}" ${isSelected ? 'checked' : ''} style="display: none;">
 
-                <!-- Imagem Reduzida com cantos arredondados -->
+                <!-- Faixa lateral colorida -->
+                <div style="width: 4px; flex-shrink: 0; background: ${isSelected ? 'linear-gradient(180deg, #22c55e, #16a34a)' : 'linear-gradient(180deg, #f59e0b, #d97706)'}; border-radius: 0; transition: all 0.2s ease;"></div>
+
+                <!-- Imagem tipo capa de livro -->
                 ${imgSrc ? `
-                    <div style="width: 48px; height: 56px; flex-shrink: 0; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 2px 6px rgba(0,0,0,0.5); background: #000; position: relative;">
+                    <div style="width: 76px; height: 96px; flex-shrink: 0; overflow: hidden; border-right: 1px solid rgba(255,255,255,0.08); background: #0a0f1e; position: relative; align-self: stretch; display: flex; align-items: center; justify-content: center;">
                         <img src="${imgSrc}" alt="${bumpLabel}" style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+                        <div style="position: absolute; inset: 0; background: linear-gradient(90deg, transparent 70%, rgba(15,23,42,0.4) 100%);"></div>
                     </div>
                 ` : ''}
 
-                <!-- Conteúdo Central: Título + Descrição curta -->
-                <div style="flex: 1; min-width: 0; text-align: left;">
-                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px;">
-                        <span style="background: ${isSelected ? '#22c55e' : '#f59e0b'}; color: #000; font-size: 0.6rem; font-weight: 900; padding: 1px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.3px; line-height: 1.2;">
+                <!-- Conteúdo Central: Título + Descrição + Preço -->
+                <div style="flex: 1; min-width: 0; text-align: left; padding: 14px 10px 14px 12px; display: flex; flex-direction: column; justify-content: center; gap: 6px;">
+                    <!-- Badge + Título -->
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="display: inline-block; background: ${isSelected ? 'linear-gradient(90deg,#22c55e,#16a34a)' : 'linear-gradient(90deg,#f59e0b,#d97706)'}; color: #000; font-size: 0.62rem; font-weight: 900; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.4; width: fit-content;">
                             ${bump.tag || 'OFERTA ÚNICA'}
                         </span>
-                        <strong style="color: #ffffff; font-size: 0.82rem; font-weight: 800; line-height: 1.2; letter-spacing: -0.2px;">
-                            ${bumpLabel}
+                        <strong style="color: #ffffff; font-size: 0.98rem; font-weight: 900; line-height: 1.25; letter-spacing: -0.3px; display: block;">
+                            ${title}
                         </strong>
                     </div>
 
-                    <!-- Descrição Limpa com marcadores -->
-                    <div style="color: #cbd5e1; font-size: 0.68rem; line-height: 1.25; margin: 3px 0 4px 0;">
+                    <!-- Descrição -->
+                    <div style="color: #94a3b8; font-size: 0.76rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                         ${desc}
                     </div>
 
-                    <!-- Preço de Oportunidade -->
-                    <div style="display: flex; align-items: baseline; gap: 6px;">
-                        <span style="color: #94a3b8; font-size: 0.65rem; text-decoration: line-through;">De R$ ${isDoencas ? '89,90' : (isManejo ? '67,00' : '39,90')}</span>
-                        <span style="color: #22c55e; font-size: 0.88rem; font-weight: 900; line-height: 1;">
+                    <!-- Preço -->
+                    <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 2px;">
+                        <span style="color: #64748b; font-size: 0.68rem; text-decoration: line-through;">De R$ ${isDoencas ? '89,90' : (isManejo ? '67,00' : '39,90')}</span>
+                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 900; line-height: 1; text-shadow: 0 0 8px rgba(74,222,128,0.4);">
                             + R$ ${formatBRL((currentPaymentMethod === 'pix' || currentPaymentMethod === 'boleto') ? bump.price : (bump.price)).replace('R$ ', '')}
                         </span>
                     </div>
                 </div>
 
-                <!-- Checkbox lateral destacada -->
-                <div class="bump-check-wrapper" style="width: 24px; height: 24px; border-radius: 6px; border: 2px solid ${isSelected ? '#22c55e' : '#f59e0b'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#22c55e' : 'rgba(0,0,0,0.6)'}; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.4); transition: all 0.15s ease;">
-                    ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.8rem; font-weight: 900;"></i>' : '<i class="fa-solid fa-plus" style="color: #f59e0b; font-size: 0.75rem;"></i>'}
+                <!-- Checkbox/Botão grande à direita -->
+                <div style="display: flex; align-items: center; justify-content: center; padding: 0 14px; flex-shrink: 0;">
+                    <div class="bump-check-wrapper" style="width: 34px; height: 34px; border-radius: 8px; border: 2px solid ${isSelected ? '#22c55e' : '#f59e0b'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'rgba(0,0,0,0.5)'}; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.5), ${isSelected ? '0 0 12px rgba(34,197,94,0.4)' : '0 0 8px rgba(245,158,11,0.2)'}; transition: all 0.15s ease;">
+                        ${isSelected ? '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.95rem; font-weight: 900;"></i>' : '<i class="fa-solid fa-plus" style="color: #f59e0b; font-size: 0.9rem;"></i>'}
+                    </div>
                 </div>
 
             </div>`;
