@@ -824,15 +824,15 @@ function renderOrderBumps(bumps) {
                 <!-- Faixa lateral colorida -->
                 <div style="width: 5px; flex-shrink: 0; background: ${isSelected ? 'linear-gradient(180deg, #22c55e, #16a34a)' : 'linear-gradient(180deg, #fbbf24, #f59e0b)'}; transition: all 0.2s ease;"></div>
 
-                <!-- Imagem tipo capa de livro — SEM overlay escuro -->
+                <!-- Imagem tipo capa de livro com tamanho fixo garantido -->
                 ${imgSrc ? `
-                    <div style="width: 80px; flex-shrink: 0; overflow: hidden; align-self: stretch; display: flex; align-items: center; justify-content: center; background: #0a0f1e;">
-                        <img src="${imgSrc}" alt="${bumpLabel}" style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+                    <div class="bump-img-box" style="width: 80px !important; min-width: 80px !important; max-width: 80px !important; height: 100px !important; min-height: 100px !important; max-height: 100px !important; flex-shrink: 0 !important; overflow: hidden !important; display: flex !important; align-items: center !important; justify-content: center !important; background: #0a0f1e !important; border-radius: 8px 0 0 8px !important; margin: 0 !important; padding: 0 !important;">
+                        <img src="${imgSrc}" alt="${bumpLabel}" style="width: 80px !important; height: 100px !important; max-width: 80px !important; max-height: 100px !important; object-fit: cover !important; object-position: center !important; display: block !important;">
                     </div>
                 ` : ''}
 
                 <!-- Conteúdo Central -->
-                <div style="flex: 1; min-width: 0; text-align: left; padding: 12px 10px 12px 12px; display: flex; flex-direction: column; justify-content: center; gap: 5px;">
+                <div class="bump-content-box" style="flex: 1 1 auto !important; min-width: 0 !important; text-align: left; padding: 12px 10px 12px 12px; display: flex; flex-direction: column; justify-content: center; gap: 5px;">
                     <!-- Badge -->
                     <span style="display: inline-block; background: ${isSelected ? '#22c55e' : '#f59e0b'}; color: #000; font-size: 0.63rem; font-weight: 900; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.4; width: fit-content;">
                         ${bump.tag || 'OFERTA ÚNICA'}
