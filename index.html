@@ -2313,31 +2313,7 @@
 
 
 
-            #checkout-page .order-bump-grid-view {
-
-                display: grid !important;
-
-                grid-template-columns: 1fr 1fr !important;
-
-                gap: 8px !important;
-
-            }
-
-
-
-            @media (min-width: 480px) {
-
-                #checkout-page .order-bump-grid-view {
-
-                    display: grid !important;
-
-                    grid-template-columns: 1fr 1fr !important;
-
-                    gap: 8px !important;
-
-                }
-
-            }
+            /* Order bump grid view legado removido em favor da coluna flex */
 
 
 
@@ -3384,35 +3360,14 @@
                 background: transparent !important;
                 border-color: transparent !important;
             }
-            #checkout-page .order-bump-container {
-                background: #000000 !important;
-                border: 3px solid #ffc107 !important;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(0, 0, 0, 0.8) !important;
-                transition: border-color 0.2s ease, box-shadow 0.2s ease;
-                touch-action: manipulation !important;
-                -webkit-tap-highlight-color: transparent !important;
-            }
-            #checkout-page .order-bump-container.selected {
-                background: #000000 !important;
-                border: 3px solid #10b981 !important;
-                box-shadow: 0 0 16px rgba(16, 185, 129, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.8) !important;
-            }
-            #checkout-page .order-bump-card {
-                background: rgba(251, 191, 36, 0.03) !important;
-                border: 1.5px dashed rgba(251, 191, 36, 0.2) !important;
-            }
-            #checkout-page .order-bump-card.active {
-                background: rgba(251, 191, 36, 0.06) !important;
-                border: 1.5px solid #fbbf24 !important;
-            }
             #checkout-page .order-bump-title {
                 color: #ffffff !important;
             }
             #checkout-page .order-bump-description {
-                color: #94a3b8 !important;
+                color: #e2e8f0 !important;
             }
             #checkout-page .order-bump-price {
-                color: #fbbf24 !important;
+                color: #4ade80 !important;
             }
             #checkout-page .ck-product-card-pricing-box {
                 background: rgba(15, 23, 42, 0.6) !important;
@@ -4604,7 +4559,7 @@
     })();
     </script>
     <script src="smart_fields.js" defer></script>
-    <script src="script.js?v=48" defer></script>
+    <script src="script.js?v=49" defer></script>
     <script>
     // ─── META ADVANCED MATCHING — INPUT LISTENERS ─────────────────────────────
     // Quando o usuário preenche email/telefone no checkout, atualiza o Pixel

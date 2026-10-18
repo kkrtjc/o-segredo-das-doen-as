@@ -842,13 +842,13 @@ function renderOrderBumps(bumps) {
                         ${title}
                     </strong>
                     <!-- Descrição mais visível -->
-                    <div style="color: #e2e8f0; font-size: 0.76rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                    <div style="color: #cbd5e1; font-size: 0.76rem; line-height: 1.35; margin: 2px 0;">
                         ${desc}
                     </div>
                     <!-- Preço -->
-                    <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 2px;">
-                        <span style="color: #94a3b8; font-size: 0.68rem; text-decoration: line-through;">De R$ ${isDoencas ? '89,90' : (isManejo ? '67,00' : '39,90')}</span>
-                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 900; line-height: 1;">
+                    <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 4px;">
+                        <span style="color: #94a3b8; font-size: 0.72rem; text-decoration: line-through;">De R$ ${isDoencas ? '89,90' : (isManejo ? '67,00' : '39,90')}</span>
+                        <span style="color: #22c55e; font-size: 1.15rem; font-weight: 900; line-height: 1;">
                             + R$ ${formatBRL(bump.price).replace('R$ ', '')}
                         </span>
                     </div>
