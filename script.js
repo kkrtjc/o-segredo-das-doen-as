@@ -1,4 +1,4 @@
-﻿const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:'
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:'
     ? 'http://localhost:10000'
     : 'https://mura-api.joaopaulojaguar.workers.dev';
 
@@ -799,55 +799,55 @@ function renderOrderBumps(bumps) {
         const isOvos = (bump.id === 'bump-ovos' || (bump.title && (bump.title.includes('Ovos') || bump.title.includes('Postura'))));
 
         const cleanTitle = isManejo ? 'Manual de Manejo dos Pintinhos' : (isDoencas ? 'Guia Completo das Doenças' : (isOvos ? 'Potencialize Produção de Ovos' : 'Tabela de Ração Prática'));
-        const badgeLabel = bump.tag || (isDoencas ? 'Mais Vendido' : (isManejo ? 'Recomendado' : 'Oferta Especial'));
+        const badgeLabel = bump.tag || (isDoencas ? 'Mais Vendido' : (isManejo ? 'Recomendado' : (isOvos ? 'Alta Postura' : 'Economia')));
+        const oldPrice = isDoencas ? '89,90' : (isManejo ? '67,00' : '39,90');
 
         let desc = bump.description;
         if (!desc) {
             desc = isManejo 
-                ? 'Aprenda o passo a passo exato do nascimento à fase adulta e reduza a mortalidade para quase zero.'
+                ? 'Passo a passo do nascimento à fase adulta para reduzir a mortalidade.'
                 : (isDoencas 
-                    ? 'Identifique sintomas, previna surtos e trate com precisão mais de 10 doenças comuns em aves.'
+                    ? 'Identifique sintomas e trate mais de 10 doenças comuns em aves.'
                     : (isOvos
-                        ? 'Multiplique a postura das galinhas com controle de luz, cálcio noturno e manejo correto.'
-                        : 'Fórmulas balanceadas do nascimento à postura para economizar até 60% no custo com ração.'));
+                        ? 'Multiplique a postura com manejo de iluminação e cálcio noturno.'
+                        : 'Fórmulas balanceadas para economizar até 60% no custo com ração.'));
         }
 
         return `
-            <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')">
+            <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="position:relative!important;display:flex!important;flex-direction:row!important;align-items:stretch!important;justify-content:flex-end!important;width:100%!important;min-height:120px!important;padding:0!important;border-radius:12px!important;background:#0b1120!important;border:1.5px solid ${isSelected ? '#10b981' : 'rgba(255,255,255,0.12)'}!important;cursor:pointer!important;overflow:hidden!important;box-shadow:0 4px 16px rgba(0,0,0,0.45)!important;margin-bottom:12px!important;box-sizing:border-box!important;-webkit-tap-highlight-color:transparent!important;">
                 <input type="checkbox" id="bump-chk-${bump.id}" ${isSelected ? 'checked' : ''} style="display: none;">
 
-                <!-- Header Superior Elegante -->
-                <div class="bump-card-header">
-                    <span class="bump-badge-tag">
-                        <i class="fa-solid fa-sparkles" style="font-size: 0.6rem;"></i> ${badgeLabel}
-                    </span>
-                    <div class="bump-action-btn">
-                        <i class="${isSelected ? 'fa-solid fa-check' : 'fa-solid fa-plus'}" style="font-size: 0.75rem;"></i>
-                        <span>${isSelected ? 'Adicionado' : 'Adicionar'}</span>
+                <!-- Foto no Fundo (lado esquerdo com fusao suave) -->
+                ${imgSrc ? `
+                    <div class="bump-bg-photo" style="position:absolute!important;top:0!important;left:0!important;width:44%!important;height:100%!important;z-index:1!important;pointer-events:none!important;overflow:hidden!important;">
+                        <img src="${imgSrc}" alt="${cleanTitle}" loading="lazy" style="position:absolute!important;top:0!important;left:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center left!important;display:block!important;opacity:0.95!important;">
+                        <div class="bump-bg-overlay" style="position:absolute!important;inset:0!important;background:${isSelected ? 'linear-gradient(to right, rgba(6,46,34,0.05) 0%, rgba(6,46,34,0.45) 45%, rgba(6,46,34,0.9) 75%, #062e22 100%)' : 'linear-gradient(to right, rgba(11,17,32,0) 0%, rgba(11,17,32,0.35) 45%, rgba(11,17,32,0.85) 75%, #0b1120 100%)'}!important;z-index:2!important;"></div>
                     </div>
-                </div>
+                ` : ''}
 
-                <!-- Corpo do Card -->
-                <div class="bump-card-body" style="display:flex!important;align-items:stretch!important;gap:12px!important;padding:12px 14px!important;box-sizing:border-box!important;">
-                    <!-- Capa do Livro -->
-                    ${imgSrc ? `
-                        <div class="bump-cover-wrapper" style="position:relative!important;width:72px!important;min-width:72px!important;max-width:72px!important;height:96px!important;min-height:96px!important;flex-shrink:0!important;border-radius:8px!important;overflow:hidden!important;box-shadow:0 4px 10px rgba(0,0,0,0.5)!important;border:1px solid rgba(255,255,255,0.1)!important;background:#020617!important;">
-                            <img src="${imgSrc}" alt="${cleanTitle}" loading="lazy" style="position:static!important;width:100%!important;max-width:72px!important;height:100%!important;max-height:96px!important;object-fit:cover!important;display:block!important;pointer-events:none!important;">
+                <!-- Conteúdo no Lado Direito -->
+                <div class="bump-content-right" style="position:relative!important;z-index:3!important;width:64%!important;min-width:0!important;margin-left:auto!important;padding:10px 12px 10px 6px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;box-sizing:border-box!important;text-align:left!important;">
+                    <!-- Topo: Badge + Botao Adicionar -->
+                    <div class="bump-top-row" style="display:flex!important;align-items:center!important;justify-content:space-between!important;gap:6px!important;margin-bottom:4px!important;">
+                        <span class="bump-badge-tag" style="display:inline-flex!important;align-items:center!important;gap:4px!important;background:${isSelected ? 'rgba(16,185,129,0.22)' : 'rgba(245,158,11,0.18)'}!important;color:${isSelected ? '#34d399' : '#fbbf24'}!important;border:1px solid ${isSelected ? 'rgba(16,185,129,0.45)' : 'rgba(245,158,11,0.4)'}!important;font-size:0.62rem!important;font-weight:800!important;padding:2px 7px!important;border-radius:5px!important;text-transform:uppercase!important;letter-spacing:0.4px!important;line-height:1.1!important;white-space:nowrap!important;">
+                            <i class="fa-solid fa-sparkles" style="font-size:0.55rem;"></i> ${badgeLabel}
+                        </span>
+                        <div class="bump-action-btn" style="display:inline-flex!important;align-items:center!important;gap:4px!important;padding:3px 8px!important;border-radius:5px!important;font-size:0.65rem!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:0.3px!important;transition:all 0.2s ease!important;border:1px solid ${isSelected ? '#10b981' : 'rgba(255,255,255,0.18)'}!important;background:${isSelected ? '#10b981' : 'rgba(255,255,255,0.08)'}!important;color:${isSelected ? '#ffffff' : '#f1f5f9'}!important;white-space:nowrap!important;">
+                            <i class="${isSelected ? 'fa-solid fa-check' : 'fa-solid fa-plus'}" style="font-size:0.7rem;"></i>
+                            <span>${isSelected ? 'Adicionado' : 'Adicionar'}</span>
                         </div>
-                    ` : ''}
+                    </div>
 
-                    <!-- Detalhes e Conteúdo -->
-                    <div class="bump-details-wrapper" style="flex:1 1 auto!important;min-width:0!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;text-align:left!important;position:relative!important;z-index:2!important;">
-                        <div>
-                            <div class="bump-title-text">${cleanTitle}</div>
-                            <div class="bump-desc-text">${desc}</div>
-                        </div>
+                    <!-- Titulo e Descricao Racional -->
+                    <div>
+                        <div class="bump-title-text" style="color:#ffffff!important;font-size:0.88rem!important;font-weight:800!important;line-height:1.25!important;letter-spacing:-0.2px!important;margin:0 0 3px 0!important;word-break:normal!important;overflow-wrap:break-word!important;text-shadow:0 1px 3px rgba(0,0,0,0.8)!important;">${cleanTitle}</div>
+                        <div class="bump-desc-text" style="font-size:0.72rem!important;line-height:1.35!important;color:#cbd5e1!important;margin:0 0 4px 0!important;word-break:normal!important;overflow-wrap:break-word!important;text-wrap:pretty!important;text-shadow:0 1px 2px rgba(0,0,0,0.8)!important;">${desc}</div>
+                    </div>
 
-                        <!-- Preço -->
-                        <div class="bump-pricing-row">
-                            <span class="bump-old-price">De R$ ${isDoencas ? '89,90' : (isManejo ? '67,00' : '39,90')}</span>
-                            <span class="bump-new-price">+ R$ ${formatBRL(bump.price).replace('R$ ', '')}</span>
-                        </div>
+                    <!-- Linha de Preco -->
+                    <div class="bump-pricing-row" style="display:flex!important;align-items:baseline!important;gap:6px!important;margin-top:auto!important;padding-top:3px!important;border-top:1px solid rgba(255,255,255,0.08)!important;">
+                        <span class="bump-old-price" style="color:#94a3b8!important;font-size:0.68rem!important;text-decoration:line-through!important;font-weight:500!important;">De R$ ${oldPrice}</span>
+                        <span class="bump-new-price" style="color:#34d399!important;font-size:0.98rem!important;font-weight:900!important;line-height:1!important;letter-spacing:-0.2px!important;">+ R$ ${formatBRL(bump.price).replace('R$ ', '')}</span>
                     </div>
                 </div>
             </div>`;
