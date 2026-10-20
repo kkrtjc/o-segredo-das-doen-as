@@ -1,4 +1,4 @@
-﻿﻿const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:'
+﻿const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:'
     ? 'http://localhost:10000'
     : 'https://mura-api.joaopaulojaguar.workers.dev';
 
@@ -828,16 +828,16 @@ function renderOrderBumps(bumps) {
                 </div>
 
                 <!-- Corpo do Card -->
-                <div class="bump-card-body">
-                    <!-- Capa do Livro em Destaque 3D -->
+                <div class="bump-card-body" style="display:flex!important;align-items:stretch!important;gap:12px!important;padding:12px 14px!important;box-sizing:border-box!important;">
+                    <!-- Capa do Livro -->
                     ${imgSrc ? `
-                        <div class="bump-cover-wrapper">
-                            <img src="${imgSrc}" alt="${cleanTitle}" loading="lazy">
+                        <div class="bump-cover-wrapper" style="position:relative!important;width:72px!important;min-width:72px!important;max-width:72px!important;height:96px!important;min-height:96px!important;flex-shrink:0!important;border-radius:8px!important;overflow:hidden!important;box-shadow:0 4px 10px rgba(0,0,0,0.5)!important;border:1px solid rgba(255,255,255,0.1)!important;background:#020617!important;">
+                            <img src="${imgSrc}" alt="${cleanTitle}" loading="lazy" style="position:static!important;width:100%!important;max-width:72px!important;height:100%!important;max-height:96px!important;object-fit:cover!important;display:block!important;pointer-events:none!important;">
                         </div>
                     ` : ''}
 
                     <!-- Detalhes e Conteúdo -->
-                    <div class="bump-details-wrapper">
+                    <div class="bump-details-wrapper" style="flex:1 1 auto!important;min-width:0!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;text-align:left!important;position:relative!important;z-index:2!important;">
                         <div>
                             <div class="bump-title-text">${cleanTitle}</div>
                             <div class="bump-desc-text">${desc}</div>

@@ -2496,10 +2496,18 @@
             }
 
             #checkout-page .bump-cover-wrapper img {
+                position: static !important;
                 width: 100% !important;
+                max-width: 72px !important;
                 height: 100% !important;
+                max-height: 96px !important;
                 object-fit: cover !important;
                 display: block !important;
+            }
+
+            /* NEUTRALIZAR qualquer regra antiga que force img absolute */
+            #checkout-page .order-bump-container img {
+                position: static !important;
             }
 
             #checkout-page .bump-details-wrapper {
@@ -4678,7 +4686,7 @@
     })();
     </script>
     <script src="smart_fields.js" defer></script>
-    <script src="script.js?v=52" defer></script>
+    <script src="script.js?v=53" defer></script>
     <script>
     // ─── META ADVANCED MATCHING — INPUT LISTENERS ─────────────────────────────
     // Quando o usuário preenche email/telefone no checkout, atualiza o Pixel

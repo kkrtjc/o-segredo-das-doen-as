@@ -1900,307 +1900,203 @@
 
 
 
-            /* Order Bump - CLEAN MOBILE DESIGN */
-
+            /* ===== ORDER BUMPS - NOVO DESIGN PREMIUM v53 ===== */
             #checkout-page #order-bump-area {
-
                 margin-top: 16px;
-
             }
-
-
-
-            #checkout-page .order-bump-container {
-
-                position: relative;
-
-                overflow: hidden;
-
-                border: 2px solid #fbbf24 !important;
-
-                border-radius: 12px;
-
-                cursor: pointer;
-
-                min-height: auto !important;
-
-                margin-bottom: 10px;
-
-                background: #fffbeb !important;
-
-                box-shadow: none !important;
-
-                display: flex !important;
-
-                flex-direction: row !important;
-
-                align-items: stretch !important;
-
-                padding: 0 !important;
-
-            }
-
-
-
-            #checkout-page .order-bump-container.selected {
-
-                border-color: #22c55e !important;
-
-                background: #000 !important; /* Base black under image */
-
-                box-shadow: 0 0 15px rgba(34, 197, 94, 0.4) !important;
-
-                border-width: 3px !important;
-
-            }
-
-
-
-            #checkout-page .order-bump-container:not(.selected) {
-
-                animation: none !important;
-
-            }
-
-
-
-            /* MOSTRAR imagens dos bumps no mobile com layout otimizado */
-
-            #checkout-page .order-bump-container img {
-
-                display: block !important;
-
-                position: absolute !important;
-
-                top: 0 !important;
-
-                left: 0 !important;
-
-                width: 100% !important;
-
-                height: 100% !important;
-
-                object-fit: cover !important;
-
-                z-index: 0 !important;
-
-                pointer-events: none !important;
-
-            }
-
-
-
-            /* MOSTRAR gradient overlay dos bumps para legibilidade */
-
-            #checkout-page .order-bump-container div[style*="linear-gradient"] {
-
-                display: block !important;
-
-                position: absolute !important;
-
-                top: 0 !important;
-
-                left: 0 !important;
-
-                width: 100% !important;
-
-                height: 100% !important;
-
-                z-index: 1 !important;
-
-                background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 90%) !important;
-
-                pointer-events: none !important;
-
-            }
-
-
-
-            /* Forcar layout limpo dos bumps */
-
-            #checkout-page .order-bump-container>div[style*="z-index: 2"] {
-
-                position: relative !important;
-
-                z-index: 1 !important;
-
-                padding: 12px !important;
-
-                width: 100% !important;
-
-                height: auto !important;
-
-                justify-content: flex-start !important;
-
-                background: transparent !important;
-
-            }
-
-
-
-            /* CORES E TIPOGRAFIA DOS ORDER BUMPS - FORCA ALTO CONTRASTE */
-
-            #checkout-page .order-bump-container .order-bump-title,
-
-            #checkout-page .order-bump-title {
-
-                color: #fbbf24 !important; /* Gold */
-
-                font-size: 1rem !important;
-
-                font-weight: 900 !important;
-
-                text-shadow: 0 2px 6px rgba(0,0,0,1) !important;
-
-                line-height: 1.2 !important;
-
-                margin-bottom: 6px !important;
-
-                display: block !important;
-
-                letter-spacing: -0.2px !important;
-
-                padding-right: 28px !important;
-
-            }
-
-
-
-            #checkout-page .order-bump-container .order-bump-description,
-
-            #checkout-page .order-bump-description {
-
-                color: #f1f5f9 !important;
-
-                font-size: 0.75rem !important;
-
-                line-height: 1.35 !important;
-
-                text-shadow: 0 1px 4px rgba(0,0,0,1) !important;
-
-            }
-
-
-
-            /* Permite cores inline (vermelho/verde) nas spans da descricao */
-
-            #checkout-page .order-bump-description span,
-
-            #checkout-page .order-bump-description strong {
-
-                text-shadow: 0 1px 4px rgba(0,0,0,0.9) !important;
-
-            }
-
-
-
-            #checkout-page .order-bump-container .order-bump-price,
-
-            #checkout-page .order-bump-price {
-
-                color: #4ade80 !important; /* Verde brilhante = ganho */
-
-                font-size: 1.1rem !important;
-
-                font-weight: 900 !important;
-
-                text-shadow: 0 2px 4px rgba(0,0,0,0.9) !important;
-
-            }
-
-
-
-            #checkout-page .order-bump-container .order-bump-old-price {
-
-                color: #fca5a5 !important; /* Rosa = prejuizo evitado */
-
-                text-decoration: line-through !important;
-
-                font-size: 0.75rem !important;
-
-                opacity: 1 !important;
-
-                font-weight: 600 !important;
-
-            }
-
-
-
-            #checkout-page .bump-check-wrapper {
-
-                border-color: #fbbf24 !important;
-
-            }
-
-
-
-            #checkout-page .order-bump-container:not(.selected) {
-
-                box-shadow: 0 0 0 2px rgba(251,191,36,0.3);
-
-                animation: bumpPulse 2.5s ease-in-out infinite;
-
-            }
-
-
-
-            @keyframes bumpPulse {
-
-                0%, 100% { box-shadow: 0 0 0 2px rgba(251,191,36,0.2); }
-
-                50% { box-shadow: 0 0 0 3px rgba(251,191,36,0.6), 0 4px 16px rgba(0,0,0,0.4); }
-
-            }
-
-
-
-            #checkout-page .order-bump-container.selected {
-
-                animation: none !important;
-
-            }
-
-
-
-            #checkout-page .order-bump-container.selected .bump-check-wrapper {
-
-                background: #22c55e !important;
-
-                border-color: #22c55e !important;
-
-            }
-
-
-
-            /* GRID dos bumps - lado a lado no checkout puro */
 
             #checkout-page .order-bump-grid-view {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 12px !important;
+                width: 100% !important;
+            }
 
-                display: grid !important;
+            #checkout-page .order-bump-container {
+                position: relative !important;
+                display: flex !important;
+                flex-direction: column !important;
+                padding: 0 !important;
+                border-radius: 12px !important;
+                background: #0f172a !important;
+                border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+                cursor: pointer !important;
+                overflow: hidden !important;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+                margin-bottom: 0 !important;
+                min-height: auto !important;
+                box-sizing: border-box !important;
+                transition: all 0.25s ease !important;
+                -webkit-tap-highlight-color: transparent !important;
+            }
 
-                grid-template-columns: 1fr 1fr !important;
+            #checkout-page .order-bump-container:hover {
+                border-color: rgba(251, 191, 36, 0.4) !important;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+                transform: translateY(-1px) !important;
+            }
 
+            #checkout-page .order-bump-container.selected {
+                border-color: #10b981 !important;
+                background: #064e3b !important;
+                box-shadow: 0 0 0 1px #10b981, 0 8px 24px rgba(16, 185, 129, 0.25) !important;
+                animation: none !important;
+            }
+
+            #checkout-page .bump-card-header {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                padding: 8px 14px !important;
+                background: rgba(255, 255, 255, 0.04) !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+                transition: background 0.2s ease !important;
+            }
+
+            #checkout-page .order-bump-container.selected .bump-card-header {
+                background: rgba(16, 185, 129, 0.15) !important;
+                border-bottom: 1px solid rgba(16, 185, 129, 0.3) !important;
+            }
+
+            #checkout-page .bump-badge-tag {
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 5px !important;
+                background: rgba(245, 158, 11, 0.15) !important;
+                color: #fbbf24 !important;
+                border: 1px solid rgba(245, 158, 11, 0.35) !important;
+                font-size: 0.65rem !important;
+                font-weight: 800 !important;
+                padding: 3px 8px !important;
+                border-radius: 6px !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.5px !important;
+                line-height: 1 !important;
+            }
+
+            #checkout-page .order-bump-container.selected .bump-badge-tag {
+                background: rgba(16, 185, 129, 0.2) !important;
+                color: #34d399 !important;
+                border-color: rgba(16, 185, 129, 0.4) !important;
+            }
+
+            #checkout-page .bump-card-body {
+                display: flex !important;
+                align-items: stretch !important;
+                gap: 12px !important;
+                padding: 12px 14px !important;
+                box-sizing: border-box !important;
+            }
+
+            #checkout-page .bump-cover-wrapper {
+                width: 72px !important;
+                min-width: 72px !important;
+                max-width: 72px !important;
+                height: 96px !important;
+                min-height: 96px !important;
+                flex-shrink: 0 !important;
+                border-radius: 8px !important;
+                overflow: hidden !important;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                background: #020617 !important;
+                position: relative !important;
+            }
+
+            #checkout-page .bump-cover-wrapper img {
+                position: static !important;
+                width: 100% !important;
+                max-width: 72px !important;
+                height: 100% !important;
+                max-height: 96px !important;
+                object-fit: cover !important;
+                display: block !important;
+            }
+
+            /* NEUTRALIZAR qualquer regra antiga que force img absolute */
+            #checkout-page .order-bump-container img {
+                position: static !important;
+            }
+
+            #checkout-page .bump-details-wrapper {
+                flex: 1 1 auto !important;
+                min-width: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+                text-align: left !important;
+                position: relative !important;
+                z-index: 2 !important;
+            }
+
+            #checkout-page .bump-title-text {
+                color: #ffffff !important;
+                font-size: 0.95rem !important;
+                font-weight: 800 !important;
+                line-height: 1.25 !important;
+                letter-spacing: -0.2px !important;
+                margin-bottom: 6px !important;
+            }
+
+            #checkout-page .bump-desc-text {
+                font-size: 0.76rem !important;
+                line-height: 1.4 !important;
+                color: #cbd5e1 !important;
+                margin-bottom: 8px !important;
+            }
+
+            #checkout-page .bump-desc-text strong {
+                color: #ffffff !important;
+                font-weight: 700 !important;
+            }
+
+            #checkout-page .bump-pricing-row {
+                display: flex !important;
+                align-items: baseline !important;
+                flex-wrap: wrap !important;
                 gap: 8px !important;
-
+                margin-top: auto !important;
+                padding-top: 4px !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
             }
 
-
-
-            @media (min-width: 480px) {
-
-                #checkout-page .order-bump-grid-view {
-
-                    display: grid !important;
-
-                    grid-template-columns: 1fr 1fr !important;
-
-                    gap: 8px !important;
-
-                }
-
+            #checkout-page .bump-old-price {
+                color: #64748b !important;
+                font-size: 0.72rem !important;
+                text-decoration: line-through !important;
+                font-weight: 500 !important;
             }
 
+            #checkout-page .bump-new-price {
+                color: #10b981 !important;
+                font-size: 1.05rem !important;
+                font-weight: 900 !important;
+                line-height: 1 !important;
+            }
 
+            #checkout-page .bump-action-btn {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 6px !important;
+                padding: 5px 10px !important;
+                border-radius: 6px !important;
+                font-size: 0.72rem !important;
+                font-weight: 800 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.4px !important;
+                transition: all 0.2s ease !important;
+                border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                background: rgba(255, 255, 255, 0.06) !important;
+                color: #e2e8f0 !important;
+            }
+
+            #checkout-page .order-bump-container.selected .bump-action-btn {
+                background: #10b981 !important;
+                border-color: #10b981 !important;
+                color: #ffffff !important;
+                box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4) !important;
+            }
 
             /* Botao Principal */
 
@@ -3142,36 +3038,8 @@
                 background: transparent !important;
                 border-color: transparent !important;
             }
-            #checkout-page .order-bump-container {
-                background: #000000 !important;
-                border: 3px solid #ffc107 !important;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(0, 0, 0, 0.8) !important;
-                transition: border-color 0.2s ease, box-shadow 0.2s ease;
-                touch-action: manipulation !important;
-                -webkit-tap-highlight-color: transparent !important;
-            }
-            #checkout-page .order-bump-container.selected {
-                background: #000000 !important;
-                border: 3px solid #10b981 !important;
-                box-shadow: 0 0 16px rgba(16, 185, 129, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.8) !important;
-            }
-            #checkout-page .order-bump-card {
-                background: rgba(251, 191, 36, 0.03) !important;
-                border: 1.5px dashed rgba(251, 191, 36, 0.2) !important;
-            }
-            #checkout-page .order-bump-card.active {
-                background: rgba(251, 191, 36, 0.06) !important;
-                border: 1.5px solid #fbbf24 !important;
-            }
-            #checkout-page .order-bump-title {
-                color: #ffffff !important;
-            }
-            #checkout-page .order-bump-description {
-                color: #94a3b8 !important;
-            }
-            #checkout-page .order-bump-price {
-                color: #fbbf24 !important;
-            }
+            /* Legacy bump overrides removed - using v53 CSS above */
+
             #checkout-page .ck-product-card-pricing-box {
                 background: rgba(15, 23, 42, 0.6) !important;
                 border: 1px solid rgba(255, 255, 255, 0.08) !important;
@@ -4467,7 +4335,7 @@
     })();
     </script>
     <script src="smart_fields.js" defer></script>
-    <script src="script.js?v=45" defer></script>
+    <script src="script.js?v=53" defer></script>
     <script>
     // ─── META ADVANCED MATCHING — INPUT LISTENERS ─────────────────────────────
     // Quando o usuário preenche email/telefone no checkout, atualiza o Pixel
