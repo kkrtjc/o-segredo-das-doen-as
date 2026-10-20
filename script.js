@@ -616,7 +616,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                     price: 14.90,
                     priceCard: 14.90,
                     image: 'tabela_racao_bump.webp',
-                    description: '<div style="display: flex; flex-direction: column; gap: 3px; margin: 4px 0; text-align: left; font-size: 0.68rem; line-height: 1.25;"><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Inicial Profissional</strong> (0 a 30 dias)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Crescimento Ideal</strong> (31 a 120 dias)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Postura</strong> (121 dias+)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Corte / Engorda</strong></div><div style="display: flex; align-items: center; gap: 5px; color: #fbbf24;"><span style="color: #fbbf24; font-weight: 900;">✓</span> <strong>Calculadora Inteligente de Insumos</strong></div></div>',
+                    description: 'Fórmulas balanceadas para economizar até 60% com custo de ração.',
                     tag: 'OFERTA ÚNICA'
                 },
                 {
@@ -625,7 +625,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                     price: 14.90,
                     priceCard: 14.90,
                     image: 'potencialize_ovos_bump.webp',
-                    description: '<div style="display: flex; flex-direction: column; gap: 3px; margin: 4px 0; text-align: left; font-size: 0.68rem; line-height: 1.25;"><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fotoperíodo 16h</strong> (Estímulo Pineal Hormonal)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Cálcio Noturno Lento</strong> (Partículas 2 a 4mm)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Manejo do Calor & Bicarbonato</strong> (+30°C)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Quebra do Choco em 3 Dias</strong> (Gaiola Suspensa)</div></div>',
+                    description: 'Multiplique a postura com manejo de iluminação e cálcio noturno.',
                     tag: 'ALTA POSTURA'
                 }
             ];
@@ -638,7 +638,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                     price: 49.90,
                     priceCard: 49.90,
                     image: 'capadasdoencas.webp',
-                    description: '<div style="display: flex; flex-direction: column; gap: 3px; margin: 4px 0; text-align: left; font-size: 0.68rem; line-height: 1.25;"><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Identifique e Trate +10 Doenças</strong> das galinhas</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Tabela de Vacinação & Vermifugação</strong> correta</div><div style="display: flex; align-items: center; gap: 5px; color: #fbbf24;"><span style="color: #fbbf24; font-weight: 900;">✓</span> <strong>Protocolo de Prevenção e Biossegurança</strong></div></div>',
+                    description: 'Identifique sintomas e trate mais de 10 doenças comuns em aves.',
                     tag: 'MAIS VENDIDO'
                 },
                 {
@@ -647,7 +647,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                     price: 14.90,
                     priceCard: 14.90,
                     image: 'tabela_racao_bump.webp',
-                    description: '<div style="display: flex; flex-direction: column; gap: 3px; margin: 4px 0; text-align: left; font-size: 0.68rem; line-height: 1.25;"><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Inicial Profissional</strong> (0 a 30 dias)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Crescimento Ideal</strong> (31 a 120 dias)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Postura</strong> (121 dias+)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fórmula Corte / Engorda</strong></div><div style="display: flex; align-items: center; gap: 5px; color: #fbbf24;"><span style="color: #fbbf24; font-weight: 900;">✓</span> <strong>Calculadora Inteligente de Insumos</strong></div></div>',
+                    description: 'Fórmulas balanceadas para economizar até 60% com custo de ração.',
                     tag: 'OFERTA ÚNICA'
                 },
                 {
@@ -656,7 +656,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                     price: 14.90,
                     priceCard: 14.90,
                     image: 'potencialize_ovos_bump.webp',
-                    description: '<div style="display: flex; flex-direction: column; gap: 3px; margin: 4px 0; text-align: left; font-size: 0.68rem; line-height: 1.25;"><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Fotoperíodo 16h</strong> (Estímulo Pineal Hormonal)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Cálcio Noturno Lento</strong> (Partículas 2 a 4mm)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Manejo do Calor & Bicarbonato</strong> (+30°C)</div><div style="display: flex; align-items: center; gap: 5px; color: #f8fafc;"><span style="color: #10b981; font-weight: 900;">✓</span> <strong>Quebra do Choco em 3 Dias</strong> (Gaiola Suspensa)</div></div>',
+                    description: 'Multiplique a postura com manejo de iluminação e cálcio noturno.',
                     tag: 'ALTA POSTURA'
                 }
             ];
@@ -773,7 +773,7 @@ function renderOrderBumps(bumps) {
     const bumpHeader = `
         <div style="text-align: center; margin-bottom: 12px; padding: 10px 14px; background: rgba(245, 158, 11, 0.08); border-radius: 10px; border: 1px solid rgba(245, 158, 11, 0.25);">
             <p style="color: #fbbf24; font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 2px 0; line-height: 1.35;">
-                âš¡ Aproveite estas ofertas com desconto especial
+                <i class="fa-solid fa-bolt" style="color: #fbbf24; margin-right: 5px;"></i> Aproveite estas ofertas com desconto especial
             </p>
             <p style="color: #cbd5e1; font-size: 0.72rem; font-weight: 500; margin: 0; line-height: 1.3;">
                 Adicione ao seu pedido com apenas 1 clique antes de finalizar:
@@ -830,7 +830,7 @@ function renderOrderBumps(bumps) {
                     <!-- Topo: Badge + Botao Adicionar -->
                     <div class="bump-top-row" style="display:flex!important;align-items:center!important;justify-content:space-between!important;gap:6px!important;margin-bottom:4px!important;">
                         <span class="bump-badge-tag" style="display:inline-flex!important;align-items:center!important;gap:4px!important;background:${isSelected ? 'rgba(16,185,129,0.22)' : 'rgba(245,158,11,0.18)'}!important;color:${isSelected ? '#34d399' : '#fbbf24'}!important;border:1px solid ${isSelected ? 'rgba(16,185,129,0.45)' : 'rgba(245,158,11,0.4)'}!important;font-size:0.62rem!important;font-weight:800!important;padding:2px 7px!important;border-radius:5px!important;text-transform:uppercase!important;letter-spacing:0.4px!important;line-height:1.1!important;white-space:nowrap!important;">
-                            <i class="fa-solid fa-sparkles" style="font-size:0.55rem;"></i> ${badgeLabel}
+                            <i class="fa-solid ${badgeIcon}" style="font-size:0.6rem;"></i> ${badgeLabel}
                         </span>
                         <div class="bump-action-btn" style="display:inline-flex!important;align-items:center!important;gap:4px!important;padding:3px 8px!important;border-radius:5px!important;font-size:0.65rem!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:0.3px!important;transition:all 0.2s ease!important;border:1px solid ${isSelected ? '#10b981' : 'rgba(255,255,255,0.18)'}!important;background:${isSelected ? '#10b981' : 'rgba(255,255,255,0.08)'}!important;color:${isSelected ? '#ffffff' : '#f1f5f9'}!important;white-space:nowrap!important;">
                             <i class="${isSelected ? 'fa-solid fa-check' : 'fa-solid fa-plus'}" style="font-size:0.7rem;"></i>
