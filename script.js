@@ -800,6 +800,7 @@ function renderOrderBumps(bumps) {
 
         const cleanTitle = isManejo ? 'Manual de Manejo dos Pintinhos' : (isDoencas ? 'Guia Completo das Doenças' : (isOvos ? 'Potencialize Produção de Ovos' : 'Tabela de Ração Prática'));
         const badgeLabel = bump.tag || (isDoencas ? 'Mais Vendido' : (isManejo ? 'Recomendado' : (isOvos ? 'Alta Postura' : 'Economia')));
+        const badgeIcon = isDoencas ? 'fa-fire' : (isOvos ? 'fa-egg' : 'fa-bolt');
         const oldPrice = isDoencas ? '89,90' : (isManejo ? '67,00' : '39,90');
 
         let desc = bump.description;
