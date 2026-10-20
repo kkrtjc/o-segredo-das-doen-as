@@ -616,7 +616,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                     price: 14.90,
                     priceCard: 14.90,
                     image: 'tabela_racao_bump.webp',
-                    description: 'Fórmulas balanceadas para economizar até 60% com custo de ração.',
+                    description: 'Fórmulas balanceadas de postura, engorda e crescimento para economizar até 60% com custo de ração.',
                     tag: 'OFERTA ÚNICA'
                 },
                 {
@@ -625,7 +625,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                     price: 14.90,
                     priceCard: 14.90,
                     image: 'potencialize_ovos_bump.webp',
-                    description: 'Multiplique a postura com manejo de iluminação e cálcio noturno.',
+                    description: 'Multiplique a postura com manejo certo, controle de iluminação e alimentação na hora correta.',
                     tag: 'ALTA POSTURA'
                 }
             ];
@@ -638,7 +638,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                     price: 49.90,
                     priceCard: 49.90,
                     image: 'capadasdoencas.webp',
-                    description: 'Identifique sintomas e trate mais de 10 doenças comuns em aves.',
+                    description: 'Identifique sintomas e trate mais de 10 doenças comuns em aves. Protocolo de vacinação e vermifugação para blindar suas aves das principais doenças.',
                     tag: 'MAIS VENDIDO'
                 },
                 {
@@ -647,7 +647,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                     price: 14.90,
                     priceCard: 14.90,
                     image: 'tabela_racao_bump.webp',
-                    description: 'Fórmulas balanceadas para economizar até 60% com custo de ração.',
+                    description: 'Fórmulas balanceadas de postura, engorda e crescimento para economizar até 60% com custo de ração.',
                     tag: 'OFERTA ÚNICA'
                 },
                 {
@@ -656,7 +656,7 @@ async function startCheckoutProcess(productId, forceBumps = []) {
                     price: 14.90,
                     priceCard: 14.90,
                     image: 'potencialize_ovos_bump.webp',
-                    description: 'Multiplique a postura com manejo de iluminação e cálcio noturno.',
+                    description: 'Multiplique a postura com manejo certo, controle de iluminação e alimentação na hora correta.',
                     tag: 'ALTA POSTURA'
                 }
             ];
@@ -808,10 +808,10 @@ function renderOrderBumps(bumps) {
             desc = isManejo 
                 ? 'Passo a passo do nascimento à fase adulta para reduzir a mortalidade.'
                 : (isDoencas 
-                    ? 'Identifique sintomas e trate mais de 10 doenças comuns em aves.'
+                    ? 'Identifique sintomas e trate mais de 10 doenças comuns em aves. Protocolo de vacinação e vermifugação para blindar suas aves das principais doenças.'
                     : (isOvos
-                        ? 'Multiplique a postura com manejo de iluminação e cálcio noturno.'
-                        : 'Fórmulas balanceadas para economizar até 60% no custo com ração.'));
+                        ? 'Multiplique a postura com manejo certo, controle de iluminação e alimentação na hora correta.'
+                        : 'Fórmulas balanceadas de postura, engorda e crescimento para economizar até 60% com custo de ração.'));
         }
 
         return `
