@@ -819,14 +819,14 @@ function renderOrderBumps(bumps) {
 
                 <!-- Foto no Fundo (lado esquerdo com fusao suave) -->
                 ${imgSrc ? `
-                    <div class="bump-bg-photo" style="position:absolute!important;top:0!important;left:0!important;width:44%!important;height:100%!important;z-index:1!important;pointer-events:none!important;overflow:hidden!important;">
+                    <div class="bump-bg-photo" style="position:absolute!important;top:0!important;left:0!important;width:38%!important;height:100%!important;z-index:1!important;pointer-events:none!important;overflow:hidden!important;">
                         <img src="${imgSrc}" alt="${cleanTitle}" loading="lazy" style="position:absolute!important;top:0!important;left:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center left!important;display:block!important;opacity:0.95!important;">
                         <div class="bump-bg-overlay" style="position:absolute!important;inset:0!important;background:${isSelected ? 'linear-gradient(to right, rgba(6,46,34,0.05) 0%, rgba(6,46,34,0.45) 45%, rgba(6,46,34,0.9) 75%, #062e22 100%)' : 'linear-gradient(to right, rgba(11,17,32,0) 0%, rgba(11,17,32,0.35) 45%, rgba(11,17,32,0.85) 75%, #0b1120 100%)'}!important;z-index:2!important;"></div>
                     </div>
                 ` : ''}
 
                 <!-- Conteúdo no Lado Direito -->
-                <div class="bump-content-right" style="position:relative!important;z-index:3!important;width:64%!important;min-width:0!important;margin-left:auto!important;padding:10px 12px 10px 6px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;box-sizing:border-box!important;text-align:left!important;">
+                <div class="bump-content-right" style="position:relative!important;z-index:3!important;width:68%!important;min-width:0!important;margin-left:auto!important;padding:10px 12px 10px 6px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;box-sizing:border-box!important;text-align:left!important;">
                     <!-- Topo: Badge + Botao Adicionar -->
                     <div class="bump-top-row" style="display:flex!important;align-items:center!important;justify-content:space-between!important;gap:6px!important;margin-bottom:4px!important;">
                         <span class="bump-badge-tag" style="display:inline-flex!important;align-items:center!important;gap:4px!important;background:${isSelected ? 'rgba(16,185,129,0.22)' : 'rgba(245,158,11,0.18)'}!important;color:${isSelected ? '#34d399' : '#fbbf24'}!important;border:1px solid ${isSelected ? 'rgba(16,185,129,0.45)' : 'rgba(245,158,11,0.4)'}!important;font-size:0.62rem!important;font-weight:800!important;padding:2px 7px!important;border-radius:5px!important;text-transform:uppercase!important;letter-spacing:0.4px!important;line-height:1.1!important;white-space:nowrap!important;">
@@ -838,10 +838,10 @@ function renderOrderBumps(bumps) {
                         </div>
                     </div>
 
-                    <!-- Titulo e Descricao Racional -->
+                    <!-- Titulo e Descricao Racional sem quebras estranhas -->
                     <div>
-                        <div class="bump-title-text" style="color:#ffffff!important;font-size:0.88rem!important;font-weight:800!important;line-height:1.25!important;letter-spacing:-0.2px!important;margin:0 0 3px 0!important;word-break:normal!important;overflow-wrap:break-word!important;text-shadow:0 1px 3px rgba(0,0,0,0.8)!important;">${cleanTitle}</div>
-                        <div class="bump-desc-text" style="font-size:0.72rem!important;line-height:1.35!important;color:#cbd5e1!important;margin:0 0 4px 0!important;word-break:normal!important;overflow-wrap:break-word!important;text-wrap:pretty!important;text-shadow:0 1px 2px rgba(0,0,0,0.8)!important;">${desc}</div>
+                        <div class="bump-title-text" style="color:#ffffff!important;font-size:0.88rem!important;font-weight:800!important;line-height:1.25!important;letter-spacing:-0.2px!important;margin:0 0 3px 0!important;word-break:normal!important;overflow-wrap:break-word!important;white-space:normal!important;text-shadow:0 1px 3px rgba(0,0,0,0.8)!important;">${cleanTitle}</div>
+                        <div class="bump-desc-text" style="font-size:0.72rem!important;line-height:1.35!important;color:#cbd5e1!important;margin:0 0 4px 0!important;word-break:normal!important;overflow-wrap:break-word!important;white-space:normal!important;text-shadow:0 1px 2px rgba(0,0,0,0.8)!important;">${desc}</div>
                     </div>
 
                     <!-- Linha de Preco -->
@@ -854,7 +854,7 @@ function renderOrderBumps(bumps) {
     }).join('');
 
     area.innerHTML = bumpHeader + `
-        <div class="order-bump-grid-view">
+        <div class="order-bump-grid-view" style="display:flex!important;flex-direction:column!important;gap:12px!important;width:100%!important;">
             ${bumpHtml}
         </div>
     `;
@@ -873,13 +873,31 @@ function toggleBump(bumpId) {
         const isSelected = cart.bumps.includes(bumpId);
         if (isSelected) {
             card.classList.add('selected');
+            card.style.borderColor = '#10b981';
+            card.style.background = '#062e22';
+            const overlay = card.querySelector('.bump-bg-overlay');
+            if (overlay) overlay.style.background = 'linear-gradient(to right, rgba(6,46,34,0.05) 0%, rgba(6,46,34,0.45) 45%, rgba(6,46,34,0.9) 75%, #062e22 100%)';
         } else {
             card.classList.remove('selected');
+            card.style.borderColor = 'rgba(255,255,255,0.12)';
+            card.style.background = '#0b1120';
+            const overlay = card.querySelector('.bump-bg-overlay');
+            if (overlay) overlay.style.background = 'linear-gradient(to right, rgba(11,17,32,0) 0%, rgba(11,17,32,0.35) 45%, rgba(11,17,32,0.85) 75%, #0b1120 100%)';
         }
 
         const btn = card.querySelector('.bump-action-btn');
         if (btn) {
-            btn.innerHTML = `<i class="${isSelected ? 'fa-solid fa-check' : 'fa-solid fa-plus'}" style="font-size: 0.75rem;"></i> <span>${isSelected ? 'Adicionado' : 'Adicionar'}</span>`;
+            if (isSelected) {
+                btn.innerHTML = `<i class="fa-solid fa-check" style="font-size:0.7rem;"></i> <span>Adicionado</span>`;
+                btn.style.background = '#10b981';
+                btn.style.borderColor = '#10b981';
+                btn.style.color = '#ffffff';
+            } else {
+                btn.innerHTML = `<i class="fa-solid fa-plus" style="font-size:0.7rem;"></i> <span>Adicionar</span>`;
+                btn.style.background = 'rgba(255,255,255,0.08)';
+                btn.style.borderColor = 'rgba(255,255,255,0.18)';
+                btn.style.color = '#f1f5f9';
+            }
         }
     }
 
