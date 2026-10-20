@@ -1,4 +1,4 @@
-const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:'
+﻿﻿const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:'
     ? 'http://localhost:10000'
     : 'https://mura-api.joaopaulojaguar.workers.dev';
 
@@ -752,13 +752,12 @@ function renderOrderBumps(bumps) {
     const area = document.getElementById('order-bump-area');
     if (!area) return;
 
-    // Filtra bumps que não devem aparecer
+    // Filtra bumps que nÃ£o devem aparecer
     const filteredBumps = (bumps || []).filter(bump => {
         if (!bump.id) {
-            if (bump.title?.includes('Pintinhos') || bump.title?.includes('Manejo')) bump.id = 'ebook-manejo';
-            else if (bump.title?.includes('Ração')) bump.id = 'bump-6361';
+            if (bump.title && (bump.title.includes('Pintinhos') || bump.title.includes('Manejo'))) bump.id = 'ebook-manejo';
+            else if (bump.title && bump.title.includes('Ração')) bump.id = 'bump-6361';
         }
-        
         if (bump.enabled === false) return false;
         return true;
     });
@@ -772,12 +771,12 @@ function renderOrderBumps(bumps) {
     area.style.marginTop = '0.5rem';
 
     const bumpHeader = `
-        <div style="text-align: center; margin-bottom: 8px; padding: 8px 12px; background: rgba(245,158,11,0.08); border-radius: 8px; border: 1px solid rgba(245,158,11,0.25);">
-            <p style="color: #fbbf24; font-size: 0.74rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 2px 0; line-height: 1.35;">
-                ⚡ Esses Conteúdos estão com desconto por pouco tempo
+        <div style="text-align: center; margin-bottom: 12px; padding: 10px 14px; background: rgba(245, 158, 11, 0.08); border-radius: 10px; border: 1px solid rgba(245, 158, 11, 0.25);">
+            <p style="color: #fbbf24; font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 2px 0; line-height: 1.35;">
+                âš¡ Aproveite estas ofertas com desconto especial
             </p>
-            <p style="color: #cbd5e1; font-size: 0.7rem; font-weight: 600; margin: 0; line-height: 1.3;">
-                Não perca essa oportunidade única.
+            <p style="color: #cbd5e1; font-size: 0.72rem; font-weight: 500; margin: 0; line-height: 1.3;">
+                Adicione ao seu pedido com apenas 1 clique antes de finalizar:
             </p>
         </div>
     `;
@@ -790,82 +789,72 @@ function renderOrderBumps(bumps) {
             else if (bump.id === 'ebook-manejo' || bump.id === 'bump-manejo') imgSrc = 'capadospintinhos.webp';
             else if (bump.id === 'bump-6361') imgSrc = 'tabela_racao_bump.webp';
             else if (bump.id === 'bump-ovos') imgSrc = 'potencialize_ovos_bump.webp';
-            else if (bump.title?.includes('Pintinhos') || bump.title?.includes('Manejo')) imgSrc = 'capadospintinhos.webp';
-            else if (bump.title?.includes('Ração') || bump.title?.includes('Racao') || bump.title?.includes('Tabela')) imgSrc = 'tabela_racao_bump.webp';
-            else if (bump.title?.includes('Ovos') || bump.title?.includes('Postura')) imgSrc = 'potencialize_ovos_bump.webp';
+            else if (bump.title && (bump.title.includes('Pintinhos') || bump.title.includes('Manejo'))) imgSrc = 'capadospintinhos.webp';
+            else if (bump.title && (bump.title.includes('Ração') || bump.title.includes('Racao') || bump.title.includes('Tabela'))) imgSrc = 'tabela_racao_bump.webp';
+            else if (bump.title && (bump.title.includes('Ovos') || bump.title.includes('Postura'))) imgSrc = 'potencialize_ovos_bump.webp';
         }
 
-        const isCombo = (bump.id === 'combo-elite-bump');
-        const isManejo = (bump.id === 'ebook-manejo' || bump.title?.includes('Pintinhos'));
-        const isDoencas = (bump.id === 'ebook-doencas' || bump.title?.includes('Doenças'));
-        const isOvos = (bump.id === 'bump-ovos' || bump.title?.includes('Ovos') || bump.title?.includes('Postura'));
-        
-        let title = isManejo ? '🐣 SALVE SEUS PINTINHOS' : (isDoencas ? '💊 TRATE SUAS GALINHAS' : (isOvos ? '🥚 ALTA PRODUÇÃO DE OVOS' : '💰 CORTE SUA CONTA DE RAÇÃO'));
-        if (isCombo) title = '<span style="color: #000; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 0 5px #fff; display: inline-block; padding: 2px 4px; border-radius: 4px; background: rgba(255,255,255,0.1);">⚠️ SEUS PINTINHOS VÃO MORRER SEM ISSO</span>';
+        const isManejo = (bump.id === 'ebook-manejo' || (bump.title && bump.title.includes('Pintinhos')));
+        const isDoencas = (bump.id === 'ebook-doencas' || (bump.title && bump.title.includes('Doenças')));
+        const isOvos = (bump.id === 'bump-ovos' || (bump.title && (bump.title.includes('Ovos') || bump.title.includes('Postura'))));
+
+        const cleanTitle = isManejo ? 'Manual de Manejo dos Pintinhos' : (isDoencas ? 'Guia Completo das Doenças' : (isOvos ? 'Potencialize Produção de Ovos' : 'Tabela de Ração Prática'));
+        const badgeLabel = bump.tag || (isDoencas ? 'Mais Vendido' : (isManejo ? 'Recomendado' : 'Oferta Especial'));
 
         let desc = bump.description;
         if (!desc) {
             desc = isManejo 
-                ? '<span style="color: #ff4444;"><strong>8 em cada 10 pintinhos morrem antes dos 20 dias.</strong></span> Temperatura errada, ração imprópria, ambiente inapropriado. <span style="color: #4ade80;"><strong>O manual te ensina o passo a passo completo</strong></span> do nascimento à fase adulta.' 
+                ? 'Aprenda o passo a passo exato do nascimento à fase adulta e reduza a mortalidade para quase zero.'
                 : (isDoencas 
-                    ? 'Com o <strong>Guia Completo das Doenças</strong> você aprende a <strong style="color: #4ade80;">identificar e tratar mais de 10 tipos diferentes de doenças</strong> nas galinhas. O tratamento que os maiores criadores usam em suas aves. <span style="color: #ff4444;"><strong>Não espere sua ave adoecer!</strong></span>'
+                    ? 'Identifique sintomas, previna surtos e trate com precisão mais de 10 doenças comuns em aves.'
                     : (isOvos
-                        ? '<span style="color: #fbbf24;"><strong>Dobre a postura do seu plantel.</strong></span> Controle de fotoperíodo, cálcio noturno lento, conforto térmico e quebra de choco.'
-                        : '<span style="color: #ff4444;"><strong>Você está perdendo dinheiro todo mês</strong></span> com ração de marca cara. <span style="color: #4ade80;"><strong>Monte sua própria ração balanceada</strong></span> e economize <strong style="color:#fbbf24;">até 60% na ração</strong> das suas aves.'));
+                        ? 'Multiplique a postura das galinhas com controle de luz, cálcio noturno e manejo correto.'
+                        : 'Fórmulas balanceadas do nascimento à postura para economizar até 60% no custo com ração.'));
         }
 
-        const bumpLabel = isManejo ? 'MANUAL DE PINTINHOS' : (isDoencas ? 'GUIA DAS DOENÇAS' : (isOvos ? 'ALTA POSTURA DE OVOS' : 'TABELA DE RAÇÃO'));
-
         return `
-            <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="display: flex; align-items: stretch; justify-content: flex-start; gap: 0; padding: 0; margin-bottom: 12px; border-radius: 12px; cursor: pointer; width: 100%; border: 2px solid ${isSelected ? '#22c55e' : '#f59e0b'}; background: ${isSelected ? '#143823' : '#1e293b'}; box-shadow: ${isSelected ? '0 0 16px rgba(34,197,94,0.35)' : '0 2px 8px rgba(0,0,0,0.2)'}; transition: all 0.2s ease; box-sizing: border-box; position: relative; overflow: hidden;">
-                
+            <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')">
                 <input type="checkbox" id="bump-chk-${bump.id}" ${isSelected ? 'checked' : ''} style="display: none;">
 
-                <!-- Faixa lateral colorida viva -->
-                <div style="width: 5px; flex-shrink: 0; background: ${isSelected ? '#22c55e' : '#f59e0b'}; transition: all 0.2s ease;"></div>
-
-                <!-- Imagem tipo capa de livro com tamanho fixo e nítido -->
-                ${imgSrc ? `
-                    <div class="bump-img-box" style="width: 80px !important; min-width: 80px !important; max-width: 80px !important; height: 100px !important; min-height: 100px !important; max-height: 100px !important; flex-shrink: 0 !important; overflow: hidden !important; display: flex !important; align-items: center !important; justify-content: center !important; background: #0f172a !important; border-radius: 8px 0 0 8px !important; margin: 0 !important; padding: 0 !important;">
-                        <img src="${imgSrc}" alt="${bumpLabel}" style="width: 80px !important; height: 100px !important; max-width: 80px !important; max-height: 100px !important; object-fit: cover !important; object-position: center !important; display: block !important;">
-                    </div>
-                ` : ''}
-
-                <!-- Conteúdo Central: Letras claras, nítidas e contrastadas -->
-                <div class="bump-content-box" style="flex: 1 1 auto !important; min-width: 0 !important; text-align: left; padding: 12px 12px 12px 14px; display: flex; flex-direction: column; justify-content: center; gap: 4px;">
-                    <!-- Badge -->
-                    <span style="display: inline-block; background: ${isSelected ? '#22c55e' : '#f59e0b'}; color: #000000; font-size: 0.65rem; font-weight: 900; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.3; width: fit-content;">
-                        ${bump.tag || 'OFERTA ÚNICA'}
+                <!-- Header Superior Elegante -->
+                <div class="bump-card-header">
+                    <span class="bump-badge-tag">
+                        <i class="fa-solid fa-sparkles" style="font-size: 0.6rem;"></i> ${badgeLabel}
                     </span>
-                    <!-- Título Branco e Nítido -->
-                    <strong style="color: #ffffff; font-size: 0.98rem; font-weight: 900; line-height: 1.25; display: block;">
-                        ${title}
-                    </strong>
-                    <!-- Descrição Clara e Legível -->
-                    <div style="color: #f1f5f9; font-size: 0.78rem; line-height: 1.35; margin: 2px 0;">
-                        ${desc}
-                    </div>
-                    <!-- Preço em Destaque Alto -->
-                    <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 3px;">
-                        <span style="color: #cbd5e1; font-size: 0.74rem; text-decoration: line-through;">De R$ ${isDoencas ? '89,90' : (isManejo ? '67,00' : '39,90')}</span>
-                        <span style="color: #4ade80; font-size: 1.2rem; font-weight: 900; line-height: 1;">
-                            + R$ ${formatBRL(bump.price).replace('R$ ', '')}
-                        </span>
+                    <div class="bump-action-btn">
+                        <i class="${isSelected ? 'fa-solid fa-check' : 'fa-solid fa-plus'}" style="font-size: 0.75rem;"></i>
+                        <span>${isSelected ? 'Adicionado' : 'Adicionar'}</span>
                     </div>
                 </div>
 
-                <!-- Checkbox grande e nítido -->
-                <div style="display: flex; align-items: center; justify-content: center; padding: 0 14px; flex-shrink: 0;">
-                    <div class="bump-check-wrapper" style="width: 34px; height: 34px; border-radius: 8px; border: 2px solid ${isSelected ? '#22c55e' : '#f59e0b'}; display: flex; align-items: center; justify-content: center; background: ${isSelected ? '#22c55e' : 'rgba(255,255,255,0.12)'}; flex-shrink: 0; transition: all 0.15s ease;">
-                        ${isSelected ? '<i class="fa-solid fa-check" style="color: #ffffff; font-size: 1rem; font-weight: 900;"></i>' : '<i class="fa-solid fa-plus" style="color: #fbbf24; font-size: 0.95rem;"></i>'}
+                <!-- Corpo do Card -->
+                <div class="bump-card-body">
+                    <!-- Capa do Livro em Destaque 3D -->
+                    ${imgSrc ? `
+                        <div class="bump-cover-wrapper">
+                            <img src="${imgSrc}" alt="${cleanTitle}" loading="lazy">
+                        </div>
+                    ` : ''}
+
+                    <!-- Detalhes e Conteúdo -->
+                    <div class="bump-details-wrapper">
+                        <div>
+                            <div class="bump-title-text">${cleanTitle}</div>
+                            <div class="bump-desc-text">${desc}</div>
+                        </div>
+
+                        <!-- Preço -->
+                        <div class="bump-pricing-row">
+                            <span class="bump-old-price">De R$ ${isDoencas ? '89,90' : (isManejo ? '67,00' : '39,90')}</span>
+                            <span class="bump-new-price">+ R$ ${formatBRL(bump.price).replace('R$ ', '')}</span>
+                        </div>
                     </div>
                 </div>
-
             </div>`;
     }).join('');
 
     area.innerHTML = bumpHeader + `
-        <div class="order-bump-grid-view" style="display: flex !important; flex-direction: column !important; gap: 8px !important; width: 100% !important;">
+        <div class="order-bump-grid-view">
             ${bumpHtml}
         </div>
     `;
@@ -879,29 +868,18 @@ function toggleBump(bumpId) {
         cart.bumps.push(bumpId);
     }
 
-    // Atualiza classes visuais sem renderizar tudo de novo (para não quebrar animações)
     const card = document.getElementById(`bump-card-${bumpId}`);
     if (card) {
-        if (cart.bumps.includes(bumpId)) {
+        const isSelected = cart.bumps.includes(bumpId);
+        if (isSelected) {
             card.classList.add('selected');
-            card.style.borderColor = '#10b981';
-            card.style.boxShadow = '0 0 15px rgba(16, 185, 129, 0.45), inset 0 0 20px rgba(0,0,0,0.8)';
-            const check = card.querySelector('.bump-check-wrapper');
-            if (check) {
-                check.style.background = '#10b981';
-                check.style.borderColor = '#10b981';
-                check.innerHTML = '<i class="fa-solid fa-check" style="color: #fff; font-size: 0.75rem;"></i>';
-            }
         } else {
             card.classList.remove('selected');
-            card.style.borderColor = '#ffc107';
-            card.style.boxShadow = '0 4px 15px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.8)';
-            const check = card.querySelector('.bump-check-wrapper');
-            if (check) {
-                check.style.background = 'rgba(0,0,0,0.7)';
-                check.style.borderColor = '#ffc107';
-                check.innerHTML = '';
-            }
+        }
+
+        const btn = card.querySelector('.bump-action-btn');
+        if (btn) {
+            btn.innerHTML = `<i class="${isSelected ? 'fa-solid fa-check' : 'fa-solid fa-plus'}" style="font-size: 0.75rem;"></i> <span>${isSelected ? 'Adicionado' : 'Adicionar'}</span>`;
         }
     }
 
