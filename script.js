@@ -611,6 +611,15 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         if (productId === 'ebook-doencas' || productId === 'combo-plataforma' || productId === 'combo-elite') {
             cart.mainProduct.fullBumps = [
                 {
+                    id: 'ebook-pintinhos',
+                    title: 'MANUAL DE MANEJO DOS PINTINHOS',
+                    price: 27.90,
+                    priceCard: 27.90,
+                    image: 'capadospintinhos.webp',
+                    description: 'Passo a passo do nascimento à fase adulta para reduzir a mortalidade e criar pintinhos saudáveis.',
+                    tag: 'RECOMENDADO'
+                },
+                {
                     id: 'bump-6361',
                     title: 'TABELA DE RAÇÃO PRÁTICA',
                     price: 14.90,
@@ -752,7 +761,7 @@ function renderOrderBumps(bumps) {
     const area = document.getElementById('order-bump-area');
     if (!area) return;
 
-    // Filtra bumps que nÃ£o devem aparecer
+    // Filtra bumps que não devem aparecer
     const filteredBumps = (bumps || []).filter(bump => {
         if (!bump.id) {
             if (bump.title && (bump.title.includes('Pintinhos') || bump.title.includes('Manejo'))) bump.id = 'ebook-manejo';
@@ -794,7 +803,7 @@ function renderOrderBumps(bumps) {
             else if (bump.title && (bump.title.includes('Ovos') || bump.title.includes('Postura'))) imgSrc = 'potencialize_ovos_bump.webp';
         }
 
-        const isManejo = (bump.id === 'ebook-manejo' || (bump.title && bump.title.includes('Pintinhos')));
+        const isManejo = (bump.id === 'ebook-manejo' || bump.id === 'ebook-pintinhos' || (bump.title && bump.title.includes('Pintinhos')));
         const isDoencas = (bump.id === 'ebook-doencas' || (bump.title && bump.title.includes('Doenças')));
         const isOvos = (bump.id === 'bump-ovos' || (bump.title && (bump.title.includes('Ovos') || bump.title.includes('Postura'))));
 
