@@ -1965,6 +1965,13 @@
                 subSel.classList.toggle('visible', campaignId === 'pintinhos');
             }
 
+            // Ao trocar de campanha, SEMPRE reseta a subpágina para 'Todas'
+            // para evitar que uma seleção anterior de Página 2 / Página 3 persista
+            currentSubPage = 'all';
+            document.querySelectorAll('.subpage-pill').forEach(function(p) { p.classList.remove('active'); });
+            var todasPill = document.querySelector('.subpage-pills .subpage-pill');
+            if (todasPill) todasPill.classList.add('active');
+
             renderMetrics();
             if (currentViewMode === 'meta') {
                 loadMetaCampaignData();
