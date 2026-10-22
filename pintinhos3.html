@@ -1,0 +1,4366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover">
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-430QD56D2K"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-430QD56D2K');
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start': new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-WVBJNXCQ');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Meta Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1346740157465853');
+
+        var pvEventId = 'pv_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+        fbq('track', 'PageView', {}, { eventID: pvEventId });
+
+        // CAPI SERVER-SIDE: PageView
+        (function() {
+            var ck = document.cookie.split(';').reduce(function(a, c) {
+                var p = c.trim().split('=');
+                if (p[0]) a[p[0]] = p[1] || '';
+                return a;
+            }, {});
+            var params = new URLSearchParams(window.location.search);
+            var fbcFromUrl = params.get('fbclid');
+            var fbcValue = ck['_fbc'] || '';
+            if (!fbcValue && fbcFromUrl) fbcValue = 'fb.1.' + Date.now() + '.' + fbcFromUrl;
+            var sid = sessionStorage.getItem('mura_session_id');
+            if (!sid) {
+                sid = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+                sessionStorage.setItem('mura_session_id', sid);
+            }
+            var testCode = params.get('testCode') || sessionStorage.getItem('mura_test_code') || null;
+            if (testCode && !sessionStorage.getItem('mura_test_code')) sessionStorage.setItem('mura_test_code', testCode);
+            var apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                ? 'http://localhost:10000'
+                : 'https://mura-api.joaopaulojaguar.workers.dev';
+            fetch(apiUrl + '/api/capi-event', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    eventName: 'PageView',
+                    eventId: pvEventId,
+                    sourceUrl: window.location.href,
+                    customer: {},
+                    fbc: fbcValue,
+                    fbp: ck['_fbp'] || '',
+                    externalId: sid,
+                    testCode: testCode,
+                    site: 'pintinhos'
+                }),
+                keepalive: true
+            }).catch(function(){});
+        })();
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=1346740157465853&ev=PageView&noscript=1" />
+    </noscript>
+    <!-- End Meta Pixel Code -->
+
+    <!-- TikTok Pixel — carregado 2s após page interactive (não impacta dados) -->
+    <script>
+        !function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","load","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=d.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=d.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+        function loadTikTok(){ttq.load('D4VFSO3C77U98L8KBEF0');ttq.page();}
+        if(document.readyState==='complete'){setTimeout(loadTikTok,2000);}
+        else{window.addEventListener('load',function(){setTimeout(loadTikTok,2000);});}
+        }(window,document,'ttq');
+    </script>
+    <!-- End TikTok Pixel Code -->
+
+    <link rel="dns-prefetch" href="https://connect.facebook.net">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+
+    <title>Manual dos Pintinhos: Pintinho Triste Não É Azar | Método Lucrativo</title>
+
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        :root {
+            --bg-dark: #070a12;
+            --card-dark: #0e1626;
+            --card-border: rgba(255, 255, 255, 0.08);
+            --gold-primary: #fbbf24;
+            --gold-gradient: linear-gradient(135deg, #fbbf24, #d97706);
+            --green-btn: linear-gradient(135deg, #22c55e, #16a34a);
+            --green-glow: rgba(34, 197, 94, 0.25);
+            --red-alert: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .lp-topbar {
+            background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d);
+            color: #ffffff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-align: center;
+            padding: 9px 12px;
+            letter-spacing: 0.3px;
+        }
+
+        .lp-container {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Hero */
+        .lp-hero {
+            padding: 24px 0 32px 0;
+            text-align: center;
+        }
+
+        .lp-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 191, 36, 0.12);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: var(--gold-primary);
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 6px 14px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .lp-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.85rem;
+            line-height: 1.25;
+            font-weight: 900;
+            color: #ffffff;
+            margin: 0 0 16px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .lp-title span.highlight-red {
+            color: #ef4444;
+            text-decoration: underline decoration-red-500/40;
+        }
+
+        .lp-title span.highlight-gold {
+            color: var(--gold-primary);
+        }
+
+        .lp-subtitle {
+            font-size: 1rem;
+            line-height: 1.55;
+            color: #cbd5e1;
+            margin: 0 0 20px 0;
+        }
+
+        .lp-pills {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .lp-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 8px;
+            color: #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lp-pill i {
+            color: #22c55e;
+        }
+
+        .lp-cover-wrap {
+            position: relative;
+            max-width: 320px;
+            margin: 0 auto 24px auto;
+        }
+
+        .lp-cover-img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            display: block;
+        }
+
+        .lp-badge-float {
+            position: absolute;
+            bottom: -10px;
+            right: 0;
+            background: var(--gold-gradient);
+            color: #0f172a;
+            font-weight: 900;
+            font-size: 0.85rem;
+            padding: 6px 14px;
+            border-radius: 999px;
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+            text-transform: uppercase;
+        }
+
+        /* CTA Button */
+        .lp-cta-btn {
+            display: block;
+            width: 100%;
+            background: var(--green-btn);
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 900;
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.35);
+            animation: lpPulse 2.2s infinite;
+            letter-spacing: 0.3px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .lp-cta-btn:active {
+            transform: scale(0.98);
+        }
+
+        @keyframes lpPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 12px rgba(34, 197, 94, 0);
+            }
+        }
+
+        .lp-price-box {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 24px;
+        }
+
+        .lp-old-price {
+            font-size: 0.85rem;
+            color: #64748b;
+            text-decoration: line-through;
+        }
+
+        .lp-current-price {
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: #22c55e;
+            margin-left: 6px;
+        }
+
+        .lp-trust-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            font-size: 0.72rem;
+            color: #94a3b8;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .lp-trust-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .lp-trust-item i {
+            color: #22c55e;
+        }
+
+        /* Botão "Como eu recebo o meu conteúdo?" na página */
+        .lp-btn-delivery-info {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 360px;
+            margin: 12px auto 6px auto;
+            padding: 11px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            color: #cbd5e1;
+            font-size: 0.84rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .lp-btn-delivery-info:hover,
+        .lp-btn-delivery-info:active {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: rgba(251, 191, 36, 0.45);
+            color: #fbbf24;
+            transform: translateY(-1px);
+        }
+
+        .lp-btn-delivery-info i {
+            color: #fbbf24;
+            font-size: 0.95rem;
+        }
+
+        /* Section Cards */
+        .lp-section {
+            padding: 28px 0;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .lp-sec-tag {
+            color: var(--gold-primary);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .lp-sec-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 16px 0;
+            line-height: 1.3;
+        }
+
+        .lp-pain-card {
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-left: 4px solid #ef4444;
+            padding: 14px 16px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+
+        .lp-pain-card h4 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #f87171;
+            margin: 0 0 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lp-pain-card p {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .lp-callout-truth {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.08), rgba(217, 119, 6, 0.05));
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .lp-callout-truth p {
+            font-size: 0.95rem;
+            color: #f8fafc;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .lp-callout-truth strong {
+            color: var(--gold-primary);
+        }
+
+        /* Pillars */
+        .lp-pillar-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .lp-pillar-card {
+            background: var(--card-dark);
+            border: 1px solid var(--card-border);
+            padding: 16px;
+            border-radius: 12px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .lp-pillar-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: rgba(34, 197, 94, 0.12);
+            color: #22c55e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .lp-pillar-card h4 {
+            font-size: 0.98rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 4px 0;
+        }
+
+        .lp-pillar-card p {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Guarantee Box */
+        .lp-guarantee-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 14px;
+            padding: 20px 18px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .lp-guarantee-card img {
+            width: 65px;
+            height: auto;
+            flex-shrink: 0;
+        }
+
+        .lp-guarantee-card h4 {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #22c55e;
+            margin: 0 0 4px 0;
+        }
+
+        .lp-guarantee-card p {
+            font-size: 0.82rem;
+            color: #cbd5e1;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Offer Box */
+        .lp-offer-box {
+            background: linear-gradient(180deg, #0e172a, #070b16);
+            border: 2px solid var(--gold-primary);
+            border-radius: 16px;
+            padding: 24px 18px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(251, 191, 36, 0.15);
+            margin: 28px 0;
+        }
+
+        .lp-offer-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin: 0 0 6px 0;
+        }
+
+        .lp-offer-desc {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin: 0 0 16px 0;
+        }
+
+        .lp-price-tag {
+            margin-bottom: 20px;
+        }
+
+        .lp-price-de {
+            font-size: 0.95rem;
+            color: #64748b;
+            text-decoration: line-through;
+        }
+
+        .lp-price-por {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #22c55e;
+            line-height: 1;
+            margin: 6px 0;
+        }
+
+        .lp-price-sub {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+
+        /* FAQ */
+        .lp-faq-item {
+            background: var(--card-dark);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+        }
+
+        .lp-faq-item h5 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lp-faq-item h5 i {
+            color: var(--gold-primary);
+            font-size: 0.8rem;
+        }
+
+        .lp-faq-item p {
+            font-size: 0.82rem;
+            color: #94a3b8;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Sticky bottom bar on mobile */
+        .lp-sticky-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(9, 13, 22, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 16px;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+            transform: translateY(120%);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+            will-change: transform, opacity;
+        }
+
+        .lp-sticky-bar.visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .lp-sticky-price {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lp-sticky-price span:first-child {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            text-decoration: line-through;
+        }
+
+        .lp-sticky-price span:last-child {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #22c55e;
+            line-height: 1;
+        }
+
+        .lp-sticky-btn {
+            background: var(--green-btn);
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 0.95rem;
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            flex-grow: 1;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+        }
+
+        /* Delivery / Como Recebe o Conteúdo — Seção Unificada */
+        #secao-como-recebe {
+            scroll-margin-top: 25px;
+        }
+
+        .lp-delivery-unified-card {
+            background: linear-gradient(160deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.85));
+            border: 1.5px solid rgba(251, 191, 36, 0.35);
+            border-radius: 18px;
+            padding: 22px 18px;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(251, 191, 36, 0.08);
+            margin-bottom: 16px;
+        }
+
+        .lp-delivery-pillar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .lp-delivery-pillar-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .lp-delivery-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .lp-delivery-icon.gold {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        .lp-delivery-icon.red {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .lp-delivery-badge {
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 3px;
+        }
+        .lp-delivery-badge.gold {
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.15);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        .lp-delivery-badge.red {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .lp-delivery-pillar h4 {
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin: 0;
+            line-height: 1.25;
+        }
+
+        .lp-delivery-pillar-desc {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .lp-delivery-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 18px 0;
+            position: relative;
+        }
+        .lp-delivery-divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .lp-delivery-divider span {
+            position: relative;
+            background: #141f33;
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #fbbf24;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lp-delivery-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 10px;
+        }
+
+        .lp-delivery-features li {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            line-height: 1.4;
+        }
+
+        .lp-delivery-features li i {
+            color: #22c55e;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .lp-instant-delivery-banner {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 12px;
+            padding: 14px 16px;
+            text-align: left;
+            margin-top: 18px;
+        }
+
+        /* Footer */
+        .lp-footer {
+            padding: 40px 0 80px 0;
+            text-align: center;
+            font-size: 0.72rem;
+            color: #64748b;
+            border-top: 1px solid var(--card-border);
+        }
+    
+        /* Bundle Stack Component (Sobreposições e Economia) */
+        .lp-bundle-stack {
+            background: rgba(14, 22, 38, 0.75);
+            border: 1.5px solid rgba(251, 191, 36, 0.35);
+            border-radius: 16px;
+            padding: 16px 14px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(251, 191, 36, 0.1);
+            text-align: left;
+        }
+
+        .lp-bundle-header {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .lp-bundle-tag {
+            display: inline-block;
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--gold-primary);
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .lp-bundle-header h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        .lp-stack-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .lp-stack-item {
+            background: rgba(10, 15, 30, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .lp-stack-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .lp-stack-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: rgba(251, 191, 36, 0.12);
+            color: var(--gold-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .lp-stack-info h4 {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0 0 2px 0;
+            line-height: 1.2;
+        }
+
+        .lp-stack-info p {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .lp-stack-right {
+            text-align: right;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .lp-stack-old {
+            font-size: 0.78rem;
+            color: #ef4444;
+            text-decoration: line-through;
+            font-weight: 700;
+        }
+
+        .lp-stack-badge {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.35);
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 2px 8px;
+            border-radius: 999px;
+            letter-spacing: 0.3px;
+        }
+
+        .lp-bundle-total-box {
+            border-top: 1px dashed rgba(255, 255, 255, 0.15);
+            margin-top: 12px;
+            padding-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .lp-bundle-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+        }
+
+        .lp-bundle-sum-old {
+            font-size: 1rem;
+            color: #ef4444;
+            text-decoration: line-through;
+            font-weight: 800;
+        }
+
+        .lp-bundle-economy {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            color: #4ade80;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 6px 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body data-page="pintinhos" class="pintinhos-page">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WVBJNXCQ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Top Alert Bar -->
+    <div class="lp-topbar">
+        ⚠️ <strong>ALERTA DE PINTEIRO:</strong> Pintinho triste não é azar — é falta de manejo correto nas primeiras semanas.
+    </div>
+
+    <div class="lp-container">
+        
+        <!-- HERO -->
+        <div class="lp-hero">
+            <div class="lp-tag">
+                <i class="fa-solid fa-shield-halved"></i> 10 ANOS DE EXPERIÊNCIA PRÁTICA NA CRIAÇÃO
+            </div>
+
+            <h1 class="lp-title">
+                Quantas vezes você tirou um lote lindo e em menos de 20 dias <span class="highlight-red">metade adoeceu ou morreu?</span>
+            </h1>
+
+            <p class="lp-subtitle">
+                Chega de perder até 40% da sua ninhada e gastar fortunas com remédios que não funcionam. Depois de <strong>10 anos criando galinhas</strong>, descobri o método exato para evitar mortes e fazer seus pintinhos crescerem rápidos, fortes e saudáveis.
+            </p>
+
+            <div class="lp-pills">
+                <div class="lp-pill"><i class="fa-solid fa-check"></i> 10 Anos de Manejo Testado</div>
+                <div class="lp-pill"><i class="fa-solid fa-check"></i> Sem Gastar com Remédios Inúteis</div>
+                <div class="lp-pill"><i class="fa-solid fa-check"></i> Crescimento Rápido e Forte</div>
+            </div>
+
+            <!-- 3D Book Cover -->
+            <div class="lp-cover-wrap">
+                <img src="capadospintinhos.webp?v=3" alt="Manual de Manejo de Pintinhos" class="lp-cover-img" loading="eager">
+                <div class="lp-badge-float">
+                    Pacote Completo: R$ 27,90
+                </div>
+            </div>
+
+            <!-- LISTA COM SOBREPOSIÇÕES (O QUE VAI LEVAR E QUANTO ESTÁ ECONOMIZANDO) -->
+            <div class="lp-bundle-stack">
+                <div class="lp-bundle-header">
+                    <span class="lp-bundle-tag"><i class="fa-solid fa-feather"></i> MANEJO DE PINTINHOS</span>
+                    <h3>O que você vai receber com acesso imediato:</h3>
+                </div>
+
+                <div class="lp-stack-cards">
+                    <div class="lp-stack-item">
+                        <div class="lp-stack-left">
+                            <div class="lp-stack-icon"><i class="fa-solid fa-syringe"></i></div>
+                            <div class="lp-stack-info">
+                                <h4>Tabela Completa de Vacinação</h4>
+                                <p>Calendário prático do nascimento à fase adulta</p>
+                            </div>
+                        </div>
+                        <div class="lp-stack-right">
+                            <span class="lp-stack-old">R$ 29,90</span>
+                            <span class="lp-stack-badge">INCLUSO</span>
+                        </div>
+                    </div>
+
+                    <div class="lp-stack-item">
+                        <div class="lp-stack-left">
+                            <div class="lp-stack-icon"><i class="fa-solid fa-temperature-half"></i></div>
+                            <div class="lp-stack-info">
+                                <h4>Guia de Temperatura e Ambiente Ideal</h4>
+                                <p>Altura da lâmpada, calor exato e zero amontoamento</p>
+                            </div>
+                        </div>
+                        <div class="lp-stack-right">
+                            <span class="lp-stack-old">R$ 39,90</span>
+                            <span class="lp-stack-badge">INCLUSO</span>
+                        </div>
+                    </div>
+
+                    <div class="lp-stack-item">
+                        <div class="lp-stack-left">
+                            <div class="lp-stack-icon"><i class="fa-solid fa-shield-virus"></i></div>
+                            <div class="lp-stack-info">
+                                <h4>Principais Doenças, Prevenção e Tratamento</h4>
+                                <p>Coccidiose, diarreia branca, gogo e empastamento</p>
+                            </div>
+                        </div>
+                        <div class="lp-stack-right">
+                            <span class="lp-stack-old">R$ 59,90</span>
+                            <span class="lp-stack-badge">INCLUSO</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lp-bundle-total-box">
+                    <div class="lp-bundle-total-row">
+                        <span>Valor Total Separado:</span>
+                        <span class="lp-bundle-sum-old">R$ 129,70</span>
+                    </div>
+                    <div class="lp-bundle-economy">
+                        <i class="fa-solid fa-fire"></i> Você economiza <strong>R$ 101,80</strong> garantindo sua vaga hoje!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preço e Botão de Ação -->
+            <div class="lp-price-box" id="lp-first-price" style="margin-top: 10px; margin-bottom: 20px;">
+                <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 4px;">Tudo isso hoje por apenas:</div>
+                <div style="display: flex; align-items: baseline; justify-content: center; gap: 8px;">
+                    <span class="lp-old-price" style="font-size: 1.1rem; color: #ef4444; font-weight: 700; text-decoration: line-through;">De R$ 129,70</span>
+                    <span class="lp-current-price" style="font-size: 2.1rem; color: #22c55e; font-weight: 900;">R$ 27,90</span>
+                </div>
+                <div style="font-size: 0.8rem; color: #cbd5e1; margin-top: 4px;">ou 3x de R$ 9,93 no cartão (ou Pix)</div>
+            </div>
+
+            <button onclick="openCheckout('ebook-pintinhos')" class="lp-cta-btn">
+                <i class="fa-solid fa-lock"></i> QUERO LEVAR TUDO POR APENAS R$ 27,90
+            </button>
+
+            <!-- Botão Como Eu Recebo Meu Acesso -->
+            <button type="button" onclick="scrollToComoRecebe()" class="lp-btn-delivery-info">
+                <i class="fa-regular fa-circle-question"></i> Como eu recebo o meu acesso?
+            </button>
+
+            <div class="lp-trust-row" style="margin-top: 14px;">
+                <div class="lp-trust-item"><i class="fa-solid fa-bolt"></i> Acesso Imediato no Celular</div>
+                <div class="lp-trust-item"><i class="fa-solid fa-shield"></i> Compra 100% Segura</div>
+                <div class="lp-trust-item"><i class="fa-solid fa-medal"></i> Garantia 7 Dias</div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO: AS DORES DO CRIADOR -->
+        <div class="lp-section">
+            <span class="lp-sec-tag">VOCÊ JÁ PASSOU POR ISSO?</span>
+            <h2 class="lp-sec-title">A frustração de ir ao pinteiro pela manhã e encontrar animais mortos...</h2>
+
+            <div class="lp-pain-card">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Pintinhos amontoados e asfixiados</h4>
+                <p>Eles piam alto a noite toda com frio, juntam todos num canto da caixa para se esquentarem e os de baixo amanhecem esmagados e sem ar.</p>
+            </div>
+
+            <div class="lp-pain-card">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Bebedouro virado e cama molhada</h4>
+                <p>O pintinho se molha, pega uma corrente de ar fria na madrugada e em poucas horas fica triste, encolhido e morre sem você entender o porquê.</p>
+            </div>
+
+            <div class="lp-pain-card">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Cloaca empastada e diarreia branca</h4>
+                <p>O intestino trava, as fezes secam e grudam na cloaca, impedindo a ave de evacuar. Em 48 horas ela para de comer e definha.</p>
+            </div>
+
+            <div class="lp-pain-card">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Prejuízo financeiro e desânimo</h4>
+                <p>Comprar 50 ou 100 pintinhos caros (ou tirar com tanto cuidado na chocadeira) para ver 30% a 50% morrerem antes do 20º dia.</p>
+            </div>
+
+            <div class="lp-callout-truth">
+                <p>
+                    A verdade que quase ninguém te conta: <strong>Pintinho não morre porque é fraco.</strong><br>
+                    Ele morre porque 95% dos criadores cometem <strong>pequenos erros invisíveis de manejo</strong> nas primeiras 72 horas de vida.
+                </p>
+            </div>
+        </div>
+
+        <!-- SEÇÃO: COMPARAÇÃO VISUAL -->
+        <div class="lp-section">
+            <span class="lp-sec-tag">A DIFERENÇA DO MANEJO CORRETO</span>
+            <h2 class="lp-sec-title">Uma ave adoeceu quando nova e a outra teve um crescimento saudável.</h2>
+            <p style="font-size: 0.92rem; color: #94a3b8; text-align: center; margin: -6px 0 16px 0;">
+                Proteja seu lote e evite esse tipo de problema.
+            </p>
+
+            <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border); margin-bottom: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+                <img src="comparacao_pintinhos.webp" alt="Comparação Pintinhos com e sem Manejo" style="width: 100%; height: auto; display: block;" loading="lazy">
+            </div>
+
+            <p style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.6; text-align: center; margin: 0 0 20px 0;">
+                Com o manejo certo, seu lote fica <strong>uniforme, com empenamento rápido, alta imunidade natural</strong> e ganho de peso acelerado.
+            </p>
+
+            <button onclick="openCheckout('ebook-pintinhos')" class="lp-cta-btn" style="font-size: 1rem; padding: 14px 18px;">
+                <i class="fa-solid fa-shield-halved"></i> BLINDAR MEU PINTEIRO POR R$ 27,90
+            </button>
+        </div>
+
+
+        <!-- SEÇÃO: COMO VOCÊ RECEBE O ACESSO (SEÇÃO UNIFICADA) -->
+        <div class="lp-section" id="secao-como-recebe">
+            <span class="lp-sec-tag" style="color: var(--gold-primary);"><i class="fa-solid fa-box-open"></i> FORMATO E ENTREGA IMEDIATA</span>
+            <h2 class="lp-sec-title">Como você recebe o seu acesso:</h2>
+            <p style="font-size: 0.9rem; color: #94a3b8; text-align: center; margin: -6px 0 22px 0;">
+                Você não precisa escolher: <strong>você recebe os dois modelos completos</strong> para ter o melhor dos dois mundos!
+            </p>
+
+            <div class="lp-delivery-unified-card">
+                <!-- Pilar 1: Plataforma Profissional Exclusiva -->
+                <div class="lp-delivery-pillar">
+                    <div class="lp-delivery-pillar-header">
+                        <div class="lp-delivery-icon gold">
+                            <i class="fa-solid fa-crown"></i>
+                        </div>
+                        <div>
+                            <span class="lp-delivery-badge gold">ACESSO VITALÍCIO &amp; ATUALIZAÇÕES</span>
+                            <h4>1. Plataforma Profissional Exclusiva (Protocolo Elite)</h4>
+                        </div>
+                    </div>
+                    <p class="lp-delivery-pillar-desc">
+                        Você tem acesso direto a uma <strong>plataforma moderna e profissional</strong>, feita para você navegar com total facilidade pelo celular, computador ou tablet. Lá dentro você encontra todas as informações organizadas passo a passo, orientações detalhadas e tem <strong>acesso vitalício com todas as futuras atualizações gratuitas</strong> incluídas, sem pagar mensalidade.
+                    </p>
+                    <ul class="lp-delivery-features">
+                        <li><i class="fa-solid fa-check"></i> Ambiente exclusivo, rápido e super fácil de usar no celular</li>
+                        <li><i class="fa-solid fa-check"></i> Conteúdo completo e sempre atualizado com as melhores práticas</li>
+                        <li><i class="fa-solid fa-check"></i> Login e senha vitalícios — consulte quando e quantas vezes quiser</li>
+                    </ul>
+                </div>
+
+                <!-- Divisor Visual -->
+                <div class="lp-delivery-divider">
+                    <span><i class="fa-solid fa-plus"></i> E VOCÊ TAMBÉM RECEBE</span>
+                </div>
+
+                <!-- Pilar 2: Arquivo em PDF Completo -->
+                <div class="lp-delivery-pillar">
+                    <div class="lp-delivery-pillar-header">
+                        <div class="lp-delivery-icon red">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <div>
+                            <span class="lp-delivery-badge red">DOWNLOAD DIRETO &amp; ACESSO OFFLINE</span>
+                            <h4>2. Arquivo Completo em PDF Diagramado</h4>
+                        </div>
+                    </div>
+                    <p class="lp-delivery-pillar-desc">
+                        Além da plataforma, você recebe o <strong>arquivo digital completo em PDF</strong> em alta resolução, pronto para baixar imediatamente. Você pode salvar na memória do seu celular para consultar direto no pinteiro <strong>mesmo sem internet ou sinal de rede</strong>, a qualquer momento.
+                    </p>
+                    <ul class="lp-delivery-features">
+                        <li><i class="fa-solid fa-check"></i> Consulta 100% offline direto na rotina do criatório</li>
+                        <li><i class="fa-solid fa-check"></i> Tabelas de calor, receitas e calendário de vacinação direto na tela do celular</li>
+                        <li><i class="fa-solid fa-check"></i> Baixou uma vez, o arquivo fica salvo com você para sempre</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Box de Entrega Imediata -->
+            <div class="lp-instant-delivery-banner">
+                <i class="fa-solid fa-bolt-lightning" style="color: #fbbf24; font-size: 1.5rem; flex-shrink: 0;"></i>
+                <div>
+                    <strong style="color: #ffffff; display: block; font-size: 0.92rem;">Recebimento em menos de 1 minuto no WhatsApp e E-mail:</strong>
+                    <span style="color: #cbd5e1; font-size: 0.82rem; line-height: 1.45; display: block; margin-top: 2px;">Assim que seu pedido for confirmado (Pix ou Cartão), você recebe automaticamente no seu WhatsApp e no seu e-mail tanto os dados de acesso da plataforma quanto o link direto para baixar o PDF.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO: GARANTIA -->
+        <div class="lp-section">
+            <div class="lp-guarantee-card">
+                <img src="galo_garantia.webp" alt="Garantia Incondicional 7 Dias">
+                <div>
+                    <h4>Garantia Blindada de 7 Dias</h4>
+                    <p>Aplique o método no seu próximo lote. Se você não notar seus pintinhos muito mais fortes e ativos, basta me mandar um WhatsApp que devolvo <strong>100% do seu dinheiro</strong>. Risco zero para você.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO: CAIXA DE OFERTA FINAL -->
+        <div class="lp-offer-box">
+            <span class="lp-sec-tag" style="color: var(--gold-primary);">OFERTA ESPECIAL DE ACESSO IMEDIATO</span>
+            <h3 class="lp-offer-title">PACOTE COMPLETO DE MANEJO DOS PINTINHOS</h3>
+            <p class="lp-offer-desc">Tabela de Vacinação + Guia de Temperatura + Prevenção de Doenças</p>
+
+            <div class="lp-price-tag">
+                <div class="lp-price-de" style="font-size: 1.1rem; color: #ef4444; font-weight: 700; text-decoration: line-through;">De R$ 129,70</div>
+                <div class="lp-price-por" style="font-size: 2.5rem; color: #22c55e; font-weight: 900;">R$ 27,90</div>
+                <div class="lp-price-sub">ou 3x de R$ 9,93 no cartão (ou Pix)</div>
+            </div>
+
+            <button onclick="openCheckout('ebook-pintinhos')" class="lp-cta-btn" style="font-size: 1.15rem; padding: 18px 20px;">
+                <i class="fa-solid fa-arrow-right"></i> GARANTIR MEU ACESSO POR R$ 27,90
+            </button>
+
+            <div class="lp-trust-row" style="margin-top: 14px;">
+                <div class="lp-trust-item"><i class="fa-brands fa-whatsapp" style="color: #22c55e;"></i> Envio Imediato no WhatsApp</div>
+                <div class="lp-trust-item"><i class="fa-solid fa-mobile-screen"></i> Leitura Fácil no Celular</div>
+            </div>
+        </div>
+
+        <!-- SEÇÃO: PERGUNTAS FREQUENTES -->
+        <div class="lp-section" style="border-bottom: none;">
+            <span class="lp-sec-tag">DÚVIDAS FREQUENTES</span>
+            <h2 class="lp-sec-title">Perguntas comuns dos criadores:</h2>
+
+            <div class="lp-faq-item">
+                <h5><i class="fa-solid fa-circle-question"></i> Como eu recebo o meu acesso?</h5>
+                <p>O envio é 100% imediato e automatizado! Assim que seu Pix ou Cartão for aprovado, você recebe no WhatsApp e no seu e-mail o acesso à nossa <strong>Plataforma Profissional Exclusiva (com login vitalício e atualizações)</strong> e também o link direto para baixar o <strong>Arquivo PDF Completo</strong> para ler direto no celular, mesmo sem sinal de internet no pinteiro.</p>
+            </div>
+
+            <div class="lp-faq-item">
+                <h5><i class="fa-solid fa-circle-question"></i> Preciso comprar remédios caros?</h5>
+                <p>Não! O foco de 98% de sobrevivência é no manejo preventivo (calor correto, hidratação de arranque e cama seca). Você só gasta o essencial com soluções que tem em casa.</p>
+            </div>
+
+            <div class="lp-faq-item">
+                <h5><i class="fa-solid fa-circle-question"></i> Serve para qual raça de galinha?</h5>
+                <p>Serve perfeitamente para qualquer raça: Galinha Caipira, Caipirão, Poedeiras Comerciais (GLC, Embrapa, Isa Brown), Frangos de Corte, Índio Gigante e aves ornamentais.</p>
+            </div>
+
+            <div class="lp-faq-item">
+                <h5><i class="fa-solid fa-circle-question"></i> E se eu não gostar ou não funcionar?</h5>
+                <p>Você tem 7 dias inteiros para testar. Se não gostar do material, basta mandar uma mensagem no nosso suporte que devolvemos 100% do seu dinheiro na hora.</p>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="lp-footer">
+            <p style="margin-bottom: 6px;">&copy; 2026 PROTOCOLO ELITE - Todos os direitos reservados.</p>
+            <p style="margin-bottom: 6px;">CNPJ: 63.665.824/0001-09</p>
+            <p style="color: #475569; font-size: 0.68rem; margin: 0;">Este produto não garante a cura mágica de aves já em estado terminal. Os resultados dependem da correta aplicação do manejo.</p>
+        </div>
+
+    </div>
+
+    <!-- Barra Fixa Inferior no Mobile -->
+    <div class="lp-sticky-bar">
+        <div class="lp-sticky-price">
+            <span>De R$ 129,70</span>
+            <span>R$ 27,90</span>
+        </div>
+        <button onclick="openCheckout('ebook-pintinhos')" class="lp-sticky-btn">
+            SALVAR MEUS PINTINHOS POR R$ 27,90 <i class="fa-solid fa-arrow-right" style="margin-left: 4px;"></i>
+        </button>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- CHECKOUT INLINE FULLSCREEN OVERLAY          -->
+    <!-- ============================================ -->
+        <div id="checkout-page" style="display: none;">
+
+        <style>
+
+            /* === CHECKOUT PAGE - FULLSCREEN OVERLAY === */
+
+            #checkout-page {
+
+                position: fixed;
+
+                top: 0;
+
+                left: 0;
+
+                right: 0;
+
+                bottom: 0;
+
+                width: 100%;
+
+                max-width: 100vw;
+
+                height: 100%;
+
+                height: 100dvh;
+
+                background-color: #090d16;
+
+                color: #f8fafc;
+
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+                line-height: 1.5;
+
+                z-index: 10000;
+
+                overflow-y: auto;
+
+                overflow-x: hidden !important;
+
+                overscroll-behavior-y: contain;
+
+                padding-bottom: 50px;
+
+                -webkit-overflow-scrolling: touch;
+
+                touch-action: pan-y;
+
+            }
+
+
+
+            #checkout-page * {
+
+                box-sizing: border-box;
+
+                max-width: 100%;
+
+            }
+
+
+
+            /* Header do Checkout */
+
+            .ck-header {
+
+                background: #0f172a;
+
+                padding: 12px 0;
+
+                position: sticky;
+
+                top: 0;
+
+                z-index: 200;
+
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+
+            }
+
+
+
+            .ck-header-container {
+
+                max-width: 960px;
+
+                margin: 0 auto;
+
+                padding: 0 16px;
+
+                display: flex;
+
+                justify-content: space-between;
+
+                align-items: center;
+
+            }
+
+
+
+            .ck-logo {
+
+                display: flex;
+
+                align-items: center;
+
+                gap: 8px;
+
+                font-weight: 700;
+
+                font-size: 16px;
+
+                letter-spacing: -0.5px;
+
+                color: #fff;
+
+            }
+
+
+
+            .ck-logo-elite {
+
+                color: #fbbf24;
+
+            }
+
+
+
+            .ck-security-badge {
+
+                display: flex;
+
+                align-items: center;
+
+                gap: 6px;
+
+                color: #22c55e;
+
+                font-weight: 600;
+
+                font-size: 12px;
+
+            }
+
+
+
+            .ck-back-btn {
+
+                display: flex;
+
+                align-items: center;
+
+                gap: 4px;
+
+                color: #94a3b8;
+
+                font-size: 13px;
+
+                cursor: pointer;
+
+                background: rgba(255, 255, 255, 0.05);
+
+                border: 1px solid rgba(255, 255, 255, 0.1);
+
+                padding: 6px 12px;
+
+                border-radius: 6px;
+
+                font-family: inherit;
+
+                transition: all 0.3s ease;
+
+            }
+
+
+
+            .ck-back-btn:hover {
+
+                background: rgba(255, 255, 255, 0.1);
+
+                color: #fff;
+
+            }
+
+
+
+            /* Timer de Urgencia */
+
+            .ck-urgency-banner {
+
+                text-align: center;
+
+                padding: 10px 16px;
+
+                background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d);
+
+                animation: ckPulse 3s infinite;
+
+            }
+
+
+
+            .ck-timer-badge {
+
+                display: inline-flex;
+
+                align-items: center;
+
+                gap: 8px;
+
+                color: #fff;
+
+                font-size: 14px;
+
+                font-weight: 700;
+
+            }
+
+
+
+            @keyframes ckPulse {
+
+
+
+                0%,
+
+                100% {
+
+                    opacity: 1;
+
+                }
+
+
+
+                50% {
+
+                    opacity: 0.85;
+
+                }
+
+            }
+
+
+
+            /* Main Container */
+
+            .ck-main {
+
+                max-width: 960px;
+
+                margin: 0 auto;
+
+                padding: 10px;
+
+            }
+
+
+
+            /* Grid Layout */
+
+            .ck-grid {
+
+                display: grid;
+
+                grid-template-columns: 1fr;
+
+                gap: 12px;
+
+            }
+
+
+
+            @media (min-width: 768px) {
+
+                .ck-grid {
+
+                    grid-template-columns: 7fr 5fr;
+
+                    gap: 24px;
+
+                }
+
+            }
+
+
+
+            /* Secoes */
+
+            .ck-section {
+
+                background-color: #ffffff;
+
+                border-radius: 12px;
+
+                padding: 10px;
+
+                border: 1px solid #e5e7eb;
+
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+            }
+
+
+
+            @media (min-width: 768px) {
+
+                .ck-section {
+
+                    padding: 16px;
+
+                }
+
+            }
+
+
+
+            .ck-section-header {
+
+                display: flex;
+
+                align-items: center;
+
+                gap: 8px;
+
+                margin-bottom: 10px;
+
+                padding-bottom: 8px;
+
+                border-bottom: 1px solid #f3f4f6;
+
+            }
+
+
+
+            .ck-section-number {
+
+                background: linear-gradient(135deg, #dc2626, #991b1b);
+
+                color: #ffffff;
+
+                width: 28px;
+
+                height: 28px;
+
+                border-radius: 50%;
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: center;
+
+                font-weight: 700;
+
+                font-size: 14px;
+
+                flex-shrink: 0;
+
+            }
+
+
+
+            .ck-section-title {
+
+                font-size: 16px;
+
+                font-weight: 700;
+
+                color: #1f2937;
+
+                margin: 0;
+
+            }
+
+
+
+            @media (min-width: 768px) {
+
+                .ck-section-title {
+
+                    font-size: 18px;
+
+                }
+
+            }
+
+
+
+            /* Formulario */
+
+            #checkout-page .ck-form-group {
+
+                margin-bottom: 8px;
+
+            }
+
+
+
+            #checkout-page .ck-form-group label {
+
+                display: block;
+
+                font-size: 12px;
+
+                font-weight: 700;
+
+                color: #374151;
+
+                margin-bottom: 4px;
+
+                text-transform: uppercase;
+
+                letter-spacing: 0.5px;
+
+            }
+
+
+
+            #checkout-page .form-input,
+
+            #checkout-page .ck-input {
+
+                width: 100% !important;
+
+                padding: 12px 14px !important;
+
+                border: 1.5px solid #d1d5db !important;
+
+                border-radius: 8px !important;
+
+                font-size: 16px !important;
+
+                font-family: inherit !important;
+
+                background: #ffffff !important;
+
+                color: #1f2937 !important;
+
+                height: auto !important;
+
+                -webkit-appearance: none !important;
+
+                -moz-appearance: none !important;
+
+                appearance: none !important;
+
+            }
+
+
+
+            #checkout-page .form-input:focus,
+
+            #checkout-page .ck-input:focus {
+
+                outline: none;
+
+                border-color: #dc2626 !important;
+
+                box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+
+            }
+
+
+
+            #checkout-page .form-input::placeholder,
+
+            #checkout-page .ck-input::placeholder {
+
+                color: #9ca3af !important;
+
+                font-size: 14px !important;
+
+            }
+
+
+
+            #checkout-page .ck-form-row {
+
+                display: grid !important;
+
+                grid-template-columns: 1fr !important;
+
+                gap: 10px;
+
+            }
+
+
+
+            @media (min-width: 768px) {
+
+                #checkout-page .ck-form-row {
+
+                    grid-template-columns: 1fr 1fr !important;
+
+                }
+
+            }
+
+
+
+            /* Order bump grid view legado removido em favor da coluna flex */
+
+/* Abas de Pagamento */
+
+            #checkout-page .radio-item {
+
+                flex: 1;
+
+                padding: 14px 10px !important;
+
+                font-weight: 700;
+
+                text-align: center;
+
+                background: #ffffff !important;
+
+                border: 2px solid #e5e7eb !important;
+
+                cursor: pointer;
+
+                color: #9ca3af !important;
+
+                font-size: 14px;
+
+                transition: all 0.2s ease;
+
+                display: flex !important;
+
+                align-items: center !important;
+
+                justify-content: center;
+
+                gap: 8px;
+
+                border-radius: 10px !important;
+
+                height: auto !important;
+
+            }
+
+
+
+            #checkout-page .radio-item.selected {
+
+                color: #dc2626 !important;
+
+                border-color: #dc2626 !important;
+
+                background: #fef2f2 !important;
+
+            }
+
+
+
+            #checkout-page .radio-title {
+
+                color: inherit !important;
+
+                font-weight: 800;
+
+                font-size: 15px;
+
+            }
+
+
+
+            #checkout-page .radio-desc {
+
+                font-size: 11px;
+
+                color: #6b7280 !important;
+
+            }
+
+
+
+            /* ===== ORDER BUMPS - NOVO DESIGN PREMIUM v53 ===== */
+            #checkout-page #order-bump-area {
+                margin-top: 16px;
+            }
+
+            #checkout-page .order-bump-grid-view {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 12px !important;
+                width: 100% !important;
+            }
+
+            #checkout-page .order-bump-container {
+                position: relative !important;
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: stretch !important;
+                justify-content: flex-end !important;
+                width: 100% !important;
+                min-height: 120px !important;
+                padding: 0 !important;
+                border-radius: 12px !important;
+                background: #0b1120 !important;
+                border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+                cursor: pointer !important;
+                overflow: hidden !important;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45) !important;
+                margin-bottom: 0 !important;
+                box-sizing: border-box !important;
+                transition: all 0.25s ease !important;
+                -webkit-tap-highlight-color: transparent !important;
+            }
+
+            #checkout-page .order-bump-container:hover {
+                border-color: rgba(251, 191, 36, 0.45) !important;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55) !important;
+                transform: translateY(-1px) !important;
+            }
+
+            #checkout-page .order-bump-container.selected {
+                border-color: #10b981 !important;
+                background: #062e22 !important;
+                box-shadow: 0 0 0 1px #10b981, 0 8px 25px rgba(16, 185, 129, 0.25) !important;
+                animation: none !important;
+            }
+
+            #checkout-page .bump-bg-photo {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 44% !important;
+                height: 100% !important;
+                z-index: 1 !important;
+                pointer-events: none !important;
+                overflow: hidden !important;
+            }
+
+            #checkout-page .bump-bg-photo img {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+                object-position: center left !important;
+                display: block !important;
+                opacity: 0.95 !important;
+                transition: transform 0.3s ease !important;
+            }
+
+            #checkout-page .order-bump-container:hover .bump-bg-photo img {
+                transform: scale(1.04) !important;
+            }
+
+            #checkout-page .bump-bg-overlay {
+                position: absolute !important;
+                inset: 0 !important;
+                background: linear-gradient(to right, rgba(11, 17, 32, 0) 0%, rgba(11, 17, 32, 0.35) 45%, rgba(11, 17, 32, 0.85) 75%, #0b1120 100%) !important;
+                z-index: 2 !important;
+                pointer-events: none !important;
+            }
+
+            #checkout-page .order-bump-container.selected .bump-bg-overlay {
+                background: linear-gradient(to right, rgba(6, 46, 34, 0.05) 0%, rgba(6, 46, 34, 0.45) 45%, rgba(6, 46, 34, 0.9) 75%, #062e22 100%) !important;
+            }
+
+            #checkout-page .bump-content-right {
+                position: relative !important;
+                z-index: 3 !important;
+                width: 64% !important;
+                min-width: 0 !important;
+                margin-left: auto !important;
+                padding: 10px 12px 10px 6px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+                box-sizing: border-box !important;
+                text-align: left !important;
+            }
+
+            #checkout-page .bump-top-row {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                gap: 6px !important;
+                margin-bottom: 4px !important;
+            }
+
+            #checkout-page .bump-badge-tag {
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 4px !important;
+                background: rgba(245, 158, 11, 0.18) !important;
+                color: #fbbf24 !important;
+                border: 1px solid rgba(245, 158, 11, 0.4) !important;
+                font-size: 0.62rem !important;
+                font-weight: 800 !important;
+                padding: 2px 7px !important;
+                border-radius: 5px !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.4px !important;
+                line-height: 1.1 !important;
+                white-space: nowrap !important;
+            }
+
+            #checkout-page .order-bump-container.selected .bump-badge-tag {
+                background: rgba(16, 185, 129, 0.22) !important;
+                color: #34d399 !important;
+                border-color: rgba(16, 185, 129, 0.45) !important;
+            }
+
+            #checkout-page .bump-action-btn {
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 4px !important;
+                padding: 3px 8px !important;
+                border-radius: 5px !important;
+                font-size: 0.65rem !important;
+                font-weight: 800 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.3px !important;
+                transition: all 0.2s ease !important;
+                border: 1px solid rgba(255, 255, 255, 0.18) !important;
+                background: rgba(255, 255, 255, 0.08) !important;
+                color: #f1f5f9 !important;
+                white-space: nowrap !important;
+            }
+
+            #checkout-page .order-bump-container.selected .bump-action-btn {
+                background: #10b981 !important;
+                border-color: #10b981 !important;
+                color: #ffffff !important;
+                box-shadow: 0 2px 8px rgba(16, 185, 129, 0.45) !important;
+            }
+
+            #checkout-page .bump-title-text {
+                color: #ffffff !important;
+                font-size: 0.88rem !important;
+                font-weight: 800 !important;
+                line-height: 1.25 !important;
+                letter-spacing: -0.2px !important;
+                margin: 0 0 3px 0 !important;
+                word-break: normal !important;
+                overflow-wrap: break-word !important;
+                text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
+            }
+
+            #checkout-page .bump-desc-text {
+                font-size: 0.72rem !important;
+                line-height: 1.35 !important;
+                color: #cbd5e1 !important;
+                margin: 0 0 4px 0 !important;
+                word-break: normal !important;
+                overflow-wrap: break-word !important;
+                text-wrap: pretty !important;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.8) !important;
+            }
+
+            #checkout-page .bump-pricing-row {
+                display: flex !important;
+                align-items: baseline !important;
+                gap: 6px !important;
+                margin-top: auto !important;
+                padding-top: 3px !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+            }
+
+            #checkout-page .bump-old-price {
+                color: #94a3b8 !important;
+                font-size: 0.68rem !important;
+                text-decoration: line-through !important;
+                font-weight: 500 !important;
+            }
+
+            #checkout-page .bump-new-price {
+                color: #34d399 !important;
+                font-size: 0.98rem !important;
+                font-weight: 900 !important;
+                line-height: 1 !important;
+                letter-spacing: -0.2px !important;
+            }
+
+            /* Botao Principal */
+
+            .ck-btn-checkout {
+
+                width: 100%;
+
+                padding: 16px;
+
+                border-radius: 12px;
+
+                background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+
+                color: #ffffff;
+
+                font-weight: 800;
+
+                font-size: 16px;
+
+                border: none;
+
+                cursor: pointer;
+
+                text-transform: uppercase;
+
+                letter-spacing: 0.5px;
+
+                transition: all 0.2s ease;
+
+                box-shadow: 0 4px 15px rgba(22, 197, 94, 0.3);
+
+                margin-bottom: 12px;
+
+                font-family: inherit;
+
+            }
+
+
+
+            .ck-btn-checkout:hover {
+
+                transform: translateY(-1px);
+
+                box-shadow: 0 6px 20px rgba(22, 197, 94, 0.4);
+
+            }
+
+
+
+            .ck-btn-checkout:active {
+
+                transform: translateY(0);
+
+            }
+
+
+
+            /* Resumo do Pedido (Sidebar) */
+
+            .ck-order-summary {
+
+                position: static;
+
+            }
+
+
+
+            @media (min-width: 768px) {
+
+                .ck-order-summary {
+
+                    position: sticky;
+
+                    top: 70px;
+
+                }
+
+            }
+
+
+
+            .ck-product-card {
+
+                display: flex;
+
+                gap: 12px;
+
+                margin-bottom: 16px;
+
+                padding-bottom: 16px;
+
+                border-bottom: 1px solid #f3f4f6;
+
+            }
+
+
+
+            .ck-product-image {
+
+                width: 65px;
+
+                height: 82px;
+
+                border-radius: 8px;
+
+                border: 1px solid #e5e7eb;
+
+                flex-shrink: 0;
+
+                overflow: hidden;
+
+            }
+
+
+
+            .ck-product-image img {
+
+                width: 100%;
+
+                height: 100%;
+
+                object-fit: cover;
+
+            }
+
+
+
+            .ck-product-info h3 {
+
+                font-size: 13px;
+
+                font-weight: 700;
+
+                margin: 0 0 2px 0;
+
+                line-height: 1.3;
+
+                color: #1f2937;
+
+            }
+
+
+
+            .ck-product-info p {
+
+                font-size: 11px;
+
+                color: #6b7280;
+
+                margin: 0 0 6px 0;
+
+            }
+
+
+
+            .ck-price-original {
+
+                text-decoration: line-through;
+
+                color: #9ca3af;
+
+                font-size: 12px;
+
+            }
+
+
+
+            .ck-price-current {
+
+                color: #dc2626;
+
+                font-weight: 800;
+
+                font-size: 16px;
+
+            }
+
+
+
+            /* Resumo de Precos */
+
+            .ck-price-breakdown {
+
+                font-size: 13px;
+
+                border-top: 1px solid #f3f4f6;
+
+                padding-top: 12px;
+
+            }
+
+
+
+            .ck-price-row {
+
+                display: flex;
+
+                justify-content: space-between;
+
+                margin-bottom: 8px;
+
+                color: #6b7280;
+
+            }
+
+
+
+            .ck-price-row.discount {
+
+                color: #16a34a;
+
+                font-weight: 600;
+
+            }
+
+
+
+            .ck-price-row.total {
+
+                font-size: 18px;
+
+                font-weight: 800;
+
+                color: #1f2937;
+
+                border-top: 2px solid #f3f4f6;
+
+                padding-top: 10px;
+
+                margin-top: 8px;
+
+            }
+
+
+
+            /* Garantia */
+
+            .ck-guarantee-box {
+
+                background: #f0fdf4;
+
+                border: 1px solid #bbf7d0;
+
+                border-radius: 10px;
+
+                padding: 12px;
+
+                display: flex;
+
+                gap: 10px;
+
+                align-items: center;
+
+                margin-top: 20px;
+
+            }
+
+
+
+            .ck-guarantee-icon {
+
+                font-size: 24px;
+
+                flex-shrink: 0;
+
+            }
+
+
+
+            .ck-guarantee-content p:first-child {
+
+                font-size: 12px;
+
+                font-weight: 800;
+
+                color: #166534;
+
+                text-transform: uppercase;
+
+                letter-spacing: 0.5px;
+
+                margin: 0 0 2px 0;
+
+            }
+
+
+
+            .ck-guarantee-content p:last-child {
+
+                font-size: 11px;
+
+                color: #15803d;
+
+                margin: 0;
+
+                line-height: 1.4;
+
+            }
+
+
+
+            /* Prova Social */
+
+            .ck-social-proof {
+
+                margin-top: 20px;
+
+            }
+
+
+
+            .ck-proof-label {
+
+                font-size: 11px;
+
+                font-weight: 700;
+
+                color: #9ca3af;
+
+                text-transform: uppercase;
+
+                letter-spacing: 1px;
+
+                text-align: center;
+
+                margin-bottom: 10px;
+
+            }
+
+
+
+            .ck-testimonial-box {
+
+                background: #f9fafb;
+
+                padding: 12px;
+
+                border-radius: 8px;
+
+                font-size: 12px;
+
+                color: #4b5563;
+
+                font-style: italic;
+
+                margin-bottom: 8px;
+
+                border-left: 3px solid #22c55e;
+
+                line-height: 1.4;
+
+            }
+
+
+
+            .ck-testimonial-author {
+
+                margin-top: 6px;
+
+                font-weight: 700;
+
+                color: #1f2937;
+
+                font-style: normal;
+
+                font-size: 11px;
+
+            }
+
+
+
+            .ck-stars {
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: center;
+
+                gap: 2px;
+
+                margin-top: 10px;
+
+                font-size: 14px;
+
+            }
+
+
+
+            .ck-star {
+
+                color: #fbbf24;
+
+            }
+
+
+
+            .ck-rating-text {
+
+                color: #6b7280;
+
+                font-weight: 700;
+
+                margin-left: 6px;
+
+                font-size: 12px;
+
+            }
+
+
+
+            /* Footer Checkout */
+
+            .ck-footer {
+
+                background: #0f172a;
+
+                padding: 20px 16px;
+
+                text-align: center;
+
+                margin-top: 20px;
+
+            }
+
+
+
+            .ck-footer p {
+
+                font-size: 12px;
+
+                color: #64748b;
+
+                margin: 0 0 4px 0;
+
+            }
+
+
+
+            /* Error styles */
+
+            #checkout-page .form-input.input-error,
+
+            #checkout-page .form-input.is-invalid {
+
+                border-color: #ef4444 !important;
+
+                background-color: #fef2f2 !important;
+
+            }
+
+
+
+            #checkout-page .form-input.input-success,
+
+            #checkout-page .form-input.is-valid {
+
+                border-color: #22c55e !important;
+
+                background-color: #f0fdf4 !important;
+
+            }
+
+
+
+            #checkout-page .error-message {
+
+                color: #ef4444;
+
+                font-size: 0.7rem;
+
+                font-weight: 700;
+
+                margin-top: 3px;
+
+                display: block;
+
+            }
+
+
+
+            /* PIX Result inside checkout page */
+
+            #checkout-page #pix-result {
+
+                max-width: 500px;
+
+                margin: 1rem auto;
+
+                padding: 1.5rem 1rem;
+
+                background: #fff;
+
+                border-radius: 16px;
+
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+            }
+
+
+
+            #checkout-page #payment-pending-view {
+
+                max-width: 500px;
+
+                margin: 1rem auto;
+
+                padding: 1.5rem 1rem;
+
+                background: #fff;
+
+                border-radius: 16px;
+
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+            }
+
+
+
+            #checkout-page .hidden {
+
+                display: none !important;
+
+            }
+
+
+
+            /* Card area */
+
+            #checkout-page #card-area {
+
+                background: #f8fafc;
+
+                border: 1px solid #e2e8f0;
+
+                padding: 12px;
+
+                border-radius: 10px;
+
+                margin-top: 12px;
+
+            }
+
+
+
+            /* WhatsApp link */
+
+            #checkout-page .ck-wpp-link {
+
+                display: inline-flex;
+
+                align-items: center;
+
+                gap: 6px;
+
+                background: #25d366;
+
+                color: #fff;
+
+                padding: 8px 14px;
+
+                border-radius: 50px;
+
+                text-decoration: none;
+
+                font-size: 0.75rem;
+
+                font-weight: 700;
+
+            }
+
+
+
+            /* Tooltip */
+
+            #checkout-page .field-tooltip {
+
+                display: none;
+
+            }
+
+
+
+            #checkout-page .form-group {
+
+                position: relative;
+
+                margin-bottom: 12px;
+
+            }
+
+
+
+            /* Price summary */
+
+            #checkout-page .price-summary-box {
+
+                background: #f9fafb !important;
+
+                border: 1px dashed #d1d5db !important;
+
+                padding: 12px;
+
+                border-radius: 10px;
+
+                margin-bottom: 12px;
+
+            }
+
+
+
+            #checkout-page .price-summary-box span {
+
+                color: #1f2937 !important;
+
+            }
+
+
+
+            #checkout-page .pix-discount-badge {
+
+                color: #16a34a !important;
+
+                background: rgba(22, 163, 74, 0.1) !important;
+
+            }
+
+
+
+            /* Mobile scroll fix */
+
+            @media (max-width: 767px) {
+
+                #checkout-page {
+
+                    padding-bottom: 0;
+
+                }
+
+
+
+                .ck-main {
+
+                    padding: 12px;
+
+                }
+
+
+
+                .ck-section {
+
+                    padding: 14px;
+
+                    border-radius: 10px;
+
+                }
+
+            }
+
+
+
+            /* MOBILE CHECKOUT LINEAR FULL-WIDTH OVERRIDES */
+
+            @media (max-width: 768px) {
+
+                #checkout-page .ck-form-row {
+
+                    grid-template-columns: 1fr !important;
+
+                }
+
+
+
+                /* ORDER BUMPS NO MOBILE: 1 COLUNA EMPILHADA LIMPA */
+                #checkout-page .order-bump-grid-view {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    gap: 12px !important;
+                    width: 100% !important;
+                }
+
+/* PROVA SOCIAL VERTICAL E CENTRALIZADA */
+
+                .ck-social-proof-mobile-stack {
+
+                    flex-direction: column !important;
+
+                    text-align: center !important;
+
+                    padding: 20px 15px !important;
+
+                    gap: 12px !important;
+
+                }
+
+
+
+                .ck-social-proof-mobile-stack .avatar-stack {
+
+                    margin-right: 0 !important;
+
+                    justify-content: center !important;
+
+                    width: 100% !important;
+
+                }
+
+
+
+                .ck-social-proof-mobile-stack div[style*="padding-left: 15px"] {
+
+                    padding-left: 0 !important;
+
+                    margin-top: 5px !important;
+
+                }
+
+
+
+                /* AJUSTE GERAL DE SECOES */
+
+                .ck-section {
+
+                    padding: 12px !important;
+
+                }
+
+
+
+                /* AJUSTE PAYMENT METHODS MOBILE - 3 CARDS LADO A LADO SEM OVERFLOW */
+
+                #checkout-page .payment-methods-grid {
+
+                    gap: 6px !important;
+
+                }
+
+                #checkout-page .radio-item {
+
+                    padding: 8px 4px !important;
+
+                    flex-direction: column !important;
+
+                    gap: 6px !important;
+
+                    justify-content: center !important;
+
+                }
+
+                #checkout-page .radio-label {
+
+                    display: flex;
+
+                    flex-direction: column;
+
+                    align-items: center;
+
+                    width: 100%;
+
+                }
+
+                #checkout-page .radio-title {
+
+                    font-size: 0.75rem !important;
+
+                    text-align: center;
+
+                    width: 100%;
+
+                    display: block;
+
+                }
+
+                #checkout-page .radio-desc {
+
+                    font-size: 0.55rem !important;
+
+                    text-align: center;
+
+                    width: 100%;
+
+                    display: block;
+
+                }
+
+                #checkout-page .radio-item img,
+
+                #checkout-page .radio-item i {
+
+                    height: 20px !important;
+
+                    font-size: 20px !important;
+
+                    margin: 0 !important;
+
+                }
+
+            }
+
+            /* Dark Mode Overrides for Premium Checkout Experience */
+            #checkout-page {
+                background-color: #090d16 !important;
+                color: #f8fafc !important;
+            }
+            #checkout-page .ck-section {
+                background-color: rgba(17, 24, 39, 0.7) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+            }
+            #checkout-page .ck-section-title {
+                color: #ffffff !important;
+            }
+            #checkout-page .ck-section-header {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+            }
+            #checkout-page .ck-form-group label {
+                color: #cbd5e1 !important;
+            }
+            #checkout-page .form-input,
+            #checkout-page .ck-input {
+                background: rgba(10, 15, 30, 0.8) !important;
+                border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+                color: #ffffff !important;
+            }
+            #checkout-page .form-input:focus,
+            #checkout-page .ck-input:focus {
+                border-color: #fbbf24 !important;
+                box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2) !important;
+            }
+            #checkout-page .ck-product-card {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+            }
+            #checkout-page .ck-product-image {
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            }
+            #checkout-page .ck-product-info h3 {
+                color: #ffffff !important;
+            }
+            #checkout-page .ck-product-info p {
+                color: #94a3b8 !important;
+            }
+            #checkout-page .ck-product-info span {
+                color: #10b981 !important;
+            }
+            #checkout-page .ck-social-proof-mobile-stack {
+                background: rgba(17, 24, 39, 0.7) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                backdrop-filter: blur(8px) !important;
+            }
+            #checkout-page .ck-social-proof-mobile-stack strong {
+                color: #ffffff !important;
+            }
+            #checkout-page .ck-social-proof-mobile-stack div[style] {
+                color: #cbd5e1 !important;
+            }
+            #checkout-page .payment-method-btn {
+                background: rgba(17, 24, 39, 0.6) !important;
+                border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+                color: #ffffff !important;
+            }
+            #checkout-page .payment-method-btn.active {
+                border-color: #fbbf24 !important;
+                background: rgba(251, 191, 36, 0.05) !important;
+                color: #fbbf24 !important;
+            }
+            #checkout-page .payment-method-btn i {
+                color: #94a3b8;
+            }
+            #checkout-page .payment-method-btn.active i {
+                color: #fbbf24;
+            }
+            #checkout-page .order-summary-item {
+                color: #cbd5e1 !important;
+            }
+            #checkout-page .order-summary-total {
+                color: #ffffff !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+            }
+            #checkout-page .ck-footer {
+                color: #64748b !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+            }
+            #checkout-page .ck-guarantee-box {
+                background: rgba(22, 163, 74, 0.05) !important;
+                border: 1px solid rgba(22, 163, 74, 0.15) !important;
+                color: #cbd5e1 !important;
+            }
+            #checkout-page .ck-guarantee-box strong {
+                color: #ffffff !important;
+            }
+            #checkout-page #order-bump-area,
+            #checkout-page #order-bump-area:hover,
+            #checkout-page #order-bump-area:focus,
+            #checkout-page #order-bump-area:active {
+                background: transparent !important;
+                border-color: transparent !important;
+            }
+            /* Legacy bump overrides removed - using v53 CSS above */
+
+            #checkout-page .ck-product-card-pricing-box {
+                background: rgba(15, 23, 42, 0.6) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                box-sizing: border-box !important;
+                width: 100% !important;
+                overflow: hidden !important;
+            }
+            #checkout-page .ck-product-info {
+                min-width: 0;
+            }
+
+            /* Payment Tabs (PIX / CARD / BOLETO) */
+            #checkout-page .radio-item {
+                background: rgba(17, 24, 39, 0.6) !important;
+                border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+                color: #94a3b8 !important;
+            }
+            #checkout-page .radio-item.selected {
+                background: rgba(251, 191, 36, 0.08) !important;
+                border-color: #fbbf24 !important;
+                color: #fbbf24 !important;
+            }
+            #checkout-page .radio-item.selected .radio-title {
+                color: #fbbf24 !important;
+            }
+            #checkout-page .radio-item.selected .radio-desc {
+                color: rgba(251, 191, 36, 0.8) !important;
+            }
+            #checkout-page .radio-desc {
+                color: #64748b !important;
+            }
+
+            /* Bottom Summary / Total Paying Box */
+            #checkout-page .price-summary-box {
+                background: rgba(10, 15, 30, 0.8) !important;
+                border: 1.5px dashed rgba(255, 255, 255, 0.12) !important;
+                padding: 16px !important;
+                color: #ffffff !important;
+            }
+            #checkout-page .price-summary-box span {
+                color: #ffffff !important;
+            }
+            #checkout-page #checkout-order-summary {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+                color: #cbd5e1 !important;
+            }
+            #checkout-page #checkout-order-summary div {
+                color: #cbd5e1 !important;
+            }
+
+            /* Testimonial Boxes inside Checkout */
+            #checkout-page .ck-testimonial-box {
+                background: rgba(255, 255, 255, 0.03) !important;
+                border: 1px solid rgba(255, 255, 255, 0.07) !important;
+                border-left: 3px solid #10b981 !important;
+                padding: 12px !important;
+                border-radius: 10px !important;
+            }
+            #checkout-page .ck-testimonial-box p {
+                color: #cbd5e1 !important;
+                font-size: 0.78rem !important;
+                line-height: 1.45 !important;
+            }
+            #checkout-page .ck-testimonial-box .ck-testimonial-author {
+                color: #ffffff !important;
+                font-size: 0.78rem !important;
+            }
+            #checkout-page .ck-testimonial-box .ck-testimonial-author span {
+                color: #94a3b8 !important;
+                border-left-color: rgba(255, 255, 255, 0.15) !important;
+                font-size: 0.7rem !important;
+            }
+            #checkout-page .ck-proof-label {
+                color: #fbbf24 !important;
+                font-size: 0.78rem !important;
+            }
+            /* Item list chips in pricing box */
+            #checkout-page .ck-item-chip {
+                display: flex;
+                align-items: baseline;
+                justify-content: space-between;
+                gap: 8px;
+                padding: 5px 0;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+                min-width: 0;
+                overflow: hidden;
+            }
+            #checkout-page .ck-item-chip:last-child {
+                border-bottom: none;
+            }
+            #checkout-page .ck-item-chip-name {
+                font-size: 0.73rem;
+                color: #cbd5e1;
+                flex: 1;
+                min-width: 0;
+                font-weight: 500;
+                line-height: 1.35;
+                word-break: break-word;
+            }
+            #checkout-page .ck-item-chip-price {
+                font-size: 0.7rem;
+                color: #ef4444;
+                text-decoration: line-through;
+                white-space: nowrap;
+                flex-shrink: 0;
+                font-weight: 600;
+                margin-left: 4px;
+            }
+            /* Premium CTA button pulse */
+            @keyframes ck-pulse {
+                0%   { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+                70%  { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+            }
+            #checkout-page .ck-btn-checkout {
+                animation: ck-pulse 2s infinite !important;
+                font-size: 1rem !important;
+                font-weight: 800 !important;
+                letter-spacing: 0.3px !important;
+                padding: 16px 24px !important;
+                border-radius: 14px !important;
+            }
+            #checkout-page .ck-btn-how-it-works {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 8px !important;
+                width: 100% !important;
+                margin-top: 10px !important;
+                padding: 11px 16px !important;
+                background: rgba(255, 255, 255, 0.05) !important;
+                border: 1px solid rgba(255, 255, 255, 0.12) !important;
+                border-radius: 12px !important;
+                color: #e2e8f0 !important;
+                font-size: 0.84rem !important;
+                font-weight: 700 !important;
+                font-family: inherit !important;
+                cursor: pointer !important;
+                transition: all 0.2s ease !important;
+                text-decoration: none !important;
+                touch-action: manipulation !important;
+                -webkit-tap-highlight-color: transparent !important;
+            }
+            #checkout-page .ck-btn-how-it-works:hover,
+            #checkout-page .ck-btn-how-it-works:active {
+                background: rgba(251, 191, 36, 0.1) !important;
+                border-color: rgba(251, 191, 36, 0.45) !important;
+                color: #fbbf24 !important;
+            }
+            #checkout-page .ck-btn-how-it-works i {
+                color: #fbbf24 !important;
+                font-size: 0.95rem !important;
+            }
+            /* Form labels and inputs – compactos */
+            #checkout-page .ck-form-group label {
+                font-size: 0.72rem !important;
+                font-weight: 600 !important;
+                letter-spacing: 0.3px !important;
+                text-transform: uppercase !important;
+                color: #94a3b8 !important;
+                margin-bottom: 4px !important;
+                display: block !important;
+            }
+            #checkout-page .form-input,
+            #checkout-page .ck-input,
+            #checkout-page input,
+            #checkout-page select,
+            #checkout-page textarea {
+                font-size: 16px !important; /* Previne auto-zoom no iOS Safari / Instagram In-App */
+                padding: 11px 12px !important;
+                border-radius: 8px !important;
+                -webkit-text-size-adjust: 100% !important;
+                text-size-adjust: 100% !important;
+            }
+
+            /* Card Input Area */
+            #checkout-page #card-area {
+                background: rgba(15, 23, 42, 0.6) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                padding: 16px !important;
+                border-radius: 12px !important;
+                margin-top: 16px !important;
+            }
+            #checkout-page select.ck-input option {
+                background-color: #0d1117 !important;
+                color: #ffffff !important;
+            }
+
+            /* Dark Mode Validation State Overrides */
+            #checkout-page .form-input.input-error,
+            #checkout-page .ck-input.input-error,
+            #checkout-page .form-input.is-invalid,
+            #checkout-page .ck-input.is-invalid {
+                border-color: #ef4444 !important;
+                background-color: rgba(239, 68, 68, 0.1) !important;
+                color: #ffffff !important;
+            }
+            #checkout-page .form-input.input-success,
+            #checkout-page .ck-input.input-success,
+            #checkout-page .form-input.is-valid,
+            #checkout-page .ck-input.is-valid {
+                border-color: #10b981 !important;
+                background-color: rgba(16, 185, 129, 0.15) !important;
+                color: #ffffff !important;
+            }
+
+            /* Override Browser Autofill (Preenchimento Automático) Styles in Dark Mode */
+            #checkout-page input:-webkit-autofill,
+            #checkout-page input:-webkit-autofill:hover, 
+            #checkout-page input:-webkit-autofill:focus, 
+            #checkout-page input:-webkit-autofill:active {
+                -webkit-box-shadow: 0 0 0 1000px #0b101d inset !important;
+                -webkit-text-fill-color: #ffffff !important;
+                transition: background-color 5000s ease-in-out 0s;
+            }
+
+            /* PIX Area Overrides (pix-result) */
+            #checkout-page #pix-result h3 {
+                color: #ffffff !important;
+            }
+            #checkout-page #pix-result p {
+                color: #cbd5e1 !important;
+            }
+            #checkout-page #pix-receiver-info p {
+                color: #ffffff !important;
+            }
+            #checkout-page #pix-receiver-info p:first-child {
+                color: #94a3b8 !important;
+            }
+            #checkout-page #qr-loader p {
+                color: #ffffff !important;
+            }
+            #checkout-page #qr-loader p span {
+                color: #94a3b8 !important;
+            }
+            #checkout-page #pix-result .qr-instructions {
+                background: rgba(15, 23, 42, 0.6) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                color: #cbd5e1 !important;
+            }
+            #checkout-page #pix-result .qr-instructions strong {
+                color: #ffffff !important;
+            }
+
+            /* Outer Containers & Warranty box within PIX result */
+            #checkout-page #pix-result,
+            #checkout-page #payment-pending-view {
+                background: rgba(17, 24, 39, 0.7) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+            }
+            #checkout-page #pix-result div[style*="background: #f0fdf4"],
+            #checkout-page #pix-result div[style*="background:#f0fdf4"] {
+                background: rgba(22, 163, 74, 0.05) !important;
+                border: 1px solid rgba(22, 163, 74, 0.15) !important;
+            }
+            #checkout-page #pix-result div[style*="background: #f0fdf4"] p,
+            #checkout-page #pix-result div[style*="background:#f0fdf4"] p {
+                color: #cbd5e1 !important;
+            }
+            #checkout-page #pix-result div[style*="background: #f0fdf4"] i,
+            #checkout-page #pix-result div[style*="background:#f0fdf4"] i {
+                color: #22c55e !important;
+            }
+            #checkout-page #pix-result div[style*="border-top: 1px dashed #e5e7eb"],
+            #checkout-page #pix-result div[style*="border-top:1px dashed #e5e7eb"] {
+                border-top: 1px dashed rgba(255, 255, 255, 0.08) !important;
+            }
+
+        </style>
+
+
+
+        <!-- Checkout Header -->
+
+        <div class="ck-header">
+
+            <div class="ck-header-container">
+
+                <button class="ck-back-btn" onclick="closeCheckout()">
+
+                    &#8592; Voltar
+
+                </button>
+
+                <div class="ck-logo" style="display: flex; align-items: center; gap: 8px;">
+                    <img src="logo.webp" alt="Logo" style="height: 38px; border-radius: 6px; display: block;">
+                    <span style="font-weight: 800; font-size: 1.1rem; letter-spacing: -0.5px; color: #fff;">PROTOCOLO <span style="color: #fbbf24;">ELITE</span></span>
+                </div>
+
+                <div class="ck-security-badge">
+
+                    <span>&#x1F512;</span>
+
+                    <span>Ambiente 100% Seguro</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Main Content -->
+
+        <div class="ck-main">
+
+            <!-- Timer de Urgencia -->
+
+            <div class="ck-urgency-banner" style="display: flex; flex-direction: column; align-items: center;">
+
+                <div class="ck-timer-badge">
+
+                    <span>&#x23F0;</span>
+
+                    <span>Oferta expira em: <span id="ck-timer">14:59</span></span>
+
+                </div>
+
+                <div style="font-size: 0.75rem; color: #ffffff; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; text-align: center; line-height: 1.2;">
+
+                    <i class="fa-solid fa-mobile-screen-button"></i> Receba o acesso na palma da sua mão imediatamente após o pagamento.
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CHECKOUT MAIN VIEW -->
+
+
+
+            <div id="checkout-main-view">
+
+                <div style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;">
+
+
+
+                    <!-- 1. Header do Produto e Garantia -->
+
+                    <div class="ck-section">
+
+                        <!-- Produto: Header (logo + titulo + subtitulo) -->
+                        <div class="ck-product-card" style="margin-bottom: 12px; padding-bottom: 12px;">
+
+                            <div class="ck-product-image" id="ck-product-cover" style="width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; overflow: hidden;">
+                                <img src="capadospintinhos.webp?v=3" alt="Manual de Pintinhos" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;">
+                            </div>
+
+                            <div class="ck-product-info" style="flex: 1; min-width: 0;">
+                                <h3 id="checkout-product-name" style="font-size: 1rem; font-weight: 800; color: #fff; margin-bottom: 2px; line-height: 1.2;">Manual de Manejo de Pintinhos</h3>
+                                <p style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 0; line-height: 1.3;">
+                                    Acesso Vitalicio + Atualizacoes<br>
+                                    <span style="color: #10b981; font-weight: 700;">+ 98% de Sobrevivência Garantida</span>
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <!-- Pricing Box: full-width, fora do flex row do card -->
+                        <div class="ck-product-card-pricing-box" style="display: flex; flex-direction: column; gap: 4px; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.08); box-sizing: border-box; width: 100%; overflow: hidden;">
+
+                            <!-- Lista de itens -->
+                            <div id="checkout-item-list" style="border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 2px;">
+                                <div class="ck-item-chip">
+                                    <span class="ck-item-chip-name">💉 Tabela Completa de Vacinação</span>
+                                    <span class="ck-item-chip-price">R$ 29,90</span>
+                                </div>
+                                <div class="ck-item-chip">
+                                    <span class="ck-item-chip-name">🌡️ Guia de Temperatura e Ambiente Ideal</span>
+                                    <span class="ck-item-chip-price">R$ 39,90</span>
+                                </div>
+                                <div class="ck-item-chip">
+                                    <span class="ck-item-chip-name">🛡️ Principais Doenças, Prevenção e Tratamento</span>
+                                    <span class="ck-item-chip-price">R$ 59,90</span>
+                                </div>
+                            </div>
+
+                            <div style="font-size: 0.78rem; color: #94a3b8; font-weight: 500;">De <span id="top-checkout-card-price" style="text-decoration: line-through; color: #ef4444; font-weight: bold;">R$ 129,70</span> por apenas:</div>
+
+                            <div style="display: flex; flex-direction: column; gap: 2px; margin-top: 4px;">
+                                <span id="checkout-product-price-display" style="font-size: 1.6rem; color: #10b981; font-weight: 900; line-height: 1.1;">R$ 27,90</span>
+                                <span id="top-checkout-card-installment" style="font-size: 0.85rem; color: #cbd5e1; font-weight: 600;">ou 3x de R$ 9,90</span>
+                            </div>
+
+                            <div id="checkout-savings-badge" style="margin-top: 6px; display: inline-block;">
+                                <span style="display: inline-block; background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.72rem; font-weight: 900; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.25); text-transform: uppercase; letter-spacing: 0.5px;">💰 VOCÊ ECONOMIZA: R$ 101,80 (78% OFF)</span>
+                            </div>
+
+                            <div style="font-size: 0.72rem; color: #fbbf24; margin-top: 6px; font-style: italic; border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 6px; font-weight: 600;">
+                                Menos de 93 centavos por dia para salvar seus pintinhos.
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- Prova Social Premium (Estilo Hero) -->
+
+                        <div class="ck-social-proof-mobile-stack" style="display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin-top: 14px; margin-bottom: 5px; padding: 12px 14px; border-radius: 12px; text-align: left;">
+                            <div class="avatar-stack" style="display: flex; flex-shrink: 0;">
+                                <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; margin-right: -12px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+                                    <img src="carrosel/carlos.webp" alt="Cliente" width="36" height="36" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" decoding="async">
+                                </div>
+                                <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; margin-right: -12px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+                                    <img src="carrosel/maria.webp" alt="Cliente" width="36" height="36" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" decoding="async">
+                                </div>
+                                <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; margin-right: -12px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+                                    <img src="carrosel/joao_new.webp" alt="Cliente" width="36" height="36" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" decoding="async">
+                                </div>
+                                <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; margin-right: -12px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+                                    <img src="carrosel/ana.webp" alt="Cliente" width="36" height="36" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" decoding="async">
+                                </div>
+                                <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+                                    <img src="carrosel/lucas.webp" alt="Cliente" width="36" height="36" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" decoding="async">
+                                </div>
+                            </div>
+                            <div style="flex: 1; min-width: 0;">
+                                <strong style="color: #ffffff; display: block; margin-bottom: 2px; font-size: 0.78rem; font-weight: 800; line-height: 1.3;">+1.600 criadores já salvando suas aves 🐔</strong>
+                                <span style="color: #94a3b8; font-size: 0.7rem; font-weight: 500; line-height: 1.3; display: block;">Não perca essa oferta por tempo limitado.</span>
+                            </div>
+                        </div>
+
+                            <!-- Garantia -->
+
+                            <div class="ck-guarantee-box">
+
+                                <div class="ck-guarantee-icon">&#x2705;</div>
+
+                                <div class="ck-guarantee-content">
+
+                                    <p>Garantia Blindada</p>
+
+                                    <p>7 dias para testar. Se nao gostar, devolvemos 100% do valor.</p>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- WhatsApp Support Banner Junto da Garantia -->
+
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; margin-top: 15px; margin-bottom: 5px; cursor: pointer; transition: 0.2s;" onclick="window.open('https://wa.me/5538999832950?text=Ol%C3%A1,%20preciso%20de%20ajuda%20para%20finalizar%20minha%20compra.', '_blank')">
+
+                                <i class="fa-brands fa-whatsapp fa-bounce" style="color: #22c55e; font-size: 1.6rem;"></i>
+
+                                <div style="text-align: left; line-height: 1.2;">
+
+                                    <span style="display: block; font-size: 0.8rem; color: #166534; font-weight: 800;">Atendimento Rápido</span>
+
+                                    <span style="display: block; font-size: 0.7rem; color: #15803d; font-weight: 500;">Dúvidas? Chame a gente no WhatsApp</span>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- Prova -->
+
+                        </div>
+
+                    </div>
+
+
+
+                    <form id="payment-form">
+
+                        <!-- Dados Pessoais -->
+
+                        <div class="ck-section">
+
+                            <div class="ck-section-header">
+
+                                <div class="ck-section-number">1</div>
+
+                                <h2 class="ck-section-title">Dados Pessoais</h2>
+
+                            </div>
+
+
+
+                            <div id="pix-fields">
+
+                                <div class="ck-form-group form-group">
+
+                                    <label for="payer-name">Nome Completo</label>
+
+                                    <input type="text" id="payer-name" name="name" autocomplete="name" class="form-input ck-input"
+
+                                        placeholder="Como no seu documento" required
+
+                                        data-tip="Digite seu nome e sobrenome completo."
+
+                                        oninput="if(document.getElementById('checkout-payer-firstname')) document.getElementById('checkout-payer-firstname').textContent = this.value.trim().split(' ')[0].toLowerCase()">
+
+                                    <div class="field-tooltip">Digite seu nome completo</div>
+
+                                </div>
+
+
+
+                                <div class="ck-form-row">
+
+                                    <div class="ck-form-group form-group">
+
+                                        <label for="payer-email">E-mail (Opcional)</label>
+
+                                        <input type="email" id="payer-email" name="email" autocomplete="email" class="form-input ck-input"
+
+                                            placeholder="seu@email.com (Opcional)" inputmode="email"
+
+                                            data-tip="Seu melhor email onde recebera o acesso ao guia.">
+
+                                        <div class="field-tooltip">Onde voce recebera o acesso</div>
+
+                                    </div>
+
+                                    <div class="ck-form-group form-group">
+
+                                        <label for="payer-phone">WhatsApp</label>
+
+                                        <input type="tel" id="payer-phone" name="phone" autocomplete="tel" class="form-input ck-input"
+
+                                            placeholder="(00) 00000-0000" required inputmode="tel"
+
+                                            data-tip="Para suporte e avisos importantes (DDD + Numero).">
+
+                                        <div class="field-tooltip">DDD + Numero</div>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <div class="ck-form-group form-group">
+                                    <label for="payer-cpf">CPF</label>
+                                    <input type="tel" id="payer-cpf" name="cpf" autocomplete="off" class="form-input ck-input"
+                                        placeholder="000.000.000-00" required inputmode="numeric" pattern="[0-9]*"
+                                        data-tip="Necessario para emitir a nota fiscal (apenas numeros).">
+                                    <div class="field-tooltip">Apenas numeros do CPF</div>
+                                    <span style="display: block; font-size: 0.7rem; color: #10b981; margin-top: 5px; font-weight: 600; line-height: 1.3;"><i class="fa-solid fa-shield-halved" style="font-size: 0.7rem;"></i> Exigência do Banco Central para emissão do seu PIX com liberação imediata.</span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- 3. Ofertas Exclusivas / Order Bumps (Movido para cá) -->
+
+                        <div class="ck-section" style="margin-top: 24px;">
+
+                            <div id="order-bump-area"></div>
+
+                        </div>
+
+
+
+                        <!-- 5. Forma de Pagamento e Botoes -->
+
+                        <!-- Pagamento -->
+
+                        <div class="ck-section" style="margin-top: 24px;">
+
+                            <div class="ck-section-header">
+
+                                <div class="ck-section-number">2</div>
+
+                                <h2 class="ck-section-title">Forma de Pagamento</h2>
+
+                            </div>
+
+
+
+                            <!-- Metodos -->
+
+                            <div class="payment-methods-grid" style="display: flex; gap: 8px; margin-bottom: 24px;">
+
+                                <div class="radio-item selected" onclick="selectPaymentMethod('pix')">
+
+                                    <input type="radio" name="paymentMethod" id="method-pix" value="pix" checked
+
+                                        style="display:none;">
+
+                                    <div class="radio-label">
+
+                                        <span class="radio-title">PIX</span>
+
+                                        <span class="radio-desc">Acesso imediato</span>
+
+                                    </div>
+
+                                    <img src="assets/pix.png"
+
+                                        style="height: 24px;" alt="Pix" loading="lazy">
+
+                                </div>
+
+                                <div class="radio-item" onclick="selectPaymentMethod('card')">
+
+                                    <input type="radio" name="paymentMethod" id="method-card" value="card"
+
+                                        style="display:none;">
+
+                                    <div class="radio-label">
+
+                                        <span class="radio-title">CARTAO</span>
+
+                                        <span class="radio-desc">Ate 4x s/ juros</span>
+
+                                    </div>
+
+                                    <div style="display: flex; gap: 5px; align-items: center;">
+
+                                        <img src="assets/visa.png"
+
+                                            style="height: 18px;" alt="Visa" loading="lazy">
+
+                                        <img src="assets/mastercard.png"
+
+                                            style="height: 18px;" alt="Mastercard" loading="lazy">
+
+                                    </div>
+
+                                </div>
+
+                                <div class="radio-item" onclick="selectPaymentMethod('boleto')">
+
+                                    <input type="radio" name="paymentMethod" id="method-boleto" value="boleto"
+
+                                        style="display:none;">
+
+                                    <div class="radio-label">
+
+                                        <span class="radio-title">BOLETO</span>
+
+                                        <span class="radio-desc" style="font-size: 0.6rem;">Até 72h</span>
+
+                                    </div>
+
+                                    <img src="assets/barcode.png" alt="Boleto" style="height: 24px;" loading="lazy">
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- Card Area -->
+
+                            <!-- Card Area -->
+
+                            <div id="card-area" style="display: none;">
+
+                                <div class="ck-form-group form-group">
+
+                                    <label>Nome no Cartao</label>
+
+                                    <input type="text" id="card-holder" name="ccname" autocomplete="cc-name" class="form-input ck-input"
+
+                                        placeholder="Como impresso no cartao"
+
+                                        data-tip="Nome exatamente como impresso no cartao.">
+
+                                    <div class="field-tooltip">Igual impresso no cartao</div>
+
+                                </div>
+
+                                <div class="ck-form-group form-group">
+
+                                    <label>CPF do Titular</label>
+
+                                    <input type="tel" id="card-cpf" name="cpf" autocomplete="off" class="form-input ck-input"
+
+                                        placeholder="000.000.000-00" inputmode="numeric" pattern="[0-9]*">
+
+                                </div>
+
+
+
+                                <div class="ck-form-group form-group">
+
+                                    <label><i class="fa-regular fa-credit-card"></i> Número do Cartão</label>
+
+                                    <input type="text" id="card-number" name="cardnumber" autocomplete="cc-number" class="form-input ck-input"
+
+                                        placeholder="0000 0000 0000 0000" inputmode="numeric">
+
+                                    <div class="field-tooltip" style="display: flex; align-items: center; gap: 6px; color: #10b981;"><i class="fa-solid fa-camera"></i> Toque aqui para escanear o cartão com a câmera (iOS/Android)</div>
+
+                                </div>
+
+                                <div class="ck-form-row">
+
+                                    <div class="ck-form-group form-group">
+
+                                        <label><i class="fa-regular fa-calendar"></i> Validade</label>
+
+                                        <input type="text" id="card-expiration" name="cc-exp" autocomplete="cc-exp" class="form-input ck-input"
+
+                                            placeholder="MM/AA" inputmode="numeric">
+
+                                    </div>
+
+                                    <div class="ck-form-group form-group">
+
+                                        <label><i class="fa-solid fa-lock"></i> CVV</label>
+
+                                        <input type="text" id="card-cvv" name="cvc" autocomplete="cc-csc" class="form-input ck-input" placeholder="123" inputmode="numeric">
+
+                                    </div>
+
+                                </div>
+
+                                <div class="ck-form-group form-group">
+
+                                    <label>Parcelas</label>
+
+                                    <select id="installments-select" class="form-input ck-input"></select>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- Order -->
+
+
+
+                            <div style="margin-top: 24px;">
+
+                                <!-- Total -->
+
+                                <div style="text-align: center; margin-top: 1.5rem;">
+
+                                    <div class="price-summary-box">
+
+                                        <div id="checkout-order-summary" style="display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px; text-align: left; font-size: 0.85rem; color: #cbd5e1;">
+
+                                        </div>
+
+                                        <div style="display: flex; justify-content: space-between; font-weight: 700;">
+
+                                            <span>Total a pagar:</span>
+
+                                            <span class="checkout-total-display">R$ --,--</span>
+
+                                        </div>
+
+                                        <div id="pix-bonus-status" style="margin-top: 4px; display: none;"></div>
+
+                                    </div>
+
+
+
+                                    <button type="button" id="btn-pay-pix" class="ck-btn-checkout" style="width: 100%; margin-top: 12px;">🔒 GARANTIR MEU ACESSO AGORA</button>
+
+                                    <button type="button" id="btn-pay-card" class="ck-btn-checkout" style="display: none; width: 100%; margin-top: 12px;">🔒 FINALIZAR PAGAMENTO</button>
+
+                                    <div id="card-return-notice" style="display: none; text-align: center; margin: 8px 0 2px 0;">
+                                        <p style="font-size: 0.78rem; color: #94a3b8; margin: 0; font-weight: 500; line-height: 1.4;">
+                                            Volte nesta tela após o pagamento e acesse imediatamente seus dados.
+                                        </p>
+                                    </div>
+
+                                    <button type="button" id="btn-pay-boleto" class="ck-btn-checkout" style="display: none; width: 100%; margin-top: 12px;">📄 GERAR BOLETO BANCÁRIO</button>
+
+                                    <!-- Trust & Security Badges logo abaixo dos botões de pagar -->
+                                    <div class="ck-security-trust-box" style="margin-top: 14px; text-align: center;">
+                                        <p style="text-align: center; font-size: 0.74rem; color: #94a3b8; margin: 0 0 10px 0; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                            <i class="fa-solid fa-lock" style="color: #22c55e;"></i> Seus dados estão protegidos com criptografia de ponta.
+                                        </p>
+
+                                        <!-- Ícones de Pagamento -->
+                                        <div style="display: flex; justify-content: center; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 10px;">
+                                            <img src="assets/visa.png" style="height: 20px;" alt="Visa" loading="lazy">
+                                            <img src="assets/mastercard.png" style="height: 20px;" alt="Mastercard" loading="lazy">
+                                            <img src="assets/pix.png" style="height: 18px;" alt="Pix" loading="lazy">
+                                            <img src="assets/mercado-pago.png" style="height: 20px;" alt="Mercado Pago" loading="lazy">
+                                        </div>
+
+                                        <!-- Selos de Garantia e Segurança -->
+                                        <div style="display: flex; justify-content: center; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                            <span style="font-size: 0.72rem; color: #22c55e; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                                                <i class="fa-solid fa-lock"></i> Compra Segura
+                                            </span>
+                                            <span style="font-size: 0.7rem; color: #475569;">|</span>
+                                            <span style="font-size: 0.72rem; color: #22c55e; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                                                <i class="fa-solid fa-shield-halved"></i> SSL 256-bit
+                                            </span>
+                                            <span style="font-size: 0.7rem; color: #475569;">|</span>
+                                            <span style="font-size: 0.72rem; color: #22c55e; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                                                <i class="fa-solid fa-check-double"></i> Garantia 7 dias
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+
+                    </form>
+
+
+
+            <!-- 6. Prova Social -->
+
+                    <div style="padding-top: 5px;">
+
+                        <!-- Prova Social -->
+
+                        <div class="ck-social-proof">
+
+                            <p class="ck-proof-label" style="text-align: center; font-weight: 800; font-size: 0.72rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">⭐ O que dizem os alunos</p>
+
+
+
+                            <div class="ck-testimonial-box" style="display: flex; gap: 10px; align-items: flex-start; text-align: left; margin-bottom: 8px;">
+                                <img src="carrosel/pedro.webp" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0;" alt="Marcos" loading="lazy">
+                                <div>
+                                    <div style="color: #fbbf24; font-size: 0.6rem; margin-bottom: 2px;">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p style="margin: 0 0 4px 0; line-height: 1.4;">"Salvei um lote de 60 pintinhos que estavam amontoando com frio. Não perdi nenhum!"</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; border-top: none; padding-top: 0; text-align: left;">Marcos Paulo <span style="font-weight: 400; border-left: 1px solid rgba(255,255,255,0.12); padding-left: 6px; margin-left: 6px;">Goiânia - GO</span></p>
+                                </div>
+                            </div>
+
+                            <div class="ck-testimonial-box" style="display: flex; gap: 10px; align-items: flex-start; text-align: left; margin-bottom: 8px;">
+                                <img src="carrosel/fernanda.webp" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0;" alt="Silvia" loading="lazy">
+                                <div>
+                                    <div style="color: #fbbf24; font-size: 0.6rem; margin-bottom: 2px;">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p style="margin: 0 0 4px 0; line-height: 1.4;">"Gastava fortuna em remédio e perdia metade dos pintinhos na primeira semana. O manejo certo salvou meu lote."</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; border-top: none; padding-top: 0; text-align: left;">Silvia Lima <span style="font-weight: 400; border-left: 1px solid rgba(255,255,255,0.12); padding-left: 6px; margin-left: 6px;">Londrina - PR</span></p>
+                                </div>
+                            </div>
+
+                            <div class="ck-testimonial-box" style="display: flex; gap: 10px; align-items: flex-start; text-align: left; margin-bottom: 8px;">
+                                <img src="carrosel/ricardo.webp" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0;" alt="João" loading="lazy">
+                                <div>
+                                    <div style="color: #fbbf24; font-size: 0.6rem; margin-bottom: 2px;">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <p style="margin: 0 0 4px 0; line-height: 1.4;">"Paguei no PIX e em menos de 1 minuto o acesso chegou no meu WhatsApp. Recomendo!"</p>
+                                    <p class="ck-testimonial-author" style="margin: 0; font-weight: 700; border-top: none; padding-top: 0; text-align: left;">João Batista <span style="font-weight: 400; border-left: 1px solid rgba(255,255,255,0.12); padding-left: 6px; margin-left: 6px;">Campinas - SP</span></p>
+                                </div>
+                            </div>
+
+
+
+                            <div class="ck-stars" style="margin-top: 15px;">
+
+                                <span class="ck-star">&#9733;</span>
+
+                                <span class="ck-star">&#9733;</span>
+
+                                <span class="ck-star">&#9733;</span>
+
+                                <span class="ck-star">&#9733;</span>
+
+                                <span class="ck-star">&#9733;</span>
+
+                                <span class="ck-rating-text">4.9/5 (1.647 avaliações)</span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PIX Result (hidden) -->
+
+            <div id="pix-result" class="hidden" style="text-align: center;">
+
+                <h3 id="pix-greeting" style="font-size: 1.5rem; font-weight: 700; color: #1f2937;">Quase lá!</h3>
+
+                <p style="font-size: 0.9rem; color: #6b7280; margin: 0.5rem 0;">Escaneie o QR Code ou copie o código abaixo.</p>
+
+
+
+                <div class="qr-container" style="background: #fff; padding: 1rem; border-radius: 1.2rem; display: flex; align-items: center; justify-content: center; width: 100%; max-width: 260px; margin: 1.5rem auto; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.05); min-height: 260px; position: relative;">
+
+                    <div id="qr-loader" class="hidden" style="position: absolute; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+
+                        <i class="fa-solid fa-shield-halved fa-beat" style="font-size: 2.5rem; color: #10b981;"></i>
+
+                        <p style="font-size: 0.85rem; color: #0f172a; font-weight: 800; text-align: center;">CONECTANDO AO BANCO...<br><span style="font-size: 0.7rem; color: #64748b; font-weight: 600;">Gerando PIX com segurança</span></p>
+
+                    </div>
+
+                    <img id="qr-code-img" src="" alt="QR Code PIX" style="width: 100%; height: auto; margin: 0 auto; border-radius: 8px;" class="hidden">
+
+                </div>
+
+
+
+                <div id="pix-receiver-info" class="hidden">
+
+                    <p style="text-align: center; margin: 0; font-size: 0.85rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Recebedor:</p>
+
+                    <p style="text-align: center; margin: 2px 0 10px 0; font-size: 1.1rem; color: #0f172a; font-weight: 900; text-transform: uppercase;">JOAO PAULO SANTOS CAMARGO</p>
+
+                </div>
+
+
+
+                <button id="btn-copy-pix" class="ck-btn-checkout" style="display: none; background: linear-gradient(135deg, #22c55e, #16a34a);">
+
+                    <i class="fa-regular fa-copy"></i> COPIAR CÓDIGO PIX
+
+                </button>
+
+                <div id="pix-return-notice" style="display: none; text-align: center; margin: 8px 0 2px 0;">
+                    <p style="font-size: 0.78rem; color: #475569; margin: 0; font-weight: 600; line-height: 1.4;">
+                        Volte nesta tela após o pagamento e acesse imediatamente seus dados.
+                    </p>
+                </div>
+
+                <textarea id="pix-copy-paste" readonly style="opacity: 0; position: absolute; z-index: -1;"></textarea>
+
+
+
+                <div class="qr-instructions" style="text-align: left; font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); padding: 1rem; border-radius: 0.5rem; margin-top: 15px;">
+
+                    <p>1. Abra o app do seu banco e escolha <strong>Pix</strong>.</p>
+
+                    <p>2. Selecione <strong>Pix Copia e Cola</strong> ou <strong>Ler QR Code</strong>.</p>
+
+                    <p>3. Cole o código ou escaneie a imagem acima.</p>
+
+                </div>
+
+
+
+                <div style="margin-top: 1.5rem; font-size: 0.85rem;">
+
+                    Dúvidas? <a href="https://wa.me/5538999832950" target="_blank" style="color: #25d366; font-weight: 700;"><i class="fa-brands fa-whatsapp"></i> Chame no WhatsApp</a>
+
+                </div>
+
+
+
+                <div style="margin-top: 1.5rem; border-top: 1px dashed #e5e7eb; padding-top: 1.5rem;">
+
+                    <div style="display: flex; justify-content: center; gap: 15px; align-items: center; margin-bottom: 15px;">
+
+                        <i class="fa-solid fa-lock" style="color: #16a34a; font-size: 1.2rem;"></i>
+
+                        <img src="assets/pix.png" style="height: 24px;" alt="Pix" loading="lazy">
+
+                        <img src="assets/mercado-pago.png" style="height: 22px;" alt="Mercado Pago" loading="lazy">
+
+                    </div>
+
+
+
+                    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+
+                        <p style="color: #166534; font-weight: 800; font-size: 0.9rem; margin: 0 0 4px 0; text-transform: uppercase;">
+
+                            <i class="fa-solid fa-shield-halved"></i> 7 Dias de Garantia
+
+                        </p>
+
+                        <p style="color: #15803d; font-size: 0.8rem; line-height: 1.3; margin: 0;">
+
+                            Se o protocolo não funcionar, nós devolvemos 100% do seu dinheiro sem burocracia.
+
+                        </p>
+
+                    </div>
+
+
+
+                </div>
+
+
+
+                <button onclick="document.getElementById('pix-result').classList.add('hidden'); document.getElementById('checkout-main-view').classList.remove('hidden');" style="margin-top: 1rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-family: inherit;">Voltar</button>
+
+            </div>
+
+
+
+            <!-- BOLETO Result (hidden) -->
+
+            <div id="boleto-result" class="hidden" style="text-align: center; padding: 0 1rem;">
+
+                <div style="max-width: 480px; margin: 0 auto;">
+
+                    <h3 style="font-size: 1.4rem; font-weight: 700; color: #1f2937; margin-bottom: 4px;">Boleto Gerado com Sucesso!</h3>
+
+                    <p style="font-size: 0.85rem; color: #6b7280; margin: 0 0 1.2rem 0;">Pague até <strong>72 horas</strong> para garantir seu acesso.</p>
+
+
+
+                    <div id="boleto-img-loading" class="hidden" style="margin: 0 auto 1rem; padding: 2.5rem 1rem; max-width: min(100%, 560px); background: #f8fafc; border-radius: 10px; border: 1px dashed #cbd5e1; color: #475569; font-size: 0.9rem;">
+
+                        <i class="fa-solid fa-spinner fa-spin" style="margin-right: 8px;"></i> Preparando visualização…
+
+                    </div>
+
+                    <div id="boleto-img-wrap" class="hidden" style="margin: 0 auto 1rem; width: 100%; max-width: min(100%, 560px); border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 16px rgba(0,0,0,0.08); background: #fff; position: relative;">
+
+                        <div class="boleto-img-shield" style="position: absolute; inset: 0; z-index: 2; cursor: default;" aria-hidden="true" oncontextmenu="return false;"></div>
+
+                        <img id="boleto-display-img" src="" alt="Ilustração de boleto (dados genéricos)" width="682" height="407" draggable="false" style="width: 100%; height: auto; display: block; user-select: none; -webkit-user-drag: none; position: relative; z-index: 1; pointer-events: none;" loading="lazy">
+
+                    </div>
+
+
+
+                    <!-- Código de barras display (Removido a pedido do usuário) -->
+
+                    <div style="display: none; background: #f8fafc; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 1rem;">
+
+                        <p style="font-size: 0.7rem; color: #64748b; font-weight: 600; text-transform: uppercase; margin: 0 0 6px 0;">Linha digitável</p>
+
+                        <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1px dashed #cbd5e1; word-break: break-all; font-family: 'Courier New', monospace; font-size: 0.9rem; font-weight: 700; color: #0f172a; letter-spacing: -0.3px;" id="boleto-barcode-display">
+
+                            Gerando código...
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Botões -->
+
+                    <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; margin-bottom: 1rem;">
+
+                        <button type="button" id="btn-download-boleto" class="ck-btn-checkout" style="width: 100%; max-width: 320px; background: linear-gradient(135deg, #22c55e, #16a34a); font-size: 0.95rem;">
+
+                            <i class="fa-solid fa-download"></i> BAIXAR BOLETO
+
+                        </button>
+
+                        <button type="button" id="btn-copy-boleto" class="ck-btn-checkout" style="display: none; width: 100%; max-width: 320px; background: #3b82f6; font-size: 0.95rem;">
+
+                            <i class="fa-solid fa-copy"></i> COPIAR LINHA DIGITÁVEL
+
+                        </button>
+
+                    </div>
+
+
+
+                    <div style="text-align: left; font-size: 0.8rem; color: #6b7280; line-height: 1.5; background: #fefce8; border: 1px solid #fef08a; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+
+                        <p style="margin: 0;"><i class="fa-solid fa-circle-exclamation" style="color: #ca8a04;"></i> Seu acesso será enviado automaticamente para seu e-mail ou pelo whatsapp assim que o pagamento for compensado (em até <strong>72 horas úteis</strong>).</p>
+
+                    </div>
+
+
+
+                    <div style="font-size: 0.85rem; margin-bottom: 8px;">
+
+                        Dúvidas? <a href="https://wa.me/5538999832950" target="_blank" style="color: #25d366; font-weight: 700;"><i class="fa-brands fa-whatsapp"></i> Chame no WhatsApp</a>
+
+                    </div>
+
+
+
+                    <button onclick="document.getElementById('boleto-result').classList.add('hidden'); document.getElementById('checkout-main-view').classList.remove('hidden');" style="margin-top: 0.5rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-family: inherit;">Voltar ao Checkout</button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Payment Pending View -->
+
+            <div id="payment-pending-view" class="hidden" style="text-align: center; padding: 1rem 0;">
+
+                <div style="font-size: 4rem; color: #f59e0b; margin-bottom: 1rem;">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                </div>
+
+                <h3 style="color: #92400e; font-size: 1.3rem; font-weight: 700;">Pagamento em Análise</h3>
+
+                <p style="font-size: 0.95rem; color: #6b7280; margin: 1rem 0; line-height: 1.5;">
+
+                    Sua transação está sendo processada com segurança pelo Mercado Pago. <br>
+
+                    <strong>Não se preocupe, isso é um procedimento normal.</strong>
+
+                </p>
+
+
+
+                <div style="background: #fffbeb; border: 1px solid #fef3c7; padding: 1rem; border-radius: 0.75rem; text-align: left; margin-bottom: 1.5rem;">
+
+                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: #92400e;">
+
+                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-envelope"></i> O acesso será enviado para o seu e-mail assim que aprovado.</li>
+
+                        <li style="margin-bottom: 8px;"><i class="fa-solid fa-clock"></i> Prazo de análise: de alguns minutos até 48h.</li>
+
+                        <li style="color: #b91c1c; font-weight: bold;"><i class="fa-solid fa-triangle-exclamation"></i> IMPORTANTE: Verifique sempre sua pasta de SPAM.</li>
+
+                    </ul>
+
+                </div>
+
+
+
+                <a href="https://wa.me/5538999832950?text=Ol%C3%A1,%20meu%20pagamento%20ficou%20em%20an%C3%A1lise.%20Pode%20me%20ajudar?" target="_blank" class="ck-btn-checkout" style="display: inline-block; text-decoration: none; background: #25d366;">
+
+                    <i class="fa-brands fa-whatsapp"></i> FALAR COM SUPORTE
+
+                </a>
+
+
+
+                <button onclick="closeCheckout()" style="margin-top: 1.5rem; background: none; border: none; color: #9ca3af; text-decoration: underline; cursor: pointer; font-size: 0.85rem; font-family: inherit; display: block; margin-left: auto; margin-right: auto;">
+
+                    Entendi, fechar checkout
+
+                </button>
+
+            </div>
+
+
+
+        </div> <!-- Fim de ck-main -->
+
+
+
+
+
+
+
+        <div class="ck-footer" style="padding-bottom: 30px;">
+
+            <p>&copy; 2026 PROTOCOLO ELITE - Todos os direitos reservados.</p>
+
+            <p>CNPJ: 63.665.824/0001-09</p>
+
+        </div>
+
+
+
+        <!-- Hidden spans for JS compatibility -->
+
+        <span id="checkout-urgency-banner" style="display:none;"></span>
+
+        <span id="checkout-payer-firstname" style="display:none;"></span>
+
+        <span id="checkout-reservation-timer" style="display:none;"></span>
+
+        <span id="product-icon-container" style="display:none;"></span>
+
+    </div>
+
+    <!-- PIX / CARTAO UPSELL RECAPTURE MODAL (SUPER COMPACTO, ELEGANTE E 100% RESPONSIVO) -->
+    <div id="pix-upsell-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999999; display: flex; align-items: center; justify-content: center; overflow-y: auto; overflow-x: hidden; padding: 12px 10px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-sizing: border-box;">
+        <div id="pix-upsell-modal-box" style="background: linear-gradient(165deg, #0b1120 0%, #1e293b 100%); border: 2px solid #f59e0b; border-radius: 16px; padding: 14px 12px; max-width: 370px; width: 100%; margin: auto; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.85); animation: fadeInUp 0.25s ease-out; position: relative; box-sizing: border-box;">
+            
+            <!-- Badge Superior -->
+            <div style="background: linear-gradient(90deg, #ef4444, #dc2626); color: #ffffff; font-size: 0.65rem; font-weight: 900; padding: 2px 10px; border-radius: 14px; display: inline-flex; align-items: center; gap: 4px; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; box-shadow: 0 4px 10px rgba(239,68,68,0.3);">
+                <span>⚡</span> OFERTA ÚNICA DE BALCÃO
+            </div>
+
+            <!-- Título Principal -->
+            <h3 id="pix-upsell-title" style="font-size: clamp(0.92rem, 3.8vw, 1.05rem); font-weight: 900; color: #ffffff; margin: 0 0 4px 0; line-height: 1.25; font-family: 'Outfit', sans-serif; letter-spacing: -0.2px;">
+                ⚠️ ESPERE! NÃO FINALIZE ANTES DE VER ISSO...
+            </h3>
+
+            <!-- Texto de Gancho -->
+            <p id="pix-upsell-description" style="font-size: clamp(0.72rem, 2.8vw, 0.78rem); color: #cbd5e1; margin: 0 0 8px 0; line-height: 1.35; font-weight: 500;">
+                Aproveite esta condição única de balcão para levar o guia completo das doenças das galinhas.
+            </p>
+
+            <!-- Card Central do Produto: Capa pequena na esquerda + Lista na direita -->
+            <div style="background: rgba(15, 23, 42, 0.88); border: 1.5px solid rgba(245, 158, 11, 0.35); border-radius: 12px; padding: 7px 10px; margin-bottom: 7px; text-align: left; box-sizing: border-box; display: flex; align-items: center; gap: 10px;">
+                <img id="pix-upsell-img" src="capadasdoencas.webp" alt="Guia Completo das Doenças" style="width: 52px; height: auto; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); flex-shrink: 0; object-fit: contain;">
+                
+                <div style="min-width: 0; flex: 1;">
+                    <div id="pix-upsell-prod-category" style="color: #f59e0b; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px;">GUIA COMPLETO ADICIONAL</div>
+                    <h4 id="pix-upsell-prod-title" style="color: #ffffff; font-size: 0.82rem; font-weight: 800; margin: 1px 0 3px 0; line-height: 1.2;">O Segredo das Doenças</h4>
+                    
+                    <!-- Lista de Benefícios Chave -->
+                    <div id="pix-upsell-list" style="font-size: 0.68rem; color: #e2e8f0; line-height: 1.25; display: flex; flex-direction: column; gap: 1px;">
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
+                            <span>Mais de 10 doenças catalogadas</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
+                            <span>Protocolo de vermifugação</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
+                            <span>Prevenção e biossegurança</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
+                            <span>Tratamento detalhado</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumo Transparente do Pedido Completo -->
+            <div id="pix-upsell-summary-box" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 6px 10px; margin-bottom: 7px; text-align: left; box-sizing: border-box;">
+                <div style="color: #94a3b8; font-size: 0.62rem; font-weight: 800; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.3px;">
+                    📦 O QUE VOCÊ VAI RECEBER:
+                </div>
+                <div id="pix-upsell-items-list" style="display: flex; flex-direction: column; gap: 2px; font-size: 0.7rem; color: #f1f5f9;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>🐣 Manual de Manejo dos Pintinhos:</span>
+                        <strong style="color: #ffffff;">R$ 27,90</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; color: #34d399;">
+                        <span>💊 Guia Completo das Doenças:</span>
+                        <strong style="color: #34d399;">+ R$ 49,90</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Box de Destaque do Preço e Total Final -->
+            <div style="background: rgba(16, 185, 129, 0.12); border: 1.5px solid rgba(16, 185, 129, 0.45); border-radius: 10px; padding: 6px 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; text-align: left; gap: 6px; box-sizing: border-box;">
+                <div style="flex: 1; min-width: 0;">
+                    <div style="color: #cbd5e1; font-size: 0.68rem; font-weight: 700; line-height: 1.2;">
+                        TOTAL SE VOCÊ ACEITAR:
+                    </div>
+                    <span id="pix-upsell-original-price" style="color: #94a3b8; font-size: 0.65rem; text-decoration: line-through; display: block; line-height: 1.2;">De R$ 177,70</span>
+                </div>
+                <div style="text-align: right; flex-shrink: 0;">
+                    <span id="pix-upsell-total-value" style="color: #10b981; font-size: clamp(1.1rem, 4.2vw, 1.25rem); font-weight: 900; white-space: nowrap; line-height: 1.1;">R$ 77,80</span>
+                    <span style="color: #94a3b8; font-size: 0.6rem; font-weight: 600; display: block;">no PIX ou até 4x no cartão</span>
+                </div>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+                <button onclick="acceptPixUpsell()" class="btn-upsell-cta" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); font-size: clamp(0.82rem, 3.4vw, 0.92rem); padding: 11px 8px; border-radius: 10px; font-weight: 900; border: none; color: #ffffff; width: 100%; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); cursor: pointer; text-transform: uppercase; letter-spacing: 0.2px; transition: transform 0.15s, opacity 0.15s; display: flex; align-items: center; justify-content: center; gap: 6px; line-height: 1.2; box-sizing: border-box;">
+                    <i class="fa-solid fa-check" style="flex-shrink: 0;"></i>
+                    <span id="pix-upsell-cta-text">Aprender sobre as doenças (Total: R$ 77,80)</span>
+                </button>
+
+                <button id="pix-upsell-reject-btn" onclick="rejectPixUpsell()" style="background: transparent; border: none; color: #94a3b8; font-size: clamp(0.7rem, 2.6vw, 0.75rem); text-decoration: underline; padding: 4px; font-weight: 600; cursor: pointer; transition: color 0.2s; line-height: 1.25; width: 100%; box-sizing: border-box;">
+                    Levar apenas o manejo de pintinhos (R$ 27,90)
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        #pix-upsell-modal.hidden { display: none !important; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(14px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .btn-upsell-cta:active {
+            transform: scale(0.98);
+            opacity: 0.92;
+        }
+    </style>
+
+    <!-- Toast Notifications (Fundo Branco Centralizado) -->
+    <div id="toast-container" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999999; display: flex; flex-direction: column; align-items: center; gap: 10px; pointer-events: none; width: max-content; max-width: calc(100vw - 32px);"></div>
+
+    <script>
+    (function() {
+        var s = document.createElement('script');
+        s.src = 'https://sdk.mercadopago.com/js/v2';
+        s.async = true;
+        s.onload = function() { window.mp = new MercadoPago('APP_USR-2502a3c7-5f59-45b0-8365-1cfcad7b0fa5'); };
+        document.head.appendChild(s);
+    })();
+    </script>
+    <script src="smart_fields.js" defer></script>
+    <script src="script.js?v=58" defer></script>
+    <script>
+    // ─── META ADVANCED MATCHING — INPUT LISTENERS ─────────────────────────────
+    // Quando o usuário preenche email/telefone no checkout, atualiza o Pixel
+    // imediatamente para maximizar a correspondência de eventos com anúncios.
+    document.addEventListener('DOMContentLoaded', function() {
+        var emailFields = ['payer-email', 'card-email', 'customer-email'];
+        var phoneFields = ['payer-phone', 'card-phone', 'customer-phone'];
+        var nameFields  = ['payer-name',  'card-holder', 'customer-name'];
+        var cpfFields   = ['payer-cpf',   'card-cpf',   'customer-cpf'];
+        var allFields   = emailFields.concat(phoneFields).concat(nameFields).concat(cpfFields);
+        allFields.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener('blur', function() {
+                if (typeof updateMetaUserData === 'function') {
+                    var name  = (document.getElementById('payer-name')  || document.getElementById('card-holder') || {}).value  || '';
+                    var email = (document.getElementById('payer-email') || document.getElementById('card-email')  || {}).value  || '';
+                    var phone = (document.getElementById('payer-phone') || document.getElementById('card-phone')  || {}).value  || '';
+                    var cpf   = (document.getElementById('payer-cpf')   || document.getElementById('card-cpf')   || {}).value  || '';
+                    updateMetaUserData({ name: name, email: email, phone: phone, cpf: cpf });
+                }
+            });
+        });
+    });
+    </script>
+    <script>
+        // Exibe o botão fixo inferior apenas após o primeiro preço da página aparecer na tela
+        (function() {
+            function setupStickyBarVisibility() {
+                var stickyBar = document.querySelector('.lp-sticky-bar');
+                var trigger = document.getElementById('lp-first-price');
+                if (!stickyBar || !trigger) return;
+
+                function checkPriceVisibility() {
+                    var rect = trigger.getBoundingClientRect();
+                    // Quando o topo do bloco de preço entra na janela de visualização
+                    if (rect.top <= window.innerHeight * 0.95) {
+                        stickyBar.classList.add('visible');
+                    } else {
+                        stickyBar.classList.remove('visible');
+                    }
+                }
+
+                window.addEventListener('scroll', checkPriceVisibility, { passive: true });
+                window.addEventListener('resize', checkPriceVisibility, { passive: true });
+                // Verificação inicial
+                checkPriceVisibility();
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', setupStickyBarVisibility);
+            } else {
+                setupStickyBarVisibility();
+            }
+        })();
+
+        // Rola suavemente com offset preciso até a seção de entrega/acesso
+        function scrollToComoRecebe() {
+            var el = document.getElementById('secao-como-recebe');
+            if (!el) return;
+            var headerOffset = 20;
+            var elementPosition = el.getBoundingClientRect().top;
+            var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({
+                top: Math.max(0, offsetPosition),
+                behavior: 'smooth'
+            });
+        }
+
+        // Fecha o checkout e rola suavemente até a seção de entrega/conteúdo
+        function closeCheckoutAndGoTo(sectionId) {
+            const ckModal = document.getElementById('checkout-page');
+            if (ckModal) {
+                ckModal.classList.remove('active');
+                ckModal.style.display = 'none';
+            }
+            document.body.classList.remove('modal-open');
+            document.documentElement.style.overflow = '';
+            sessionStorage.removeItem('mura_modal_open');
+
+            setTimeout(function() {
+                if (sectionId === 'secao-como-recebe') {
+                    scrollToComoRecebe();
+                } else {
+                    const target = document.getElementById(sectionId);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            }, 120);
+        }
+    </script>
+</body>
+</html>
