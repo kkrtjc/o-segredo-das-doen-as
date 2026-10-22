@@ -2131,6 +2131,17 @@
         }
 
         // RENDERIZAÇÃO IMPECÁVEL DOS DADOS
+                // Helper para identificar sub-página exata (Original, Página 2 ou Página 3)
+        function getPintinhosSubpage(it) {
+            if (!it) return 'pintinhos';
+            const s = String(it.site || '').toLowerCase().trim();
+            const u = String(it.url || it.sourceUrl || it.source || it.reason || '').toLowerCase().trim();
+            if (s === 'pintinhos3' || s.includes('pintinhos3') || u.includes('pintinhos3')) return 'pintinhos3';
+            if (s === 'pintinhos2' || s.includes('pintinhos2') || u.includes('pintinhos2')) return 'pintinhos2';
+            if (s === 'pintinhos' || s.includes('pintinhos') || u.includes('pintinhos')) return 'pintinhos';
+            return 'pintinhos';
+        }
+
         function renderMetrics() {
             if (!globalAnalytics || !globalHistory) return;
 
@@ -2221,9 +2232,12 @@
                 const isPintinhosSale = (saleSite === 'pintinhos') || mainItem.includes('pintinho') || (mainItem.includes('manejo') && !mainItem.includes('cura') && !mainItem.includes('elite'));
 
                 if (isPintinhos && isPintinhosSale) {
-                    salesCount++;
-                    revenue += Number(sale.total);
-                    matchingSales.push(sale);
+                    const subpage = getPintinhosSubpage(sale);
+                    if (currentSubPage === 'all' || currentSubPage === subpage) {
+                        salesCount++;
+                        revenue += Number(sale.total);
+                        matchingSales.push({ ...sale, subpage });
+                    }
                 } else if (!isPintinhos && !isPintinhosSale && saleSite !== 'vsl' && !itemsStr.includes('[amz]')) {
                     salesCount++;
                     revenue += Number(sale.total);
@@ -2277,20 +2291,29 @@
                 const belongsToCurrentCampaign = isPintinhos ? isPintinhosItem(item) : isDoencasItem(item);
                 if (!belongsToCurrentCampaign) return; // Descarta completamente se for da outra campanha!
 
+                // FILTRO TOTAL E INDEPENDENTE POR SUB-PÁGINA (Página Original, Página 2, Página 3 ou Todas)
+                let itemSubpage = 'pintinhos';
+                if (isPintinhos) {
+                    itemSubpage = getPintinhosSubpage(item);
+                    if (currentSubPage !== 'all' && currentSubPage !== itemSubpage) {
+                        return; // DESCARTA! Não pertence à página selecionada
+                    }
+                }
+
                 const itemSite = String(item.site || '').toLowerCase();
                 const isPlatform = (itemSite === 'platform' || itemSite === 'app' || itemSite === 'admin-panel' || item.source === 'platform');
                 const cleanPhone = parsePhone(item.phone);
 
                 if (isPlatform) {
-                    // Da plataforma, SÓ exibe se tiver dados válidos para chamar no WhatsApp!
-                    if (cleanPhone) {
-                        platformAbandons.push({ ...item, isFromPlatform: true });
+                    // Da plataforma só exibe na visão 'Todas' para não poluir páginas individuais de teste de tráfego
+                    if (cleanPhone && (currentSubPage === 'all' || !isPintinhos)) {
+                        platformAbandons.push({ ...item, isFromPlatform: true, subpage: itemSubpage });
                     }
                     return;
                 }
 
                 // Abandono da página de vendas externa da campanha
-                campaignAbandons.push({ ...item, isFromPlatform: false });
+                campaignAbandons.push({ ...item, isFromPlatform: false, subpage: itemSubpage });
             });
 
             // As métricas do funil da campanha mostram ESTRITAMENTE a página externa de tráfego
@@ -2355,6 +2378,18 @@
                 const platformBadge = isPlatformSale 
                     ? '<span style="background:rgba(147,51,234,0.25); color:#c084fc; border:1px solid rgba(168,85,247,0.5); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800; display:inline-flex; align-items:center; gap:4px; margin-left:4px;"><i class="fa-solid fa-crown" style="color:#e879f9;"></i> PLATAFORMA</span>' 
                     : '';
+
+                let subpageBadge = '';
+                if (currentCampaign === 'pintinhos' && !isPlatformSale) {
+                    const sub = sale.subpage || getPintinhosSubpage(sale);
+                    if (sub === 'pintinhos3') {
+                        subpageBadge = '<span style="background:rgba(168,85,247,0.22); color:#c084fc; border:1px solid rgba(168,85,247,0.5); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800; margin-left:4px;"><i class="fa-solid fa-file-lines"></i> PÁGINA 3</span>';
+                    } else if (sub === 'pintinhos2') {
+                        subpageBadge = '<span style="background:rgba(56,189,248,0.22); color:#38bdf8; border:1px solid rgba(56,189,248,0.5); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800; margin-left:4px;"><i class="fa-solid fa-file-lines"></i> PÁGINA 2</span>';
+                    } else {
+                        subpageBadge = '<span style="background:rgba(245,158,11,0.22); color:#fbbf24; border:1px solid rgba(245,158,11,0.5); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800; margin-left:4px;"><i class="fa-solid fa-file-lines"></i> ORIGINAL</span>';
+                    }
+                }
 
                 const nome = sale.name || sale.customer?.name || 'Cliente';
                 const email = sale.email || sale.customer?.email || 'Sem e-mail';
@@ -2505,9 +2540,20 @@
                     : (item.total ? formatBRL(item.total) : 'R$ 49,90');
 
                 // Badge e identificação cristalina de origem
-                const originBadge = isPlatform
+                let originBadge = isPlatform
                     ? '<span style="background:rgba(147,51,234,0.25); color:#c084fc; border:1px solid rgba(168,85,247,0.5); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-crown" style="color:#e879f9;"></i> PLATAFORMA PROTOCOLO ELITE</span>'
                     : '<span style="background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800;">PÁGINA DE VENDAS</span>';
+
+                if (currentCampaign === 'pintinhos' && !isPlatform) {
+                    const sub = item.subpage || getPintinhosSubpage(item);
+                    if (sub === 'pintinhos3') {
+                        originBadge = '<span style="background:rgba(168,85,247,0.22); color:#c084fc; border:1px solid rgba(168,85,247,0.5); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:800;"><i class="fa-solid fa-file-lines"></i> PÁGINA 3 (LOTE LINDO)</span>';
+                    } else if (sub === 'pintinhos2') {
+                        originBadge = '<span style="background:rgba(56,189,248,0.22); color:#38bdf8; border:1px solid rgba(56,189,248,0.5); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:800;"><i class="fa-solid fa-file-lines"></i> PÁGINA 2 (15 DIAS)</span>';
+                    } else {
+                        originBadge = '<span style="background:rgba(245,158,11,0.22); color:#fbbf24; border:1px solid rgba(245,158,11,0.5); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:800;"><i class="fa-solid fa-file-lines"></i> ORIGINAL</span>';
+                    }
+                }
 
                 const originDescription = isPlatform
                     ? `<div class="list-item-sub" style="color: #c084fc; font-weight: 700; font-size: 11px; margin-top: 4px;">
