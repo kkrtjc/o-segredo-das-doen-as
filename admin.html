@@ -174,6 +174,29 @@
             box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3); font-weight: 800;
         }
 
+        /* SUB-PAGE SELECTOR (Pintinhos 1, 2, 3) */
+        .subpage-selector {
+            display: none; margin-bottom: 14px; padding: 10px 12px;
+            background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.18);
+            border-radius: 14px; text-align: center;
+        }
+        .subpage-selector.visible { display: block; }
+        .subpage-selector-label {
+            font-size: 11px; color: #fbbf24; font-weight: 700; margin-bottom: 8px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .subpage-pills { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+        .subpage-pill {
+            background: rgba(15, 23, 42, 0.7); border: 1px solid var(--surface-border);
+            color: var(--text-muted); padding: 6px 12px; border-radius: 10px; font-size: 11px;
+            font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s;
+        }
+        .subpage-pill:active { transform: scale(0.95); }
+        .subpage-pill.active {
+            background: rgba(245, 158, 11, 0.2); color: #fbbf24;
+            border-color: rgba(245, 158, 11, 0.5); font-weight: 800;
+        }
+
         /* BANNER DO PRODUTO ATUAL */
         .active-campaign-banner {
             background: rgba(15, 23, 42, 0.6); border: 1px solid var(--surface-border);
@@ -1045,6 +1068,19 @@
                 </div>
             </div>
 
+            <!-- SUB-SELETOR DE PÁGINA (só visível na campanha Pintinhos) -->
+            <div id="subpage-selector" class="subpage-selector">
+                <div class="subpage-selector-label">
+                    <i class="fa-solid fa-file-lines"></i> Filtrar por Página de Destino:
+                </div>
+                <div class="subpage-pills">
+                    <div class="subpage-pill active" onclick="selectSubPage('all', this)">Todas</div>
+                    <div class="subpage-pill" onclick="selectSubPage('pintinhos', this)">Original</div>
+                    <div class="subpage-pill" onclick="selectSubPage('pintinhos2', this)">Página 2</div>
+                    <div class="subpage-pill" onclick="selectSubPage('pintinhos3', this)">Página 3</div>
+                </div>
+            </div>
+
             <!-- SELETOR DE MODO: SITE VS META ADS -->
             <div class="view-mode-selector">
                 <button class="view-mode-btn active" id="btn-mode-site" onclick="switchViewMode('site')">
@@ -1758,7 +1794,8 @@
         }
 
         let currentPass = '';
-        let currentCampaign = 'doencas'; // 'doencas' ou 'pintinhos'
+        let currentCampaign = 'doencas';
+        let currentSubPage = 'all'; // 'all', 'pintinhos', 'pintinhos2', 'pintinhos3' // 'doencas' ou 'pintinhos'
         let currentPeriod = 'all'; // 'today', 'yesterday', '7days', 'all', 'custom'
         let customStartDate = '';
         let customEndDate = '';
@@ -1922,10 +1959,23 @@
                 bPrice.textContent = 'R$ 27,90';
             }
 
+            // Mostra/esconde sub-seletor de páginas
+            const subSel = document.getElementById('subpage-selector');
+            if (subSel) {
+                subSel.classList.toggle('visible', campaignId === 'pintinhos');
+            }
+
             renderMetrics();
             if (currentViewMode === 'meta') {
                 loadMetaCampaignData();
             }
+        }
+
+        function selectSubPage(subPage, el) {
+            currentSubPage = subPage;
+            document.querySelectorAll('.subpage-pill').forEach(p => p.classList.remove('active'));
+            if (el) el.classList.add('active');
+            renderMetrics();
         }
 
         function switchMainTab(tab) {
@@ -2100,9 +2150,18 @@
             // 1. CÁLCULO DE VISITAS E CHECKOUTS
             if (currentPeriod === 'all') {
                 if (isPintinhos) {
-                    visits = totals.uniqueVisits_pintinhos || totals.pageViews_pintinhos || 0;
-                    pageViews = totals.pageViews_pintinhos || 0;
-                    checkouts = totals.checkoutOpens_pintinhos || 0;
+                    if (currentSubPage === 'all') {
+                        visits = (totals.uniqueVisits_pintinhos || totals.pageViews_pintinhos || 0)
+                               + (totals.uniqueVisits_pintinhos2 || totals.pageViews_pintinhos2 || 0)
+                               + (totals.uniqueVisits_pintinhos3 || totals.pageViews_pintinhos3 || 0);
+                        pageViews = (totals.pageViews_pintinhos || 0) + (totals.pageViews_pintinhos2 || 0) + (totals.pageViews_pintinhos3 || 0);
+                        checkouts = (totals.checkoutOpens_pintinhos || 0) + (totals.checkoutOpens_pintinhos2 || 0) + (totals.checkoutOpens_pintinhos3 || 0);
+                    } else {
+                        const sfx = currentSubPage === 'pintinhos' ? '_pintinhos' : (currentSubPage === 'pintinhos2' ? '_pintinhos2' : '_pintinhos3');
+                        visits = totals['uniqueVisits' + sfx] || totals['pageViews' + sfx] || 0;
+                        pageViews = totals['pageViews' + sfx] || 0;
+                        checkouts = totals['checkoutOpens' + sfx] || 0;
+                    }
                 } else {
                     // Oficial / Doenças (página de vendas externa - isolada de plataforma e app)
                     const platVisits = (totals.uniqueVisits_platform || 0) + (totals.uniqueVisits_app || 0);
@@ -2117,9 +2176,18 @@
                 dates.forEach(dStr => {
                     const d = daily[dStr] || {};
                     if (isPintinhos) {
-                        visits += (d.uniqueVisits_pintinhos || d.pageViews_pintinhos || 0);
-                        pageViews += (d.pageViews_pintinhos || 0);
-                        checkouts += (d.checkoutOpens_pintinhos || 0);
+                        if (currentSubPage === 'all') {
+                            visits += (d.uniqueVisits_pintinhos || d.pageViews_pintinhos || 0)
+                                    + (d.uniqueVisits_pintinhos2 || d.pageViews_pintinhos2 || 0)
+                                    + (d.uniqueVisits_pintinhos3 || d.pageViews_pintinhos3 || 0);
+                            pageViews += (d.pageViews_pintinhos || 0) + (d.pageViews_pintinhos2 || 0) + (d.pageViews_pintinhos3 || 0);
+                            checkouts += (d.checkoutOpens_pintinhos || 0) + (d.checkoutOpens_pintinhos2 || 0) + (d.checkoutOpens_pintinhos3 || 0);
+                        } else {
+                            const sfx = currentSubPage === 'pintinhos' ? '_pintinhos' : (currentSubPage === 'pintinhos2' ? '_pintinhos2' : '_pintinhos3');
+                            visits += (d['uniqueVisits' + sfx] || d['pageViews' + sfx] || 0);
+                            pageViews += (d['pageViews' + sfx] || 0);
+                            checkouts += (d['checkoutOpens' + sfx] || 0);
+                        }
                     } else {
                         const platVisits = (d.uniqueVisits_platform || 0) + (d.uniqueVisits_app || 0);
                         const platViews = (d.pageViews_platform || 0) + (d.pageViews_app || 0);

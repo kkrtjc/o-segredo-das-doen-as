@@ -2,9 +2,14 @@ const API_URL = window.location.hostname === 'localhost' || window.location.host
     ? 'http://localhost:10000'
     : 'https://mura-api.joaopaulojaguar.workers.dev';
 
-const PAGE_SOURCE = (window.location.pathname.includes('pintinhos') || window.location.href.includes('pintinhos') || document.body?.dataset?.page === 'pintinhos' || document.body?.classList?.contains('pintinhos-page')) 
-    ? 'pintinhos' 
-    : (document.querySelector('.vsl-page') ? 'vsl' : 'text');
+const PAGE_SOURCE = (() => {
+    const loc = (window.location.pathname + window.location.href).toLowerCase();
+    if (loc.includes('pintinhos3')) return 'pintinhos3';
+    if (loc.includes('pintinhos2')) return 'pintinhos2';
+    if (loc.includes('pintinhos') || document.body?.dataset?.page === 'pintinhos' || document.body?.classList?.contains('pintinhos-page')) return 'pintinhos';
+    if (document.querySelector('.vsl-page')) return 'vsl';
+    return 'text';
+})();
 
 let cart = {
     mainProduct: null,
@@ -3146,7 +3151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionStorage.setItem(FLAG_KEY, 'true');
 
         const viewEventId = generateEventID();
-        const isPintinhos = (typeof PAGE_SOURCE !== 'undefined' && PAGE_SOURCE === 'pintinhos');
+        const isPintinhos = (typeof PAGE_SOURCE !== 'undefined' && (PAGE_SOURCE === 'pintinhos' || PAGE_SOURCE.startsWith('pintinhos')));
         const mainId = isPintinhos ? 'ebook-pintinhos' : 'ebook-doencas';
         const title = isPintinhos ? 'Manual de Manejo de Pintinhos: 98% de Sobrevivência' : 'Protocolo de Elite - O Segredo das Doenças';
         const price = isPintinhos ? 27.90 : 89.90;
