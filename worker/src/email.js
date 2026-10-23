@@ -154,7 +154,13 @@ export async function sendEmail(env, customer, items, paymentId = null, facebook
                 currency: 'BRL',
                 contentIds: contentIds,
                 contentType: 'product',
-                sourceUrl: env.SITE_URL || 'https://osegredodasgalinhas.pages.dev/',
+                // URL exata da pagina onde ocorreu a venda (critica para atribuicao correta no Meta Ads)
+                // A Meta usa event_source_url para bater com o link de destino dos anuncios.
+                // Se a venda veio de pintinhos3.html, o Purchase CAPI deve apontar para pintinhos3.html.
+                sourceUrl: (site === 'pintinhos3' ? 'https://osegredodasgalinhas.pages.dev/pintinhos3.html'
+                    : site === 'pintinhos2' ? 'https://osegredodasgalinhas.pages.dev/pintinhos2.html'
+                    : site === 'pintinhos'  ? 'https://osegredodasgalinhas.pages.dev/pintinhos.html'
+                    : env.SITE_URL || 'https://osegredodasgalinhas.pages.dev/'),
                 site: site
             });
             console.log(`[CAPI] Purchase server-side disparado com sucesso. EventID: ${eventIdToUse} (Original: ${facebookEventId})`);
