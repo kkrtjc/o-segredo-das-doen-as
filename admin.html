@@ -2390,11 +2390,11 @@
                 if (currentCampaign === 'pintinhos' && !isPlatformSale) {
                     const sub = sale.subpage || getPintinhosSubpage(sale);
                     if (sub === 'pintinhos3') {
-                        subpageBadge = '<span style="background:rgba(168,85,247,0.22); color:#c084fc; border:1px solid rgba(168,85,247,0.5); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800; margin-left:4px;"><i class="fa-solid fa-file-lines"></i> PÁGINA 3</span>';
+                        subpageBadge = '<span style="background:rgba(168,85,247,0.25); color:#c084fc; border:1px solid rgba(168,85,247,0.6); padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; margin-left:6px; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-file-lines"></i> PÁGINA 3 (REMÉDIO CARO)</span>';
                     } else if (sub === 'pintinhos2') {
-                        subpageBadge = '<span style="background:rgba(56,189,248,0.22); color:#38bdf8; border:1px solid rgba(56,189,248,0.5); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800; margin-left:4px;"><i class="fa-solid fa-file-lines"></i> PÁGINA 2</span>';
+                        subpageBadge = '<span style="background:rgba(56,189,248,0.25); color:#38bdf8; border:1px solid rgba(56,189,248,0.6); padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; margin-left:6px; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-file-lines"></i> PÁGINA 2 (15 DIAS)</span>';
                     } else {
-                        subpageBadge = '<span style="background:rgba(245,158,11,0.22); color:#fbbf24; border:1px solid rgba(245,158,11,0.5); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800; margin-left:4px;"><i class="fa-solid fa-file-lines"></i> ORIGINAL</span>';
+                        subpageBadge = '<span style="background:rgba(245,158,11,0.25); color:#fbbf24; border:1px solid rgba(245,158,11,0.6); padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; margin-left:6px; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-file-lines"></i> PÁGINA ORIGINAL</span>';
                     }
                 }
 
@@ -2432,7 +2432,7 @@
                 html += `
                 <div class="list-item" style="${isPlatformSale ? 'border-left: 3px solid #a855f7;' : ''}">
                     <div class="list-item-title">
-                        <span>${nome} ${methodBadge} ${platformBadge}</span>
+                        <span>${nome} ${methodBadge} ${subpageBadge} ${platformBadge}</span>
                         <span class="list-item-right-price">${formatBRL(sale.total)}</span>
                     </div>
                     <div class="list-item-sub"><i class="fa-regular fa-envelope"></i> ${email || 'Sem e-mail'}</div>
