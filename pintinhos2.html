@@ -130,6 +130,45 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
+        .lp-brand-header {
+            background: #0b1120;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lp-brand-inner {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .lp-brand-logo {
+            height: 34px;
+            width: auto;
+            display: block;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .lp-brand-name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 0.98rem;
+            letter-spacing: -0.2px;
+            color: #ffffff;
+            line-height: 1.1;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .lp-brand-name span {
+            color: #fbbf24;
+        }
+
 
         .lp-topbar {
             background: linear-gradient(90deg, #7f1d1d, #991b1b, #7f1d1d);
@@ -970,6 +1009,14 @@
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WVBJNXCQ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+    <!-- Top Brand Header -->
+    <header class="lp-brand-header">
+        <div class="lp-brand-inner">
+            <img src="logo.webp" alt="Galos Mura Brasil" class="lp-brand-logo">
+            <span class="lp-brand-name">GALOS MURA <span>BRASIL</span></span>
+        </div>
+    </header>
+
 
     <!-- Top Alert Bar -->
     <div class="lp-topbar">
@@ -1480,6 +1527,28 @@
 
                 color: #fff;
 
+            }
+
+            @media (max-width: 440px) {
+                .ck-header-container {
+                    padding: 0 10px;
+                    gap: 6px;
+                }
+                .ck-back-btn {
+                    padding: 5px 9px;
+                    font-size: 12px;
+                    white-space: nowrap;
+                    flex-shrink: 0;
+                }
+                .ck-security-badge {
+                    font-size: 11px;
+                    gap: 4px;
+                    white-space: nowrap;
+                    flex-shrink: 0;
+                }
+                .ck-sec-prefix {
+                    display: none;
+                }
             }
 
 
@@ -3264,16 +3333,16 @@
 
                 </button>
 
-                <div class="ck-logo" style="display: flex; align-items: center; gap: 8px;">
-                    <img src="logo.webp" alt="Logo" style="height: 38px; border-radius: 6px; display: block;">
-                    <span style="font-weight: 800; font-size: 1.1rem; letter-spacing: -0.5px; color: #fff;">PROTOCOLO <span style="color: #fbbf24;">ELITE</span></span>
+                <div class="ck-logo" style="display: flex; align-items: center; gap: 7px; min-width: 0;">
+                    <img src="logo.webp" alt="Galos Mura Brasil" style="height: 36px; width: auto; object-fit: contain; display: block; flex-shrink: 0;">
+                    <span class="ck-logo-text" style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: clamp(0.78rem, 3.4vw, 1.05rem); letter-spacing: -0.2px; color: #fff; white-space: nowrap; line-height: 1.1;">GALOS MURA <span style="color: #fbbf24;">BRASIL</span></span>
                 </div>
 
                 <div class="ck-security-badge">
 
                     <span>&#x1F512;</span>
 
-                    <span>Ambiente 100% Seguro</span>
+                    <span><span class="ck-sec-prefix">Ambiente </span>100% Seguro</span>
 
                 </div>
 
@@ -3316,10 +3385,6 @@
             <div id="checkout-main-view">
 
                 <div style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;">
-
-                    <div class="ck-page-brand" style="text-align: center; margin: 0 0 -2px 0; font-size: 0.78rem; font-weight: 800; letter-spacing: 1.8px; color: #fbbf24; text-transform: uppercase; line-height: 1.2;">
-                        GALOS MURA BRASIL
-                    </div>
 
 
 
