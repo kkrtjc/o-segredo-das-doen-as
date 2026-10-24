@@ -4149,95 +4149,103 @@
 
     </div>
 
-    <!-- PIX / CARTAO UPSELL RECAPTURE MODAL (SUPER COMPACTO, ELEGANTE E 100% RESPONSIVO) -->
-    <div id="pix-upsell-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999999; display: flex; align-items: center; justify-content: center; overflow-y: auto; overflow-x: hidden; padding: 12px 10px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-sizing: border-box;">
-        <div id="pix-upsell-modal-box" style="background: linear-gradient(165deg, #0b1120 0%, #1e293b 100%); border: 2px solid #f59e0b; border-radius: 16px; padding: 14px 12px; max-width: 370px; width: 100%; margin: auto; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.85); animation: fadeInUp 0.25s ease-out; position: relative; box-sizing: border-box;">
+    <!-- PIX / CARTAO / BOLETO UPSELL MODAL (UNIFICADO, ZERO ROLAGEM E 100% LEGÍVEL EM QUALQUER CELULAR) -->
+    <div id="pix-upsell-modal" class="hidden">
+        <div id="pix-upsell-modal-box">
             
-            <!-- Badge Superior -->
-            <div style="background: linear-gradient(90deg, #ef4444, #dc2626); color: #ffffff; font-size: 0.65rem; font-weight: 900; padding: 2px 10px; border-radius: 14px; display: inline-flex; align-items: center; gap: 4px; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; box-shadow: 0 4px 10px rgba(239,68,68,0.3);">
-                <span>⚡</span> OFERTA ÚNICA DE BALCÃO
+            <!-- Badge + Título Compactos -->
+            <div class="upsell-top-badge">
+                <span>⚡</span> OFERTA ÚNICA IMPERDÍVEL
             </div>
 
-            <!-- Título Principal -->
-            <h3 id="pix-upsell-title" style="font-size: clamp(0.92rem, 3.8vw, 1.05rem); font-weight: 900; color: #ffffff; margin: 0 0 4px 0; line-height: 1.25; font-family: 'Outfit', sans-serif; letter-spacing: -0.2px;">
+            <h3 id="pix-upsell-title">
                 ⚠️ ESPERE! NÃO FINALIZE ANTES DE VER ISSO...
             </h3>
 
-            <!-- Texto de Gancho -->
-            <p id="pix-upsell-description" style="font-size: clamp(0.72rem, 2.8vw, 0.78rem); color: #cbd5e1; margin: 0 0 8px 0; line-height: 1.35; font-weight: 500;">
-                Aproveite esta condição única de balcão para levar o guia completo das doenças das galinhas.
+            <p id="pix-upsell-description">
+                Adicione o <strong style="color: #fbbf24;">Guia Completo</strong> com mais de 10 doenças que atacam as galinhas, com condição única de oferta imperdível:
             </p>
 
-            <!-- Card Central do Produto: Capa pequena na esquerda + Lista na direita -->
-            <div style="background: rgba(15, 23, 42, 0.88); border: 1.5px solid rgba(245, 158, 11, 0.35); border-radius: 12px; padding: 7px 10px; margin-bottom: 7px; text-align: left; box-sizing: border-box; display: flex; align-items: center; gap: 10px;">
-                <img id="pix-upsell-img" src="capadasdoencas.webp" alt="Guia Completo das Doenças" style="width: 52px; height: auto; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); flex-shrink: 0; object-fit: contain;">
-                
-                <div style="min-width: 0; flex: 1;">
-                    <div id="pix-upsell-prod-category" style="color: #f59e0b; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px;">GUIA COMPLETO ADICIONAL</div>
-                    <h4 id="pix-upsell-prod-title" style="color: #ffffff; font-size: 0.82rem; font-weight: 800; margin: 1px 0 3px 0; line-height: 1.2;">O Segredo das Doenças</h4>
+            <!-- CARD UNIFICADO (Produto + Benefícios + Resumo + Total em 1 único bloco compacto) -->
+            <div class="upsell-unified-card">
+                <!-- Parte Superior: Capa + Preço à esquerda | Benefícios à direita -->
+                <div class="upsell-product-section">
+                    <div class="upsell-cover-col">
+                        <img id="pix-upsell-img" src="capadasdoencas.webp" alt="Guia Completo das Doenças">
+                        <div id="pix-upsell-cover-pricing" class="upsell-cover-pricing">
+                            <span class="upsell-cover-old">De R$ 117,90</span>
+                            <span class="upsell-cover-new"><small>por </small>R$ 49,90</span>
+                        </div>
+                    </div>
                     
-                    <!-- Lista de Benefícios Chave -->
-                    <div id="pix-upsell-list" style="font-size: 0.68rem; color: #e2e8f0; line-height: 1.25; display: flex; flex-direction: column; gap: 1px;">
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
-                            <span>Mais de 10 doenças catalogadas</span>
+                    <div class="upsell-product-info">
+                        <div id="pix-upsell-prod-category" style="display:none;">GUIA COMPLETO ADICIONAL</div>
+                        <h4 id="pix-upsell-prod-title">💊 O Segredo das Doenças</h4>
+                        
+                        <div id="pix-upsell-list">
+                            <div class="upsell-benefit-item">
+                                <span class="upsell-benefit-check">✓</span>
+                                <span>Mais de 10 doenças catalogadas</span>
+                            </div>
+                            <div class="upsell-benefit-item">
+                                <span class="upsell-benefit-check">✓</span>
+                                <span>Protocolo de vacinação e vermifugação</span>
+                            </div>
+                            <div class="upsell-benefit-item">
+                                <span class="upsell-benefit-check">✓</span>
+                                <span>Prevenção e biossegurança</span>
+                            </div>
+                            <div class="upsell-benefit-item">
+                                <span class="upsell-benefit-check">✓</span>
+                                <span>Tratamento detalhado com medicamentos que eu mesmo uso no meu criatório</span>
+                            </div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
-                            <span>Protocolo de vermifugação</span>
+                    </div>
+                </div>
+
+                <!-- Parte Inferior Integrada: Itens + Total Final na mesma caixa -->
+                <div class="upsell-order-footer">
+                    <div id="pix-upsell-summary-box">
+                        <div id="pix-upsell-items-list" class="upsell-summary-rows">
+                            <div class="upsell-summary-row">
+                                <span>🐣 Manejo dos Pintinhos:</span>
+                                <strong>R$ 27,90</strong>
+                            </div>
+                            <div class="upsell-summary-row upsell-summary-row-highlight">
+                                <span>💊 Guia Completo das Doenças:</span>
+                                <strong>+ R$ 49,90</strong>
+                            </div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
-                            <span>Prevenção e biossegurança</span>
+                    </div>
+
+                    <div class="upsell-total-row">
+                        <div class="upsell-total-left">
+                            <div class="upsell-total-label">TOTAL SE ACEITAR:</div>
+                            <div class="upsell-discount-meta">
+                                <span id="pix-upsell-original-price">De R$ 145,80</span>
+                                <span id="pix-upsell-savings">• Economize R$ 68,00</span>
+                            </div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <span style="color: #10b981; font-weight: 900; font-size: 0.75rem;">✓</span>
-                            <span>Tratamento detalhado</span>
+                        <div class="upsell-total-right">
+                            <span id="pix-upsell-total-value">R$ 77,80</span>
+                            <span id="pix-upsell-payment-note">no PIX ou até 4x no cartão</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Resumo Transparente do Pedido Completo -->
-            <div id="pix-upsell-summary-box" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 6px 10px; margin-bottom: 7px; text-align: left; box-sizing: border-box;">
-                <div style="color: #94a3b8; font-size: 0.62rem; font-weight: 800; text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.3px;">
-                    📦 O QUE VOCÊ VAI RECEBER:
-                </div>
-                <div id="pix-upsell-items-list" style="display: flex; flex-direction: column; gap: 2px; font-size: 0.7rem; color: #f1f5f9;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span>🐣 Manual de Manejo dos Pintinhos:</span>
-                        <strong style="color: #ffffff;">R$ 27,90</strong>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; color: #34d399;">
-                        <span>💊 Guia Completo das Doenças:</span>
-                        <strong style="color: #34d399;">+ R$ 49,90</strong>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Box de Destaque do Preço e Total Final -->
-            <div style="background: rgba(16, 185, 129, 0.12); border: 1.5px solid rgba(16, 185, 129, 0.45); border-radius: 10px; padding: 6px 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; text-align: left; gap: 6px; box-sizing: border-box;">
-                <div style="flex: 1; min-width: 0;">
-                    <div style="color: #cbd5e1; font-size: 0.68rem; font-weight: 700; line-height: 1.2;">
-                        TOTAL SE VOCÊ ACEITAR:
-                    </div>
-                    <span id="pix-upsell-original-price" style="color: #94a3b8; font-size: 0.65rem; text-decoration: line-through; display: block; line-height: 1.2;">De R$ 177,70</span>
-                </div>
-                <div style="text-align: right; flex-shrink: 0;">
-                    <span id="pix-upsell-total-value" style="color: #10b981; font-size: clamp(1.1rem, 4.2vw, 1.25rem); font-weight: 900; white-space: nowrap; line-height: 1.1;">R$ 77,80</span>
-                    <span style="color: #94a3b8; font-size: 0.6rem; font-weight: 600; display: block;">no PIX ou até 4x no cartão</span>
-                </div>
-            </div>
-
-            <!-- Botões de Ação -->
-            <div style="display: flex; flex-direction: column; gap: 4px;">
-                <button onclick="acceptPixUpsell()" class="btn-upsell-cta" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); font-size: clamp(0.82rem, 3.4vw, 0.92rem); padding: 11px 8px; border-radius: 10px; font-weight: 900; border: none; color: #ffffff; width: 100%; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); cursor: pointer; text-transform: uppercase; letter-spacing: 0.2px; transition: transform 0.15s, opacity 0.15s; display: flex; align-items: center; justify-content: center; gap: 6px; line-height: 1.2; box-sizing: border-box;">
-                    <i class="fa-solid fa-check" style="flex-shrink: 0;"></i>
-                    <span id="pix-upsell-cta-text">Aprender sobre as doenças (Total: R$ 77,80)</span>
+            <!-- Botões de Ação Super Legíveis -->
+            <div class="upsell-actions">
+                <button type="button" onclick="acceptPixUpsell()" class="btn-upsell-cta">
+                    <span class="upsell-cta-main">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span id="pix-upsell-cta-text">SIM! APRENDER SOBRE AS DOENÇAS</span>
+                    </span>
+                    <span id="pix-upsell-cta-sub" class="upsell-cta-sub">Incluir no meu pedido • Total: R$ 77,80</span>
                 </button>
 
-                <button id="pix-upsell-reject-btn" onclick="rejectPixUpsell()" style="background: transparent; border: none; color: #94a3b8; font-size: clamp(0.7rem, 2.6vw, 0.75rem); text-decoration: underline; padding: 4px; font-weight: 600; cursor: pointer; transition: color 0.2s; line-height: 1.25; width: 100%; box-sizing: border-box;">
-                    Levar apenas o manejo de pintinhos (R$ 27,90)
+                <button type="button" id="pix-upsell-reject-btn" onclick="rejectPixUpsell()" class="btn-upsell-reject">
+                    Não, levar apenas o que escolhi (R$ 27,90)
                 </button>
             </div>
 
@@ -4245,14 +4253,368 @@
     </div>
 
     <style>
-        #pix-upsell-modal.hidden { display: none !important; }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(14px) scale(0.98); }
+        #pix-upsell-modal {
+            position: fixed;
+            inset: 0;
+            height: 100vh;
+            height: 100dvh;
+            background: rgba(2, 6, 23, 0.9);
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding: 8px 10px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        #pix-upsell-modal.hidden {
+            display: none !important;
+        }
+        #pix-upsell-modal-box {
+            background: linear-gradient(165deg, #0b1120 0%, #152238 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 16px;
+            padding: 11px 12px;
+            max-width: 400px;
+            width: 100%;
+            margin: auto;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 24px rgba(245, 158, 11, 0.14);
+            animation: upsellFadeInUp 0.22s ease-out;
+            position: relative;
+            box-sizing: border-box;
+        }
+        @keyframes upsellFadeInUp {
+            from { opacity: 0; transform: translateY(10px) scale(0.98); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .btn-upsell-cta:active {
-            transform: scale(0.98);
-            opacity: 0.92;
+        #pix-upsell-modal .upsell-top-badge {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+            color: #ffffff;
+            font-size: 0.64rem;
+            font-weight: 900;
+            padding: 2px 10px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 3px 10px rgba(239, 68, 68, 0.35);
+            line-height: 1.2;
+        }
+        #pix-upsell-title {
+            font-size: clamp(0.92rem, 3.9vw, 1.06rem);
+            font-weight: 900;
+            color: #ffffff;
+            margin: 0 0 3px 0;
+            line-height: 1.2;
+            font-family: 'Outfit', 'Inter', sans-serif;
+            letter-spacing: -0.2px;
+        }
+        #pix-upsell-description {
+            font-size: clamp(0.75rem, 3vw, 0.82rem);
+            color: #e2e8f0;
+            margin: 0 0 8px 0;
+            line-height: 1.3;
+            font-weight: 500;
+        }
+
+        /* CARD UNIFICADO (PRODUTO + RESUMO + TOTAL) */
+        #pix-upsell-modal .upsell-unified-card {
+            background: rgba(15, 23, 42, 0.92);
+            border: 1.5px solid rgba(245, 158, 11, 0.42);
+            border-radius: 13px;
+            overflow: hidden;
+            margin-bottom: 9px;
+            text-align: left;
+            box-sizing: border-box;
+        }
+        #pix-upsell-modal .upsell-product-section {
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #pix-upsell-modal .upsell-cover-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            width: 82px;
+            text-align: center;
+        }
+        #pix-upsell-img {
+            width: 60px;
+            height: auto;
+            border-radius: 7px;
+            border: 1px solid rgba(245, 158, 11, 0.38);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.65);
+            flex-shrink: 0;
+            object-fit: contain;
+            display: block;
+            margin-bottom: 4px;
+        }
+        #pix-upsell-modal .upsell-cover-pricing {
+            width: 100%;
+            background: rgba(16, 185, 129, 0.14);
+            border: 1px solid rgba(16, 185, 129, 0.42);
+            border-radius: 7px;
+            padding: 3px 4px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.15;
+        }
+        #pix-upsell-modal .upsell-cover-old {
+            color: #94a3b8;
+            font-size: 0.62rem;
+            font-weight: 600;
+            text-decoration: line-through;
+            white-space: nowrap;
+        }
+        #pix-upsell-modal .upsell-cover-new {
+            color: #34d399;
+            font-size: 0.78rem;
+            font-weight: 900;
+            white-space: nowrap;
+            letter-spacing: -0.2px;
+            margin-top: 1px;
+        }
+        #pix-upsell-modal .upsell-cover-new small {
+            color: #cbd5e1;
+            font-size: 0.6rem;
+            font-weight: 600;
+        }
+        #pix-upsell-modal .upsell-product-info {
+            min-width: 0;
+            flex: 1;
+        }
+        #pix-upsell-prod-title {
+            color: #fbbf24;
+            font-size: clamp(0.84rem, 3.4vw, 0.92rem);
+            font-weight: 800;
+            margin: 0 0 4px 0;
+            line-height: 1.2;
+        }
+        #pix-upsell-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5px;
+        }
+        #pix-upsell-modal .upsell-benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+            font-size: clamp(0.73rem, 2.95vw, 0.79rem);
+            color: #f8fafc;
+            font-weight: 500;
+            line-height: 1.24;
+        }
+        #pix-upsell-modal .upsell-benefit-check {
+            color: #10b981;
+            font-weight: 900;
+            font-size: 0.78rem;
+            line-height: 1.2;
+            flex-shrink: 0;
+        }
+
+        /* RODAPÉ INTEGRADO DE RESUMO + TOTAL */
+        #pix-upsell-modal .upsell-order-footer {
+            background: rgba(16, 185, 129, 0.09);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 7px 10px 8px 10px;
+        }
+        #pix-upsell-summary-box {
+            margin-bottom: 6px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed rgba(148, 163, 184, 0.25);
+        }
+        #pix-upsell-modal .upsell-summary-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        #pix-upsell-modal .upsell-summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            font-size: clamp(0.73rem, 2.9vw, 0.78rem);
+            color: #e2e8f0;
+            line-height: 1.25;
+        }
+        #pix-upsell-modal .upsell-summary-row strong {
+            color: #ffffff;
+            font-weight: 800;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        #pix-upsell-modal .upsell-summary-row-highlight,
+        #pix-upsell-modal .upsell-summary-row-highlight strong {
+            color: #34d399 !important;
+            font-weight: 800;
+        }
+        #pix-upsell-modal .upsell-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+        }
+        #pix-upsell-modal .upsell-total-left {
+            flex: 1;
+            min-width: 0;
+        }
+        #pix-upsell-modal .upsell-total-label {
+            color: #f8fafc;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+            line-height: 1.2;
+        }
+        #pix-upsell-modal .upsell-discount-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px;
+            margin-top: 1px;
+        }
+        #pix-upsell-original-price {
+            color: #94a3b8;
+            font-size: 0.68rem;
+            text-decoration: line-through;
+            font-weight: 600;
+            line-height: 1.15;
+        }
+        #pix-upsell-savings {
+            color: #fbbf24;
+            font-size: 0.66rem;
+            font-weight: 800;
+            line-height: 1.15;
+        }
+        #pix-upsell-modal .upsell-total-right {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        #pix-upsell-total-value {
+            color: #34d399;
+            font-size: clamp(1.12rem, 4.5vw, 1.28rem);
+            font-weight: 900;
+            white-space: nowrap;
+            line-height: 1.05;
+            display: block;
+        }
+        #pix-upsell-payment-note {
+            color: #cbd5e1;
+            font-size: 0.62rem;
+            font-weight: 600;
+            display: block;
+            margin-top: 1px;
+        }
+
+        /* BOTÕES DE AÇÃO */
+        #pix-upsell-modal .upsell-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        #pix-upsell-modal .btn-upsell-cta {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.28) !important;
+            border-radius: 11px !important;
+            padding: 9px 10px !important;
+            min-height: 48px !important;
+            width: 100% !important;
+            color: #ffffff !important;
+            box-shadow: 0 5px 16px rgba(16, 185, 129, 0.45) !important;
+            cursor: pointer !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 2px !important;
+            box-sizing: border-box !important;
+            transition: transform 0.15s ease, filter 0.15s ease !important;
+            -webkit-tap-highlight-color: transparent !important;
+        }
+        #pix-upsell-modal .btn-upsell-cta:hover {
+            filter: brightness(1.06);
+        }
+        #pix-upsell-modal .btn-upsell-cta:active {
+            transform: scale(0.985);
+        }
+        #pix-upsell-modal .upsell-cta-main {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: clamp(0.82rem, 3.5vw, 0.92rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+            line-height: 1.18;
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+        }
+        #pix-upsell-modal .upsell-cta-sub {
+            font-size: clamp(0.71rem, 2.85vw, 0.77rem);
+            font-weight: 700;
+            color: #ecfdf5;
+            line-height: 1.15;
+            opacity: 0.96;
+        }
+        #pix-upsell-modal .btn-upsell-reject {
+            background: rgba(30, 41, 59, 0.85) !important;
+            border: 1.5px solid rgba(148, 163, 184, 0.36) !important;
+            border-radius: 10px !important;
+            color: #e2e8f0 !important;
+            font-size: clamp(0.75rem, 3vw, 0.82rem) !important;
+            font-weight: 700 !important;
+            padding: 8px 10px !important;
+            min-height: 38px !important;
+            width: 100% !important;
+            cursor: pointer !important;
+            line-height: 1.2 !important;
+            box-sizing: border-box !important;
+            transition: background 0.15s ease, color 0.15s ease !important;
+            -webkit-tap-highlight-color: transparent !important;
+        }
+        #pix-upsell-modal .btn-upsell-reject:hover {
+            background: rgba(51, 65, 85, 0.92) !important;
+            color: #ffffff !important;
+        }
+
+        /* Celulares estreitos (<= 359px) */
+        @media (max-width: 359px) {
+            #pix-upsell-modal { padding: 6px 6px; }
+            #pix-upsell-modal-box { padding: 9px 9px; }
+            #pix-upsell-modal .upsell-cover-col { width: 72px; }
+            #pix-upsell-img { width: 52px; }
+            #pix-upsell-modal .upsell-product-section { gap: 8px; padding: 7px 8px; }
+        }
+
+        /* Telas baixas (ex: iPhone SE / Android compacto com barra do navegador aberta) */
+        @media (max-height: 620px) {
+            #pix-upsell-modal { padding: 4px 8px; }
+            #pix-upsell-modal-box { padding: 8px 10px; }
+            #pix-upsell-modal .upsell-top-badge { margin-bottom: 2px; padding: 1px 8px; font-size: 0.6rem; }
+            #pix-upsell-title { font-size: 0.88rem; margin-bottom: 2px; }
+            #pix-upsell-description { font-size: 0.72rem; line-height: 1.22; margin-bottom: 5px; }
+            #pix-upsell-img { width: 50px; margin-bottom: 3px; }
+            #pix-upsell-modal .upsell-product-section { padding: 6px 8px; gap: 8px; }
+            #pix-upsell-modal .upsell-benefit-item { font-size: 0.7rem; line-height: 1.18; }
+            #pix-upsell-modal .upsell-order-footer { padding: 5px 8px 6px 8px; }
+            #pix-upsell-summary-box { margin-bottom: 4px; padding-bottom: 4px; }
+            #pix-upsell-modal .upsell-unified-card { margin-bottom: 6px; }
+            #pix-upsell-modal .btn-upsell-cta { padding: 7px 8px !important; min-height: 42px !important; }
+            #pix-upsell-modal .btn-upsell-reject { padding: 6px 8px !important; min-height: 34px !important; }
+            #pix-upsell-modal .upsell-actions { gap: 4px; }
         }
     </style>
 
@@ -4269,7 +4631,7 @@
     })();
     </script>
     <script src="smart_fields.js" defer></script>
-    <script src="script.js?v=60" defer></script>
+    <script src="script.js?v=64" defer></script>
     <script>
     // ─── META ADVANCED MATCHING — INPUT LISTENERS ─────────────────────────────
     // Quando o usuário preenche email/telefone no checkout, atualiza o Pixel

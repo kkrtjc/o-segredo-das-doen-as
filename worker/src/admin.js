@@ -247,7 +247,7 @@ adminRoutes.post('/config/reset', async (c) => {
             },
             'ebook-pintinhos': {
                 title: 'Manual de Manejo de Pintinhos', price: 27.90, originalPrice: 67.00, enabled: true,
-                description: 'Aprenda a melhor forma de tratar e manejar seus pintinhos', cover: 'capadospintinhos.webp', orderBumps: ['ebook-doencas', 'bump-6361', 'bump-ovos']
+                description: 'Aprenda a melhor forma de tratar e manejar seus pintinhos', cover: 'capadospintinhos.webp', orderBumps: ['bump-6361', 'bump-ovos']
             },
             'ebook-manejo': {
                 title: 'Manual de Manejo de Pintinhos', price: 27.90, originalPrice: 67.00, enabled: true,
