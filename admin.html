@@ -2161,11 +2161,12 @@
             let checkouts = 0;
             let salesCount = 0;
             let abandonsCount = 0;
+            let trackedAbandons = 0;
             let revenue = 0;
 
             const isPintinhos = (currentCampaign === 'pintinhos');
 
-            // 1. CÁLCULO DE VISITAS E CHECKOUTS
+            // 1. CÁLCULO DE VISITAS, CHECKOUTS E ABANDONOS RASTREADOS
             if (currentPeriod === 'all') {
                 if (isPintinhos) {
                     if (currentSubPage === 'all') {
@@ -2174,21 +2175,25 @@
                                + (totals.uniqueVisits_pintinhos3 || totals.pageViews_pintinhos3 || 0);
                         pageViews = (totals.pageViews_pintinhos || 0) + (totals.pageViews_pintinhos2 || 0) + (totals.pageViews_pintinhos3 || 0);
                         checkouts = (totals.checkoutOpens_pintinhos || 0) + (totals.checkoutOpens_pintinhos2 || 0) + (totals.checkoutOpens_pintinhos3 || 0);
+                        trackedAbandons = (totals.checkoutAbandons_pintinhos || 0) + (totals.checkoutAbandons_pintinhos2 || 0) + (totals.checkoutAbandons_pintinhos3 || 0);
                     } else {
                         const sfx = currentSubPage === 'pintinhos' ? '_pintinhos' : (currentSubPage === 'pintinhos2' ? '_pintinhos2' : '_pintinhos3');
                         visits = totals['uniqueVisits' + sfx] || totals['pageViews' + sfx] || 0;
                         pageViews = totals['pageViews' + sfx] || 0;
                         checkouts = totals['checkoutOpens' + sfx] || 0;
+                        trackedAbandons = totals['checkoutAbandons' + sfx] || 0;
                     }
                 } else {
                     // Oficial / Doenças (página de vendas externa - isolada de plataforma e app)
                     const platVisits = (totals.uniqueVisits_platform || 0) + (totals.uniqueVisits_app || 0);
                     const platViews = (totals.pageViews_platform || 0) + (totals.pageViews_app || 0);
                     const platCheckouts = (totals.checkoutOpens_platform || 0) + (totals.checkoutOpens_app || 0);
+                    const platAbandons = (totals.checkoutAbandons_platform || 0) + (totals.checkoutAbandons_app || 0);
 
                     visits = Math.max(0, (totals.uniqueVisits || totals.pageViews || 0) - platVisits);
                     pageViews = Math.max(0, (totals.pageViews || 0) - platViews);
                     checkouts = Math.max(0, (totals.checkoutOpens || totals.checkoutStarts || 0) - platCheckouts);
+                    trackedAbandons = Math.max(0, (totals.checkoutAbandons || 0) - platAbandons);
                 }
             } else {
                 dates.forEach(dStr => {
@@ -2200,20 +2205,24 @@
                                     + (d.uniqueVisits_pintinhos3 || d.pageViews_pintinhos3 || 0);
                             pageViews += (d.pageViews_pintinhos || 0) + (d.pageViews_pintinhos2 || 0) + (d.pageViews_pintinhos3 || 0);
                             checkouts += (d.checkoutOpens_pintinhos || 0) + (d.checkoutOpens_pintinhos2 || 0) + (d.checkoutOpens_pintinhos3 || 0);
+                            trackedAbandons += (d.checkoutAbandons_pintinhos || 0) + (d.checkoutAbandons_pintinhos2 || 0) + (d.checkoutAbandons_pintinhos3 || 0);
                         } else {
                             const sfx = currentSubPage === 'pintinhos' ? '_pintinhos' : (currentSubPage === 'pintinhos2' ? '_pintinhos2' : '_pintinhos3');
                             visits += (d['uniqueVisits' + sfx] || d['pageViews' + sfx] || 0);
                             pageViews += (d['pageViews' + sfx] || 0);
                             checkouts += (d['checkoutOpens' + sfx] || 0);
+                            trackedAbandons += (d['checkoutAbandons' + sfx] || 0);
                         }
                     } else {
                         const platVisits = (d.uniqueVisits_platform || 0) + (d.uniqueVisits_app || 0);
                         const platViews = (d.pageViews_platform || 0) + (d.pageViews_app || 0);
                         const platCheckouts = (d.checkoutOpens_platform || 0) + (d.checkoutOpens_app || 0);
+                        const platAbandons = (d.checkoutAbandons_platform || 0) + (d.checkoutAbandons_app || 0);
 
                         visits += Math.max(0, (d.uniqueVisits || d.pageViews || 0) - platVisits);
                         pageViews += Math.max(0, (d.pageViews || 0) - platViews);
                         checkouts += Math.max(0, (d.checkoutOpens || d.checkoutStarts || 0) - platCheckouts);
+                        trackedAbandons += Math.max(0, (d.checkoutAbandons || 0) - platAbandons);
                     }
                 });
             }
@@ -2226,7 +2235,7 @@
                 if (!sale || Number(sale.total) <= 0) return;
                 if (!isDateMatch(sale.date || sale.created_at, dates)) return;
 
-                const saleSite = String(sale.site || '').toLowerCase();
+                const saleSite = String(sale.site || '').toLowerCase().trim();
                 const itemsStr = (sale.items || []).join(' ').toLowerCase();
                 const mainItem = (sale.items && sale.items.length > 0) ? String(sale.items[0]).toLowerCase() : '';
 
@@ -2234,9 +2243,9 @@
                 if (saleSite === 'admin-panel' && Number(sale.total) <= 0) return;
 
                 // Uma venda pertence à campanha PINTINHOS se:
-                // - A origem registrada foi 'pintinhos' (saleSite === 'pintinhos')
-                // - OU o produto comprado for Manual dos Pintinhos (seja da página ou da plataforma)
-                const isPintinhosSale = (saleSite === 'pintinhos') || mainItem.includes('pintinho') || (mainItem.includes('manejo') && !mainItem.includes('cura') && !mainItem.includes('elite'));
+                // - A origem registrada foi pintinhos, pintinhos2, pintinhos3 ou lp-pintinhos
+                // - OU o produto principal comprado foi Manual dos Pintinhos
+                const isPintinhosSale = saleSite.startsWith('pintinhos') || saleSite === 'lp-pintinhos' || mainItem.includes('pintinho') || (mainItem.includes('manejo') && !mainItem.includes('cura') && !mainItem.includes('elite'));
 
                 if (isPintinhos && isPintinhosSale) {
                     const subpage = getPintinhosSubpage(sale);
@@ -2257,23 +2266,23 @@
             const platformAbandons = [];
             const abandonsList = Array.isArray(globalAbandons) ? globalAbandons : [];
 
-            // Identificadores estritos de produto
+            // Identificadores estritos de produto (suporta pintinhos, pintinhos2, pintinhos3 e upsell de doenças aceito na página de pintinhos)
             const isPintinhosItem = (it) => {
-                const s = String(it.site || '').toLowerCase();
-                const p = String(it.product || it.products || '').toLowerCase();
+                const s = String(it.site || '').toLowerCase().trim();
+                const p = String(it.product || it.products || '').toLowerCase().trim();
                 if (s === 'amazon' || p.includes('[amz]')) return false;
-                if (s === 'pintinhos') return true;
-                if (p === 'ebook-pintinhos') return true;
-                if (p.includes('pintinho') && !p.includes('doenca') && !p.includes('cura') && !p.includes('elite')) return true;
+                if (s === 'pintinhos' || s === 'pintinhos2' || s === 'pintinhos3' || s === 'lp-pintinhos' || s.startsWith('pintinhos')) return true;
+                if (p === 'ebook-pintinhos' || p === 'ebook-manejo' || p.startsWith('manual de manejo de pintinhos')) return true;
+                if (p.includes('pintinho') && !p.includes('doenca') && !p.includes('doença') && !p.includes('cura') && !p.includes('elite')) return true;
                 return false;
             };
 
             const isDoencasItem = (it) => {
                 if (isPintinhosItem(it)) return false;
-                const s = String(it.site || '').toLowerCase();
-                const p = String(it.product || it.products || '').toLowerCase();
+                const s = String(it.site || '').toLowerCase().trim();
+                const p = String(it.product || it.products || '').toLowerCase().trim();
                 if (s === 'amazon' || p.includes('[amz]')) return false;
-                if (s === 'text' || s === 'official' || p.includes('doenca') || p.includes('cura') || p.includes('elite') || p.includes('combo')) return true;
+                if (s === 'text' || s === 'official' || p.includes('doenca') || p.includes('doença') || p.includes('cura') || p.includes('elite') || p.includes('combo')) return true;
                 return true;
             };
 
@@ -2293,17 +2302,15 @@
                 if (alreadyPaid) return;
 
                 // FILTRO ESTRITO DA CAMPANHA ATIVA:
-                // Se estamos na aba Pintinhos, SÓ aceita itens de Pintinhos.
-                // Se estamos na aba Doenças, SÓ aceita itens de Doenças.
                 const belongsToCurrentCampaign = isPintinhos ? isPintinhosItem(item) : isDoencasItem(item);
-                if (!belongsToCurrentCampaign) return; // Descarta completamente se for da outra campanha!
+                if (!belongsToCurrentCampaign) return;
 
                 // FILTRO TOTAL E INDEPENDENTE POR SUB-PÁGINA (Página Original, Página 2, Página 3 ou Todas)
                 let itemSubpage = 'pintinhos';
                 if (isPintinhos) {
                     itemSubpage = getPintinhosSubpage(item);
                     if (currentSubPage !== 'all' && currentSubPage !== itemSubpage) {
-                        return; // DESCARTA! Não pertence à página selecionada
+                        return;
                     }
                 }
 
@@ -2312,22 +2319,25 @@
                 const cleanPhone = parsePhone(item.phone);
 
                 if (isPlatform) {
-                    // Da plataforma só exibe na visão 'Todas' para não poluir páginas individuais de teste de tráfego
                     if (cleanPhone && (currentSubPage === 'all' || !isPintinhos)) {
                         platformAbandons.push({ ...item, isFromPlatform: true, subpage: itemSubpage });
                     }
                     return;
                 }
 
-                // Abandono da página de vendas externa da campanha
                 campaignAbandons.push({ ...item, isFromPlatform: false, subpage: itemSubpage });
             });
 
-            // As métricas do funil da campanha mostram ESTRITAMENTE a página externa de tráfego
-            abandonsCount = campaignAbandons.length;
+            // Contabiliza tanto leads com contato salvo quanto saídas de checkout sem pagamento no funil
+            const leadsAbandonsCount = campaignAbandons.length;
+            const unpaidCheckoutsCount = Math.max(0, checkouts - salesCount);
+            const rawFunnelAbandons = checkouts > 0
+                ? Math.min(checkouts, Math.max(unpaidCheckoutsCount, trackedAbandons))
+                : trackedAbandons;
+            abandonsCount = Math.max(leadsAbandonsCount, rawFunnelAbandons);
             const platformWithWppCount = platformAbandons.length;
 
-            // Na lista para recuperação no WhatsApp: junta os da campanha com os da plataforma que têm WhatsApp (ambos pertencentes exclusivamente à campanha ativa!)
+            // Na lista para recuperação no WhatsApp: junta os leads da campanha com os da plataforma que deixaram contato
             const matchingAbandons = [...campaignAbandons, ...platformAbandons];
 
             // 4. TAXAS PERCENTUAIS
@@ -2344,8 +2354,9 @@
             document.getElementById('val-checkouts-sub').textContent = `${checkoutRate}% das visitas`;
 
             document.getElementById('val-abandons').textContent = abandonsCount;
+            const contactSub = ` • ${leadsAbandonsCount} c/ contato`;
             const platSub = platformWithWppCount > 0 ? ` (+${platformWithWppCount} da plataforma)` : '';
-            document.getElementById('val-abandons-sub').textContent = `${abandonRate}% do checkout${platSub}`;
+            document.getElementById('val-abandons-sub').textContent = `${abandonRate}% do checkout${contactSub}${platSub}`;
 
             document.getElementById('val-sales').textContent = salesCount;
             document.getElementById('val-sales-sub').textContent = `${paidRate}% conversão checkout`;
@@ -2361,7 +2372,7 @@
             renderSalesList(matchingSales);
 
             // 7. RENDERIZAR LISTA DE ABANDONOS
-            renderAbandonsList(matchingAbandons);
+            renderAbandonsList(matchingAbandons, abandonsCount);
         }
 
         function renderSalesList(sales) {
@@ -2517,12 +2528,16 @@
             document.body.removeChild(textArea);
         }
 
-        function renderAbandonsList(abandons) {
+        function renderAbandonsList(abandons, totalFunnelAbandons = 0) {
             const container = document.getElementById('abandons-list');
             if (!container) return;
 
             if (abandons.length === 0) {
-                container.innerHTML = '<div class="empty-state">Nenhum abandono registrado para este produto no período.</div>';
+                if (totalFunnelAbandons > 0) {
+                    container.innerHTML = `<div class="empty-state">Houve <strong>${totalFunnelAbandons}</strong> saída(s) de checkout no período, mas os visitantes fecharam a tela antes de preencher WhatsApp, e-mail ou CPF.</div>`;
+                } else {
+                    container.innerHTML = '<div class="empty-state">Nenhum abandono registrado para este produto no período.</div>';
+                }
                 return;
             }
 

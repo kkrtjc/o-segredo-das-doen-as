@@ -54,6 +54,49 @@ function applyDynamicPrices(productData) {
 // --- INIT: CHECK PENDING PIX (Recover Logic) ---
     // Wrap everything in a robust initialization
     const initPage = async () => {
+        // 0. IMMEDIATE SYNCHRONOUS INIT (Garante máscaras e rastreio de abandono desde o milissegundo 0)
+        try { initFAQ(); } catch (e) {}
+        try { initSmoothScroll(); } catch (e) {}
+        try { initComparisonSlider(); } catch (e) {}
+        try { initStickyCTA(); } catch (e) {}
+        try { initLazyLoading(); } catch (e) {}
+        try { initImageTransitions(); } catch (e) {}
+        try { initHelpBubbles(); } catch (e) {}
+        try { setupFields(); } catch (e) {}
+        try { initCheckoutAbandonAutoTracking(); } catch (e) {}
+        try { initMobileFixes(); } catch (e) {}
+        try { renderHomeProducts(); } catch (e) {}
+
+        // LAZY VIDEO
+        try {
+            const lazyVideo = document.getElementById('vsl-video');
+            if (lazyVideo && 'IntersectionObserver' in window) {
+                const videoObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const source = lazyVideo.querySelector('source');
+                            if (source && source.dataset.src) {
+                                source.src = source.dataset.src;
+                                lazyVideo.load();
+                            }
+                            observer.unobserve(lazyVideo);
+                        }
+                    });
+                }, { rootMargin: '200px' });
+                videoObserver.observe(lazyVideo);
+            }
+        } catch (e) {}
+
+        // CTA CLICK TRACKING (Imediato)
+        try {
+            document.querySelectorAll('a[href^="#offer"]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const ctaId = btn.getAttribute('data-cta') || 'generic_cta';
+                    trackEvent('cta_click', null, ctaId);
+                });
+            });
+        } catch (e) {}
+
         // 1. UNIQUE VISITOR + SESSÃO TRACKING
         try {
             const todayStr = new Date().toISOString().split('T')[0];
@@ -66,19 +109,11 @@ function applyDynamicPrices(productData) {
                 await trackEvent('unique_visit');
                 localStorage.setItem('mura_visita_hoje', todayStr);
             }
-
-            // 2. CTA CLICK TRACKING
-            document.querySelectorAll('a[href^="#offer"]').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const ctaId = btn.getAttribute('data-cta') || 'generic_cta';
-                    trackEvent('cta_click', null, ctaId);
-                });
-            });
         } catch (e) {
             console.warn('[TRACKING] Failed:', e);
         }
 
-        // 3. PIX RECOVERY
+        // 2. PIX RECOVERY
         const cached = localStorage.getItem('active_pix_session');
         if (cached) {
             try {
@@ -103,7 +138,7 @@ function applyDynamicPrices(productData) {
             } catch (e) { localStorage.removeItem('active_pix_session'); }
         }
 
-        // 4. PRE-FETCH
+        // 3. PRE-FETCH
         const productsToPreload = ['ebook-doencas', 'combo-elite', 'ebook-manejo', 'combo-plataforma'];
         productsToPreload.forEach(async (id) => {
             try {
@@ -117,39 +152,6 @@ function applyDynamicPrices(productData) {
                 }
             } catch (e) { console.warn(`[PREFETCH] Failed: ${id}`); }
         });
-
-        // 5. COMPONENTS INIT
-        initFAQ();
-        initSmoothScroll();
-        initComparisonSlider();
-        initStickyCTA();
-        initLazyLoading();
-        initImageTransitions();
-        initHelpBubbles();
-        setupFields();
-        renderHomeProducts();
-        initCheckoutAbandonAutoTracking();
-
-        // 6. LAZY VIDEO
-        const lazyVideo = document.getElementById('vsl-video');
-        if (lazyVideo && 'IntersectionObserver' in window) {
-            const videoObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const source = lazyVideo.querySelector('source');
-                        if (source && source.dataset.src) {
-                            source.src = source.dataset.src;
-                            lazyVideo.load();
-                        }
-                        observer.unobserve(lazyVideo);
-                    }
-                });
-            }, { rootMargin: '200px' });
-            videoObserver.observe(lazyVideo);
-        }
-
-        // 7. GLOBAL MOBILE FIXES
-        initMobileFixes();
 
         // 8. DIRECT CHECKOUT LINK
         const urlParams = new URLSearchParams(window.location.search);
@@ -289,18 +291,27 @@ function initMobileFixes() {
 const checkoutModal = document.getElementById('checkout-page');
 
 // --- TRACKING ENGINE ---
-async function trackEvent(type, isMobileManual = null, ctaId = null, details = null) {
+async function trackEvent(type, isMobileManual = null, ctaId = null, details = null, useBeacon = false) {
     const isMobile = isMobileManual !== null ? isMobileManual : (
         window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
     );
 
     const body = JSON.stringify({ type, isMobile, ctaId, details, site: PAGE_SOURCE });
 
+    if (useBeacon && typeof navigator !== 'undefined' && navigator.sendBeacon) {
+        try {
+            const sent = navigator.sendBeacon(`${API_URL}/api/track`, new Blob([body], { type: 'text/plain;charset=UTF-8' }));
+            if (sent) return;
+        } catch (e) {}
+    }
+
     for (let attempt = 1; attempt <= 2; attempt++) {
         try {
             const resp = await fetch(`${API_URL}/api/track`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+                body,
+                keepalive: true
             });
             if (resp.ok) return;
         } catch (e) {
@@ -535,6 +546,8 @@ async function startCheckoutProcess(productId, forceBumps = []) {
     trackEvent('checkout_open');
     
     sessionStorage.setItem('mura_modal_open', 'true');
+    sessionStorage.removeItem('mura_abandon_tracked');
+    sessionStorage.removeItem('mura_checkout_paid');
     currentFacebookEventId = generateEventID();
     // InitiateCheckout will be fired in loadCheckoutData once we have the price and name
 
@@ -778,10 +791,10 @@ function renderOrderBumps(bumps) {
     const bumpHeader = `
         <div style="text-align: center; margin-bottom: 12px; padding: 10px 14px; background: rgba(245, 158, 11, 0.08); border-radius: 10px; border: 1px solid rgba(245, 158, 11, 0.25);">
             <p style="color: #fbbf24; font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 2px 0; line-height: 1.35;">
-                <i class="fa-solid fa-bolt" style="color: #fbbf24; margin-right: 5px;"></i> Aproveite estas ofertas com desconto especial
+                <i class="fa-solid fa-bolt" style="color: #fbbf24; margin-right: 5px;"></i> APROVEITE ESTAS OFERTAS OPCIONAIS COM DESCONTO ESPECIAL
             </p>
             <p style="color: #cbd5e1; font-size: 0.72rem; font-weight: 500; margin: 0; line-height: 1.3;">
-                Adicione ao seu pedido com apenas 1 clique antes de finalizar:
+                Clique no botão "Adicionar" ao lado apenas se quiser incluir:
             </p>
         </div>
     `;
@@ -820,7 +833,7 @@ function renderOrderBumps(bumps) {
         }
 
         return `
-            <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" onclick="toggleBump('${bump.id}')" style="position:relative!important;display:flex!important;flex-direction:row!important;align-items:stretch!important;justify-content:flex-end!important;width:100%!important;min-height:120px!important;padding:0!important;border-radius:12px!important;background:#0b1120!important;border:1.5px solid ${isSelected ? '#10b981' : 'rgba(255,255,255,0.12)'}!important;cursor:pointer!important;overflow:hidden!important;box-shadow:0 4px 16px rgba(0,0,0,0.45)!important;margin-bottom:12px!important;box-sizing:border-box!important;-webkit-tap-highlight-color:transparent!important;">
+            <div id="bump-card-${bump.id}" class="order-bump-container ${isSelected ? 'selected' : ''}" style="position:relative!important;display:flex!important;flex-direction:row!important;align-items:stretch!important;justify-content:flex-end!important;width:100%!important;min-height:122px!important;padding:0!important;border-radius:12px!important;background:${isSelected ? '#062e22' : '#0b1120'}!important;border:1.5px solid ${isSelected ? '#10b981' : 'rgba(255,255,255,0.12)'}!important;cursor:default!important;overflow:hidden!important;box-shadow:0 4px 16px rgba(0,0,0,0.45)!important;margin-bottom:12px!important;box-sizing:border-box!important;-webkit-tap-highlight-color:transparent!important;">
                 <input type="checkbox" id="bump-chk-${bump.id}" ${isSelected ? 'checked' : ''} style="display: none;">
 
                 <!-- Foto no Fundo (lado esquerdo com fusao suave) -->
@@ -833,27 +846,29 @@ function renderOrderBumps(bumps) {
 
                 <!-- Conteúdo no Lado Direito -->
                 <div class="bump-content-right" style="position:relative!important;z-index:3!important;width:68%!important;min-width:0!important;margin-left:auto!important;padding:10px 12px 10px 6px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;box-sizing:border-box!important;text-align:left!important;">
-                    <!-- Topo: Badge + Botao Adicionar -->
-                    <div class="bump-top-row" style="display:flex!important;align-items:center!important;justify-content:space-between!important;gap:6px!important;margin-bottom:4px!important;">
+                    <!-- Topo: Apenas Badge (Card não é clicável para evitar seleção acidental) -->
+                    <div class="bump-top-row" style="display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:6px!important;margin-bottom:4px!important;">
                         <span class="bump-badge-tag" style="display:inline-flex!important;align-items:center!important;gap:4px!important;background:${isSelected ? 'rgba(16,185,129,0.22)' : 'rgba(245,158,11,0.18)'}!important;color:${isSelected ? '#34d399' : '#fbbf24'}!important;border:1px solid ${isSelected ? 'rgba(16,185,129,0.45)' : 'rgba(245,158,11,0.4)'}!important;font-size:0.62rem!important;font-weight:800!important;padding:2px 7px!important;border-radius:5px!important;text-transform:uppercase!important;letter-spacing:0.4px!important;line-height:1.1!important;white-space:nowrap!important;">
                             <i class="fa-solid ${badgeIcon}" style="font-size:0.6rem;"></i> ${badgeLabel}
                         </span>
-                        <div class="bump-action-btn" style="display:inline-flex!important;align-items:center!important;gap:4px!important;padding:3px 8px!important;border-radius:5px!important;font-size:0.65rem!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:0.3px!important;transition:all 0.2s ease!important;border:1px solid ${isSelected ? '#10b981' : 'rgba(255,255,255,0.18)'}!important;background:${isSelected ? '#10b981' : 'rgba(255,255,255,0.08)'}!important;color:${isSelected ? '#ffffff' : '#f1f5f9'}!important;white-space:nowrap!important;">
-                            <i class="${isSelected ? 'fa-solid fa-check' : 'fa-solid fa-plus'}" style="font-size:0.7rem;"></i>
-                            <span>${isSelected ? 'Adicionado' : 'Adicionar'}</span>
-                        </div>
                     </div>
 
                     <!-- Titulo e Descricao Racional sem quebras estranhas -->
                     <div>
                         <div class="bump-title-text" style="color:#ffffff!important;font-size:0.88rem!important;font-weight:800!important;line-height:1.25!important;letter-spacing:-0.2px!important;margin:0 0 3px 0!important;word-break:normal!important;overflow-wrap:break-word!important;white-space:normal!important;text-shadow:0 1px 3px rgba(0,0,0,0.8)!important;">${cleanTitle}</div>
-                        <div class="bump-desc-text" style="font-size:0.72rem!important;line-height:1.35!important;color:#cbd5e1!important;margin:0 0 4px 0!important;word-break:normal!important;overflow-wrap:break-word!important;white-space:normal!important;text-shadow:0 1px 2px rgba(0,0,0,0.8)!important;">${desc}</div>
+                        <div class="bump-desc-text" style="font-size:0.72rem!important;line-height:1.35!important;color:#cbd5e1!important;margin:0 0 6px 0!important;word-break:normal!important;overflow-wrap:break-word!important;white-space:normal!important;text-shadow:0 1px 2px rgba(0,0,0,0.8)!important;">${desc}</div>
                     </div>
 
-                    <!-- Linha de Preco -->
-                    <div class="bump-pricing-row" style="display:flex!important;align-items:baseline!important;gap:6px!important;margin-top:auto!important;padding-top:3px!important;border-top:1px solid rgba(255,255,255,0.08)!important;">
-                        <span class="bump-old-price" style="color:#94a3b8!important;font-size:0.68rem!important;text-decoration:line-through!important;font-weight:500!important;">De R$ ${oldPrice}</span>
-                        <span class="bump-new-price" style="color:#34d399!important;font-size:0.98rem!important;font-weight:900!important;line-height:1!important;letter-spacing:-0.2px!important;">+ R$ ${formatBRL(bump.price).replace('R$ ', '')}</span>
+                    <!-- Linha Inferior: Preço à esquerda + Botão Adicionar ao lado direito (ÚNICO clicável) -->
+                    <div class="bump-pricing-row" style="display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;margin-top:auto!important;padding-top:6px!important;border-top:1px solid rgba(255,255,255,0.08)!important;">
+                        <div style="display:flex!important;flex-direction:column!important;align-items:flex-start!important;line-height:1.15!important;min-width:0!important;">
+                            <span class="bump-old-price" style="color:#94a3b8!important;font-size:0.66rem!important;text-decoration:line-through!important;font-weight:500!important;white-space:nowrap!important;">De R$ ${oldPrice}</span>
+                            <span class="bump-new-price" style="color:#34d399!important;font-size:0.96rem!important;font-weight:900!important;line-height:1.1!important;letter-spacing:-0.2px!important;white-space:nowrap!important;">+ R$ ${formatBRL(bump.price).replace('R$ ', '')}</span>
+                        </div>
+                        <button type="button" class="bump-action-btn" aria-pressed="${isSelected ? 'true' : 'false'}" onclick="event.stopPropagation(); toggleBump('${bump.id}')" style="display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;min-height:36px!important;padding:7px 13px!important;border-radius:8px!important;font-size:0.74rem!important;font-weight:800!important;font-family:inherit!important;text-transform:uppercase!important;letter-spacing:0.3px!important;cursor:pointer!important;transition:all 0.2s ease!important;border:1.5px solid #10b981!important;background:${isSelected ? '#10b981' : 'rgba(16,185,129,0.14)'}!important;color:${isSelected ? '#ffffff' : '#34d399'}!important;box-shadow:${isSelected ? '0 3px 10px rgba(16,185,129,0.4)' : 'none'}!important;white-space:nowrap!important;flex-shrink:0!important;-webkit-tap-highlight-color:transparent!important;">
+                            <i class="${isSelected ? 'fa-solid fa-check' : 'fa-solid fa-plus'}" style="font-size:0.74rem;pointer-events:none;"></i>
+                            <span style="pointer-events:none;">${isSelected ? 'Adicionado' : 'Adicionar'}</span>
+                        </button>
                     </div>
                 </div>
             </div>`;
@@ -874,9 +889,12 @@ function toggleBump(bumpId) {
         cart.bumps.push(bumpId);
     }
 
+    const isSelected = cart.bumps.includes(bumpId);
+    const chk = document.getElementById(`bump-chk-${bumpId}`);
+    if (chk) chk.checked = isSelected;
+
     const card = document.getElementById(`bump-card-${bumpId}`);
     if (card) {
-        const isSelected = cart.bumps.includes(bumpId);
         if (isSelected) {
             card.classList.add('selected');
             card.style.borderColor = '#10b981';
@@ -893,16 +911,19 @@ function toggleBump(bumpId) {
 
         const btn = card.querySelector('.bump-action-btn');
         if (btn) {
+            btn.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
             if (isSelected) {
-                btn.innerHTML = `<i class="fa-solid fa-check" style="font-size:0.7rem;"></i> <span>Adicionado</span>`;
+                btn.innerHTML = `<i class="fa-solid fa-check" style="font-size:0.74rem;pointer-events:none;"></i> <span style="pointer-events:none;">Adicionado</span>`;
                 btn.style.background = '#10b981';
                 btn.style.borderColor = '#10b981';
                 btn.style.color = '#ffffff';
+                btn.style.boxShadow = '0 3px 10px rgba(16,185,129,0.4)';
             } else {
-                btn.innerHTML = `<i class="fa-solid fa-plus" style="font-size:0.7rem;"></i> <span>Adicionar</span>`;
-                btn.style.background = 'rgba(255,255,255,0.08)';
-                btn.style.borderColor = 'rgba(255,255,255,0.18)';
-                btn.style.color = '#f1f5f9';
+                btn.innerHTML = `<i class="fa-solid fa-plus" style="font-size:0.74rem;pointer-events:none;"></i> <span style="pointer-events:none;">Adicionar</span>`;
+                btn.style.background = 'rgba(16,185,129,0.14)';
+                btn.style.borderColor = '#10b981';
+                btn.style.color = '#34d399';
+                btn.style.boxShadow = 'none';
             }
         }
     }
@@ -1231,10 +1252,9 @@ function showSkeletons(container, count = 3) {
 
 // --- GLOBALS ---
 function closeCheckout() {
-    captureAbandonedLead({
-        type: 'checkout_closed',
-        reason: 'Fechou o checkout no X / Voltar'
-    });
+    if (typeof window.recordCheckoutAbandon === 'function') {
+        window.recordCheckoutAbandon('Fechou o checkout no X / Voltar', false);
+    }
     const checkoutModal = document.getElementById('checkout-page');
     if (checkoutModal) {
         checkoutModal.classList.remove('active');
@@ -1973,6 +1993,8 @@ async function handlePayment(method) {
             console.log("Resposta API:", result);
 
             if (result.status === 'approved') {
+                sessionStorage.setItem('mura_checkout_paid', 'true');
+                sessionStorage.removeItem('mura_modal_open');
                 const c = getCurrentCustomerData();
                 // Salva dados no sessionStorage para a página de obrigado
                 sessionStorage.setItem('obrigado_name', c.name || '');
@@ -2256,21 +2278,23 @@ function calculateCurrentCartTotal() {
     }
 }
 
-let lastAbandonPayload = '';
+let lastAbandonSignature = '';
 let lastAbandonTime = 0;
 
 async function captureAbandonedLead(extra = {}) {
     try {
-        const name = (extra.name || document.getElementById('payer-name')?.value || document.getElementById('card-holder')?.value || '').trim();
-        const email = (extra.email || document.getElementById('payer-email')?.value || document.getElementById('card-email')?.value || '').trim();
-        const rawPhone = (extra.phone || document.getElementById('payer-phone')?.value || document.getElementById('card-phone')?.value || '').trim();
+        if (sessionStorage.getItem('mura_checkout_paid') === 'true') return;
+
+        const name = (extra.name || document.getElementById('payer-name')?.value || document.getElementById('card-holder')?.value || document.getElementById('customer-name')?.value || '').trim();
+        const email = (extra.email || document.getElementById('payer-email')?.value || document.getElementById('card-email')?.value || document.getElementById('customer-email')?.value || '').trim();
+        const rawPhone = (extra.phone || document.getElementById('payer-phone')?.value || document.getElementById('card-phone')?.value || document.getElementById('customer-phone')?.value || '').trim();
         const cleanPhone = rawPhone.replace(/\D/g, '');
-        const rawCpf = (extra.cpf || document.getElementById('payer-cpf')?.value || document.getElementById('card-cpf')?.value || '').trim();
+        const rawCpf = (extra.cpf || document.getElementById('payer-cpf')?.value || document.getElementById('card-cpf')?.value || document.getElementById('customer-cpf')?.value || '').trim();
         const cleanCpf = rawCpf.replace(/\D/g, '');
-        const productId = extra.product || (cart && cart.mainProduct && cart.mainProduct.id) || (cart && cart.id) || 'combo-plataforma';
+        const productId = extra.product || (cart && cart.mainProduct && cart.mainProduct.id) || (cart && cart.id) || (PAGE_SOURCE.startsWith('pintinhos') ? 'ebook-pintinhos' : 'combo-plataforma');
         const total = extra.total || calculateCurrentCartTotal();
 
-        // Só captura se tiver pelo menos telefone (>= 8 dígitos) OU email válido OU CPF
+        // Só captura lead nominal se tiver telefone (>= 8 dígitos) OU email válido OU CPF (11 dígitos)
         const hasContact = cleanPhone.length >= 8 || (email.length >= 5 && email.includes('@')) || cleanCpf.length >= 11;
         if (!hasContact) return;
 
@@ -2288,37 +2312,65 @@ async function captureAbandonedLead(extra = {}) {
             site: typeof PAGE_SOURCE !== 'undefined' ? PAGE_SOURCE : 'app'
         };
 
-        const payloadStr = JSON.stringify(payload);
+        const signature = JSON.stringify([payload.name, payload.email, cleanPhone, cleanCpf, payload.product, payload.total, payload.pixGenerated, payload.pixId]);
         const now = Date.now();
-        // Evita chamadas duplicadas idênticas em menos de 2.5 segundos
-        if (payloadStr === lastAbandonPayload && (now - lastAbandonTime) < 2500) {
+        if (!extra.force && !extra.useBeacon && !extra.pixGenerated && signature === lastAbandonSignature && (now - lastAbandonTime) < 2500) {
             return;
         }
-        lastAbandonPayload = payloadStr;
+        lastAbandonSignature = signature;
         lastAbandonTime = now;
 
-        console.log("🛒 [ABANDON] Salvando lead abandonado no painel:", payload.name, payload.phone, payload.reason);
-
+        const payloadStr = JSON.stringify(payload);
         const endpoint = `${API_URL}/api/abandon`;
 
-        if (extra.useBeacon && navigator.sendBeacon) {
-            const blob = new Blob([payloadStr], { type: 'application/json' });
-            navigator.sendBeacon(endpoint, blob);
-        } else {
-            await fetch(endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: payloadStr,
-                keepalive: true
-            }).catch(e => console.warn("Falha ao registrar abandono", e));
+        // text/plain evita CORS Preflight (OPTIONS) no mobile/Instagram WebView durante fechamento de aba
+        if (extra.useBeacon && typeof navigator !== 'undefined' && navigator.sendBeacon) {
+            const blob = new Blob([payloadStr], { type: 'text/plain;charset=UTF-8' });
+            const queued = navigator.sendBeacon(endpoint, blob);
+            if (queued) return;
         }
+
+        await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+            body: payloadStr,
+            keepalive: true
+        }).catch(e => console.warn('Falha ao registrar abandono', e));
     } catch (e) {
-        console.warn("Erro ao capturar abandono", e);
+        console.warn('Erro ao capturar abandono', e);
     }
 }
 
+function recordCheckoutAbandon(reason = 'Saiu do checkout sem finalizar', useBeacon = false) {
+    try {
+        if (sessionStorage.getItem('mura_checkout_paid') === 'true') return;
+        const isModalOpen = sessionStorage.getItem('mura_modal_open') === 'true' ||
+            document.getElementById('checkout-page')?.classList.contains('active');
+        if (!isModalOpen) return;
+
+        captureAbandonedLead({
+            type: 'checkout_abandon',
+            reason,
+            useBeacon,
+            force: true
+        });
+
+        if (sessionStorage.getItem('mura_abandon_tracked') !== 'true') {
+            sessionStorage.setItem('mura_abandon_tracked', 'true');
+            trackEvent('checkout_abandon', null, null, reason, useBeacon);
+        }
+    } catch (e) {
+        console.warn('Erro ao contabilizar abandono:', e);
+    }
+}
+window.recordCheckoutAbandon = recordCheckoutAbandon;
+
+let abandonTrackingInitialized = false;
 // Auto-tracking em tempo real nos campos do checkout
 function initCheckoutAbandonAutoTracking() {
+    if (abandonTrackingInitialized) return;
+    abandonTrackingInitialized = true;
+
     const fields = [
         'payer-name', 'payer-email', 'payer-phone', 'payer-cpf',
         'card-holder', 'card-email', 'card-phone', 'card-cpf'
@@ -2326,31 +2378,35 @@ function initCheckoutAbandonAutoTracking() {
 
     let phoneTimer = null;
     let emailTimer = null;
+    let cpfTimer = null;
+    let nameTimer = null;
 
     fields.forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
 
-        // Captura ao sair do campo (blur)
-        el.addEventListener('blur', () => {
+        // Captura ao sair do campo (blur) e também em Autofill de celular (change)
+        const onFieldCommit = () => {
             captureAbandonedLead({
                 type: 'checkout_blur',
-                reason: `Preencheu campo e avançou`
+                reason: 'Preencheu campo no checkout'
             });
-        });
+        };
+        el.addEventListener('blur', onFieldCommit);
+        el.addEventListener('change', onFieldCommit);
 
-        // Captura em tempo real no WhatsApp enquanto digita (debounce de 1.2s)
+        // Captura em tempo real no WhatsApp enquanto digita (>= 8 dígitos, debounce 900ms)
         if (id.includes('phone')) {
             el.addEventListener('input', () => {
                 clearTimeout(phoneTimer);
                 const numbers = el.value.replace(/\D/g, '');
-                if (numbers.length >= 10) {
+                if (numbers.length >= 8) {
                     phoneTimer = setTimeout(() => {
                         captureAbandonedLead({
                             type: 'checkout_typing',
                             reason: 'Digitou WhatsApp no formulário'
                         });
-                    }, 1200);
+                    }, 900);
                 }
             });
         }
@@ -2365,38 +2421,53 @@ function initCheckoutAbandonAutoTracking() {
                             type: 'checkout_typing',
                             reason: 'Digitou e-mail no formulário'
                         });
-                    }, 1500);
+                    }, 1100);
+                }
+            });
+        }
+
+        // Captura em tempo real no CPF completo (11 dígitos)
+        if (id.includes('cpf')) {
+            el.addEventListener('input', () => {
+                clearTimeout(cpfTimer);
+                const digits = el.value.replace(/\D/g, '');
+                if (digits.length === 11) {
+                    cpfTimer = setTimeout(() => {
+                        captureAbandonedLead({
+                            type: 'checkout_typing',
+                            reason: 'Digitou CPF no formulário'
+                        });
+                    }, 900);
+                }
+            });
+        }
+
+        // Atualiza o nome se o cliente preencher ou corrigir depois do telefone/CPF
+        if (id.includes('name') || id.includes('holder')) {
+            el.addEventListener('input', () => {
+                clearTimeout(nameTimer);
+                if (el.value.trim().length >= 3) {
+                    nameTimer = setTimeout(() => {
+                        captureAbandonedLead({
+                            type: 'checkout_typing',
+                            reason: 'Preencheu nome no formulário'
+                        });
+                    }, 1200);
                 }
             });
         }
     });
 
-    // Mobile: detecta quando minimiza o navegador ou desliga a tela do celular
+    // Mobile: detecta quando minimiza o navegador, troca para outro app ou desliga a tela do celular
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'hidden') {
-            const isModalOpen = sessionStorage.getItem('mura_modal_open') === 'true' || 
-                document.getElementById('checkout-page')?.classList.contains('active');
-            if (isModalOpen) {
-                captureAbandonedLead({
-                    type: 'checkout_tab_hidden',
-                    reason: 'Minimizou navegador ou desligou tela do celular',
-                    useBeacon: true
-                });
-            }
+            recordCheckoutAbandon('Minimizou navegador ou desligou tela do celular', true);
         }
     });
 
-    // Mobile: detecta fechamento da aba / saída de página
+    // Mobile/iOS: detecta fechamento da aba / saída de página
     window.addEventListener('pagehide', () => {
-        const isModalOpen = sessionStorage.getItem('mura_modal_open') === 'true' || 
-            document.getElementById('checkout-page')?.classList.contains('active');
-        if (isModalOpen) {
-            captureAbandonedLead({
-                type: 'checkout_page_exit',
-                reason: 'Fechou aba/navegador no celular',
-                useBeacon: true
-            });
-        }
+        recordCheckoutAbandon('Fechou aba/navegador no celular', true);
     });
 }
 
@@ -2412,21 +2483,19 @@ document.querySelectorAll('.method-btn').forEach(b => b.addEventListener('click'
 document.querySelector('.close-modal')?.addEventListener('click', async () => {
     // TRACK ABANDON
     if (sessionStorage.getItem('mura_modal_open') === 'true') {
-        trackEvent('checkout_abandon');
-        await captureAbandonedLead(); // Captura os dados antes de fechar
+        recordCheckoutAbandon('Fechou o modal de checkout', false);
         sessionStorage.removeItem('mura_modal_open');
         sessionStorage.removeItem('checkout_started');
     }
 
-    checkoutModal.classList.remove('active');
-    // document.body.style.overflow = ''; // Fixed iOS Safari bug
+    if (checkoutModal) checkoutModal.classList.remove('active');
     document.documentElement.style.overflow = '';
 
     // RESET BUTTONS STATE (Critical Fix)
     const btnPix = document.getElementById('btn-pay-pix');
     if (btnPix) {
         btnPix.disabled = false;
-        btnPix.innerText = 'GERAR PIX AGORA'; // Or original text
+        btnPix.innerText = 'GERAR PIX AGORA';
     }
     const btnCard = document.getElementById('btn-pay-card');
     if (btnCard) {
@@ -2441,8 +2510,8 @@ document.querySelector('.close-modal')?.addEventListener('click', async () => {
 
     // Reset State logic for next open
     setTimeout(() => {
-        document.getElementById('checkout-main-view').classList.remove('hidden');
-        document.getElementById('pix-result').classList.add('hidden');
+        document.getElementById('checkout-main-view')?.classList.remove('hidden');
+        document.getElementById('pix-result')?.classList.add('hidden');
         const boletoResult = document.getElementById('boleto-result');
         if (boletoResult) boletoResult.classList.add('hidden');
         const boletoImg = document.getElementById('boleto-display-img');
@@ -2458,11 +2527,9 @@ document.querySelector('.close-modal')?.addEventListener('click', async () => {
     }, 300);
 });
 
-// Captura se fechar a aba/janela
+// Captura se fechar a aba/janela no desktop/Android
 window.addEventListener('beforeunload', () => {
-    if (sessionStorage.getItem('mura_modal_open') === 'true') {
-        captureAbandonedLead();
-    }
+    recordCheckoutAbandon('Fechou a janela do checkout', true);
 });
 
 // --- 4. MASKS ---
@@ -2661,6 +2728,8 @@ function showPixResult(data, items) {
                 if (window.activePixPoll) clearTimeout(window.activePixPoll);
                 window.activePixPoll = null;
                 localStorage.removeItem('active_pix_session');
+                sessionStorage.setItem('mura_checkout_paid', 'true');
+                sessionStorage.removeItem('mura_modal_open');
 
                 // 🔴 FIX: Marca o abandono como PAGO para não poluir o painel
                 try {

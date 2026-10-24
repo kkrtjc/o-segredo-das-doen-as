@@ -1893,24 +1893,18 @@
                 align-items: stretch !important;
                 justify-content: flex-end !important;
                 width: 100% !important;
-                min-height: 120px !important;
+                min-height: 122px !important;
                 padding: 0 !important;
                 border-radius: 12px !important;
                 background: #0b1120 !important;
                 border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
-                cursor: pointer !important;
+                cursor: default !important;
                 overflow: hidden !important;
                 box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45) !important;
                 margin-bottom: 0 !important;
                 box-sizing: border-box !important;
-                transition: all 0.25s ease !important;
+                transition: border-color 0.2s ease, background 0.2s ease !important;
                 -webkit-tap-highlight-color: transparent !important;
-            }
-
-            #checkout-page .order-bump-container:hover {
-                border-color: rgba(251, 191, 36, 0.45) !important;
-                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55) !important;
-                transform: translateY(-1px) !important;
             }
 
             #checkout-page .order-bump-container.selected {
@@ -1924,7 +1918,7 @@
                 position: absolute !important;
                 top: 0 !important;
                 left: 0 !important;
-                width: 44% !important;
+                width: 42% !important;
                 height: 100% !important;
                 z-index: 1 !important;
                 pointer-events: none !important;
@@ -1941,11 +1935,6 @@
                 object-position: center left !important;
                 display: block !important;
                 opacity: 0.95 !important;
-                transition: transform 0.3s ease !important;
-            }
-
-            #checkout-page .order-bump-container:hover .bump-bg-photo img {
-                transform: scale(1.04) !important;
             }
 
             #checkout-page .bump-bg-overlay {
@@ -1963,7 +1952,7 @@
             #checkout-page .bump-content-right {
                 position: relative !important;
                 z-index: 3 !important;
-                width: 64% !important;
+                width: 68% !important;
                 min-width: 0 !important;
                 margin-left: auto !important;
                 padding: 10px 12px 10px 6px !important;
@@ -1977,7 +1966,7 @@
             #checkout-page .bump-top-row {
                 display: flex !important;
                 align-items: center !important;
-                justify-content: space-between !important;
+                justify-content: flex-start !important;
                 gap: 6px !important;
                 margin-bottom: 4px !important;
             }
@@ -2008,25 +1997,40 @@
             #checkout-page .bump-action-btn {
                 display: inline-flex !important;
                 align-items: center !important;
-                gap: 4px !important;
-                padding: 3px 8px !important;
-                border-radius: 5px !important;
-                font-size: 0.65rem !important;
+                justify-content: center !important;
+                gap: 5px !important;
+                min-height: 36px !important;
+                padding: 7px 13px !important;
+                border-radius: 8px !important;
+                font-size: 0.74rem !important;
                 font-weight: 800 !important;
+                font-family: inherit !important;
                 text-transform: uppercase !important;
                 letter-spacing: 0.3px !important;
+                cursor: pointer !important;
                 transition: all 0.2s ease !important;
-                border: 1px solid rgba(255, 255, 255, 0.18) !important;
-                background: rgba(255, 255, 255, 0.08) !important;
-                color: #f1f5f9 !important;
+                border: 1.5px solid #10b981 !important;
+                background: rgba(16, 185, 129, 0.14) !important;
+                color: #34d399 !important;
                 white-space: nowrap !important;
+                flex-shrink: 0 !important;
+                -webkit-tap-highlight-color: transparent !important;
+            }
+
+            #checkout-page .bump-action-btn:hover {
+                background: rgba(16, 185, 129, 0.26) !important;
+                transform: translateY(-1px) !important;
+            }
+
+            #checkout-page .bump-action-btn:active {
+                transform: scale(0.97) !important;
             }
 
             #checkout-page .order-bump-container.selected .bump-action-btn {
                 background: #10b981 !important;
                 border-color: #10b981 !important;
                 color: #ffffff !important;
-                box-shadow: 0 2px 8px rgba(16, 185, 129, 0.45) !important;
+                box-shadow: 0 3px 10px rgba(16, 185, 129, 0.4) !important;
             }
 
             #checkout-page .bump-title-text {
@@ -2045,7 +2049,7 @@
                 font-size: 0.72rem !important;
                 line-height: 1.35 !important;
                 color: #cbd5e1 !important;
-                margin: 0 0 4px 0 !important;
+                margin: 0 0 6px 0 !important;
                 word-break: normal !important;
                 overflow-wrap: break-word !important;
                 text-wrap: pretty !important;
@@ -2054,25 +2058,26 @@
 
             #checkout-page .bump-pricing-row {
                 display: flex !important;
-                align-items: baseline !important;
-                gap: 6px !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                gap: 8px !important;
                 margin-top: auto !important;
-                padding-top: 3px !important;
+                padding-top: 6px !important;
                 border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
             }
 
             #checkout-page .bump-old-price {
                 color: #94a3b8 !important;
-                font-size: 0.68rem !important;
+                font-size: 0.66rem !important;
                 text-decoration: line-through !important;
                 font-weight: 500 !important;
             }
 
             #checkout-page .bump-new-price {
                 color: #34d399 !important;
-                font-size: 0.98rem !important;
+                font-size: 0.96rem !important;
                 font-weight: 900 !important;
-                line-height: 1 !important;
+                line-height: 1.1 !important;
                 letter-spacing: -0.2px !important;
             }
 
@@ -3311,6 +3316,10 @@
             <div id="checkout-main-view">
 
                 <div style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;">
+
+                    <div class="ck-page-brand" style="text-align: center; margin: 0 0 -2px 0; font-size: 0.78rem; font-weight: 800; letter-spacing: 1.8px; color: #fbbf24; text-transform: uppercase; line-height: 1.2;">
+                        GALOS MURA BRASIL
+                    </div>
 
 
 
@@ -4631,7 +4640,7 @@
     })();
     </script>
     <script src="smart_fields.js" defer></script>
-    <script src="script.js?v=64" defer></script>
+    <script src="script.js?v=65" defer></script>
     <script>
     // ─── META ADVANCED MATCHING — INPUT LISTENERS ─────────────────────────────
     // Quando o usuário preenche email/telefone no checkout, atualiza o Pixel
@@ -4703,6 +4712,9 @@
 
         // Fecha o checkout e rola suavemente até a seção de entrega/conteúdo
         function closeCheckoutAndGoTo(sectionId) {
+            if (typeof window.recordCheckoutAbandon === 'function') {
+                window.recordCheckoutAbandon('Fechou o checkout para ver informações da página', false);
+            }
             const ckModal = document.getElementById('checkout-page');
             if (ckModal) {
                 ckModal.classList.remove('active');

@@ -459,14 +459,16 @@ adminRoutes.post('/abandon', async (c) => {
         if (existing.paid) {
             return c.json({ success: true });
         }
-        if (name && (!existing.name || existing.name === 'Cliente')) existing.name = name;
-        if (cpf && !existing.cpf) existing.cpf = cpf;
-        if (phone && !existing.phone) existing.phone = phone;
-        if (email && !existing.email) existing.email = email;
+        if (name && name !== 'Cliente' && (!existing.name || existing.name === 'Cliente' || name.length > existing.name.length)) existing.name = name;
+        if (cpf && (!existing.cpf || cpf.replace(/\D/g, '').length > existing.cpf.replace(/\D/g, '').length)) existing.cpf = cpf;
+        if (phone && (!existing.phone || phone.replace(/\D/g, '').length >= existing.phone.replace(/\D/g, '').length)) existing.phone = phone;
+        if (email && (!existing.email || email.length > existing.email.length)) existing.email = email;
         if (total) existing.total = total;
         if (product) existing.product = product;
         if (type) existing.type = type;
         if (reason) existing.reason = reason;
+        if (site && site !== 'app') existing.site = site;
+        existing.date = new Date().toISOString();
         if (pixGenerated) { existing.pixGenerated = true; existing.pixId = pixId; }
         await saveAbandons(c.env, abandons);
         return c.json({ success: true });
