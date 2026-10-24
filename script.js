@@ -838,35 +838,35 @@ function renderOrderBumps(bumps) {
 
                 <!-- Foto no Fundo (lado esquerdo com fusao suave) -->
                 ${imgSrc ? `
-                    <div class="bump-bg-photo" style="position:absolute!important;top:0!important;left:0!important;width:38%!important;height:100%!important;z-index:1!important;pointer-events:none!important;overflow:hidden!important;">
+                    <div class="bump-bg-photo" style="position:absolute!important;top:0!important;left:0!important;width:36%!important;height:100%!important;z-index:1!important;pointer-events:none!important;overflow:hidden!important;">
                         <img src="${imgSrc}" alt="${cleanTitle}" loading="lazy" style="position:absolute!important;top:0!important;left:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center left!important;display:block!important;opacity:0.95!important;">
-                        <div class="bump-bg-overlay" style="position:absolute!important;inset:0!important;background:${isSelected ? 'linear-gradient(to right, rgba(6,46,34,0.05) 0%, rgba(6,46,34,0.45) 45%, rgba(6,46,34,0.9) 75%, #062e22 100%)' : 'linear-gradient(to right, rgba(11,17,32,0) 0%, rgba(11,17,32,0.35) 45%, rgba(11,17,32,0.85) 75%, #0b1120 100%)'}!important;z-index:2!important;"></div>
+                        <div class="bump-bg-overlay" style="position:absolute!important;inset:0!important;background:${isSelected ? 'linear-gradient(to right, rgba(6,46,34,0.05) 0%, rgba(6,46,34,0.48) 45%, rgba(6,46,34,0.92) 75%, #062e22 100%)' : 'linear-gradient(to right, rgba(11,17,32,0) 0%, rgba(11,17,32,0.4) 45%, rgba(11,17,32,0.88) 75%, #0b1120 100%)'}!important;z-index:2!important;"></div>
                     </div>
                 ` : ''}
 
                 <!-- Conteúdo no Lado Direito -->
-                <div class="bump-content-right" style="position:relative!important;z-index:3!important;width:68%!important;min-width:0!important;margin-left:auto!important;padding:10px 12px 10px 6px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;box-sizing:border-box!important;text-align:left!important;">
+                <div class="bump-content-right" style="position:relative!important;z-index:3!important;width:70%!important;min-width:0!important;margin-left:auto!important;padding:10px 10px 10px 6px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;box-sizing:border-box!important;text-align:left!important;">
                     <!-- Topo: Apenas Badge (Card não é clicável para evitar seleção acidental) -->
                     <div class="bump-top-row" style="display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:6px!important;margin-bottom:4px!important;">
-                        <span class="bump-badge-tag" style="display:inline-flex!important;align-items:center!important;gap:4px!important;background:${isSelected ? 'rgba(16,185,129,0.22)' : 'rgba(245,158,11,0.18)'}!important;color:${isSelected ? '#34d399' : '#fbbf24'}!important;border:1px solid ${isSelected ? 'rgba(16,185,129,0.45)' : 'rgba(245,158,11,0.4)'}!important;font-size:0.62rem!important;font-weight:800!important;padding:2px 7px!important;border-radius:5px!important;text-transform:uppercase!important;letter-spacing:0.4px!important;line-height:1.1!important;white-space:nowrap!important;">
-                            <i class="fa-solid ${badgeIcon}" style="font-size:0.6rem;"></i> ${badgeLabel}
+                        <span class="bump-badge-tag" style="display:inline-flex!important;align-items:center!important;gap:4px!important;background:${isSelected ? 'rgba(16,185,129,0.22)' : 'rgba(245,158,11,0.18)'}!important;color:${isSelected ? '#34d399' : '#fbbf24'}!important;border:1px solid ${isSelected ? 'rgba(16,185,129,0.45)' : 'rgba(245,158,11,0.4)'}!important;font-size:10px!important;font-weight:800!important;padding:2px 7px!important;border-radius:5px!important;text-transform:uppercase!important;letter-spacing:0.4px!important;line-height:1.1!important;white-space:nowrap!important;">
+                            <i class="fa-solid ${badgeIcon}" style="font-size:9.5px;"></i> ${badgeLabel}
                         </span>
                     </div>
 
                     <!-- Titulo e Descricao Racional sem quebras estranhas -->
                     <div>
-                        <div class="bump-title-text" style="color:#ffffff!important;font-size:0.88rem!important;font-weight:800!important;line-height:1.25!important;letter-spacing:-0.2px!important;margin:0 0 3px 0!important;word-break:normal!important;overflow-wrap:break-word!important;white-space:normal!important;text-shadow:0 1px 3px rgba(0,0,0,0.8)!important;">${cleanTitle}</div>
-                        <div class="bump-desc-text" style="font-size:0.72rem!important;line-height:1.35!important;color:#cbd5e1!important;margin:0 0 6px 0!important;word-break:normal!important;overflow-wrap:break-word!important;white-space:normal!important;text-shadow:0 1px 2px rgba(0,0,0,0.8)!important;">${desc}</div>
+                        <div class="bump-title-text" style="color:#ffffff!important;font-size:14px!important;font-weight:800!important;line-height:1.25!important;letter-spacing:-0.2px!important;margin:0 0 3px 0!important;word-break:normal!important;overflow-wrap:break-word!important;white-space:normal!important;text-shadow:0 1px 3px rgba(0,0,0,0.8)!important;">${cleanTitle}</div>
+                        <div class="bump-desc-text" style="font-size:11.5px!important;line-height:1.35!important;color:#cbd5e1!important;margin:0 0 7px 0!important;word-break:normal!important;overflow-wrap:break-word!important;white-space:normal!important;text-shadow:0 1px 2px rgba(0,0,0,0.8)!important;">${desc}</div>
                     </div>
 
-                    <!-- Linha Inferior: Preço à esquerda + Botão Adicionar ao lado direito (ÚNICO clicável) -->
-                    <div class="bump-pricing-row" style="display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;margin-top:auto!important;padding-top:6px!important;border-top:1px solid rgba(255,255,255,0.08)!important;">
-                        <div style="display:flex!important;flex-direction:column!important;align-items:flex-start!important;line-height:1.15!important;min-width:0!important;">
-                            <span class="bump-old-price" style="color:#94a3b8!important;font-size:0.66rem!important;text-decoration:line-through!important;font-weight:500!important;white-space:nowrap!important;">De R$ ${oldPrice}</span>
-                            <span class="bump-new-price" style="color:#34d399!important;font-size:0.96rem!important;font-weight:900!important;line-height:1.1!important;letter-spacing:-0.2px!important;white-space:nowrap!important;">+ R$ ${formatBRL(bump.price).replace('R$ ', '')}</span>
+                    <!-- Linha Inferior: Preço à esquerda + Botão Adicionar à direita (flex-shrink:0 + flex-wrap impede qualquer sobreposição) -->
+                    <div class="bump-pricing-row" style="display:flex!important;flex-wrap:wrap!important;align-items:center!important;justify-content:space-between!important;gap:6px 8px!important;width:100%!important;margin-top:auto!important;padding-top:6px!important;border-top:1px solid rgba(255,255,255,0.08)!important;">
+                        <div class="bump-price-col" style="display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;line-height:1.15!important;flex:0 0 auto!important;flex-shrink:0!important;">
+                            <span class="bump-old-price" style="color:#94a3b8!important;font-size:10.5px!important;text-decoration:line-through!important;font-weight:500!important;white-space:nowrap!important;max-width:none!important;">De R$ ${oldPrice}</span>
+                            <span class="bump-new-price" style="color:#34d399!important;font-size:14.5px!important;font-weight:900!important;line-height:1.15!important;letter-spacing:-0.2px!important;white-space:nowrap!important;max-width:none!important;">+ R$ ${formatBRL(bump.price).replace('R$ ', '')}</span>
                         </div>
-                        <button type="button" class="bump-action-btn" aria-pressed="${isSelected ? 'true' : 'false'}" onclick="event.stopPropagation(); toggleBump('${bump.id}')" style="display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;min-height:36px!important;padding:7px 13px!important;border-radius:8px!important;font-size:0.74rem!important;font-weight:800!important;font-family:inherit!important;text-transform:uppercase!important;letter-spacing:0.3px!important;cursor:pointer!important;transition:all 0.2s ease!important;border:1.5px solid #10b981!important;background:${isSelected ? '#10b981' : 'rgba(16,185,129,0.14)'}!important;color:${isSelected ? '#ffffff' : '#34d399'}!important;box-shadow:${isSelected ? '0 3px 10px rgba(16,185,129,0.4)' : 'none'}!important;white-space:nowrap!important;flex-shrink:0!important;-webkit-tap-highlight-color:transparent!important;">
-                            <i class="${isSelected ? 'fa-solid fa-check' : 'fa-solid fa-plus'}" style="font-size:0.74rem;pointer-events:none;"></i>
+                        <button type="button" class="bump-action-btn" aria-pressed="${isSelected ? 'true' : 'false'}" onclick="event.stopPropagation(); toggleBump('${bump.id}')" style="display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:4px!important;min-height:32px!important;padding:6px 10px!important;border-radius:7px!important;font-size:11px!important;line-height:1!important;font-weight:800!important;font-family:inherit!important;text-transform:uppercase!important;letter-spacing:0.2px!important;cursor:pointer!important;transition:all 0.2s ease!important;border:1.5px solid #10b981!important;background:${isSelected ? '#10b981' : 'rgba(16,185,129,0.14)'}!important;color:${isSelected ? '#ffffff' : '#34d399'}!important;box-shadow:${isSelected ? '0 3px 10px rgba(16,185,129,0.4)' : 'none'}!important;white-space:nowrap!important;flex:0 0 auto!important;flex-shrink:0!important;margin-left:auto!important;-webkit-tap-highlight-color:transparent!important;">
+                            <i class="${isSelected ? 'fa-solid fa-check' : 'fa-solid fa-plus'}" style="font-size:10.5px;pointer-events:none;"></i>
                             <span style="pointer-events:none;">${isSelected ? 'Adicionado' : 'Adicionar'}</span>
                         </button>
                     </div>
@@ -913,13 +913,13 @@ function toggleBump(bumpId) {
         if (btn) {
             btn.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
             if (isSelected) {
-                btn.innerHTML = `<i class="fa-solid fa-check" style="font-size:0.74rem;pointer-events:none;"></i> <span style="pointer-events:none;">Adicionado</span>`;
+                btn.innerHTML = `<i class="fa-solid fa-check" style="font-size:10.5px;pointer-events:none;"></i> <span style="pointer-events:none;">Adicionado</span>`;
                 btn.style.background = '#10b981';
                 btn.style.borderColor = '#10b981';
                 btn.style.color = '#ffffff';
                 btn.style.boxShadow = '0 3px 10px rgba(16,185,129,0.4)';
             } else {
-                btn.innerHTML = `<i class="fa-solid fa-plus" style="font-size:0.74rem;pointer-events:none;"></i> <span style="pointer-events:none;">Adicionar</span>`;
+                btn.innerHTML = `<i class="fa-solid fa-plus" style="font-size:10.5px;pointer-events:none;"></i> <span style="pointer-events:none;">Adicionar</span>`;
                 btn.style.background = 'rgba(16,185,129,0.14)';
                 btn.style.borderColor = '#10b981';
                 btn.style.color = '#34d399';
