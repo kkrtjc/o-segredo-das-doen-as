@@ -1068,17 +1068,15 @@
                 </div>
             </div>
 
-            <!-- SUB-SELETOR DE PÁGINA (só visível na campanha Pintinhos) -->
-            <div id="subpage-selector" class="subpage-selector">
-                <div class="subpage-selector-label">
+            <!-- SUB-SELETOR DE PÁGINA (Pintinhos: Todas / Original / Página 2 / Página 3 | Doenças: Todas / Original / Página 2) -->
+            <div id="subpage-selector" class="subpage-selector visible">
+                <div class="subpage-selector-label" id="subpage-selector-title">
                     <i class="fa-solid fa-file-lines"></i> Filtrar por Página de Destino:
                 </div>
                 <div class="subpage-pills" id="subpage-pills-container">
-                    <div class="subpage-pill active" onclick="selectSubPage('all', this)">Todas</div>
-                    <div class="subpage-pill" onclick="selectSubPage('original', this)" id="pill-sub-original">Original</div>
-                    <div class="subpage-pill" onclick="selectSubPage('page2', this)" id="pill-sub-p2">Página 2</div>
-                    <div class="subpage-pill" onclick="selectSubPage('pintinhos3', this)" id="pill-sub-p3">Página 3</div>
+                    <!-- Renderizado dinamicamente por renderSubpageSelector() -->
                 </div>
+            </div>
             </div>
 
             <!-- SELETOR DE MODO: SITE VS META ADS -->
@@ -1933,6 +1931,32 @@
         }
 
         // Alternância de Campanha (Doenças vs Pintinhos)
+        function renderSubpageSelector() {
+            const container = document.getElementById('subpage-pills-container');
+            if (!container) return;
+
+            let pills = [];
+            if (currentCampaign === 'pintinhos') {
+                pills = [
+                    { id: 'all', label: 'Todas' },
+                    { id: 'pintinhos', label: 'Original' },
+                    { id: 'pintinhos2', label: 'Página 2 (15 Dias)' },
+                    { id: 'pintinhos3', label: 'Página 3 (Remédio Caro)' }
+                ];
+            } else {
+                pills = [
+                    { id: 'all', label: 'Todas' },
+                    { id: 'doencas', label: 'Original' },
+                    { id: 'doencas2', label: 'Página 2 (Plantel Blindado)' }
+                ];
+            }
+
+            container.innerHTML = pills.map(p => {
+                const isActive = (currentSubPage === p.id);
+                return `<div class="subpage-pill ${isActive ? 'active' : ''}" onclick="selectSubPage('${p.id}', this)">${p.label}</div>`;
+            }).join('');
+        }
+
         function selectCampaign(campaignId) {
             currentCampaign = campaignId;
             switchMainTab('campaign');
@@ -1959,20 +1983,13 @@
                 bPrice.textContent = 'R$ 27,90';
             }
 
-            // Mostra/esconde sub-seletor de páginas
+            // Exibe o sub-seletor para ambas as campanhas
             const subSel = document.getElementById('subpage-selector');
-            if (subSel) {
-                subSel.classList.toggle('visible', true);
-            const p3 = document.getElementById('pill-sub-p3');
-            if (p3) p3.style.display = (campaignId === 'pintinhos') ? 'inline-block' : 'none';
-            }
+            if (subSel) subSel.classList.add('visible');
 
-            // Ao trocar de campanha, SEMPRE reseta a subpágina para 'Todas'
-            // para evitar que uma seleção anterior de Página 2 / Página 3 persista
+            // Ao trocar de campanha, SEMPRE reseta a subpágina para 'all'
             currentSubPage = 'all';
-            document.querySelectorAll('.subpage-pill').forEach(function(p) { p.classList.remove('active'); });
-            var todasPill = document.querySelector('.subpage-pills .subpage-pill');
-            if (todasPill) todasPill.classList.add('active');
+            renderSubpageSelector();
 
             renderMetrics();
             if (currentViewMode === 'meta') {
@@ -1981,9 +1998,7 @@
         }
 
         function selectSubPage(subPage, el) {
-            if (subPage === 'original') currentSubPage = (currentCampaign === 'pintinhos' ? 'pintinhos' : 'doencas');
-            else if (subPage === 'page2') currentSubPage = (currentCampaign === 'pintinhos' ? 'pintinhos2' : 'doencas2');
-            else currentSubPage = subPage;
+            currentSubPage = subPage;
             document.querySelectorAll('.subpage-pill').forEach(p => p.classList.remove('active'));
             if (el) el.classList.add('active');
             renderMetrics();
@@ -2354,13 +2369,11 @@
                 const belongsToCurrentCampaign = isPintinhos ? isPintinhosItem(item) : isDoencasItem(item);
                 if (!belongsToCurrentCampaign) return;
 
-                // FILTRO TOTAL E INDEPENDENTE POR SUB-PÁGINA (Página Original, Página 2, Página 3 ou Todas)
-                let itemSubpage = 'pintinhos';
-                if (isPintinhos) {
-                    itemSubpage = getPintinhosSubpage(item);
-                    if (currentSubPage !== 'all' && currentSubPage !== itemSubpage) {
-                        return;
-                    }
+                // FILTRO TOTAL E INDEPENDENTE POR SUB-PÁGINA (Pintinhos: Original, P2, P3 | Doenças: Original, P2 | ou Todas)
+                let itemSubpage = isPintinhos ? getPintinhosSubpage(item) : getDoencasSubpage(item);
+
+                if (currentSubPage !== 'all' && currentSubPage !== itemSubpage) {
+                    return;
                 }
 
                 const itemSite = String(item.site || '').toLowerCase();
@@ -2368,8 +2381,7 @@
                 const cleanPhone = parsePhone(item.phone);
 
                 if (isPlatform) {
-                    const isDoencasSubMatch = (!isPintinhos && (currentSubPage === 'all' || currentSubPage === getDoencasSubpage(item)));
-                if (cleanPhone && (isDoencasSubMatch || (isPintinhos && currentSubPage === 'all'))) {
+                    if (cleanPhone && currentSubPage === 'all') {
                         platformAbandons.push({ ...item, isFromPlatform: true, subpage: itemSubpage });
                     }
                     return;
@@ -2448,14 +2460,23 @@
                     : '';
 
                 let subpageBadge = '';
-                if (currentCampaign === 'pintinhos' && !isPlatformSale) {
-                    const sub = sale.subpage || getPintinhosSubpage(sale);
-                    if (sub === 'pintinhos3') {
-                        subpageBadge = '<span style="background:rgba(168,85,247,0.25); color:#c084fc; border:1px solid rgba(168,85,247,0.6); padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; margin-left:6px; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-file-lines"></i> PÁGINA 3 (REMÉDIO CARO)</span>';
-                    } else if (sub === 'pintinhos2') {
-                        subpageBadge = '<span style="background:rgba(56,189,248,0.25); color:#38bdf8; border:1px solid rgba(56,189,248,0.6); padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; margin-left:6px; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-file-lines"></i> PÁGINA 2 (15 DIAS)</span>';
-                    } else {
-                        subpageBadge = '<span style="background:rgba(245,158,11,0.25); color:#fbbf24; border:1px solid rgba(245,158,11,0.6); padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; margin-left:6px; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-file-lines"></i> PÁGINA ORIGINAL</span>';
+                if (!isPlatformSale) {
+                    if (currentCampaign === 'pintinhos') {
+                        const sub = sale.subpage || getPintinhosSubpage(sale);
+                        if (sub === 'pintinhos3') {
+                            subpageBadge = '<span style="background:rgba(168,85,247,0.25); color:#c084fc; border:1px solid rgba(168,85,247,0.6); padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; margin-left:6px; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-file-lines"></i> PÁGINA 3 (REMÉDIO CARO)</span>';
+                        } else if (sub === 'pintinhos2') {
+                            subpageBadge = '<span style="background:rgba(56,189,248,0.25); color:#38bdf8; border:1px solid rgba(56,189,248,0.6); padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; margin-left:6px; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-file-lines"></i> PÁGINA 2 (15 DIAS)</span>';
+                        } else {
+                            subpageBadge = '<span style="background:rgba(245,158,11,0.25); color:#fbbf24; border:1px solid rgba(245,158,11,0.6); padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; margin-left:6px; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-file-lines"></i> PÁGINA ORIGINAL</span>';
+                        }
+                    } else if (currentCampaign === 'doencas') {
+                        const sub = sale.subpage || getDoencasSubpage(sale);
+                        if (sub === 'doencas2') {
+                            subpageBadge = '<span style="background:rgba(56,189,248,0.25); color:#38bdf8; border:1px solid rgba(56,189,248,0.6); padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; margin-left:6px; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-file-lines"></i> DOENÇAS 2 (PLANTEL BLINDADO)</span>';
+                        } else {
+                            subpageBadge = '<span style="background:rgba(245,158,11,0.25); color:#fbbf24; border:1px solid rgba(245,158,11,0.6); padding:3px 8px; border-radius:6px; font-size:10px; font-weight:800; margin-left:6px; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-file-lines"></i> DOENÇAS ORIGINAL</span>';
+                        }
                     }
                 }
 
@@ -2616,14 +2637,23 @@
                     ? '<span style="background:rgba(147,51,234,0.25); color:#c084fc; border:1px solid rgba(168,85,247,0.5); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-crown" style="color:#e879f9;"></i> PLATAFORMA PROTOCOLO ELITE</span>'
                     : '<span style="background:rgba(239,68,68,0.15); color:#f87171; border:1px solid rgba(239,68,68,0.3); padding:2px 7px; border-radius:6px; font-size:10px; font-weight:800;">PÁGINA DE VENDAS</span>';
 
-                if (currentCampaign === 'pintinhos' && !isPlatform) {
-                    const sub = item.subpage || getPintinhosSubpage(item);
-                    if (sub === 'pintinhos3') {
-                        originBadge = '<span style="background:rgba(168,85,247,0.22); color:#c084fc; border:1px solid rgba(168,85,247,0.5); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:800;"><i class="fa-solid fa-file-lines"></i> PÁGINA 3 (LOTE LINDO)</span>';
-                    } else if (sub === 'pintinhos2') {
-                        originBadge = '<span style="background:rgba(56,189,248,0.22); color:#38bdf8; border:1px solid rgba(56,189,248,0.5); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:800;"><i class="fa-solid fa-file-lines"></i> PÁGINA 2 (15 DIAS)</span>';
-                    } else {
-                        originBadge = '<span style="background:rgba(245,158,11,0.22); color:#fbbf24; border:1px solid rgba(245,158,11,0.5); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:800;"><i class="fa-solid fa-file-lines"></i> ORIGINAL</span>';
+                if (!isPlatform) {
+                    if (currentCampaign === 'pintinhos') {
+                        const sub = item.subpage || getPintinhosSubpage(item);
+                        if (sub === 'pintinhos3') {
+                            originBadge = '<span style="background:rgba(168,85,247,0.22); color:#c084fc; border:1px solid rgba(168,85,247,0.5); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:800;"><i class="fa-solid fa-file-lines"></i> PÁGINA 3 (REMÉDIO CARO)</span>';
+                        } else if (sub === 'pintinhos2') {
+                            originBadge = '<span style="background:rgba(56,189,248,0.22); color:#38bdf8; border:1px solid rgba(56,189,248,0.5); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:800;"><i class="fa-solid fa-file-lines"></i> PÁGINA 2 (15 DIAS)</span>';
+                        } else {
+                            originBadge = '<span style="background:rgba(245,158,11,0.22); color:#fbbf24; border:1px solid rgba(245,158,11,0.5); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:800;"><i class="fa-solid fa-file-lines"></i> ORIGINAL</span>';
+                        }
+                    } else if (currentCampaign === 'doencas') {
+                        const sub = item.subpage || getDoencasSubpage(item);
+                        if (sub === 'doencas2') {
+                            originBadge = '<span style="background:rgba(56,189,248,0.22); color:#38bdf8; border:1px solid rgba(56,189,248,0.5); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:800;"><i class="fa-solid fa-file-lines"></i> DOENÇAS 2 (PLANTEL BLINDADO)</span>';
+                        } else {
+                            originBadge = '<span style="background:rgba(245,158,11,0.22); color:#fbbf24; border:1px solid rgba(245,158,11,0.5); padding:2px 8px; border-radius:6px; font-size:10px; font-weight:800;"><i class="fa-solid fa-file-lines"></i> DOENÇAS ORIGINAL</span>';
+                        }
                     }
                 }
 
