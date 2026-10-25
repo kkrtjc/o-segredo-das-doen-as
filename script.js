@@ -1280,28 +1280,46 @@ window.attemptCloseCheckout = closeCheckout;
 
 // --- CHECKOUT SINGLE STEP FUNNELS (Previous steps were merged) ---
 
-// --- RESERVATION TIMER (auto-restart) ---
+// --- RESERVATION TIMER (Atualiza #ck-timer visível no topo do checkout em todas as páginas) ---
 let reservationTimerInterval = null;
 function startReservationTimer() {
     if (reservationTimerInterval) clearInterval(reservationTimerInterval);
-    let seconds = 600; // 10 minutes
-    const display = document.getElementById('checkout-reservation-timer');
-    if (!display) return;
+
+    const DURATION_SEC = 15 * 60 - 1; // 14:59
+    const STORAGE_KEY = 'mura_ck_timer_end';
+    let endTime = 0;
+
+    try {
+        endTime = parseInt(sessionStorage.getItem(STORAGE_KEY) || '0', 10);
+    } catch (e) {}
+
+    if (!endTime || endTime <= Date.now() + 1000) {
+        endTime = Date.now() + DURATION_SEC * 1000;
+        try { sessionStorage.setItem(STORAGE_KEY, String(endTime)); } catch (e) {}
+    }
 
     function updateDisplay() {
-        const m = Math.floor(seconds / 60);
-        const s = seconds % 60;
-        display.textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+        const ckTimerEl = document.getElementById('ck-timer');
+        const legacyTimerEl = document.getElementById('checkout-reservation-timer');
+        if (!ckTimerEl && !legacyTimerEl) return;
+
+        let remaining = Math.floor((endTime - Date.now()) / 1000);
+        if (remaining < 0) {
+            endTime = Date.now() + DURATION_SEC * 1000;
+            try { sessionStorage.setItem(STORAGE_KEY, String(endTime)); } catch (e) {}
+            remaining = DURATION_SEC;
+        }
+
+        const m = Math.floor(remaining / 60);
+        const s = remaining % 60;
+        const text = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+
+        if (ckTimerEl) ckTimerEl.textContent = text;
+        if (legacyTimerEl) legacyTimerEl.textContent = text;
     }
 
     updateDisplay();
-    reservationTimerInterval = setInterval(() => {
-        seconds--;
-        if (seconds < 0) {
-            seconds = 600; // restart
-        }
-        updateDisplay();
-    }, 1000);
+    reservationTimerInterval = setInterval(updateDisplay, 1000);
 }
 
 // Alias for white checkout compatibility
