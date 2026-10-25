@@ -629,15 +629,6 @@ async function startCheckoutProcess(productId, forceBumps = []) {
         if (productId === 'ebook-doencas' || productId === 'combo-plataforma' || productId === 'combo-elite') {
             cart.mainProduct.fullBumps = [
                 {
-                    id: 'ebook-pintinhos',
-                    title: 'MANUAL DE MANEJO DOS PINTINHOS',
-                    price: 27.90,
-                    priceCard: 27.90,
-                    image: 'capadospintinhos.webp',
-                    description: 'Passo a passo do nascimento à fase adulta para reduzir a mortalidade e criar pintinhos saudáveis.',
-                    tag: 'RECOMENDADO'
-                },
-                {
                     id: 'bump-6361',
                     title: 'TABELA DE RAÇÃO PRÁTICA',
                     price: 14.90,
@@ -1049,7 +1040,7 @@ function updateTotal() {
         if (!bump && window.siteConfig) bump = window.siteConfig.products[id];
         if (!bump) bump = prefetchedProducts[id];
         
-        let bumpTitle = bump?.title || (id === 'ebook-doencas' ? 'Guia Completo das Doenças' : (id === 'bump-6361' ? 'Tabela de Ração Prática' : (id === 'bump-ovos' ? 'Potencialize a Produção de Ovos' : 'Oferta Adicional')));
+        let bumpTitle = bump?.title || (id === 'ebook-doencas' ? 'Guia Completo das Doenças' : ((id === 'ebook-manejo' || id === 'ebook-pintinhos') ? 'Manual de Manejo dos Pintinhos' : (id === 'bump-6361' ? 'Tabela de Ração Prática' : (id === 'bump-ovos' ? 'Potencialize a Produção de Ovos' : 'Oferta Adicional'))));
         let bumpImg = (id === 'ebook-doencas' || id.includes('doencas')) ? 'capadasdoencas.webp' : ((id === 'bump-6361' || id.includes('racao')) ? 'tabela_racao_bump.webp' : ((id === 'bump-ovos' || id.includes('ovos')) ? 'potencialize_ovos_bump.webp' : 'capadospintinhos.webp'));
         let priceForMethod = bump?.price || (id === 'ebook-doencas' ? 49.90 : ((id === 'ebook-manejo' || id === 'ebook-pintinhos') ? 27.90 : 14.90));
         
@@ -1532,17 +1523,25 @@ function setupPixUpsellModal(method) {
     const fmtOriginal = originalTotal.toFixed(2).replace('.', ',');
 
     if (titleEl) titleEl.innerText = '⚠️ ESPERE! NÃO FINALIZE ANTES DE VER ISSO...';
-    if (descEl) descEl.innerHTML = 'Adicione o <strong style="color: #fbbf24;">Manual de Manejo de Pintinhos</strong> com condição única de balcão:';
+    if (descEl) descEl.innerHTML = 'Adicione o <strong style="color: #fbbf24;">Manual de Manejo dos Pintinhos</strong> do nascimento à fase adulta, com condição única de oferta imperdível:';
     if (imgEl) {
         imgEl.src = 'capadospintinhos.webp';
         imgEl.alt = 'Manual de Manejo dos Pintinhos';
     }
+    const coverPricingEl = document.getElementById('pix-upsell-cover-pricing');
+    if (coverPricingEl) {
+        coverPricingEl.innerHTML = `
+            <span class="upsell-cover-old">De R$ 67,00</span>
+            <span class="upsell-cover-new"><small>por </small>R$ 27,90</span>
+        `;
+    }
     if (prodCategoryEl) prodCategoryEl.innerText = 'MANUAL COMPLETO ADICIONAL';
-    if (prodTitleEl) prodTitleEl.innerText = 'Manual de Manejo dos Pintinhos';
+    if (prodTitleEl) prodTitleEl.innerText = '🐣 Manual de Manejo dos Pintinhos';
     if (priceEl) priceEl.innerHTML = '+ R$ 27,90';
     if (originalPriceEl) originalPriceEl.innerText = `De R$ ${fmtOriginal}`;
-    if (savingsEl) savingsEl.innerText = '🔥 Economia de R$ 39,10';
+    if (savingsEl) savingsEl.innerText = '• Economize R$ 39,10';
     if (subtextEl) subtextEl.innerText = 'Adicional com desconto:';
+
     if (listEl) {
         listEl.innerHTML = `
             <div class="upsell-benefit-item">
@@ -1568,9 +1567,6 @@ function setupPixUpsellModal(method) {
     if (summaryBox) {
         summaryBox.style.display = 'block';
         summaryBox.innerHTML = `
-            <div class="upsell-summary-header">
-                📦 O QUE VOCÊ VAI RECEBER:
-            </div>
             <div class="upsell-summary-rows">
                 <div class="upsell-summary-row">
                     <span>💊 Guia Completo das Doenças:</span>
@@ -1583,11 +1579,11 @@ function setupPixUpsellModal(method) {
                 </div>` : ''}
                 ${hasOvos ? `
                 <div class="upsell-summary-row">
-                    <span>🥚 Potencialize a Produção de Ovos:</span>
+                    <span>🥚 Potencialize Produção de Ovos:</span>
                     <strong>R$ 14,90</strong>
                 </div>` : ''}
                 <div class="upsell-summary-row upsell-summary-row-highlight">
-                    <span>🐣 Manual de Manejo dos Pintinhos:</span>
+                    <span>🐣 Manejo dos Pintinhos:</span>
                     <strong>+ R$ 27,90</strong>
                 </div>
             </div>
@@ -1599,15 +1595,21 @@ function setupPixUpsellModal(method) {
         totalValueEl.innerText = `R$ ${fmtTotal}`;
     }
 
+    if (paymentNoteEl) {
+        paymentNoteEl.innerText = method === 'boleto' ? 'no Boleto, PIX ou até 4x no cartão' : 'no PIX ou até 4x no cartão';
+    }
+
     if (ctaBtnText) {
         ctaBtnText.innerText = ctaSubText
             ? 'SIM! APRENDER MANEJO DE PINTINHOS'
-            : `Aprender sobre o manejo de pintinhos (Total: R$ ${fmtTotal})`;
+            : `SIM! APRENDER MANEJO DE PINTINHOS (R$ ${fmtTotal})`;
     }
     if (ctaSubText) {
         ctaSubText.innerText = `Incluir no meu pedido • Total: R$ ${fmtTotal}`;
     }
-    if (rejectBtn) rejectBtn.innerText = `Não, levar apenas o que escolhi (R$ ${fmtCurrent})`;
+    if (rejectBtn) {
+        rejectBtn.innerText = `Não, levar apenas o que escolhi (R$ ${fmtCurrent})`;
+    }
 }
 
 
@@ -1672,9 +1674,14 @@ async function handlePayment(method) {
     const isValid = validateCheckoutInputs(method);
     if (!isValid) return;
 
-    // --- PIX/CARD/BOLETO UPSELL INTERCEPT PARA PINTINHOS -> DOENÇAS ---
+    // --- PIX/CARD/BOLETO UPSELL INTERCEPT (PINTINHOS <-> DOENÇAS) ---
     const isPintinhosMain = cart.mainProduct && (cart.mainProduct.id === 'ebook-pintinhos' || cart.mainProduct.id === 'ebook-manejo');
-    const shouldShowPixUpsell = !window.bypassPixUpsell && (method === 'pix' || method === 'card' || method === 'boleto') && isPintinhosMain && !cart.bumps.includes('ebook-doencas');
+    const isDoencasMain = cart.mainProduct && (cart.mainProduct.id === 'ebook-doencas' || cart.mainProduct.id === 'combo-plataforma');
+    const alreadyHasPintinhos = cart.bumps.includes('ebook-manejo') || cart.bumps.includes('ebook-pintinhos');
+    const shouldShowPixUpsell = !window.bypassPixUpsell && (method === 'pix' || method === 'card' || method === 'boleto') && (
+        (isPintinhosMain && !cart.bumps.includes('ebook-doencas')) ||
+        (isDoencasMain && !alreadyHasPintinhos)
+    );
 
     console.log('[UPSELL DEBUG] bypass:', window.bypassPixUpsell, 'method:', method, 'product:', cart.mainProduct?.id, 'bumps:', cart.bumps, 'shouldShow:', shouldShowPixUpsell);
 
@@ -1684,7 +1691,9 @@ async function handlePayment(method) {
             window._pendingUpsellMethod = method;
             captureAbandonedLead({
                 type: 'upsell_modal_shown',
-                reason: 'Abriu formulário e visualizou oferta de Upsell das Doenças'
+                reason: isPintinhosMain
+                    ? 'Abriu formulário e visualizou oferta de Upsell das Doenças'
+                    : 'Abriu formulário e visualizou oferta de Upsell dos Pintinhos'
             });
             setupPixUpsellModal(method);
             upsellModal.classList.remove('hidden');
@@ -2075,7 +2084,7 @@ async function handlePayment(method) {
                 btn.innerText = originalText;
             }
         } catch (e) {
-            console.error("ERRO CRÃ TICO CARTÃO:", e);
+            console.error("ERRO CRÍTICO CARTÃO:", e);
             let errDisplay = 'Erro desconhecido';
 
             if (e && e.message) errDisplay = e.message;
