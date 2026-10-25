@@ -7,6 +7,7 @@ const PAGE_SOURCE = (() => {
     if (loc.includes('pintinhos3')) return 'pintinhos3';
     if (loc.includes('pintinhos2')) return 'pintinhos2';
     if (loc.includes('pintinhos') || document.body?.dataset?.page === 'pintinhos' || document.body?.classList?.contains('pintinhos-page')) return 'pintinhos';
+    if (loc.includes('doencas2') || document.body?.dataset?.page === 'doencas2' || document.body?.classList?.contains('doencas2-page')) return 'doencas2';
     if (document.querySelector('.vsl-page')) return 'vsl';
     return 'text';
 })();

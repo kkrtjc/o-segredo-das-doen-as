@@ -27,7 +27,8 @@ trackingRoutes.post('/track', async (c) => {
     
     // Suporte a múltiplos sites (Oficial, Pintinhos, Amazon, VSL, Plataforma/App)
     let suffix = '';
-    if (site === 'pintinhos') suffix = '_pintinhos';
+    if (site === 'doencas2') suffix = '_doencas2';
+    else if (site === 'pintinhos') suffix = '_pintinhos';
     else if (site === 'pintinhos2') suffix = '_pintinhos2';
     else if (site === 'pintinhos3') suffix = '_pintinhos3';
     else if (site === 'amazon') suffix = '_amazon';

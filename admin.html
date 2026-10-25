@@ -1073,11 +1073,11 @@
                 <div class="subpage-selector-label">
                     <i class="fa-solid fa-file-lines"></i> Filtrar por Página de Destino:
                 </div>
-                <div class="subpage-pills">
+                <div class="subpage-pills" id="subpage-pills-container">
                     <div class="subpage-pill active" onclick="selectSubPage('all', this)">Todas</div>
-                    <div class="subpage-pill" onclick="selectSubPage('pintinhos', this)">Original</div>
-                    <div class="subpage-pill" onclick="selectSubPage('pintinhos2', this)">Página 2</div>
-                    <div class="subpage-pill" onclick="selectSubPage('pintinhos3', this)">Página 3</div>
+                    <div class="subpage-pill" onclick="selectSubPage('original', this)" id="pill-sub-original">Original</div>
+                    <div class="subpage-pill" onclick="selectSubPage('page2', this)" id="pill-sub-p2">Página 2</div>
+                    <div class="subpage-pill" onclick="selectSubPage('pintinhos3', this)" id="pill-sub-p3">Página 3</div>
                 </div>
             </div>
 
@@ -1962,7 +1962,9 @@
             // Mostra/esconde sub-seletor de páginas
             const subSel = document.getElementById('subpage-selector');
             if (subSel) {
-                subSel.classList.toggle('visible', campaignId === 'pintinhos');
+                subSel.classList.toggle('visible', true);
+            const p3 = document.getElementById('pill-sub-p3');
+            if (p3) p3.style.display = (campaignId === 'pintinhos') ? 'inline-block' : 'none';
             }
 
             // Ao trocar de campanha, SEMPRE reseta a subpágina para 'Todas'
@@ -1979,7 +1981,9 @@
         }
 
         function selectSubPage(subPage, el) {
-            currentSubPage = subPage;
+            if (subPage === 'original') currentSubPage = (currentCampaign === 'pintinhos' ? 'pintinhos' : 'doencas');
+            else if (subPage === 'page2') currentSubPage = (currentCampaign === 'pintinhos' ? 'pintinhos2' : 'doencas2');
+            else currentSubPage = subPage;
             document.querySelectorAll('.subpage-pill').forEach(p => p.classList.remove('active'));
             if (el) el.classList.add('active');
             renderMetrics();
@@ -2139,6 +2143,14 @@
 
         // RENDERIZAÇÃO IMPECÁVEL DOS DADOS
                 // Helper para identificar sub-página exata (Original, Página 2 ou Página 3)
+        function getDoencasSubpage(it) {
+            if (!it) return 'doencas';
+            const s = String(it.site || '').toLowerCase().trim();
+            const u = String(it.url || it.sourceUrl || it.source || it.reason || '').toLowerCase().trim();
+            if (s === 'doencas2' || s.includes('doencas2') || u.includes('doencas2')) return 'doencas2';
+            return 'doencas';
+        }
+
         function getPintinhosSubpage(it) {
             if (!it) return 'pintinhos';
             const s = String(it.site || '').toLowerCase().trim();
@@ -2184,16 +2196,33 @@
                         trackedAbandons = totals['checkoutAbandons' + sfx] || 0;
                     }
                 } else {
-                    // Oficial / Doenças (página de vendas externa - isolada de plataforma e app)
-                    const platVisits = (totals.uniqueVisits_platform || 0) + (totals.uniqueVisits_app || 0);
-                    const platViews = (totals.pageViews_platform || 0) + (totals.pageViews_app || 0);
-                    const platCheckouts = (totals.checkoutOpens_platform || 0) + (totals.checkoutOpens_app || 0);
-                    const platAbandons = (totals.checkoutAbandons_platform || 0) + (totals.checkoutAbandons_app || 0);
+                    // Oficial / Doenças (página de vendas externa - com suporte a doencas2)
+                    if (currentSubPage === 'doencas2') {
+                        visits = totals.uniqueVisits_doencas2 || totals.pageViews_doencas2 || 0;
+                        pageViews = totals.pageViews_doencas2 || 0;
+                        checkouts = totals.checkoutOpens_doencas2 || 0;
+                        trackedAbandons = totals.checkoutAbandons_doencas2 || 0;
+                    } else if (currentSubPage === 'doencas') {
+                        const platVisits = (totals.uniqueVisits_platform || 0) + (totals.uniqueVisits_app || 0);
+                        const platViews = (totals.pageViews_platform || 0) + (totals.pageViews_app || 0);
+                        const platCheckouts = (totals.checkoutOpens_platform || 0) + (totals.checkoutOpens_app || 0);
+                        const platAbandons = (totals.checkoutAbandons_platform || 0) + (totals.checkoutAbandons_app || 0);
 
-                    visits = Math.max(0, (totals.uniqueVisits || totals.pageViews || 0) - platVisits);
-                    pageViews = Math.max(0, (totals.pageViews || 0) - platViews);
-                    checkouts = Math.max(0, (totals.checkoutOpens || totals.checkoutStarts || 0) - platCheckouts);
-                    trackedAbandons = Math.max(0, (totals.checkoutAbandons || 0) - platAbandons);
+                        visits = Math.max(0, (totals.uniqueVisits || totals.pageViews || 0) - platVisits - (totals.uniqueVisits_doencas2 || 0));
+                        pageViews = Math.max(0, (totals.pageViews || 0) - platViews - (totals.pageViews_doencas2 || 0));
+                        checkouts = Math.max(0, (totals.checkoutOpens || totals.checkoutStarts || 0) - platCheckouts - (totals.checkoutOpens_doencas2 || 0));
+                        trackedAbandons = Math.max(0, (totals.checkoutAbandons || 0) - platAbandons - (totals.checkoutAbandons_doencas2 || 0));
+                    } else {
+                        const platVisits = (totals.uniqueVisits_platform || 0) + (totals.uniqueVisits_app || 0);
+                        const platViews = (totals.pageViews_platform || 0) + (totals.pageViews_app || 0);
+                        const platCheckouts = (totals.checkoutOpens_platform || 0) + (totals.checkoutOpens_app || 0);
+                        const platAbandons = (totals.checkoutAbandons_platform || 0) + (totals.checkoutAbandons_app || 0);
+
+                        visits = Math.max(0, (totals.uniqueVisits || totals.pageViews || 0) - platVisits);
+                        pageViews = Math.max(0, (totals.pageViews || 0) - platViews);
+                        checkouts = Math.max(0, (totals.checkoutOpens || totals.checkoutStarts || 0) - platCheckouts);
+                        trackedAbandons = Math.max(0, (totals.checkoutAbandons || 0) - platAbandons);
+                    }
                 }
             } else {
                 dates.forEach(dStr => {
@@ -2214,15 +2243,32 @@
                             trackedAbandons += (d['checkoutAbandons' + sfx] || 0);
                         }
                     } else {
-                        const platVisits = (d.uniqueVisits_platform || 0) + (d.uniqueVisits_app || 0);
-                        const platViews = (d.pageViews_platform || 0) + (d.pageViews_app || 0);
-                        const platCheckouts = (d.checkoutOpens_platform || 0) + (d.checkoutOpens_app || 0);
-                        const platAbandons = (d.checkoutAbandons_platform || 0) + (d.checkoutAbandons_app || 0);
+                        if (currentSubPage === 'doencas2') {
+                            visits += (d.uniqueVisits_doencas2 || d.pageViews_doencas2 || 0);
+                            pageViews += (d.pageViews_doencas2 || 0);
+                            checkouts += (d.checkoutOpens_doencas2 || 0);
+                            trackedAbandons += (d.checkoutAbandons_doencas2 || 0);
+                        } else if (currentSubPage === 'doencas') {
+                            const platVisits = (d.uniqueVisits_platform || 0) + (d.uniqueVisits_app || 0);
+                            const platViews = (d.pageViews_platform || 0) + (d.pageViews_app || 0);
+                            const platCheckouts = (d.checkoutOpens_platform || 0) + (d.checkoutOpens_app || 0);
+                            const platAbandons = (d.checkoutAbandons_platform || 0) + (d.checkoutAbandons_app || 0);
 
-                        visits += Math.max(0, (d.uniqueVisits || d.pageViews || 0) - platVisits);
-                        pageViews += Math.max(0, (d.pageViews || 0) - platViews);
-                        checkouts += Math.max(0, (d.checkoutOpens || d.checkoutStarts || 0) - platCheckouts);
-                        trackedAbandons += Math.max(0, (d.checkoutAbandons || 0) - platAbandons);
+                            visits += Math.max(0, (d.uniqueVisits || d.pageViews || 0) - platVisits - (d.uniqueVisits_doencas2 || 0));
+                            pageViews += Math.max(0, (d.pageViews || 0) - platViews - (d.pageViews_doencas2 || 0));
+                            checkouts += Math.max(0, (d.checkoutOpens || d.checkoutStarts || 0) - platCheckouts - (d.checkoutOpens_doencas2 || 0));
+                            trackedAbandons += Math.max(0, (d.checkoutAbandons || 0) - platAbandons - (d.checkoutAbandons_doencas2 || 0));
+                        } else {
+                            const platVisits = (d.uniqueVisits_platform || 0) + (d.uniqueVisits_app || 0);
+                            const platViews = (d.pageViews_platform || 0) + (d.pageViews_app || 0);
+                            const platCheckouts = (d.checkoutOpens_platform || 0) + (d.checkoutOpens_app || 0);
+                            const platAbandons = (d.checkoutAbandons_platform || 0) + (d.checkoutAbandons_app || 0);
+
+                            visits += Math.max(0, (d.uniqueVisits || d.pageViews || 0) - platVisits);
+                            pageViews += Math.max(0, (d.pageViews || 0) - platViews);
+                            checkouts += Math.max(0, (d.checkoutOpens || d.checkoutStarts || 0) - platCheckouts);
+                            trackedAbandons += Math.max(0, (d.checkoutAbandons || 0) - platAbandons);
+                        }
                     }
                 });
             }
@@ -2255,9 +2301,12 @@
                         matchingSales.push({ ...sale, subpage });
                     }
                 } else if (!isPintinhos && !isPintinhosSale && saleSite !== 'vsl' && !itemsStr.includes('[amz]')) {
-                    salesCount++;
-                    revenue += Number(sale.total);
-                    matchingSales.push(sale);
+                    const subpage = getDoencasSubpage(sale);
+                    if (currentSubPage === 'all' || currentSubPage === subpage) {
+                        salesCount++;
+                        revenue += Number(sale.total);
+                        matchingSales.push({ ...sale, subpage });
+                    }
                 }
             });
 
@@ -2319,7 +2368,8 @@
                 const cleanPhone = parsePhone(item.phone);
 
                 if (isPlatform) {
-                    if (cleanPhone && (currentSubPage === 'all' || !isPintinhos)) {
+                    const isDoencasSubMatch = (!isPintinhos && (currentSubPage === 'all' || currentSubPage === getDoencasSubpage(item)));
+                if (cleanPhone && (isDoencasSubMatch || (isPintinhos && currentSubPage === 'all'))) {
                         platformAbandons.push({ ...item, isFromPlatform: true, subpage: itemSubpage });
                     }
                     return;
