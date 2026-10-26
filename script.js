@@ -98,17 +98,18 @@ function applyDynamicPrices(productData) {
             });
         } catch (e) {}
 
-        // 1. UNIQUE VISITOR + SESSÃO TRACKING
+        // 1. UNIQUE VISITOR + SESSÃO TRACKING (Isolado por página de destino)
         try {
             const todayStr = new Date().toISOString().split('T')[0];
-            const lastVisit = localStorage.getItem('mura_visita_hoje');
+            const visitKey = 'mura_visita_' + (PAGE_SOURCE || 'text') + '_' + todayStr;
+            const lastVisit = localStorage.getItem(visitKey);
 
             // Sequentialize to avoid KV race conditions in Worker
             await trackEvent('session_start');
 
-            if (lastVisit !== todayStr) {
+            if (!lastVisit) {
                 await trackEvent('unique_visit');
-                localStorage.setItem('mura_visita_hoje', todayStr);
+                localStorage.setItem(visitKey, '1');
             }
         } catch (e) {
             console.warn('[TRACKING] Failed:', e);
