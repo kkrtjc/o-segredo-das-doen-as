@@ -1871,6 +1871,7 @@
                     document.getElementById('app-header').style.display = 'flex';
                     document.getElementById('app-main').style.display = 'block';
                     document.getElementById('app-nav').style.display = 'flex';
+                    renderSubpageSelector();
                     await refreshData();
                 } else {
                     showToast('Senha incorreta.');
@@ -2162,7 +2163,8 @@
             if (!it) return 'doencas';
             const s = String(it.site || '').toLowerCase().trim();
             const u = String(it.url || it.sourceUrl || it.source || it.reason || '').toLowerCase().trim();
-            if (s === 'doencas2' || s.includes('doencas2') || u.includes('doencas2')) return 'doencas2';
+            const p = String(it.product || it.products || '').toLowerCase().trim();
+            if (s === 'doencas2' || s.includes('doencas2') || u.includes('doencas2') || p.includes('doencas2')) return 'doencas2';
             return 'doencas';
         }
 
@@ -2211,32 +2213,38 @@
                         trackedAbandons = totals['checkoutAbandons' + sfx] || 0;
                     }
                 } else {
-                    // Oficial / Doenças (página de vendas externa - com suporte a doencas2)
+                    // Oficial / Doenças (página de vendas externa - com suporte total a doencas2)
+                    const platVisits = (totals.uniqueVisits_platform || 0) + (totals.uniqueVisits_app || 0);
+                    const platViews = (totals.pageViews_platform || 0) + (totals.pageViews_app || 0);
+                    const platCheckouts = (totals.checkoutOpens_platform || 0) + (totals.checkoutOpens_app || 0);
+                    const platAbandons = (totals.checkoutAbandons_platform || 0) + (totals.checkoutAbandons_app || 0);
+
+                    const origVisits = Math.max(0, (totals.uniqueVisits || totals.pageViews || 0) - platVisits);
+                    const origViews = Math.max(0, (totals.pageViews || 0) - platViews);
+                    const origCheckouts = Math.max(0, (totals.checkoutOpens || totals.checkoutStarts || 0) - platCheckouts);
+                    const origAbandons = Math.max(0, (totals.checkoutAbandons || 0) - platAbandons);
+
+                    const d2Visits = totals.uniqueVisits_doencas2 || totals.pageViews_doencas2 || 0;
+                    const d2Views = totals.pageViews_doencas2 || 0;
+                    const d2Checkouts = totals.checkoutOpens_doencas2 || 0;
+                    const d2Abandons = totals.checkoutAbandons_doencas2 || 0;
+
                     if (currentSubPage === 'doencas2') {
-                        visits = totals.uniqueVisits_doencas2 || totals.pageViews_doencas2 || 0;
-                        pageViews = totals.pageViews_doencas2 || 0;
-                        checkouts = totals.checkoutOpens_doencas2 || 0;
-                        trackedAbandons = totals.checkoutAbandons_doencas2 || 0;
+                        visits = d2Visits;
+                        pageViews = d2Views;
+                        checkouts = d2Checkouts;
+                        trackedAbandons = d2Abandons;
                     } else if (currentSubPage === 'doencas') {
-                        const platVisits = (totals.uniqueVisits_platform || 0) + (totals.uniqueVisits_app || 0);
-                        const platViews = (totals.pageViews_platform || 0) + (totals.pageViews_app || 0);
-                        const platCheckouts = (totals.checkoutOpens_platform || 0) + (totals.checkoutOpens_app || 0);
-                        const platAbandons = (totals.checkoutAbandons_platform || 0) + (totals.checkoutAbandons_app || 0);
-
-                        visits = Math.max(0, (totals.uniqueVisits || totals.pageViews || 0) - platVisits - (totals.uniqueVisits_doencas2 || 0));
-                        pageViews = Math.max(0, (totals.pageViews || 0) - platViews - (totals.pageViews_doencas2 || 0));
-                        checkouts = Math.max(0, (totals.checkoutOpens || totals.checkoutStarts || 0) - platCheckouts - (totals.checkoutOpens_doencas2 || 0));
-                        trackedAbandons = Math.max(0, (totals.checkoutAbandons || 0) - platAbandons - (totals.checkoutAbandons_doencas2 || 0));
+                        visits = origVisits;
+                        pageViews = origViews;
+                        checkouts = origCheckouts;
+                        trackedAbandons = origAbandons;
                     } else {
-                        const platVisits = (totals.uniqueVisits_platform || 0) + (totals.uniqueVisits_app || 0);
-                        const platViews = (totals.pageViews_platform || 0) + (totals.pageViews_app || 0);
-                        const platCheckouts = (totals.checkoutOpens_platform || 0) + (totals.checkoutOpens_app || 0);
-                        const platAbandons = (totals.checkoutAbandons_platform || 0) + (totals.checkoutAbandons_app || 0);
-
-                        visits = Math.max(0, (totals.uniqueVisits || totals.pageViews || 0) - platVisits);
-                        pageViews = Math.max(0, (totals.pageViews || 0) - platViews);
-                        checkouts = Math.max(0, (totals.checkoutOpens || totals.checkoutStarts || 0) - platCheckouts);
-                        trackedAbandons = Math.max(0, (totals.checkoutAbandons || 0) - platAbandons);
+                        // Todas (Original + Página 2)
+                        visits = origVisits + d2Visits;
+                        pageViews = origViews + d2Views;
+                        checkouts = origCheckouts + d2Checkouts;
+                        trackedAbandons = origAbandons + d2Abandons;
                     }
                 }
             } else {
@@ -2258,31 +2266,38 @@
                             trackedAbandons += (d['checkoutAbandons' + sfx] || 0);
                         }
                     } else {
+                        // Doenças
+                        const platVisits = (d.uniqueVisits_platform || 0) + (d.uniqueVisits_app || 0);
+                        const platViews = (d.pageViews_platform || 0) + (d.pageViews_app || 0);
+                        const platCheckouts = (d.checkoutOpens_platform || 0) + (d.checkoutOpens_app || 0);
+                        const platAbandons = (d.checkoutAbandons_platform || 0) + (d.checkoutAbandons_app || 0);
+
+                        const origVisits = Math.max(0, (d.uniqueVisits || d.pageViews || 0) - platVisits);
+                        const origViews = Math.max(0, (d.pageViews || 0) - platViews);
+                        const origCheckouts = Math.max(0, (d.checkoutOpens || d.checkoutStarts || 0) - platCheckouts);
+                        const origAbandons = Math.max(0, (d.checkoutAbandons || 0) - platAbandons);
+
+                        const d2Visits = d.uniqueVisits_doencas2 || d.pageViews_doencas2 || 0;
+                        const d2Views = d.pageViews_doencas2 || 0;
+                        const d2Checkouts = d.checkoutOpens_doencas2 || 0;
+                        const d2Abandons = d.checkoutAbandons_doencas2 || 0;
+
                         if (currentSubPage === 'doencas2') {
-                            visits += (d.uniqueVisits_doencas2 || d.pageViews_doencas2 || 0);
-                            pageViews += (d.pageViews_doencas2 || 0);
-                            checkouts += (d.checkoutOpens_doencas2 || 0);
-                            trackedAbandons += (d.checkoutAbandons_doencas2 || 0);
+                            visits += d2Visits;
+                            pageViews += d2Views;
+                            checkouts += d2Checkouts;
+                            trackedAbandons += d2Abandons;
                         } else if (currentSubPage === 'doencas') {
-                            const platVisits = (d.uniqueVisits_platform || 0) + (d.uniqueVisits_app || 0);
-                            const platViews = (d.pageViews_platform || 0) + (d.pageViews_app || 0);
-                            const platCheckouts = (d.checkoutOpens_platform || 0) + (d.checkoutOpens_app || 0);
-                            const platAbandons = (d.checkoutAbandons_platform || 0) + (d.checkoutAbandons_app || 0);
-
-                            visits += Math.max(0, (d.uniqueVisits || d.pageViews || 0) - platVisits - (d.uniqueVisits_doencas2 || 0));
-                            pageViews += Math.max(0, (d.pageViews || 0) - platViews - (d.pageViews_doencas2 || 0));
-                            checkouts += Math.max(0, (d.checkoutOpens || d.checkoutStarts || 0) - platCheckouts - (d.checkoutOpens_doencas2 || 0));
-                            trackedAbandons += Math.max(0, (d.checkoutAbandons || 0) - platAbandons - (d.checkoutAbandons_doencas2 || 0));
+                            visits += origVisits;
+                            pageViews += origViews;
+                            checkouts += origCheckouts;
+                            trackedAbandons += origAbandons;
                         } else {
-                            const platVisits = (d.uniqueVisits_platform || 0) + (d.uniqueVisits_app || 0);
-                            const platViews = (d.pageViews_platform || 0) + (d.pageViews_app || 0);
-                            const platCheckouts = (d.checkoutOpens_platform || 0) + (d.checkoutOpens_app || 0);
-                            const platAbandons = (d.checkoutAbandons_platform || 0) + (d.checkoutAbandons_app || 0);
-
-                            visits += Math.max(0, (d.uniqueVisits || d.pageViews || 0) - platVisits);
-                            pageViews += Math.max(0, (d.pageViews || 0) - platViews);
-                            checkouts += Math.max(0, (d.checkoutOpens || d.checkoutStarts || 0) - platCheckouts);
-                            trackedAbandons += Math.max(0, (d.checkoutAbandons || 0) - platAbandons);
+                            // Todas
+                            visits += (origVisits + d2Visits);
+                            pageViews += (origViews + d2Views);
+                            checkouts += (origCheckouts + d2Checkouts);
+                            trackedAbandons += (origAbandons + d2Abandons);
                         }
                     }
                 });
@@ -2346,7 +2361,7 @@
                 const s = String(it.site || '').toLowerCase().trim();
                 const p = String(it.product || it.products || '').toLowerCase().trim();
                 if (s === 'amazon' || p.includes('[amz]')) return false;
-                if (s === 'text' || s === 'official' || p.includes('doenca') || p.includes('doença') || p.includes('cura') || p.includes('elite') || p.includes('combo')) return true;
+                if (s === 'text' || s === 'official' || s === 'doencas' || s === 'doencas2' || p.includes('doenca') || p.includes('doença') || p.includes('cura') || p.includes('elite') || p.includes('combo')) return true;
                 return true;
             };
 

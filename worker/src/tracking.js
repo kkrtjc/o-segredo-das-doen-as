@@ -25,15 +25,16 @@ trackingRoutes.post('/track', async (c) => {
     const t = analytics.totals;
     const d = analytics.daily[todayStr];
     
-    // Suporte a múltiplos sites (Oficial, Pintinhos, Amazon, VSL, Plataforma/App)
+    // Suporte a múltiplos sites (Oficial, Doenças 2, Pintinhos 1/2/3, Amazon, VSL, Plataforma/App)
+    const s = String(site || '').toLowerCase().trim();
     let suffix = '';
-    if (site === 'doencas2') suffix = '_doencas2';
-    else if (site === 'pintinhos') suffix = '_pintinhos';
-    else if (site === 'pintinhos2') suffix = '_pintinhos2';
-    else if (site === 'pintinhos3') suffix = '_pintinhos3';
-    else if (site === 'amazon') suffix = '_amazon';
-    else if (site === 'vsl') suffix = '_vsl';
-    else if (site === 'app' || site === 'platform') suffix = '_platform';
+    if (s === 'doencas2' || s.includes('doencas2')) suffix = '_doencas2';
+    else if (s === 'pintinhos3' || s.includes('pintinhos3')) suffix = '_pintinhos3';
+    else if (s === 'pintinhos2' || s.includes('pintinhos2')) suffix = '_pintinhos2';
+    else if (s === 'pintinhos' || s.includes('pintinhos')) suffix = '_pintinhos';
+    else if (s === 'amazon' || s.includes('amazon')) suffix = '_amazon';
+    else if (s === 'vsl' || s.includes('vsl')) suffix = '_vsl';
+    else if (s === 'app' || s === 'platform' || s.includes('platform')) suffix = '_platform';
     
     const inc = (baseKey) => { 
         const key = baseKey + suffix;
